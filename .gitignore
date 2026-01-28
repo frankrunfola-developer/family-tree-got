@@ -34,8 +34,6 @@ dist/
 .env.*
 
 # ---- User uploads ----
-# Keep the folder, ignore user-uploaded files
-static/uploads/*
 !static/uploads/.gitkeep
 
 # If you want to ALSO ignore the preloaded lannister avatars, uncomment:
