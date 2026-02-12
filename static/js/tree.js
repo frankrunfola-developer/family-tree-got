@@ -1,7 +1,10 @@
 // tree.js
 // Dagre layout + union nodes for genealogical structure.
 // IMPORTANT: do NOT collapse unions (renderer uses them for couple+hub routing).
-// Tighter spacing + card-sized nodes.
+// Adds a post-layout spacing refinement so you can control:
+// - spouse gap
+// - sibling gap
+// - extra gap between unrelated nodes/clusters
 
 import { renderFamilyTree } from "./familyTree.js";
 
@@ -86,22 +89,22 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
   const dagre = window.dagre;
   if (!dagre) throw new Error("Dagre not found. Ensure dagre.min.js loads before tree.js.");
 
-  // TIGHTER spacing (more dense)
+  // Dense base layout (we'll refine spacing after)
   const {
     rankdir = "TB",
-    ranksep = 50,   // vertical distance between generations
-    nodesep = 30,   // horizontal distance between siblings
-    marginx = 14,
-    marginy = 14,
+    ranksep = 50,
+    nodesep = 22,
+    marginx = 12,
+    marginy = 12,
   } = opts;
 
   const g = new dagre.graphlib.Graph();
   g.setGraph({ rankdir, ranksep, nodesep, marginx, marginy });
   g.setDefaultEdgeLabel(() => ({}));
 
-  // Must match card-ish size in familyTree.js (roughly)
-  const PERSON_W = 210;
-  const PERSON_H = 185;
+  // MUST match card sizing in familyTree.js
+  const PERSON_W = 190;
+  const PERSON_H = 200;
 
   for (const n of graphNodes) {
     const isUnion = n.kind === "union";
@@ -128,7 +131,7 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
     maxY = Math.max(maxY, n.y);
   }
 
-  const pad = 24;
+  const pad = 22;
   for (const n of placed) {
     n.x = n.x - minX + pad;
     n.y = n.y - minY + pad;
@@ -141,16 +144,19 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
   };
 }
 
-
+// Post-layout spacing refinement:
+// - spouses in same union: fixed gap
+// - siblings under same union: fixed gap
+// - unrelated nodes on same row: enforced minimum "cluster gap"
 function refineSpacing(laidNodes, laidLinks, opts = {}) {
   const {
-    SPOUSE_GAP = 26,      // distance between spouse cards (edge-to-edge feel)
-    SIBLING_GAP = 20,     // distance between siblings in same family
-    CLUSTER_GAP = 60,     // extra gap between unrelated clusters
-    CARD_W = 190,         // must match familyTree.js
+    SPOUSE_GAP = 14,      // gap BETWEEN spouse cards
+    SIBLING_GAP = 12,     // gap BETWEEN sibling cards
+    CLUSTER_GAP = 70,     // extra breathing room between unrelated nodes on a row
+    CARD_W = 190,         // match familyTree.js
   } = opts;
 
-  const byId = new Map(laidNodes.map(n => [String(n.id), n]));
+  const byId = new Map(laidNodes.map((n) => [String(n.id), n]));
   const isUnion = (id) => byId.get(String(id))?.kind === "union";
 
   // unionId -> { parents:[], children:[] }
@@ -169,10 +175,9 @@ function refineSpacing(laidNodes, laidLinks, opts = {}) {
     }
   }
 
-  // Helper to place a set of nodes centered around cx with fixed gap
   function placeRowCentered(ids, cx, gap) {
-    const arr = ids.map(id => byId.get(id)).filter(Boolean);
-    arr.sort((a, b) => a.x - b.x); // stable-ish order
+    const arr = [...new Set(ids)].map((id) => byId.get(id)).filter(Boolean);
+    arr.sort((a, b) => a.x - b.x);
 
     const step = CARD_W + gap;
     const totalW = arr.length > 0 ? (arr.length - 1) * step : 0;
@@ -188,25 +193,28 @@ function refineSpacing(laidNodes, laidLinks, opts = {}) {
     const u = byId.get(uId);
     if (!u) continue;
 
-    const parentIds = [...new Set(pc.parents)].filter(id => byId.has(id));
-    const childIds = [...new Set(pc.children)].filter(id => byId.has(id));
+    const parentIds = pc.parents.filter((id) => byId.has(id));
+    const childIds = pc.children.filter((id) => byId.has(id));
 
     if (parentIds.length) placeRowCentered(parentIds, u.x, SPOUSE_GAP);
     if (childIds.length) placeRowCentered(childIds, u.x, SIBLING_GAP);
 
-    // keep union centered between spouses (helps routing look nicer)
+    // Keep union centered between spouses (improves routing)
     if (parentIds.length >= 2) {
-      const ps = parentIds.map(id => byId.get(id)).filter(Boolean).sort((a,b)=>a.x-b.x);
+      const ps = parentIds
+        .map((id) => byId.get(id))
+        .filter(Boolean)
+        .sort((a, b) => a.x - b.x);
       u.x = (ps[0].x + ps[ps.length - 1].x) / 2;
     }
   }
 
-  // 2) Cluster separation (simple collision push on each rank/y band)
-  // Group nodes by y (rounded band)
+  // 2) Cluster separation (simple collision push on each y band)
   const bands = new Map();
-  const BAND = 20; // tolerance
+  const BAND = 18; // y tolerance for "same row"
+
   for (const n of laidNodes) {
-    if (n.kind === "union") continue; // unions are invisible
+    if (n.kind === "union") continue;
     const key = Math.round(n.y / BAND);
     if (!bands.has(key)) bands.set(key, []);
     bands.get(key).push(n);
@@ -218,8 +226,6 @@ function refineSpacing(laidNodes, laidLinks, opts = {}) {
 
     for (const n of row) {
       const left = n.x - CARD_W / 2;
-      const right = n.x + CARD_W / 2;
-
       if (left < lastRight + CLUSTER_GAP) {
         const push = (lastRight + CLUSTER_GAP) - left;
         n.x += push;
@@ -230,7 +236,6 @@ function refineSpacing(laidNodes, laidLinks, opts = {}) {
 
   return laidNodes;
 }
-
 
 function enablePanZoom(svg, viewport) {
   let scale = 1, tx = 0, ty = 0;
@@ -296,12 +301,12 @@ export async function initTree(treeName = "gupta") {
 
   const laid = dagreLayout(graphNodes, graphLinks, { rankdir: "TB" });
 
-  // enforce your custom spacing rules
+  // YOUR CONTROL KNOBS:
   refineSpacing(laid.nodes, laid.links, {
-    SPOUSE_GAP: 18,
-    SIBLING_GAP: 14,
-    CLUSTER_GAP: 70,
-    CARD_W: 190
+    SPOUSE_GAP: 12,   // tighter spouses
+    SIBLING_GAP: 10,  // tighter siblings
+    CLUSTER_GAP: 70,  // keep unrelated branches from crushing each other
+    CARD_W: 190,
   });
 
   const result = renderFamilyTree(svg, {
