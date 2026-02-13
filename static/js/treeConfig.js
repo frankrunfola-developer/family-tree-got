@@ -1,53 +1,76 @@
 // static/js/treeConfig.js
-// Single source of truth for tree rendering + layout knobs.
-// Both tree.js and familyTree.js import this.
+// ----------------------------------------------------------------------------
+// Tree rendering + layout knobs (single source of truth).
+// Imported by both `tree.js` and `familyTree.js`.
+//
+// If you want to change how the tree *looks* without touching layout/render code,
+// change values in this file first.
+// ----------------------------------------------------------------------------
 
 export const TREE_CFG = {
+  // Dagre layout (graph -> x/y positions)
   dagre: {
+    // Top-to-bottom layout
     rankdir: "TB",
-    ranksep: 45,
-    nodesep: 200,
+
+    // Vertical distance between generations (rows)
+    ranksep: 65,
+
+    // Horizontal distance between nodes (columns)
+    nodesep: 100,
+
+    // Extra padding around the dagre graph
     marginx: 10,
     marginy: 10,
   },
 
+  // Node/card sizing (all dimensions in SVG px)
   sizing: {
-    CARD_W: 155,
-    CARD_H: 180,
-    CARD_R: 16,
+    CARD_W: 310,     // person card width
+    CARD_H: 250,     // person card height
+    CARD_R: 16,      // card corner radius
 
-    PHOTO_SIZE: 110,
-    PHOTO_R: 55,
-  },
 
+    PHOTO_R: 80,   // single source of truth for circle size
+    PHOTO_Y: 14,   // top offset of the circle’s bounding box
+},
+
+  // Card text baseline positions (relative to card top-left)
   text: {
-    NAME_Y: 138,
-    META_Y: 158,
+    NAME_Y: 190,
+    META_Y: 220
   },
 
+  // Text styling (SVG text)
+  fonts: {
+    NAME_PX: 31,   // name font size
+    META_PX: 27,   // date/meta font size
+    WEIGHT_NAME: 600,
+    WEIGHT_META: 500,
+  },
+
+
+  // Link routing knobs (elbows + stems)
   links: {
-    // Elbow routing vertical drop (union -> child, and single-parent cases)
-    STEM_LEN: 10,
-    STEM_MIN: 6,
-    STEM_FACTOR: 0.35, // 0 = fixed only
-
-    // Couple connector controls
-    // COUPLE_STEM: desired trunk height (join bar -> union point)
-    // PARENT_STEM_MAX: cap for parent->join vertical drops (defaults to COUPLE_STEM)
-    COUPLE_STEM: 14,       // try 8–16
-    PARENT_STEM_MAX: 14,   // keep parent verticals short; set equal to COUPLE_STEM
-
-    COUPLE_Y_FROM_TOP: 74, // keep if used elsewhere
+    // ONE knob for ALL vertical stems (the "drop" length used to build elbows):
+    // - parent drops down to the couple join line
+    // - trunk from the couple join line down to the union point
+    // - union-to-child elbow vertical stem (from union point to the elbow)
+    //
+    // If your connectors look too "tall" or too "flat", change *only* this value.
+    STEM: 30,
   },
 
+  // Spacing policy (mostly used when building the graph)
   spacing: {
     SPOUSE_GAP: 20,
-    SIBLING_GAP: 75,
+    SIBLING_GAP: 80,
     CLUSTER_GAP: 62,
     COUPLE_KEEP_OUT_PAD: 12,
     ROW_EPS: 10,
   },
 
+  // ViewBox framing / padding for the SVG viewport
   view: {
     minWidth: 1050,
     minHeight: 620,
@@ -55,3 +78,5 @@ export const TREE_CFG = {
     extra: 54,
   },
 };
+
+

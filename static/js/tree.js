@@ -5,10 +5,10 @@
 // - Even sibling spacing
 // - If siblings need more width, their ENTIRE descendant subtrees recursively widen outward
 // - Single child is centered under parents
-// - NEW: if a spouse has no parents (not produced by a union), keep them on the OUTER side of the screen
-//        so siblings stay tighter. Never swap a sibling with a spouse.
+// - If a spouse has no parents (not produced by a union), keep them on the OUTER side of the screen
+//   so siblings stay tighter. Never swap a sibling with a spouse.
 
-import { renderFamilyTree } from "./familyTree.js";
+import { renderFamilyTree, fitTreeToScreen } from "./familyTree.js";
 import { TREE_CFG } from "./treeConfig.js";
 
 function getRelPair(r) {
@@ -114,7 +114,7 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
 
   const placed = graphNodes.map((n) => {
     const dn = g.node(n.id);
-    // IMPORTANT: dagre gives CENTER coordinates. We keep node.x/node.y as CENTER everywhere.
+    // dagre gives CENTER coordinates. We keep node.x/node.y as CENTER everywhere.
     return { ...n, x: dn?.x ?? 0, y: dn?.y ?? 0 };
   });
 
@@ -256,14 +256,12 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     return ax - bx;
   });
 
-  const assignedUnion = new Set();
   const assignedPerson = new Set();
 
   // Global anchor used to define "outer part of the screen"
   const ANCHOR_X = (bounds?.width ?? TREE_CFG.view.minWidth) / 2;
 
   function orderParentsOuterOutsiders(parentIds, unionCenterX) {
-    // Base stable order first
     const ordered = sortByBaseX(parentIds);
 
     // Outsider = spouse that does NOT have a parent union (no parents in tree)
@@ -275,10 +273,7 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     // "Outer side" depends on which half of the screen the union lives on
     const outerIsLeft = unionCenterX < ANCHOR_X;
 
-    // Put outsiders on the outer end:
-    // - Left half: outsiders first (leftmost)
-    // - Right half: outsiders last (rightmost)
-    // This never swaps a sibling with spouse; it only reorders the spouse row.
+    // Put outsiders on the outer end
     return outerIsLeft ? [...outsiders, ...insiders] : [...insiders, ...outsiders];
   }
 
@@ -308,7 +303,7 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     if (n === 1) {
       const c = byId.get(kids[0]);
       if (c) {
-        c.x = centerX; // CENTER X
+        c.x = centerX;
         assignedPerson.add(kids[0]);
       }
       return;
@@ -325,7 +320,7 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
 
       const child = byId.get(cid);
       if (child) {
-        child.x = mid; // CENTER X
+        child.x = mid;
         assignedPerson.add(cid);
       }
 
@@ -336,8 +331,7 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
   function layoutUnion(unionId, centerX) {
     unionId = String(unionId);
     const u = byId.get(unionId);
-    if (u) u.x = centerX; // union node itself is a point; keep CENTER X
-    assignedUnion.add(unionId);
+    if (u) u.x = centerX;
 
     const pc = unions.get(unionId);
     if (!pc) return;
@@ -395,14 +389,25 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
   for (const n of laidNodes) n.x += shiftX;
 
   const newWidth = (maxX - minX) + pad * 2;
-
   return { nodes: laidNodes, width: newWidth };
 }
 
+/**
+ * Pan/zoom modifies the <g> viewport transform.
+ * Fit-to-screen must reset this transform, otherwise viewBox changes won't appear to "recenter".
+ */
 function enablePanZoom(svg, viewport) {
   let scale = 1, tx = 0, ty = 0;
   const apply = () => viewport.setAttribute("transform", `translate(${tx}, ${ty}) scale(${scale})`);
 
+  const reset = () => {
+    scale = 1;
+    tx = 0;
+    ty = 0;
+    apply();
+  };
+
+  // Zoom under mouse
   svg.addEventListener(
     "wheel",
     (e) => {
@@ -426,9 +431,8 @@ function enablePanZoom(svg, viewport) {
     { passive: false }
   );
 
-  let dragging = false,
-    lastX = 0,
-    lastY = 0;
+  // Pan (drag)
+  let dragging = false, lastX = 0, lastY = 0;
 
   svg.addEventListener("pointerdown", (e) => {
     dragging = true;
@@ -448,18 +452,36 @@ function enablePanZoom(svg, viewport) {
 
   svg.addEventListener("pointerup", (e) => {
     dragging = false;
-    try {
-      svg.releasePointerCapture(e.pointerId);
-    } catch {}
+    try { svg.releasePointerCapture(e.pointerId); } catch {}
   });
 
   apply();
+  return { reset };
 }
 
 async function loadTreeData(treeName = "gupta") {
   const res = await fetch(`/api/tree/${encodeURIComponent(treeName)}`);
   if (!res.ok) throw new Error(`Failed to load tree JSON (${res.status})`);
   return await res.json();
+}
+
+function wireFitUI(svg, panZoomApi) {
+  const btn = document.getElementById("fitTreeBtn");
+  if (!btn) return;
+
+  const doFit = () => {
+    if (panZoomApi?.reset) panZoomApi.reset();
+    requestAnimationFrame(() => fitTreeToScreen(svg));
+  };
+
+  btn.addEventListener("click", doFit);
+
+  // Keep it viewable on resize/orientation changes
+  let t = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(doFit, 140);
+  });
 }
 
 export async function initTree(treeName = "gupta") {
@@ -482,7 +504,12 @@ export async function initTree(treeName = "gupta") {
     height,
   });
 
-  enablePanZoom(svg, result.viewport);
+  const panZoomApi = enablePanZoom(svg, result.viewport);
+  wireFitUI(svg, panZoomApi);
+
+  // Start centered/tight
+  panZoomApi.reset();
+  fitTreeToScreen(svg);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

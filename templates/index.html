@@ -13,21 +13,25 @@
         <div class="tag">Where your family’s story took shape</div>
       </div>
 
+      <div class="topbar-right" aria-label="Brand mark">
+        <img
+          class="nav-logo"
+          src="/static/img/lineagemap_mark.svg"
+          alt="LineAgeMap mark"
+          width="40"
+          height="40"
+          loading="eager"
+        />
+      </div>
     </header>
 
     <main>
-      <section class="hero">
-        <h1>Make your family history feel real.</h1>
-        <p>
-          A clean, map-inspired family tree view you can share. Zoom, pan, and explore connections—without the clutter.
-        </p>
-      </section>
-
       <div id="canvas">
+        <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
         <svg id="treeSvg"></svg>
       </div>
 
-      <section id="contact" class="footer" >
+      <section id="contact" class="footer">
         <div class="foot-inner">
           <div class="foot-left">
             <div class="foot-brand">LineAgeMap</div>

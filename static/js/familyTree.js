@@ -1,10 +1,18 @@
 // static/js/familyTree.js
 // Renderer for the family tree.
 // IMPORTANT: node.x/node.y are CENTER coordinates everywhere (Option A).
+// NOTE: We only "frame" the tree by computing a tight viewBox. We do NOT change layout math.
 
 import { TREE_CFG } from "./treeConfig.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
+
+// unionId -> rendered Y for union join point (used when STEM forces uniform stems)
+const UNION_RENDER_Y = new Map();
+
+// Remember the last render so the "Fit to screen" button can re-frame the viewBox
+let _LAST_NODES = null;
+let _LAST_SVG = null;
 
 function el(tag) {
   return document.createElementNS(SVG_NS, tag);
@@ -22,6 +30,7 @@ function cardTopLeft(n) {
 function anchor(n, where) {
   const { CARD_H } = TREE_CFG.sizing;
 
+  // unions are points, people are cards (anchors depend on top/bottom of card)
   if (n.kind === "union") return { x: n.x, y: n.y };
 
   const top = n.y - CARD_H / 2;
@@ -36,20 +45,15 @@ function clamp(v, lo, hi) {
   return Math.max(lo, Math.min(hi, v));
 }
 
-function computeStemLen(a, b) {
-  const maxStem = TREE_CFG.links.STEM_LEN ?? 10;
-  const minStem = TREE_CFG.links.STEM_MIN ?? 6;
-  const factor = TREE_CFG.links.STEM_FACTOR ?? 0;
-
-  const gap = b.y - a.y;
-  if (!(gap > 0)) return minStem;
-
-  const adaptive = factor > 0 ? gap * factor : maxStem;
-  return clamp(adaptive, minStem, maxStem);
+function computeStemLen() {
+  // All elbow routing uses ONE shared vertical stem length.
+  // This keeps the tree visually consistent and makes tuning easy.
+  const stem = TREE_CFG.links.STEM;
+  return (typeof stem === "number" && isFinite(stem) && stem > 0) ? stem : 14;
 }
 
 function drawElbowPath(path, a, b) {
-  const stem = computeStemLen(a, b);
+  const stem = computeStemLen();
   const midY = a.y + stem;
 
   const d = [
@@ -68,8 +72,78 @@ function buildNodeMap(nodes) {
   return m;
 }
 
-function applyViewBox(svg, width, height) {
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+/**
+ * Compute a tight viewBox around the actual tree bounds (cards + union points).
+ * - For normal render we still enforce minWidth/minHeight so tiny trees don't over-zoom.
+ * - For "Fit to screen" we disable min enforcement and remove extra bottom padding.
+ */
+function applyViewBox(svg, nodes, opts = {}) {
+  const { CARD_W, CARD_H } = TREE_CFG.sizing;
+  const { minWidth, minHeight, pad, extra } = TREE_CFG.view;
+
+  const enforceMin = opts.enforceMin !== false; // default true
+  const padUsed = typeof opts.padOverride === "number" ? opts.padOverride : pad;
+  const extraUsed = typeof opts.extraOverride === "number" ? opts.extraOverride : (extra ?? 0);
+
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+
+  for (const n of nodes) {
+    if (n.kind === "union") {
+      // unions are points (but may be "render-shifted" when STEM is used)
+      const uy = UNION_RENDER_Y.get(String(n.id));
+      const y = uy != null ? uy : n.y;
+
+      minX = Math.min(minX, n.x);
+      maxX = Math.max(maxX, n.x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+      continue;
+    }
+
+    // people are cards: node.x/node.y are centers
+    const left = n.x - CARD_W / 2;
+    const right = n.x + CARD_W / 2;
+    const top = n.y - CARD_H / 2;
+    const bottom = n.y + CARD_H / 2;
+
+    minX = Math.min(minX, left);
+    maxX = Math.max(maxX, right);
+    minY = Math.min(minY, top);
+    maxY = Math.max(maxY, bottom);
+  }
+
+  // Safety fallback if nodes are empty/invalid
+  if (!isFinite(minX) || !isFinite(minY)) {
+    minX = 0;
+    minY = 0;
+    maxX = minWidth;
+    maxY = minHeight;
+  }
+
+  // Tight bounds + padding
+  let vbX = minX - padUsed;
+  let vbY = minY - padUsed;
+  let vbW = (maxX - minX) + padUsed * 2;
+  let vbH = (maxY - minY) + padUsed * 2 + extraUsed;
+
+  // Optional: Enforce minimum view size WITHOUT breaking centering
+  if (enforceMin) {
+    if (vbW < minWidth) {
+      const add = (minWidth - vbW) / 2;
+      vbX -= add;
+      vbW = minWidth;
+    }
+    if (vbH < minHeight) {
+      const add = (minHeight - vbH) / 2;
+      vbY -= add;
+      vbH = minHeight;
+    }
+  }
+
+  svg.setAttribute("viewBox", `${vbX} ${vbY} ${vbW} ${vbH}`);
   svg.setAttribute("width", "100%");
   svg.setAttribute("height", "100%");
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
@@ -147,27 +221,22 @@ function drawCoupleJoin(linksG, parents, unionNode) {
 
   const aL = anchor(left, "bottom");
   const aR = anchor(right, "bottom");
-  const unionPt = anchor(unionNode, "mid");
+  const unionId = String(unionNode.id);
 
-  const trunkDesired = TREE_CFG.links.COUPLE_STEM ?? 14;
+  // Use the same vertical stem length everywhere (parents, trunk, and child elbows).
+  const stem = computeStemLen();
 
-  // NEW: cap how tall the parent vertical drops can be
-  // Default: same as couple trunk height (what you asked for)
-  const parentMax = TREE_CFG.links.PARENT_STEM_MAX ?? trunkDesired;
-
+  // Force ALL three verticals to be the same:
+  // 1) parent drops = stem
+  // 2) trunk (join -> union point) = stem
   const maxBottom = Math.max(aL.y, aR.y);
-  const minJoinY = maxBottom + 2;
+  const joinY = maxBottom + stem;
 
-  // Ideal joinY to get trunk height ~= trunkDesired:
-  const targetJoinY = unionPt.y - trunkDesired;
+  // Render the union join point at joinY + stem (visual anchoring only)
+  const unionRenderY = joinY + stem;
+  UNION_RENDER_Y.set(unionId, unionRenderY);
 
-  // But we clamp so parent->join verticals are never taller than parentMax
-  const maxJoinY = minJoinY + parentMax;
-
-  // Final joinY:
-  const joinY = clamp(targetJoinY, minJoinY, maxJoinY);
-
-  // Parent verticals (now capped)
+  // Parent verticals
   const p1 = el("path");
   drawPathCommon(p1);
   p1.setAttribute("d", `M ${aL.x} ${aL.y} L ${aL.x} ${joinY}`);
@@ -184,18 +253,25 @@ function drawCoupleJoin(linksG, parents, unionNode) {
   p3.setAttribute("d", `M ${aL.x} ${joinY} L ${aR.x} ${joinY}`);
   linksG.appendChild(p3);
 
-  // Vertical trunk down to union (takes whatever remaining distance exists)
+  // Vertical trunk down to the rendered union point
   const midX = (aL.x + aR.x) / 2;
 
   const p4 = el("path");
   drawPathCommon(p4);
-  p4.setAttribute("d", `M ${midX} ${joinY} L ${midX} ${unionPt.y}`);
+  p4.setAttribute("d", `M ${midX} ${joinY} L ${midX} ${unionRenderY}`);
   linksG.appendChild(p4);
 }
 
 export function renderFamilyTree(svg, { nodes, links, width, height }) {
   clear(svg);
-  applyViewBox(svg, width, height);
+  UNION_RENDER_Y.clear();
+
+  // Persist the last render so the "Fit to screen" button can re-frame
+  _LAST_NODES = nodes;
+  _LAST_SVG = svg;
+
+  // Auto-frame the tree inside the SVG (with minimums so small trees don't over-zoom)
+  applyViewBox(svg, nodes, { enforceMin: true });
 
   const viewport = el("g");
   viewport.setAttribute("class", "tree-viewport");
@@ -253,11 +329,16 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       continue;
     }
 
-    // union -> child elbow
+    // union -> child elbow (start at rendered union Y when present)
     if (s.kind === "union" && t.kind === "person") {
       const path = el("path");
       drawPathCommon(path);
-      drawElbowPath(path, anchor(s, "mid"), anchor(t, "top"));
+
+      const uId = String(s.id);
+      const y = UNION_RENDER_Y.get(uId);
+      const from = y != null ? { x: s.x, y } : anchor(s, "mid");
+
+      drawElbowPath(path, from, anchor(t, "top"));
       linksG.appendChild(path);
       continue;
     }
@@ -268,13 +349,18 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
   nodesG.setAttribute("class", "tree-nodes");
   viewport.appendChild(nodesG);
 
-  const { CARD_W, CARD_H, CARD_R, PHOTO_SIZE, PHOTO_R } = TREE_CFG.sizing;
+  const { CARD_W, CARD_H, CARD_R, PHOTO_R, PHOTO_Y } = TREE_CFG.sizing;
+  const PHOTO_SIZE = PHOTO_R * 2;
+
 
   for (const n of nodes) {
     if (n.kind === "union") {
       const c = el("circle");
       c.setAttribute("cx", n.x);
-      c.setAttribute("cy", n.y);
+
+      const y = UNION_RENDER_Y.get(String(n.id));
+      c.setAttribute("cy", y != null ? y : n.y);
+
       c.setAttribute("r", "2.5");
       c.setAttribute("fill", "var(--tree-union-dot)");
       nodesG.appendChild(c);
@@ -303,7 +389,8 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     clip.setAttribute("id", clipId);
     const clipCircle = el("circle");
     clipCircle.setAttribute("cx", String(CARD_W / 2));
-    clipCircle.setAttribute("cy", String(PHOTO_SIZE / 2 + 14));
+    clipCircle.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
+
     clipCircle.setAttribute("r", String(PHOTO_R));
     clip.appendChild(clipCircle);
     defs.appendChild(clip);
@@ -312,7 +399,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       const img = el("image");
       img.setAttribute("href", n.photoUrl);
       img.setAttribute("x", String(CARD_W / 2 - PHOTO_SIZE / 2));
-      img.setAttribute("y", String(14));
+      img.setAttribute("y", String(PHOTO_Y));
       img.setAttribute("width", String(PHOTO_SIZE));
       img.setAttribute("height", String(PHOTO_SIZE));
       img.setAttribute("preserveAspectRatio", "xMidYMid slice");
@@ -321,7 +408,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     } else {
       const ph = el("circle");
       ph.setAttribute("cx", String(CARD_W / 2));
-      ph.setAttribute("cy", String(PHOTO_SIZE / 2 + 14));
+      ph.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
       ph.setAttribute("r", String(PHOTO_R));
       ph.setAttribute("fill", "var(--tree-photo-ph)");
       g.appendChild(ph);
@@ -329,7 +416,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
 
     const ring = el("circle");
     ring.setAttribute("cx", String(CARD_W / 2));
-    ring.setAttribute("cy", String(PHOTO_SIZE / 2 + 14));
+    ring.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
     ring.setAttribute("r", String(PHOTO_R));
     ring.setAttribute("fill", "none");
     ring.setAttribute("stroke", "var(--tree-photo-ring)");
@@ -341,16 +428,17 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     name.setAttribute("y", String(TREE_CFG.text.NAME_Y));
     name.setAttribute("text-anchor", "middle");
     name.setAttribute("dominant-baseline", "middle");
-    name.setAttribute(
-      "style",
-      [
-        "fill: var(--tree-text-strong)",
-        "font-size: 12.5px",
-        "font-weight: 700",
-        "font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
-        "pointer-events: none",
-      ].join("; ")
-    );
+  name.setAttribute(
+    "style",
+    [
+      "fill: var(--tree-text-strong)",
+      `font-size: ${TREE_CFG.fonts.NAME_PX}px`,
+      `font-weight: ${TREE_CFG.fonts.WEIGHT_NAME}`,
+      "font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
+      "pointer-events: none",
+    ].join("; ")
+  );
+
     name.textContent = (n.label ?? "").toString();
     g.appendChild(name);
 
@@ -363,8 +451,8 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       "style",
       [
         "fill: var(--tree-text-soft)",
-        "font-size: 11px",
-        "font-weight: 500",
+        `font-size: ${TREE_CFG.fonts.META_PX}px`,
+        `font-weight: ${TREE_CFG.fonts.WEIGHT_META}`,
         "font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
         "pointer-events: none",
       ].join("; ")
@@ -374,4 +462,16 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
   }
 
   return { viewport };
+}
+
+/**
+ * Re-apply the "camera framing" (tight viewBox) for the last rendered tree.
+ * Used by the always-visible "Fit to screen" button.
+ */
+export function fitTreeToScreen(svgOverride = null) {
+  const svg = svgOverride || _LAST_SVG;
+  if (!svg || !_LAST_NODES || !_LAST_NODES.length) return;
+
+  // Fit should be truly tight: no minimums, no extra bottom padding
+  applyViewBox(svg, _LAST_NODES, { enforceMin: false, extraOverride: 0 });
 }
