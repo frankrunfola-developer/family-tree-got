@@ -130,7 +130,7 @@ function pickMeta(raw) {
 
 function drawPathCommon(path) {
   path.setAttribute("fill", "none");
-  path.setAttribute("stroke", "rgba(255,255,255,0.35)");
+  path.setAttribute("stroke", "var(--tree-link)");
   path.setAttribute("stroke-width", "2");
   path.setAttribute("stroke-linecap", "round");
   path.setAttribute("stroke-linejoin", "round");
@@ -276,7 +276,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       c.setAttribute("cx", n.x);
       c.setAttribute("cy", n.y);
       c.setAttribute("r", "2.5");
-      c.setAttribute("fill", "rgba(255,255,255,0.08)");
+      c.setAttribute("fill", "var(--tree-union-dot)");
       nodesG.appendChild(c);
       continue;
     }
@@ -293,8 +293,8 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     card.setAttribute("height", String(CARD_H));
     card.setAttribute("rx", String(CARD_R));
     card.setAttribute("ry", String(CARD_R));
-    card.setAttribute("fill", "rgba(12,14,20,0.78)");
-    card.setAttribute("stroke", "rgba(255,255,255,0.18)");
+    card.setAttribute("fill", "var(--tree-card-bg)");
+    card.setAttribute("stroke", "var(--tree-card-stroke)");
     card.setAttribute("stroke-width", "1.5");
     g.appendChild(card);
 
@@ -323,7 +323,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       ph.setAttribute("cx", String(CARD_W / 2));
       ph.setAttribute("cy", String(PHOTO_SIZE / 2 + 14));
       ph.setAttribute("r", String(PHOTO_R));
-      ph.setAttribute("fill", "rgba(255,255,255,0.08)");
+      ph.setAttribute("fill", "var(--tree-photo-ph)");
       g.appendChild(ph);
     }
 
@@ -332,7 +332,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     ring.setAttribute("cy", String(PHOTO_SIZE / 2 + 14));
     ring.setAttribute("r", String(PHOTO_R));
     ring.setAttribute("fill", "none");
-    ring.setAttribute("stroke", "rgba(255,255,255,0.20)");
+    ring.setAttribute("stroke", "var(--tree-photo-ring)");
     ring.setAttribute("stroke-width", "2");
     g.appendChild(ring);
 
@@ -344,7 +344,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     name.setAttribute(
       "style",
       [
-        "fill: rgba(255,255,255,0.92)",
+        "fill: var(--tree-text-strong)",
         "font-size: 12.5px",
         "font-weight: 700",
         "font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
@@ -362,7 +362,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     meta.setAttribute(
       "style",
       [
-        "fill: rgba(255,255,255,0.65)",
+        "fill: var(--tree-text-soft)",
         "font-size: 11px",
         "font-weight: 500",
         "font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",

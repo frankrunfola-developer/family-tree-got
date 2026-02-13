@@ -1,24 +1,31 @@
 from __future__ import annotations
 
+################################################################
+# RENDER HOSTING
+#   - Update App to Use Persistent Disk
+#---------------------------------------------------------------
+import os
+
+DATA_DIR = os.environ.get("DATA_DIR", "data")
+
+os.makedirs(DATA_DIR, exist_ok=True)
+################################################################
+
 import json
 from pathlib import Path
 from typing import Any, Dict
 
 from flask import Flask, jsonify, render_template, request
-from werkzeug.utils import secure_filename
 
 APP_DIR = Path(__file__).parent
-DATA_DIR = APP_DIR / "data"
-UPLOAD_DIR = APP_DIR / "static" / "uploads"
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-ALLOWED_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+# Convert DATA_DIR (string) to a Path and make it absolute relative to the app folder if needed
+DATA_DIR = Path(DATA_DIR)
+if not DATA_DIR.is_absolute():
+    DATA_DIR = APP_DIR / DATA_DIR
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 app = Flask(__name__)
-
-
-def allowed_file(filename: str) -> bool:
-    return Path(filename).suffix.lower() in ALLOWED_EXTS
 
 
 def family_path(name: str) -> Path:
@@ -32,17 +39,12 @@ def load_family_file(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def save_family_file(path: Path, payload: Dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-
 @app.get("/")
 def index():
     return render_template("index.html")
 
 
-# ✅ What tree.js is calling
+# Tree data endpoint (read-only)
 @app.get("/api/tree/<name>")
 def api_tree(name: str):
     path = family_path(name)

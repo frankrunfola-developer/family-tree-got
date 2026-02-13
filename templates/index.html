@@ -3,42 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Gupta Family Tree</title>
+    <title>LineAgeMap</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
   </head>
   <body>
-    <header>
-      <div class="title">
-        <h1>Gupta Family Tree</h1>
-        <div class="sub">Dagre layout · union nodes · straight lines · zoom/pan</div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">LineAgeMap</div>
+        <div class="tag">Where your family’s story took shape</div>
       </div>
 
-      <div class="actions">
-        <button id="reloadBtn" type="button">Reload</button>
-        <label class="btn">
-          Upload Photo
-          <input id="photoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
-        </label>
-        <select id="personSelect"></select>
-        <button id="assignPhotoBtn" type="button">Assign Photo</button>
-      </div>
     </header>
 
     <main>
+      <section class="hero">
+        <h1>Make your family history feel real.</h1>
+        <p>
+          A clean, map-inspired family tree view you can share. Zoom, pan, and explore connections—without the clutter.
+        </p>
+      </section>
+
       <div id="canvas">
         <svg id="treeSvg"></svg>
       </div>
 
-      <details class="advanced">
-        <summary>Advanced: Edit JSON</summary>
-        <div class="adv-inner">
-          <button id="saveBtn" type="button">Save JSON</button>
-          <textarea id="jsonBox" spellcheck="false"></textarea>
-          <p class="hint">
-            Relationships are parent→child. The root ancestor is the person who is never listed as a child.
-          </p>
+      <section id="contact" class="footer" >
+        <div class="foot-inner">
+          <div class="foot-left">
+            <div class="foot-brand">LineAgeMap</div>
+            <div class="foot-sub">Simple. Nostalgic. Shareable.</div>
+          </div>
+          <div class="foot-right">
+            <span>© <span id="year"></span></span>
+          </div>
         </div>
-      </details>
+      </section>
     </main>
 
     <!-- Dagre MUST load before tree.js (tree.js reads window.dagre) -->
@@ -46,5 +45,8 @@
 
     <!-- tree.js uses ES module imports -->
     <script type="module" src="/static/js/tree.js"></script>
+    <script>
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+    </script>
   </body>
 </html>

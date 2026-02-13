@@ -9,8 +9,6 @@
     { "born": "1956", "id": "indranil", "name": "Indranil Gupta", "photo": "/static/uploads/gupta/indranil.png" },
     { "born": "1962", "id": "sharmistha", "name": "Sharmistha Gupta", "photo": "/static/uploads/gupta/sharmistha.png" },
 
-    { "born": "0000", "id": "sibling", "name": "Sibling Gupta", "photo": "/static/uploads/gupta/sibling1.png" },
-
     { "born": "1960", "id": "rumjhum", "name": "Rumjhum Chatterjee", "photo": "/static/uploads/gupta/rumjhum.png" },
     { "born": "1958", "id": "vinayak", "name": "Vinayak Chatterjee", "photo": "/static/uploads/gupta/vinayak.png" },
 
@@ -29,11 +27,8 @@
     { "born": "2022", "id": "maahir", "name": "Maahir Kochhar", "photo": "/static/uploads/gupta/maahir.png" },
 
     { "born": "2001", "id": "atreyee", "name": "Atreyee Gupta", "photo": "/static/uploads/gupta/atreyee.png" },
-    { "born": "2005", "id": "auroni", "name": "Auroni Gupta", "photo": "/static/uploads/gupta/auroni.png" },
+    { "born": "2005", "id": "auroni", "name": "Auroni Gupta", "photo": "/static/uploads/gupta/auroni.png" }
 
-
-    { "born": "0000", "id": "mom", "name": "Mom Sen", "photo": "/static/uploads/gupta/mom.png" },
-    { "born": "0000", "id": "dad", "name": "Dad Sen", "photo": "/static/uploads/gupta/dad.png" }
   ],
   "relationships": [
     { "type": "spouse", "a": "paresh", "b": "nilima" },
@@ -75,12 +70,7 @@
     { "child": "adalina", "parent": "frank" },
 
     { "child": "maahir", "parent": "nayantara" },
-    { "child": "maahir", "parent": "shailesh" },
+    { "child": "maahir", "parent": "shailesh" }
 
-
-    { "child": "sharmistha", "parent": "mom" },
-    { "child": "sharmistha", "parent": "dad" },
-    { "child": "sibling", "parent": "mom" },
-    { "child": "sibling", "parent": "dad" }
   ]
 }

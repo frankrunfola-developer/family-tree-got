@@ -1,38 +1,31 @@
-# Family Tree App (Lannister Demo • Photo Nodes)
+# LineAgeMap (Flask + SVG Family Tree Demo)
 
-A lightweight **Flask + D3.js** app that renders a **family tree with photo nodes**.
+A lightweight **Flask** app that renders a **clean, map-like family tree** (zoom + pan) using an SVG renderer.
 
-This version ships with:
-- A **preloaded family-focused dataset** (Tywin/Joanna → Cersei/Jaime/Tyrion → Joffrey/Myrcella/Tommen)
-- **Preloaded images** (generated, self-contained)
-- **Vertical flow** (top → down)
-- **Simple UI** (tree first; JSON editor is optional / collapsed)
+This build is intentionally simple:
+- **No upload UI**
+- **No in-browser JSON editor**
+- Read-only tree data served from disk via **`/api/tree/<name>`**
+
 ---
 
 ## Quickstart
 
-### 1) Create a virtual environment
-
-**Windows (PowerShell)**
+### Windows (PowerShell)
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-```
-
-**macOS / Linux / Git Bash**
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-### 2) Install dependencies
-```bash
-python.exe -m pip install --upgrade pip
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+python app.py
 ```
 
-### 3) Run the app
+### Bash / Git Bash / WSL / macOS / Linux
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 python app.py
 ```
 
@@ -40,140 +33,85 @@ Open: http://127.0.0.1:5000
 
 ---
 
+## Data files (what loads the tree)
+
+Tree JSON lives in `data/` and follows this naming convention:
+
+- `data/family_gupta.json`  → loads at `/api/tree/gupta`
+- `data/family_got.json`    → loads at `/api/tree/got`
+
+The default demo tree name is set in `static/js/tree.js`:
+
+```js
+initTree("gupta");
+```
+
+---
+
+## Render hosting (persistent disk)
+
+`app.py` reads `DATA_DIR` from the environment:
+
+- If `DATA_DIR` is set (recommended on Render with a mounted disk), data is read from there.
+- If not set, it defaults to a local `data/` folder.
+
+Example (bash):
+```bash
+export DATA_DIR=/var/data
+```
+
+Example (PowerShell):
+```powershell
+$env:DATA_DIR="C:\lineagemap-data"
+```
+
+---
+
 ## File structure (with comments)
 
 ```text
-family-tree-got/
-├─ app.py                      # Flask server: serves the page + JSON API + photo upload endpoint
-├─ requirements.txt            # Python dependencies (Flask)
-├─ README.md                   # You are here
+lineagemap/
+├─ app.py                    # Flask server (serves index + /api/tree/<name>)
+├─ requirements.txt          # Python deps
+├─ README.md                 # This file
 │
 ├─ data/
-│  └─ family.json              # The family tree data (people + parent→child relationships)
+│  ├─ family_gupta.json      # Demo tree (Gupta)
+│  └─ family_got.json        # Demo tree (Game of Thrones)
 │
 ├─ templates/
-│  └─ index.html               # Main HTML page (simple UI + loads D3 + tree.js)
+│  └─ index.html             # Clean landing page + SVG canvas
 │
 └─ static/
    ├─ css/
-   │  └─ styles.css            # App styling (layout, fonts, canvas sizing)
-   │
+   │  └─ styles.css          # Nostalgic, clean theme
    ├─ js/
-   │  └─ tree.js               # D3 rendering + UI events (vertical layout + photo nodes)
-   │
+   │  ├─ tree.js             # Loads JSON + layout + pan/zoom
+   │  ├─ familyTree.js       # SVG renderer (cards, links, labels)
+   │  └─ treeConfig.js       # Shared config constants
    └─ uploads/
-      ├─ lannister/            # Preloaded pics referenced by the JSON
-      │  ├─ tywin.png
-      │  ├─ joanna.png
-      │  ├─ cersei.png
-      │  ├─ jaime.png
-      │  ├─ tyrion.png
-      │  ├─ joffrey.png
-      │  ├─ myrcella.png
-      │  └─ tommen.png
-      └─ (your uploads...)     # New photos you upload via the UI land here
+      ├─ gupta/              # Example images (optional; referenced by photoUrl)
+      │  ├─ Indrajit.png      # example
+      │  ├─ adalina.png       # example
+      │  └─ atreyee.png       # example
+      ├─ lannister/
+      │  ├─ cersei.png        # example
+      │  ├─ jaime.png         # example
+      │  └─ joffrey.png       # example
+      └─ stark/
+         ├─ arya.png          # example
+         ├─ bran.png          # example
+         └─ eddard.png        # example
 ```
 
----
-
-## How it works (quick mental model)
-
-### Backend (Flask)
-- `GET /`  
-  Serves the UI page (`templates/index.html`)
-- `GET /api/family`  
-  Returns the JSON in `data/family.json`
-- `POST /api/family`  
-  Saves JSON back to `data/family.json`
-- `POST /api/upload`  
-  Uploads an image into `static/uploads/` and returns a URL like:
-  - `/static/uploads/yourfile.png`
-
-### Frontend (D3.js)
-- Loads JSON from `/api/family`
-- Builds a parent→child hierarchy
-- Renders a **vertical tree** (top → down)
-- Each node shows:
-  - square photo (clipped)
-  - name
-  - optional born/died line
-- Includes zoom/pan
+Notes:
+- Image files are optional. If a person node has `photoUrl`, the renderer shows it.
+- If no `photoUrl` is present, the node shows a subtle placeholder circle.
 
 ---
 
-## Important rendering behavior
+## API
 
-### Couples are visually connected (even if one spouse has no parents)
-Couple nodes draw a **horizontal connector stroke** between partners. This guarantees that a spouse who is only present in the tree **by marriage** (no parents in the dataset) still has a visible line tying them to the tree.
+- `GET /` → landing page
+- `GET /api/tree/<name>` → returns `DATA_DIR/family_<name>.json`
 
-### Parent-child links target the correct spouse in a couple
-When a child node is a **couple**, the parent→child link is routed to **only the descendant spouse** (the actual child), not through both spouses. This makes the ancestry unambiguous.
-
-### Clean defaults on refresh
-- The tree starts **centered** every refresh (no hard-coded translate values).
-- Nodes are **square** (with slight rounding) instead of circular.
-
----
-
-## Data model (`data/family.json`)
-
-```json
-{
-  "people": [
-    {
-      "id": "tywin",
-      "name": "Tywin Lannister",
-      "born": "242 AC",
-      "died": "",
-      "photo": "/static/uploads/lannister/tywin.png"
-    }
-  ],
-  "relationships": [
-    { "parent": "tywin", "child": "cersei" }
-  ]
-}
-```
-
-### Rules / assumptions
-- Relationships are **directed parent → child**
-- Root ancestor is computed as:
-  - “the person who is never listed as a child”
-- This is a **single-tree MVP**
-  - Multiple disconnected families will require a “choose root” option or multiple renders
-
----
-
-## Using the UI
-
-Top bar:
-1. **Reload**: reloads `data/family.json` from disk
-2. **Upload Photo**: upload `.png`, `.jpg`, `.jpeg`, `.webp`
-3. **Select person → Assign Photo**: updates that person’s `photo` field in-memory
-
-To persist changes:
-- Expand **Advanced: Edit JSON**
-- Click **Save JSON**
-
----
-
-## Common tweaks
-
-### Make nodes closer together
-Edit: `static/js/tree.js`
-
-- Find `nodeSize([xSpacing, ySpacing])`
-- Reduce the numbers to pack tighter.
-
-### 90-degree links (elbows) instead of curved
-Edit: `static/js/tree.js`
-
-- Replace the `d` path generator on the link with an elbow path:
-  `M x0 y0 V midY H x1 V y1`
-
----
-
-## Next upgrades (if you want this to feel “real”)
-1. Spouse rendering (sideways relationship)
-2. Export to PNG/SVG/PDF
-3. Multiple roots / choose root
-4. GEDCOM import (bigger project)
