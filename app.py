@@ -52,6 +52,8 @@ def api_tree(name: str):
         return jsonify({"error": "not found", "expected_file": str(path)}), 404
     return jsonify(load_family_file(path))
 
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+#####################
+# LOCAL RUN
+#####################
+#if __name__ == "__main__":
+    #app.run(host="127.0.0.1", port=5000, debug=True)
