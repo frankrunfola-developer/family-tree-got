@@ -51,6 +51,29 @@ function computeStemLen() {
   const stem = TREE_CFG.links.STEM;
   return (typeof stem === "number" && isFinite(stem) && stem > 0) ? stem : 14;
 }
+function drawMarriageIcon(linksG, x, y) {
+  const g = el("g");
+  g.setAttribute("transform", `translate(${x}, ${y})`);
+  g.setAttribute("opacity", "0.9");
+  g.setAttribute("pointer-events", "none");
+
+  const mkRing = (cx) => {
+    const c = el("circle");
+    c.setAttribute("cx", String(cx));
+    c.setAttribute("cy", "0");
+    c.setAttribute("r", "8.2");
+    c.setAttribute("fill", "none");
+    c.setAttribute("stroke", "var(--tree-link)");
+    c.setAttribute("stroke-width", "1.6");
+    return c;
+  };
+
+  // Two rings with slight overlap
+  g.appendChild(mkRing(-4.2));
+  g.appendChild(mkRing(4.2));
+
+  linksG.appendChild(g);
+}
 
 function drawElbowPath(path, a, b) {
   const stem = computeStemLen();
@@ -207,7 +230,7 @@ function pickMeta(raw) {
 function drawPathCommon(path) {
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", "var(--tree-link)");
-  path.setAttribute("stroke-width", "2");
+  path.setAttribute("stroke-width", "1.6");
   path.setAttribute("stroke-linecap", "round");
   path.setAttribute("stroke-linejoin", "round");
 }
@@ -221,48 +244,46 @@ function drawCoupleJoin(linksG, parents, unionNode) {
   const left = ps[0];
   const right = ps[ps.length - 1];
 
-  const aL = anchor(left, "bottom");
-  const aR = anchor(right, "bottom");
   const unionId = String(unionNode.id);
 
-  // Use the same vertical stem length everywhere (parents, trunk, and child elbows).
+  const { CARD_W } = TREE_CFG.sizing;
+
+  // "Inner wall" connection points (mid-height of each card)
+  const aL = { x: left.x + CARD_W / 2, y: left.y };
+  const aR = { x: right.x - CARD_W / 2, y: right.y };
+
+  // Use the same vertical stem length everywhere (trunk and child elbows).
   const stem = computeStemLen();
 
-  // Force ALL three verticals to be the same:
-  // 1) parent drops = stem
-  // 2) trunk (join -> union point) = stem
-  const maxBottom = Math.max(aL.y, aR.y);
-  const joinY = maxBottom + stem;
+  // Horizontal join line sits in the middle between the parents (at their mid-height)
+  const joinY = (aL.y + aR.y) / 2;
 
-  // Render the union join point at joinY + stem (visual anchoring only)
+
+  // Render the union join point one stem-length below the join line (visual anchoring only)
   const unionRenderY = joinY + stem;
   UNION_RENDER_Y.set(unionId, unionRenderY);
 
-  // Parent verticals
-  const p1 = el("path");
-  drawPathCommon(p1);
-  p1.setAttribute("d", `M ${aL.x} ${aL.y} L ${aL.x} ${joinY}`);
-  linksG.appendChild(p1);
-
-  const p2 = el("path");
-  drawPathCommon(p2);
-  p2.setAttribute("d", `M ${aR.x} ${aR.y} L ${aR.x} ${joinY}`);
-  linksG.appendChild(p2);
-
-  // Horizontal join between parents
+  // Horizontal join between parents (touches the INNER walls)
   const p3 = el("path");
   drawPathCommon(p3);
+  p3.setAttribute("stroke-width", "3");
   p3.setAttribute("d", `M ${aL.x} ${joinY} L ${aR.x} ${joinY}`);
   linksG.appendChild(p3);
 
-  // Vertical trunk down to the rendered union point
+  // Vertical trunk down from the midpoint of the horizontal join
   const midX = (aL.x + aR.x) / 2;
 
+  // put icon slightly ABOVE the horizontal join line
+  drawMarriageIcon(linksG, midX, joinY - 20);
+  
   const p4 = el("path");
   drawPathCommon(p4);
+  p4.setAttribute("stroke-width", "2.8");
   p4.setAttribute("d", `M ${midX} ${joinY} L ${midX} ${unionRenderY}`);
   linksG.appendChild(p4);
 }
+
+
 
 export function renderFamilyTree(svg, { nodes, links, width, height }) {
   clear(svg);
@@ -373,7 +394,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
       const y = UNION_RENDER_Y.get(String(n.id));
       c.setAttribute("cy", y != null ? y : n.y);
 
-      c.setAttribute("r", "2.5");
+      c.setAttribute("r", "4.5");
       c.setAttribute("fill", "var(--tree-union-dot)");
       nodesG.appendChild(c);
       continue;

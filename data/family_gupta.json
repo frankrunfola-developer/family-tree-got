@@ -28,6 +28,7 @@
 
     { "born": "2001", "id": "atreyee", "name": "Atreyee Gupta", "photo": "/static/uploads/gupta/atreyee.png" },
     { "born": "2005", "id": "auroni", "name": "Auroni Gupta", "photo": "/static/uploads/gupta/auroni.png" }
+
   ],
   "relationships": [
     { "type": "spouse", "a": "paresh", "b": "nilima" },
@@ -69,6 +70,9 @@
     { "child": "adalina", "parent": "frank" },
 
     { "child": "maahir", "parent": "nayantara" },
-    { "child": "maahir", "parent": "shailesh" }
+    { "child": "maahir", "parent": "shailesh" },
+
+    { "type": "spouse", "a": "mom", "b": "dad" }
+
   ]
 }

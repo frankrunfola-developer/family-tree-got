@@ -102,7 +102,6 @@ body{
   justify-self: end;
   margin-left: 0;
 }
-
 .nav-logo{
   display:block;
   width: 50px;
@@ -140,6 +139,34 @@ main{
   width:100%;
   height:100%;
   display:block;
+}
+
+/* Sleeker card shadow */
+.tree-card,
+.tree-node-card,
+.tree-person-card,
+.tree-nodes rect {
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.10));
+}
+
+/* Optional: slightly stronger on hover */
+.tree-card:hover,
+.tree-node-card:hover,
+.tree-person-card:hover,
+.tree-nodes g:hover rect {
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.14));
+}
+.tree-nodes rect { filter: drop-shadow(0 6px 14px rgba(0,0,0,0.10)); }
+
+
+/* Sleek, always-on shadow for the SVG card rectangles */
+.tree-nodes rect{
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.10));
+}
+.tree-nodes rect{
+  filter:
+    drop-shadow(0 14px 30px rgba(0, 0, 0, 0.22))
+    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.14));
 }
 
 /* Fit-to-screen button */
@@ -190,28 +217,27 @@ main{
 
 /* Mobile + responsive tightening */
 @media (max-width: 860px){
-  :root{
-    --page-pad: 16px;
-    --content-max: 1100px;
-  }
-
-  /* Center label gets cramped on small screens — hide it */
-  .nav-family{ display: none; }
-
-  main{
-    padding: 10px var(--page-pad) 12px;
-  }
-
-  /* Key: stop forcing a tall viewport; let content determine height */
-  #canvas{
-    height: auto;
-    min-height: 440px; /* was 360px */
-  }
-
-  #treeSvg{
-    height: auto;
+  .nav-family{
+    display: inline-flex;      /* keep it visible */
+    justify-self: center;
+    max-width: 52vw;           /* prevents collisions */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 6px 10px;
   }
 }
+@media (max-width: 475px){
+  .nav-family{
+    max-width: 46vw;
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    padding: 5px 8px;
+  }
+}
+
 
 @media (max-width: 600px){
   :root{ --page-pad: 12px; }
@@ -254,5 +280,114 @@ main{
     right: 10px;
     padding: 8px 10px;
     font-size: 13px;
+  }
+}
+
+/* Mobile scaling: header + footer shrink cleanly */
+@media (max-width: 860px){
+
+  /* Header spacing */
+  .topbar{ padding: 10px var(--page-pad); }
+  .topbar-inner{ gap: 10px; }
+
+  /* Left brand */
+  .brand .logo{
+    font-size: 16px;
+    letter-spacing: 0.1px;
+  }
+  .brand .tag{
+    font-size: 11.5px;
+  }
+
+  /* Center label stays centered, but shrinks + clamps width */
+  .nav-family{
+    display: inline-flex;
+    justify-self: center;
+    max-width: 52vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 6px 10px;
+  }
+
+  /* Right logo */
+  .nav-logo{
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Footer */
+  .foot-inner{
+    font-size: 12px;
+    gap: 10px;
+    padding: 8px 0 6px;
+  }
+  .foot-brand{
+    font-size: 13px;
+  }
+  .foot-sub{
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 475px){
+
+  /* Header gets tighter */
+  .topbar{ padding: 8px var(--page-pad); }
+  .topbar-inner{ gap: 8px; }
+
+  .brand .logo{ font-size: 15px; }
+  .brand .tag{ font-size: 10.5px; }
+
+  .nav-family{
+    max-width: 46vw;
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    padding: 5px 8px;
+  }
+
+  .nav-logo{
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Footer stacks nicer on tiny screens */
+  .foot-inner{
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 11.5px;
+  }
+  .foot-brand{ font-size: 12.5px; }
+  .foot-sub{ font-size: 11px; }
+}
+
+/* Ultra-small phones (your screenshot range ~295px) */
+@media (max-width: 360px){
+
+  /* Make the left block compact */
+  .brand .logo{ font-size: 14px; }
+  .brand .tag{ display: none; } /* biggest space saver */
+
+  /* Make the center pill smaller + less “loud” */
+  .nav-family{
+    max-width: 44vw;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 4px 7px;
+    border-radius: 999px;
+  }
+
+  /* Shrink right logo a bit */
+  .nav-logo{ width: 34px; height: 34px; }
+}
+@media (max-width: 320px){
+  .nav-family{
+    max-width: 40vw;
+    font-size: 8.5px;
+    letter-spacing: 0.04em;
+    padding: 3px 6px;
   }
 }

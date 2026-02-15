@@ -11,7 +11,7 @@ export const TREE_CFG = {
   // Dagre layout (graph -> x/y positions)
   dagre: {
     rankdir: "TB",  // Extra padding around the dagre graph
-    ranksep: 65, // Vertical distance between generations (rows)
+    ranksep: 45, // Vertical distance between generations (rows)
     nodesep: 100,// Horizontal distance between nodes (columns)
     marginx: 10,   // Extra padding around the dagre graph
     marginy: 10,
@@ -19,7 +19,7 @@ export const TREE_CFG = {
 
   // Node/card sizing (all dimensions in SVG px)
   sizing: {
-    CARD_W: 310,     // person card width
+    CARD_W: 270,     // person card width
     CARD_H: 250,     // person card height
     CARD_R: 16,      // card corner radius
     PHOTO_R: 80,   // single source of truth for circle size
@@ -28,13 +28,13 @@ export const TREE_CFG = {
 
   // Card text baseline positions (relative to card top-left)
   text: {
-    NAME_Y: 190,
-    META_Y: 220
+    NAME_Y: 200,
+    META_Y: 230
   },
 
   // Text styling (SVG text)
   fonts: {
-    NAME_PX: 31,   // name font size
+    NAME_PX: 28,   // name font size
     META_PX: 27,   // date/meta font size
     WEIGHT_NAME: 600,
     WEIGHT_META: 500,
@@ -47,13 +47,13 @@ export const TREE_CFG = {
     // - parent drops down to the couple join line
     // - trunk from the couple join line down to the union point
     // - union-to-child elbow vertical stem (from union point to the elbow)
-    STEM: 30,   // If your connectors look too "tall" or too "flat", change *only* this value.
+    STEM: 80,   // If your connectors look too "tall" or too "flat", change *only* this value.
   },
 
   // Spacing policy (mostly used when building the graph)
   spacing: {
-    SPOUSE_GAP: 20,
-    SIBLING_GAP: 80,
+    SPOUSE_GAP: 40,
+    SIBLING_GAP: 60,
     CLUSTER_GAP: 62,
     COUPLE_KEEP_OUT_PAD: 12,
     ROW_EPS: 10,
