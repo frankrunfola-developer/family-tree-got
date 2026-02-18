@@ -5,67 +5,37 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>LineAgeMap</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-pro.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   </head>
 
 <body class="app">
+  {% include "_topbar.html" %}
 
-  <!-- Header (centered title like the mock) -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div></div>
-
-      <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-        <div class="logo">LineAgeMap</div>
-      </a>
-
-      <div class="topbar-right" aria-label="Actions">
-        <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 11.5l9-8 9 8" />
-            <path d="M6.5 10.5V20h11V10.5" />
-          </svg>
-        </a>
-
-        <img
-          class="nav-logo"
-          src="{{ url_for('static', filename='img/favicon.ico') }}"
-          alt="LineAgeMap mark"
-          width="40"
-          height="40"
-          loading="eager"
-        />
-      </div>
+  <main>
+    <div id="canvas">
+      <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
+      <svg id="treeSvg"></svg>
     </div>
-  </header>
-      <main>
-        <div id="canvas">
-          <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
-          <svg id="treeSvg"></svg>
+
+    <section id="contact" class="footer">
+      <div class="foot-inner">
+        <div class="foot-left">
+          <div class="foot-brand">LineAgeMap</div>
+          <div class="foot-sub">Simple. Nostalgic. Shareable.</div>
         </div>
+        <div class="foot-right">
+          <span>© <span id="year"></span></span>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        <section id="contact" class="footer">
-          <div class="foot-inner">
-            <div class="foot-left">
-              <div class="foot-brand">LineAgeMap</div>
-              <div class="foot-sub">Simple. Nostalgic. Shareable.</div>
-            </div>
-            <div class="foot-right">
-              <span>© <span id="year"></span></span>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <!-- Dagre MUST load before tree.js (tree.js reads window.dagre) -->
-      <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
-
-      <!-- tree.js uses ES module imports -->
-      <script type="module" src="/static/js/tree.js"></script>
-      <script>
-        document.getElementById("year").textContent = String(new Date().getFullYear());
-      </script>
-    </div>
-
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+  <script type="module" src="/static/js/tree.js"></script>
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+</body>
 </html>

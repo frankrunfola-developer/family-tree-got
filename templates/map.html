@@ -5,59 +5,20 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>LineAgeMap</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-pro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/map-accordion.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   </head>
 
 <body class="app">
+  {% include "_topbar.html" %}
 
-  <!-- Header (centered title like the mock) -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div></div>
-
-      <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-        <div class="logo">LineAgeMap</div>
-      </a>
-
-      <div class="topbar-right" aria-label="Actions">
-        <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 11.5l9-8 9 8" />
-            <path d="M6.5 10.5V20h11V10.5" />
-          </svg>
-        </a>
-
-        <img
-          class="nav-logo"
-          src="{{ url_for('static', filename='img/favicon.ico') }}"
-          alt="LineAgeMap mark"
-          width="40"
-          height="40"
-          loading="eager"
-        />
-      </div>
-    </div>
-  </header>
-
-  <!-- Map -->
-  <main>
-    <div class="nav-family" style="margin: 14px auto 18px;">MAP</div>
-
-    <section class="map-shell" aria-label="Family map">
-      <div class="map-panel">
-        <div class="map-canvas" id="mapCanvas">
-          <img
-            class="map-bg"
-            src="{{ url_for('static', filename='img/world-muted.png') }}"
-            alt=""
-            aria-hidden="true"
-          />
-          <div class="map-pins" id="mapPins"></div>
-        </div>
-      </div>
+  <main class="mapPage">
+    <div class="mapTitlePill">MAP</div>
+    <section class="accordion" id="mapAccordion" aria-label="Country, state, city map accordion">
+      <!-- populated by /static/js/map-accordion.js -->
     </section>
 
-    <!-- Footer -->
     <section class="footer">
       <div class="foot-inner">
         <div class="foot-left">
@@ -71,149 +32,10 @@
     </section>
   </main>
 
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/map-accordion.js') }}"></script>
   <script>
     document.getElementById("year").textContent = String(new Date().getFullYear());
-
-    // Family file name for /api/tree/<name>
-    const FAMILY_NAME = "gupta";
-
-    // Simple equirectangular projection:
-    // x = (lng + 180) / 360 * width
-    // y = (90 - lat) / 180 * height
-    function project(lat, lng, width, height) {
-      return {
-        x: (lng + 180) / 360 * width,
-        y: (90 - lat) / 180 * height
-      };
-    }
-
-    function parseYear(val) {
-      if (val == null) return null;
-      const n = parseInt(String(val).trim(), 10);
-      return Number.isFinite(n) ? n : null;
-    }
-
-    function calcAge(bornStr, diedStr) {
-      const born = parseYear(bornStr);
-      if (!born) return null;
-      const died = parseYear(diedStr);
-      const end = died || new Date().getFullYear();
-      const age = end - born;
-      return (age >= 0 && age <= 130) ? age : null;
-    }
-
-    function safeText(v) { return (v ?? "").toString(); }
-    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-    function buildPin(person) {
-      // New format: person.location { city, region, country, lat, lng }
-      // Back-compat: person.current
-      const loc = person.location || person.current || null;
-      if (!loc || loc.lat == null || loc.lng == null) return null;
-
-      const age = calcAge(person.born, person.died);
-      const name = safeText(person.name);
-
-      const city = safeText(loc.city);
-      const region = safeText(loc.region);
-      const country = safeText(loc.country);
-
-      const place = [city, region].filter(Boolean).join(", ") || city || "";
-      const placeWithCountry = [place || "", country].filter(Boolean).join(", ") || "—";
-
-      const el = document.createElement("div");
-      el.className = "avatar-pin";
-
-      const img = document.createElement("img");
-      img.className = "avatar-pin-img";
-      img.alt = name;
-      img.src = person.photo || "{{ url_for('static', filename='img/placeholder-avatar.png') }}";
-
-      const label = document.createElement("div");
-      label.className = "avatar-pin-label";
-
-      const top = document.createElement("div");
-      top.className = "avatar-pin-name";
-      top.textContent = name;
-
-      const bottom = document.createElement("div");
-      bottom.className = "avatar-pin-city";
-      bottom.textContent = (age != null) ? `Age ${age}, ${placeWithCountry}` : placeWithCountry;
-
-      label.appendChild(top);
-      label.appendChild(bottom);
-
-      el.appendChild(img);
-      el.appendChild(label);
-
-      return { el, lat: loc.lat, lng: loc.lng, key: `${loc.lat},${loc.lng}` };
-    }
-
-    async function initMapPins() {
-      const canvas = document.getElementById("mapCanvas");
-      const layer = document.getElementById("mapPins");
-
-      const res = await fetch(`/api/tree/${FAMILY_NAME}`);
-      const data = await res.json();
-      const people = Array.isArray(data.people) ? data.people : [];
-
-      // Default behavior: show people that have a location and are alive (no died).
-      // You can broaden later (e.g. include historical “last known” pins).
-      const pins = [];
-      for (const p of people) {
-        if (p.died) continue;
-        const pin = buildPin(p);
-        if (pin) pins.push(pin);
-      }
-
-      // group identical coords so they don't overlap perfectly
-      const groups = new Map();
-      for (const p of pins) {
-        const arr = groups.get(p.key) || [];
-        arr.push(p);
-        groups.set(p.key, arr);
-      }
-
-      function layout() {
-        layer.innerHTML = "";
-        const rect = canvas.getBoundingClientRect();
-        const w = rect.width;
-        const h = rect.height;
-
-        // clamp padding so labels stay inside
-        const padX = 130;
-        const padY = 64;
-
-        for (const arr of groups.values()) {
-          const base = project(arr[0].lat, arr[0].lng, w, h);
-          const n = arr.length;
-          const r = n === 1 ? 0 : 18;
-
-          for (let i = 0; i < n; i++) {
-            const item = arr[i];
-            const angle = (i / Math.max(1, n)) * Math.PI * 2;
-            const dx = Math.cos(angle) * r;
-            const dy = Math.sin(angle) * r;
-
-            let x = base.x + dx;
-            let y = base.y + dy;
-
-            x = clamp(x, padX, w - padX);
-            y = clamp(y, padY, h - padY);
-
-            item.el.style.left = `${x}px`;
-            item.el.style.top = `${y}px`;
-
-            layer.appendChild(item.el);
-          }
-        }
-      }
-
-      layout();
-      window.addEventListener("resize", layout);
-    }
-
-    initMapPins().catch(console.error);
   </script>
 </body>
 </html>

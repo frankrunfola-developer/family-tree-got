@@ -5,39 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>LineAgeMap</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-pro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home-extra.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   </head>
 
 <body class="app">
-
-  <!-- Header (centered title like the mock) -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div></div>
-
-      <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-        <div class="logo">LineAgeMap</div>
-      </a>
-
-      <div class="topbar-right" aria-label="Actions">
-        <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 11.5l9-8 9 8" />
-            <path d="M6.5 10.5V20h11V10.5" />
-          </svg>
-        </a>
-
-        <img
-          class="nav-logo"
-          src="{{ url_for('static', filename='img/favicon.ico') }}"
-          alt="LineAgeMap mark"
-          width="40"
-          height="40"
-          loading="eager"
-        />
-      </div>
-    </div>
-  </header>
+  {% include "_topbar.html" %}
 
   <main class="landing">
     <section class="landingHero">
@@ -47,22 +21,30 @@
         <span class="flourish right" aria-hidden="true"></span>
       </div>
 
+      <!-- extra branches -->
+      <div class="homeSprig homeSprig--tl" aria-hidden="true">
+        <img src="{{ url_for('static', filename='img/sprig.svg') }}" alt="">
+      </div>
+      <div class="homeSprig homeSprig--br" aria-hidden="true">
+        <img src="{{ url_for('static', filename='img/sprig.svg') }}" alt="">
+      </div>
+
       <div class="tileRow" role="navigation" aria-label="Primary pages">
-        <a class="navTile" href="/tree">
+        <a class="navTile" href="{{ url_for('tree_view') }}">
           <div class="tileIcon" aria-hidden="true">
             <img class="tileIcon" src="{{ url_for('static', filename='img/icon-tree.svg') }}?v=2" alt="Tree">
           </div>
           <div class="tileLabel">Tree</div>
         </a>
 
-        <a class="navTile" href="/map">
+        <a class="navTile" href="{{ url_for('map_view') }}">
           <div class="tileIcon" aria-hidden="true">
             <img class="tileIcon" src="{{ url_for('static', filename='img/icon-map.svg') }}?v=4" alt="Map">
           </div>
           <div class="tileLabel">Map</div>
         </a>
 
-        <a class="navTile" href="/timeline">
+        <a class="navTile" href="{{ url_for('timeline_view') }}">
           <div class="tileIcon" aria-hidden="true">
             <img class="tileIcon" src="{{ url_for('static', filename='img/icon-timeline.svg') }}?v=7" alt="Timeline">
           </div>
@@ -72,5 +54,6 @@
     </section>
   </main>
 
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 </body>
 </html>

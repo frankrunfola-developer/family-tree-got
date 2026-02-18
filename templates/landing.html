@@ -10,46 +10,7 @@
   </head>
   <body>
     <div class="appWrap">
-      <header class="topbar">
-        <div class="topbar-inner">
-          <div class="brand">
-            <div class="logo">LineAgeMap</div>
-            <div class="tag">Where your family’s story took shape</div>
-          </div>
-
-          <!-- Center callout -->
-          <div class="nav-family" aria-label="Page label">
-            <span class="nav-pill-icon" aria-hidden="true">
-              <!-- Compass / Explore icon -->
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="8.5"></circle>
-                <path d="M14.8 9.2l-2.2 5.6-5.6 2.2 2.2-5.6 5.6-2.2z"></path>
-              </svg>
-            </span>
-            Choose a View
-          </div>
-
-          <div class="topbar-right" aria-label="Actions">
-            <!-- Subtle home button -->
-            <a class="home-btn" href="/" aria-label="Home">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M3 11.5l9-8 9 8" />
-                <path d="M6.5 10.5V20h11V10.5" />
-              </svg>
-            </a>
-
-            <!-- Brand mark (use your favicon for now) -->
-            <img
-              class="nav-logo"
-              src="/static/img/favicon.ico"
-              alt="LineAgeMap mark"
-              width="40"
-              height="40"
-              loading="eager"
-            />
-          </div>
-        </div>
-      </header>
+      {% include "_topbar.html" %}
 
       <main>
         <section class="landing2">
@@ -139,5 +100,6 @@
         document.getElementById("year").textContent = String(new Date().getFullYear());
       </script>
     </div>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
   </body>
 </html>

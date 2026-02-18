@@ -1,0 +1,6 @@
+/* Home sprigs (extra branches) */
+.homeSprig{position:absolute;width:160px;opacity:.30;pointer-events:none}
+.homeSprig img{width:100%;height:auto;display:block}
+.homeSprig--tl{left:-22px;top:-22px;transform:rotate(-8deg)}
+.homeSprig--br{right:-24px;bottom:-26px;transform:rotate(172deg)}
+.landingHero{position:relative}
