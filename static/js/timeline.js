@@ -1,19 +1,23 @@
-// Timeline built from /api/tree/<family>
-// Schema expected: { people:[{name,born,died,location:{city,region,country}, events?:[...] }], relationships:[...] }
+// LineAgeMap Timeline — serpentine “single path” layout
+// Builds from /api/tree/<family>
+// Schema expected: { people:[{name,born,died,location:{city,region,country}, events?:[...] , photo?:... }], relationships:[...] }
 
 (() => {
   const familyId = (window.TIMELINE_FAMILY_ID || "gupta").toLowerCase();
 
   const elStatus = document.getElementById("tlStatus");
-  const elList = document.getElementById("tlList");
   const elSearch = document.getElementById("tlSearch");
   const chips = Array.from(document.querySelectorAll(".tlChip"));
+
+  const root = document.getElementById("tlSnakeRoot");
+  const svg  = document.getElementById("tlSnakeSvg");
+  const cardsWrap = document.getElementById("tlSnakeCards");
+  const densitySel = document.getElementById("tlDensity");
+  const colsSel = document.getElementById("tlCols");
 
   let allEvents = [];
   let activeType = "all";
   let q = "";
-
-  const ICON = { birth:"B", death:"D", marriage:"M", move:"↗", other:"•" };
 
   function setStatus(msg){ if (elStatus) elStatus.textContent = msg || ""; }
 
@@ -38,11 +42,6 @@
     if (/^\d{4}$/.test(orig)) return String(y);
     if (/^\d{4}-\d{2}$/.test(orig)) return `${y}-${m}`;
     return `${y}-${m}-${day}`;
-  }
-
-  function getYear(d){
-    const dt = safeDate(d);
-    return dt ? dt.getFullYear() : "Unknown";
   }
 
   function computeAge(born, died){
@@ -72,7 +71,15 @@
       date: e.date || "",
       title: e.title || "",
       meta: e.meta || "",
+      person: e.person || "",
+      photo: e.photo || "",
     };
+  }
+
+  function pickPhoto(p){
+    // try a few likely keys; fall back to your placeholder
+    const raw = p.photo || p.photo_url || p.image || p.avatar || "";
+    return raw || "/static/img/placeholder-avatar.png";
   }
 
   function buildEvents(tree){
@@ -83,6 +90,7 @@
       const name = p.name || "";
       const born = p.born || "";
       const died = p.died || "";
+      const photo = pickPhoto(p);
 
       const loc = p.location || {};
       const where = [loc.city, loc.region, loc.country].filter(Boolean).join(", ");
@@ -91,8 +99,10 @@
         ev.push(normalize({
           type: "birth",
           date: born,
-          title: `Birth: ${name}`,
-          meta: where ? `Born in ${where}` : ""
+          title: name,
+          meta: where ? `Born in ${where}` : "Born",
+          person: name,
+          photo,
         }));
       }
 
@@ -101,95 +111,251 @@
         ev.push(normalize({
           type: "death",
           date: died,
-          title: `Death: ${name}`,
-          meta: (age != null) ? `Age ${age}` : ""
+          title: name,
+          meta: (age != null) ? `Died • Age ${age}` : "Died",
+          person: name,
+          photo,
         }));
       }
 
-      // Optional custom per-person events later:
-      // p.events = [{type,date,title,meta}]
+      // Optional custom per-person events:
+      // p.events = [{type,date,title,meta,where,photo?}]
       if (Array.isArray(p.events)) {
         for (const ce of p.events) {
           ev.push(normalize({
             type: ce.type || "other",
             date: ce.date || "",
-            title: ce.title || `${(ce.type||"Event")}: ${name}`,
-            meta: ce.meta || ce.where || ""
+            title: (ce.title && ce.title !== "") ? ce.title : name,
+            meta: ce.meta || ce.where || "",
+            person: name,
+            photo: ce.photo || photo,
           }));
         }
       }
     }
 
-    // newest first
-    ev.sort((a,b) => (safeDate(b.date)?.getTime() ?? -Infinity) - (safeDate(a.date)?.getTime() ?? -Infinity));
+    // OLD -> NEW (forward in time)
+    ev.sort((a,b) => (safeDate(a.date)?.getTime() ?? Infinity) - (safeDate(b.date)?.getTime() ?? Infinity));
     return ev;
   }
 
   function matches(e){
     if (activeType !== "all" && e.type !== activeType) return false;
     if (!q) return true;
-    const hay = `${e.title} ${e.meta} ${e.type} ${e.date}`.toLowerCase();
+    const hay = `${e.title} ${e.person} ${e.meta} ${e.type} ${e.date}`.toLowerCase();
     return hay.includes(q);
   }
 
-  function groupByYear(events){
-    const m = new Map();
-    for (const e of events){
-      const y = getYear(e.date);
-      if (!m.has(y)) m.set(y, []);
-      m.get(y).push(e);
+  // --- serpentine layout helpers ---
+  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+  const px = (v) => `${Math.round(v)}px`;
+
+  function computeAutoCols(containerWidth, cardW, gapX, paddingX){
+    const usable = containerWidth - paddingX * 2;
+    const cols = Math.floor((usable + gapX) / (cardW + gapX));
+    return clamp(cols, 1, 6);
+  }
+
+  function curveBetween(x1, y1, x2, y2){
+    const dx = Math.abs(x2 - x1);
+    const pull = clamp(dx * 0.35, 40, 150);
+    return `C ${x1 + (x2>x1? pull : -pull)} ${y1},
+             ${x2 - (x2>x1? pull : -pull)} ${y2},
+             ${x2} ${y2}`;
+  }
+
+function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
+  // x1,y1 and x2,y2 are CENTER points of cards
+  // dir is direction of the row we’re leaving: +1 means L->R, -1 means R->L
+  // We exit from the side edge of the leaving card, go straight down,
+  // then turn and enter the next card from its side edge.
+
+  const startX = x1 + dir * (cardW / 2 + edgeOut);       // exit from side of leaving card
+  const endDir = -dir;                                   // next row runs opposite direction
+  const endX   = x2 + endDir * (cardW / 2 + edgeOut);    // approach side of next card
+
+  // Vertical “drop” ends a bit above y2 so the elbow is clean
+  const dropY = y2 - r;
+
+  // Corner math: we’ll do a single rounded elbow using a cubic
+  // from vertical segment into horizontal segment.
+  const k = 0.55228475 * r; // circle-to-cubic constant
+
+  // Path:
+  // - curve from center to startX on same y (keeps smooth into the side exit)
+  // - straight down
+  // - rounded corner into horizontal
+  // - straight horizontal toward endX
+  // - curve from endX into the next node center
+  return [
+    curveBetween(x1, y1, startX, y1),
+    `L ${startX} ${dropY}`,
+    // rounded elbow: vertical -> horizontal (towards endX)
+    `C ${startX} ${dropY + k},
+       ${startX + (endX > startX ? k : -k)} ${y2},
+       ${startX + (endX > startX ? r : -r)} ${y2}`,
+    `L ${endX} ${y2}`,
+    curveBetween(endX, y2, x2, y2)
+  ].join(" ");
+}
+
+  function renderCards(model){
+    if (!cardsWrap) return;
+    cardsWrap.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    for (const e of model){
+      const card = document.createElement("article");
+      card.className = "tlSCard";
+      card.dataset.type = e.type;
+
+      const photo = document.createElement("div");
+      photo.className = "tlSPhoto";
+      photo.style.backgroundImage = `url("${e.photo}")`;
+
+      const body = document.createElement("div");
+      body.className = "tlSBody";
+
+      const top = document.createElement("div");
+      top.className = "tlSTop";
+      top.innerHTML = `
+        <div class="tlSDate">${escapeHtml(fmtDate(e.date))}</div>
+        <div class="tlSType tlSType--${escapeHtml(e.type)}">${escapeHtml(e.type.toUpperCase())}</div>
+      `;
+
+      const name = document.createElement("div");
+      name.className = "tlSName";
+      name.textContent = e.title || e.person || "Event";
+
+      const meta = document.createElement("div");
+      meta.className = "tlSMeta";
+      meta.textContent = e.meta || "";
+
+      body.append(top, name, meta);
+      card.append(photo, body);
+      frag.appendChild(card);
     }
-    const years = Array.from(m.keys()).sort((a,b) => {
-      if (a === "Unknown") return 1;
-      if (b === "Unknown") return -1;
-      return Number(b) - Number(a);
+
+    cardsWrap.appendChild(frag);
+  }
+
+  function layoutAndDraw(){
+    if (!root || !svg || !cardsWrap) return;
+
+    const density = densitySel?.value || "airy";
+    root.setAttribute("data-density", density);
+
+    const containerW = root.clientWidth;
+    const isMobile = containerW < 640;
+
+    const cardW = isMobile ? Math.min(360, containerW - 36) : ((density === "airy") ? 430 : 385);
+    const cardH = isMobile ? 118 : ((density === "airy") ? 132 : 122);
+    const edgeOut = 26;   // how far the line exits past the card edge
+    const elbowR  = 26;   // corner roundness for the 90° turn
+
+    const gapX  = isMobile ? 30  : ((density === "airy") ? 110 : 88);// tighter horizontally
+    const gapY  = isMobile ? 70  : ((density === "airy") ? 150 : 128); // less vertical gap
+
+    const padX  = isMobile ? 18  : ((density === "airy") ? 88 : 70);
+    const padY  = isMobile ? 18  : ((density === "airy") ? 62 : 52); // less top/bottom padding
+
+    let cols;
+    if (isMobile) {
+      cols = 1;
+    } else {
+      cols = colsSel?.value || "auto";
+      cols = (cols === "auto")
+        ? computeAutoCols(containerW, cardW, gapX, padX)
+        : parseInt(cols, 10);
+      cols = clamp(cols || 3, 1, 6);
+      if (containerW < 720) cols = clamp(cols, 1, 2);
+    }
+
+    cols = clamp(cols || 3, 1, 6);
+
+    if (containerW < 720) cols = clamp(cols, 1, 2);
+
+    cardsWrap.style.setProperty("--tl-card-w", px(cardW));
+    cardsWrap.style.setProperty("--tl-card-h", px(cardH));
+    cardsWrap.style.setProperty("--tl-gap-x", px(gapX));
+    cardsWrap.style.setProperty("--tl-gap-y", px(gapY));
+    cardsWrap.style.setProperty("--tl-pad-x", px(padX));
+    cardsWrap.style.setProperty("--tl-pad-y", px(padY));
+    cardsWrap.style.setProperty("--tl-cols", cols);
+
+    const cards = Array.from(cardsWrap.querySelectorAll(".tlSCard"));
+
+    const centers = [];
+    for (let i = 0; i < cards.length; i++){
+      const row = Math.floor(i / cols);
+      const pos = i % cols;
+      const dir = (row % 2 === 0) ? 1 : -1;
+      const col = (dir === 1) ? pos : (cols - 1 - pos);
+
+      const x = padX + col * (cardW + gapX) + cardW/2;
+      const y = padY + row * (cardH + gapY) + cardH/2;
+
+      cards[i].style.transform = `translate(${px(x - cardW/2)}, ${px(y - cardH/2)})`;
+
+      centers.push({ x, y, row, dir });
+    }
+
+    const rows = Math.max(1, Math.ceil(cards.length / cols));
+    const totalH = padY*2 + rows*cardH + (rows-1)*gapY;
+    root.style.height = px(totalH);
+
+    svg.setAttribute("width", containerW);
+    svg.setAttribute("height", totalH);
+    svg.setAttribute("viewBox", `0 0 ${containerW} ${totalH}`);
+    svg.innerHTML = "";
+
+    if (centers.length < 2) return;
+
+    let d = `M ${centers[0].x} ${centers[0].y} `;
+    for (let i = 0; i < centers.length - 1; i++){
+      const a = centers[i];
+      const b = centers[i+1];
+      if (a.row === b.row){
+        d += curveBetween(a.x, a.y, b.x, b.y) + " ";
+      } else {
+        d += uTurn(a.x, a.y, b.x, b.y, a.dir, cardW, edgeOut, elbowR) + " ";
+      }
+
+    }
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d.trim());
+    path.setAttribute("class", "tlSPath");
+
+    const dots = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    dots.setAttribute("class", "tlSDots");
+    centers.forEach((p) => {
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", p.x);
+      c.setAttribute("cy", p.y);
+      c.setAttribute("r", isMobile ? 4 : 5);
+      dots.appendChild(c);
     });
-    return years.map(y => ({ year:y, items:m.get(y) }));
+
+    svg.appendChild(path);
+    svg.appendChild(dots);
   }
 
   function render(){
-    elList.innerHTML = "";
     const filtered = allEvents.filter(matches);
 
     if (!filtered.length) {
       setStatus("No matching events.");
+      if (cardsWrap) cardsWrap.innerHTML = "";
+      if (svg) svg.innerHTML = "";
+      if (root) root.style.height = "0px";
       return;
     }
 
-    setStatus(`${filtered.length} event${filtered.length === 1 ? "" : "s"}`);
+    setStatus(`${filtered.length} event${filtered.length === 1 ? "" : "s"} • oldest → newest`);
 
-    const groups = groupByYear(filtered);
-    const frag = document.createDocumentFragment();
-
-    for (const g of groups){
-      const yearWrap = document.createElement("div");
-      yearWrap.className = "tlYear";
-      yearWrap.innerHTML = `
-        <div class="tlYear__head">
-          <div class="tlYear__label">${escapeHtml(g.year)}</div>
-          <div class="tlYear__rule"></div>
-        </div>
-      `;
-
-      for (const e of g.items){
-        const icon = ICON[e.type] || ICON.other;
-        const card = document.createElement("div");
-        card.className = "tlItem";
-        card.innerHTML = `
-          <div class="tlIcon" aria-hidden="true">${icon}</div>
-          <div class="tlMain">
-            <h3 class="tlTitle">${escapeHtml(e.title)}</h3>
-            <div class="tlMeta">${escapeHtml([fmtDate(e.date), e.meta].filter(Boolean).join(" • "))}</div>
-            <div class="tlTag">${escapeHtml((e.type || "other").toUpperCase())}</div>
-          </div>
-        `;
-        yearWrap.appendChild(card);
-      }
-
-      frag.appendChild(yearWrap);
-    }
-
-    elList.appendChild(frag);
+    renderCards(filtered);
+    layoutAndDraw();
   }
 
   function setActiveChip(type){
@@ -199,7 +365,17 @@
   }
 
   chips.forEach(c => c.addEventListener("click", () => setActiveChip(c.dataset.type)));
-  elSearch.addEventListener("input", (e) => { q = e.target.value.trim().toLowerCase(); render(); });
+  if (elSearch) elSearch.addEventListener("input", (e) => { q = e.target.value.trim().toLowerCase(); render(); });
+
+  if (densitySel) densitySel.addEventListener("change", () => render());
+  if (colsSel) colsSel.addEventListener("change", () => render());
+
+  // Resize: only re-layout (avoid rebuilding cards)
+  let raf = 0;
+  window.addEventListener("resize", () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => layoutAndDraw());
+  });
 
   async function load(){
     try{
@@ -212,7 +388,8 @@
     } catch (err){
       console.error(err);
       setStatus("Couldn’t load timeline. (Check console.)");
-      elList.innerHTML = "";
+      if (cardsWrap) cardsWrap.innerHTML = "";
+      if (svg) svg.innerHTML = "";
     }
   }
 

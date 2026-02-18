@@ -3,78 +3,91 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>LineAgeMap</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <title>LineAgeMap — Tree</title>
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- Base app styles (includes topbar styles) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+    <!-- Optional: page-specific tree styles if you have them -->
+    {% if (config and config.get('TREE_CSS')) %}
+    <link rel="stylesheet" href="{{ url_for('static', filename=config.get('TREE_CSS')) }}" />
+    {% endif %}
   </head>
 
-<body class="app">
-
-    <!-- Header -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <nav class="topbar-links" aria-label="Primary">
-        <a class="is-active" href="{{ url_for('tree_view') }}">Tree</a>
-        <a  href="{{ url_for('map_view') }}">Map</a>
-        <a  href="{{ url_for('timeline_view') }}">Timeline</a>
-      </nav>
-
-      <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-        <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt="" aria-hidden="true" />
-        <div class="logo">LineAgeMap</div>
-      </a>
-
-      <div class="topbar-right" aria-label="Actions">
-        <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 11.5l9-8 9 8" />
-            <path d="M6.5 10.5V20h11V10.5" />
-          </svg>
-        </a>
-
-        <button class="menu-btn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel">
-          <span class="menu-icon" aria-hidden="true"></span>
-          <span class="sr-only">Menu</span>
-        </button>
-
-        <div class="menu-panel" id="navpanel" role="navigation" aria-label="Mobile menu">
-          <a href="{{ url_for('tree_view') }}">Tree</a>
+  <body class="app">
+    <!-- Header / Nav -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <nav class="topbar-links" aria-label="Primary">
+          <a class="is-active" href="{{ url_for('tree_view') }}">Tree</a>
           <a href="{{ url_for('map_view') }}">Map</a>
           <a href="{{ url_for('timeline_view') }}">Timeline</a>
+        </nav>
+
+        <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+          <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt aria-hidden="true" />
+          <div class="logo">LineAgeMap</div>
+        </a>
+
+        <div class="topbar-right" aria-label="Actions">
+          <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 11.5l9-8 9 8" />
+              <path d="M6.5 10.5V20h11V10.5" />
+            </svg>
+          </a>
+
+          <button class="menu-btn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel">
+            <span class="menu-icon" aria-hidden="true"></span>
+            <span class="sr-only">Menu</span>
+          </button>
+
+          <div class="menu-panel" id="navpanel" role="navigation" aria-label="Mobile menu">
+            <a href="{{ url_for('tree_view') }}">Tree</a>
+            <a href="{{ url_for('map_view') }}">Map</a>
+            <a href="{{ url_for('timeline_view') }}">Timeline</a>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-      <main>
-        <div id="canvas">
+    <main class="container">
+      <!-- Tree canvas -->
+      <section class="treeShell" aria-label="Family Tree">
+        <div id="canvas" class="treeCanvas">
           <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
-          <svg id="treeSvg"></svg>
+          <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
         </div>
+      </section>
 
-        <section id="contact" class="footer">
-          <div class="foot-inner">
-            <div class="foot-left">
-              <div class="foot-brand">LineAgeMap</div>
-              <div class="foot-sub">Simple. Nostalgic. Shareable.</div>
-            </div>
-            <div class="foot-right">
-              <span>© <span id="year"></span></span>
-            </div>
+      <!-- Footer -->
+      <footer class="footer" id="contact">
+        <div class="foot-inner">
+          <div class="foot-left">
+            <div class="foot-brand">LineAgeMap</div>
+            <div class="foot-sub">Simple. Nostalgic. Shareable.</div>
           </div>
-        </section>
-      </main>
+          <div class="foot-right">
+            <span>© <span id="year"></span></span>
+          </div>
+        </div>
+      </footer>
+    </main>
 
-      <!-- Dagre MUST load before tree.js (tree.js reads window.dagre) -->
-      <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+    <!-- Scripts (order matters) -->
+    <script>
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+    </script>
 
-      <!-- tree.js uses ES module imports -->
-      <script type="module" src="/static/js/tree.js"></script>
-      <script>
-        document.getElementById("year").textContent = String(new Date().getFullYear());
-      </script>
-    </div>
+    <!-- Mobile nav behavior -->
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 
-    <script src="/static/js/nav.js"></script>
-</body>
+    <!-- Dagre MUST load before tree.js (tree.js reads window.dagre) -->
+    <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+
+    <!-- Tree page logic (ES module imports) -->
+    <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+  </body>
 </html>

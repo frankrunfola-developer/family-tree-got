@@ -73,10 +73,37 @@
         </div>
       </header>
 
-      <section class="tlWrap">
-        <div id="tlStatus" class="tlStatus">Loading timeline…</div>
-        <div id="tlList" class="tlList" aria-live="polite"></div>
-      </section>
+      <section class="tlWrap tlWrap--snake">
+  <div class="tlStatusRow">
+    <div id="tlStatus" class="tlStatus">Loading timeline…</div>
+
+    <div class="tlSnakeControls" aria-label="Timeline layout controls">
+      <label class="tlLabel">
+        Density
+        <select id="tlDensity" class="tlSelect">
+          <option value="airy" selected>Airy</option>
+          <option value="cozy">Cozy</option>
+        </select>
+      </label>
+      <label class="tlLabel">
+        Cards/row
+        <select id="tlCols" class="tlSelect">
+          <option value="auto" selected>Auto</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div id="tlSnakeRoot" class="tlSnakeRoot" data-density="airy">
+    <svg id="tlSnakeSvg" class="tlSnakeSvg" aria-hidden="true"></svg>
+    <div id="tlSnakeCards" class="tlSnakeCards" aria-live="polite"></div>
+  </div>
+</section>
+
     </main>
 
     <script>
