@@ -683,3 +683,45 @@ main{ padding: 10px var(--page-pad) 22px; max-width: var(--content-max); margin:
 @media (max-width: 760px){
   .topbar-links{ display:none; }
 }
+
+/* =========================================================
+   Topbar alignment (icon left, title centered, actions right)
+   ========================================================= */
+.topbar-inner{
+  grid-template-columns: auto 1fr auto;
+}
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  justify-self:start;
+}
+.brandIcon{
+  display:inline-flex;
+  align-items:center;
+  text-decoration:none;
+}
+.brandTitle{
+  justify-self:center;
+  text-decoration:none;
+  color:inherit;
+  font-family: var(--serif);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-size: clamp(22px, 3.2vw, 34px);
+  line-height: 1.1;
+  text-align:center;
+}
+.topbar-links{
+  display:flex;
+  gap: 8px;
+  align-items:center;
+}
+
+/* hide the inline links earlier on small screens (hamburger handles it) */
+@media (max-width: 720px){
+  .topbar-links{ display:none; }
+  .topbar-left{ gap: 8px; }
+  .brandMark{ width:42px; height:42px; }
+  .brandTitle{ font-size: 22px; }
+}

@@ -1,21 +1,19 @@
 <header class="topbar" role="banner">
   <div class="topbar-inner topbar-pro">
-    <!-- Left: primary nav -->
-    <nav class="topnav" aria-label="Primary">
-      <a class="topnav-link" href="{{ url_for('tree_view') }}">Tree</a>
-      <a class="topnav-link" href="{{ url_for('map_view') }}">Map</a>
-      <a class="topnav-link" href="{{ url_for('timeline_view') }}">Timeline</a>
-    </nav>
+    <div class="topbar-left">
+      <a class="brandIcon" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+        <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt="" aria-hidden="true" />
+      </a>
 
-    <!-- Center: brand -->
-    <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-      <span class="brandMark" aria-hidden="true">
-        <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="" />
-      </span>
-      <span class="logo">LineAgeMap</span>
-    </a>
+      <nav class="topnav" aria-label="Primary">
+        <a class="topnav-link" href="{{ url_for('tree_view') }}">Tree</a>
+        <a class="topnav-link" href="{{ url_for('map_view') }}">Map</a>
+        <a class="topnav-link" href="{{ url_for('timeline_view') }}">Timeline</a>
+      </nav>
+    </div>
 
-    <!-- Right: actions -->
+    <a class="brandTitle" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">LineAgeMap</a>
+
     <div class="topbar-right" aria-label="Actions">
       <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -24,17 +22,15 @@
         </svg>
       </a>
 
-      <button class="navbtn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel">
+      <button class="navbtn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel" aria-label="Menu">
         <span class="navbtn-bars" aria-hidden="true"></span>
-        <span class="sr-only">Menu</span>
       </button>
     </div>
   </div>
 
-  <!-- Mobile panel -->
-  <div class="topnav-panel" id="navpanel" role="navigation" aria-label="Mobile">
-    <a class="topnav-link" href="{{ url_for('tree_view') }}">Tree</a>
-    <a class="topnav-link" href="{{ url_for('map_view') }}">Map</a>
-    <a class="topnav-link" href="{{ url_for('timeline_view') }}">Timeline</a>
+  <div class="topnav-panel" id="navpanel" hidden>
+    <a href="{{ url_for('tree_view') }}">Tree</a>
+    <a href="{{ url_for('map_view') }}">Map</a>
+    <a href="{{ url_for('timeline_view') }}">Timeline</a>
   </div>
 </header>

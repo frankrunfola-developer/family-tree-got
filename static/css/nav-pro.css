@@ -138,3 +138,46 @@
   .navbtn{ display:inline-grid; place-items:center; }
   .topbar-pro{ grid-template-columns: 1fr auto 1fr; }
 }
+
+/* =========================================================
+   Navbar alignment (icon left, title centered, actions right)
+   ========================================================= */
+
+.topbar-pro{
+  grid-template-columns: auto 1fr auto;
+}
+
+.brandIcon{
+  justify-self:start;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+}
+
+.brandTitle{
+  justify-self:center;
+  text-decoration:none;
+  color: rgba(40, 32, 24, 0.92);
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-size: clamp(22px, 3.2vw, 34px);
+  line-height: 1.1;
+  text-align:center;
+}
+
+.brandIcon .brandMark{
+  width: 52px;
+  height: 52px;
+}
+.brandIcon .brandMark img{
+  width: 34px;
+  height: 34px;
+}
+
+/* Center filters row + tighten chips on small screens */
+@media (max-width: 520px){
+  .topbar-pro{ padding: 8px 12px; }
+  .brandIcon .brandMark{ width:44px; height:44px; }
+  .brandIcon .brandMark img{ width:28px; height:28px; }
+}

@@ -39,7 +39,7 @@
       "name": "Indranil Gupta",
       "born": "1956",
       "photo": "/static/uploads/gupta/indranil.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
     },
     {
       "id": "sharmistha",
@@ -84,14 +84,14 @@
       "name": "Rohini Runfola",
       "born": "1988",
       "photo": "/static/uploads/gupta/rohini.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
     },
     {
       "id": "frank",
       "name": "Frank Runfola",
       "born": "1987",
       "photo": "/static/uploads/gupta/frank.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
     },
 
     {
@@ -99,14 +99,14 @@
       "name": "Caleb Runfola",
       "born": "2016",
       "photo": "/static/uploads/gupta/caleb.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
     },
     {
       "id": "adalina",
       "name": "Adalina Runfola",
       "born": "2018",
       "photo": "/static/uploads/gupta/adalina.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
     },
 
     {
@@ -188,5 +188,155 @@
 
     { "child": "maahir", "parent": "nayantara" },
     { "child": "maahir", "parent": "shailesh" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1919_paresh_nilima_marriage",
+      "type": "marriage",
+      "date": "1919-02-14",
+      "people": ["paresh", "nilima"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+    {
+      "id": "evt_1955_prosun_dipali_marriage",
+      "type": "marriage",
+      "date": "1955-11-20",
+      "people": ["prosun", "dipali"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+    {
+      "id": "evt_1984_rumjhum_vinayak_marriage",
+      "type": "marriage",
+      "date": "1984-12-02",
+      "people": ["rumjhum", "vinayak"],
+      "location": { "city": "Bengaluru", "region": "Karnataka", "country": "India", "lat": 12.9716, "lng": 77.5946 },
+      "description": "Married in Bengaluru."
+    },
+    {
+      "id": "evt_1985_indranil_sharmistha_marriage",
+      "type": "marriage",
+      "date": "1985-08-18",
+      "people": ["indranil", "sharmistha"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 },
+      "description": "Married in London."
+    },
+    {
+      "id": "evt_1988_indrajit_nanda_marriage",
+      "type": "marriage",
+      "date": "1988-09-10",
+      "people": ["indrajit", "nanda"],
+      "location": { "city": "Seattle", "region": "WA", "country": "USA", "lat": 47.6062, "lng": -122.3321 },
+      "description": "Married in Seattle."
+    },
+    {
+      "id": "evt_2012_rohini_frank_marriage",
+      "type": "marriage",
+      "date": "2012-10-06",
+      "people": ["rohini", "frank"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Married in New York City."
+    },
+    {
+      "id": "evt_2015_nayantara_shailesh_marriage",
+      "type": "marriage",
+      "date": "2015-01-24",
+      "people": ["nayantara", "shailesh"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+
+    {
+      "id": "evt_1982_indranil_move_delhi",
+      "type": "move",
+      "date": "1982-06-01",
+      "people": ["indranil"],
+      "location": { "city": "New Delhi", "region": "Delhi", "country": "India", "lat": 28.6139, "lng": 77.209 },
+      "description": "Relocation for work."
+    },
+    {
+      "id": "evt_1987_indranil_move_nyc",
+      "type": "move",
+      "date": "1987-03-01",
+      "people": ["indranil"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "International relocation."
+    },
+    {
+      "id": "evt_1994_indrajit_move_sf",
+      "type": "move",
+      "date": "1994-05-01",
+      "people": ["indrajit"],
+      "location": { "city": "San Francisco", "region": "CA", "country": "USA", "lat": 37.7749, "lng": -122.4194 },
+      "description": "West coast relocation."
+    },
+    {
+      "id": "evt_2006_sharmistha_move_manchester",
+      "type": "move",
+      "date": "2006-09-01",
+      "people": ["sharmistha"],
+      "location": { "city": "Manchester", "region": "England", "country": "UK", "lat": 53.4808, "lng": -2.2426 },
+      "description": "Move within England."
+    },
+    {
+      "id": "evt_2002_atreyee_move_toronto",
+      "type": "move",
+      "date": "2002-08-01",
+      "people": ["atreyee"],
+      "location": { "city": "Toronto", "region": "ON", "country": "Canada", "lat": 43.6532, "lng": -79.3832 },
+      "description": "Move to Toronto."
+    },
+
+    {
+      "id": "evt_1970_paresh_death_kolkata",
+      "type": "death",
+      "date": "1970-01-01",
+      "people": ["paresh"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_1999_nilima_death_kolkata",
+      "type": "death",
+      "date": "1999-01-01",
+      "people": ["nilima"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_2015_prosun_death_kolkata",
+      "type": "death",
+      "date": "2015-01-01",
+      "people": ["prosun"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_2019_dipali_death_kolkata",
+      "type": "death",
+      "date": "2019-01-01",
+      "people": ["dipali"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+
+    {
+      "id": "evt_2016_caleb_birth_nyc",
+      "type": "birth",
+      "date": "2016-04-01",
+      "people": ["caleb"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Born in NYC."
+    },
+    {
+      "id": "evt_2018_adalina_birth_nyc",
+      "type": "birth",
+      "date": "2018-09-01",
+      "people": ["adalina"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Born in NYC."
+    }
   ]
 }

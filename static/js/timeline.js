@@ -14,10 +14,12 @@
   const cardsWrap = document.getElementById("tlSnakeCards");
   const densitySel = document.getElementById("tlDensity");
   const colsSel = document.getElementById("tlCols");
+  const sortBtn = document.getElementById("tlSort");
 
   let allEvents = [];
   let activeType = "all";
   let q = "";
+  let sortOrder = (sortBtn?.dataset.order === "desc") ? "desc" : "asc";
 
   function setStatus(msg){ if (elStatus) elStatus.textContent = msg || ""; }
 
@@ -82,18 +84,89 @@
     return raw || "/static/img/placeholder-avatar.png";
   }
 
+  function getPersonById(people, id){
+    return people.find(p => String(p.id || "").toLowerCase() === String(id || "").toLowerCase());
+  }
+
+  function prettyWhere(loc){
+    if (!loc) return "";
+    const s = [loc.city, loc.region, loc.country].filter(Boolean).join(", ");
+    return s;
+  }
+
   function buildEvents(tree){
     const people = Array.isArray(tree.people) ? tree.people : [];
     const ev = [];
 
+    // Index helpers
+    const byId = new Map();
+    for (const p of people){
+      if (p?.id) byId.set(String(p.id).toLowerCase(), p);
+    }
+
+    // --- 1) Root-level explicit events (recommended) ---
+    // schema: tree.events = [{id,type,date,title,people:[ids],location:{...},description?,meta?}]
+    if (Array.isArray(tree.events)){
+      for (const e of tree.events){
+        const type = e.type || "other";
+        const date = e.date || "";
+        const loc  = e.location || {};
+        const where = prettyWhere(loc);
+
+        // Resolve people ids -> names + choose a representative photo
+        const ids = Array.isArray(e.people) ? e.people : [];
+        const persons = ids
+          .map(pid => byId.get(String(pid).toLowerCase()))
+          .filter(Boolean);
+
+        const names = persons.map(p => p.name).filter(Boolean);
+        const personLabel = names.join(" & ") || (e.person || "");
+        const photo = (persons[0] ? pickPhoto(persons[0]) : (e.photo || ""));
+
+        // Sensible default title if not provided
+        let title = e.title || "";
+        if (!title){
+          if (type === "marriage" && names.length >= 2) title = `Marriage of ${names[0]} & ${names[1]}`;
+          else if (type === "move" && names.length >= 1) title = `${names[0]} moves`;
+          else if (type === "birth" && names.length >= 1) title = names[0];
+          else if (type === "death" && names.length >= 1) title = names[0];
+          else title = personLabel || "Event";
+        }
+
+        // Meta line (subtle descriptive line)
+        const meta =
+          e.meta ||
+          e.description ||
+          (type === "marriage"
+            ? (where ? `Married in ${where}` : "Marriage")
+            : type === "move"
+              ? (where ? `Moved to ${where}` : "Move")
+              : type === "birth"
+                ? (where ? `Born in ${where}` : "Born")
+                : type === "death"
+                  ? (where ? `Died in ${where}` : "Died")
+                  : (where || ""));
+
+        ev.push(normalize({
+          id: e.id,
+          type,
+          date,
+          title,
+          meta,
+          person: personLabel,
+          photo: e.photo || photo,
+        }));
+      }
+    }
+
+    // --- 2) Derived per-person birth/death + per-person custom events ---
     for (const p of people) {
       const name = p.name || "";
       const born = p.born || "";
       const died = p.died || "";
       const photo = pickPhoto(p);
 
-      const loc = p.location || {};
-      const where = [loc.city, loc.region, loc.country].filter(Boolean).join(", ");
+      const where = prettyWhere(p.location);
 
       if (born) {
         ev.push(normalize({
@@ -119,14 +192,17 @@
       }
 
       // Optional custom per-person events:
-      // p.events = [{type,date,title,meta,where,photo?}]
+      // p.events = [{type,date,title,meta,where,photo?,location?}]
       if (Array.isArray(p.events)) {
         for (const ce of p.events) {
+          const loc = ce.location || null;
+          const where2 = ce.where || prettyWhere(loc);
+
           ev.push(normalize({
             type: ce.type || "other",
             date: ce.date || "",
             title: (ce.title && ce.title !== "") ? ce.title : name,
-            meta: ce.meta || ce.where || "",
+            meta: ce.meta || where2 || "",
             person: name,
             photo: ce.photo || photo,
           }));
@@ -134,10 +210,23 @@
       }
     }
 
-    // OLD -> NEW (forward in time)
+    // Old -> New default
     ev.sort((a,b) => (safeDate(a.date)?.getTime() ?? Infinity) - (safeDate(b.date)?.getTime() ?? Infinity));
-    return ev;
+
+    // Optional: de-dupe if you end up with repeats
+    // (same type + date + title)
+    const seen = new Set();
+    const out = [];
+    for (const e of ev){
+      const key = `${e.type}|${fmtDate(e.date)}|${e.title}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(e);
+    }
+
+    return out;
   }
+
 
   function matches(e){
     if (activeType !== "all" && e.type !== activeType) return false;
@@ -248,16 +337,32 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
     const containerW = root.clientWidth;
     const isMobile = containerW < 640;
 
-    const cardW = isMobile ? Math.min(360, containerW - 36) : ((density === "airy") ? 430 : 385);
-    const cardH = isMobile ? 118 : ((density === "airy") ? 132 : 122);
-    const edgeOut = 26;   // how far the line exits past the card edge
-    const elbowR  = 26;   // corner roundness for the 90° turn
+    // --- sizing ---
+    // Goal: tighter nodes + less empty space while keeping the “one-way snake” readable.
+    const mobileScale = 0.70; // ~30% smaller on phones
 
-    const gapX  = isMobile ? 30  : ((density === "airy") ? 110 : 88);// tighter horizontally
-    const gapY  = isMobile ? 70  : ((density === "airy") ? 150 : 128); // less vertical gap
+    const baseCardW = (density === "airy") ? 320 : 290;
+    const baseCardH = (density === "airy") ? 108 : 100;
 
-    const padX  = isMobile ? 18  : ((density === "airy") ? 88 : 70);
-    const padY  = isMobile ? 18  : ((density === "airy") ? 62 : 52); // less top/bottom padding
+    const cardW = isMobile ? Math.round((Math.min(360, containerW - 28)) * mobileScale) : baseCardW;
+    const cardH = isMobile ? Math.round(112 * mobileScale) : baseCardH;
+
+    // how far the line exits past the card edge, and elbow roundness for the 90° turn
+    const edgeOut = isMobile ? Math.round(26 * mobileScale) : 24;
+    const elbowR  = isMobile ? Math.round(18 * mobileScale) : 18;
+
+    const baseGapX = (density === "airy") ? 70 : 60;
+    // vertical breathing room between rows (tighter than before)
+    const baseGapY = (density === "airy") ? 84 : 72;
+
+    const gapX  = isMobile ? Math.round(34 * mobileScale) : baseGapX;
+    const gapY  = isMobile ? Math.round(56 * mobileScale) : baseGapY;
+
+    const basePadX = (density === "airy") ? 70 : 58;
+    const basePadY = (density === "airy") ? 54 : 46;
+
+    const padX  = isMobile ? Math.round(18 * mobileScale) : basePadX;
+    const padY  = isMobile ? Math.round(18 * mobileScale) : basePadY;
 
     let cols;
     if (isMobile) {
@@ -292,7 +397,10 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
       const dir = (row % 2 === 0) ? 1 : -1;
       const col = (dir === 1) ? pos : (cols - 1 - pos);
 
-      const x = padX + col * (cardW + gapX) + cardW/2;
+      const contentW = cols * cardW + (cols - 1) * gapX;
+      const startX = Math.max(12, Math.round((containerW - contentW) / 2));
+
+      const x = startX + col * (cardW + gapX) + cardW/2;
       const y = padY + row * (cardH + gapY) + cardH/2;
 
       cards[i].style.transform = `translate(${px(x - cardW/2)}, ${px(y - cardH/2)})`;
@@ -323,6 +431,12 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
 
     }
 
+    // Extend the tail past the final node a bit (so the line clearly exits the last card)
+    const last = centers[centers.length - 1];
+    const endExtra = isMobile ? Math.round(38 * mobileScale) : 34;
+    const tailX = last.x + last.dir * (cardW / 2 + edgeOut + endExtra);
+    d += curveBetween(last.x, last.y, tailX, last.y) + " ";
+
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", d.trim());
     path.setAttribute("class", "tlSPath");
@@ -342,7 +456,10 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
   }
 
   function render(){
-    const filtered = allEvents.filter(matches);
+    let filtered = allEvents.filter(matches);
+
+    // Apply sort order (default asc = oldest -> newest)
+    if (sortOrder === "desc") filtered = filtered.slice().reverse();
 
     if (!filtered.length) {
       setStatus("No matching events.");
@@ -352,7 +469,7 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
       return;
     }
 
-    setStatus(`${filtered.length} event${filtered.length === 1 ? "" : "s"} • oldest → newest`);
+    setStatus(`${filtered.length} event${filtered.length === 1 ? "" : "s"}`);
 
     renderCards(filtered);
     layoutAndDraw();
@@ -369,6 +486,20 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
 
   if (densitySel) densitySel.addEventListener("change", () => render());
   if (colsSel) colsSel.addEventListener("change", () => render());
+
+  if (sortBtn) {
+    const sync = () => {
+      sortBtn.dataset.order = sortOrder;
+      sortBtn.textContent = (sortOrder === "desc") ? "Desc" : "Asc";
+      sortBtn.setAttribute("aria-pressed", String(sortOrder === "desc"));
+    };
+    sync();
+    sortBtn.addEventListener("click", () => {
+      sortOrder = (sortOrder === "asc") ? "desc" : "asc";
+      sync();
+      render();
+    });
+  }
 
   // Resize: only re-layout (avoid rebuilding cards)
   let raf = 0;

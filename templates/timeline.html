@@ -16,20 +16,18 @@
     <!-- Navbar (matches your nav-pro.css) -->
     <header class="topbar">
       <div class="topbar-pro">
-        <nav class="topnav" aria-label="Primary">
-          <a class="topnav-link" href="{{ url_for('tree_view') }}">Tree</a>
-          <a class="topnav-link" href="{{ url_for('map_view') }}">Map</a>
-          <a class="topnav-link" href="{{ url_for('timeline_view') }}">Timeline</a>
-        </nav>
-
-        <a class="brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+        <!-- Left: brand icon -->
+        <a class="brandIcon" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
           <span class="brandMark">
-            <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt>
+            <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="">
           </span>
-          <div class="logo">LineAgeMap</div>
         </a>
 
-        <div class="topbar-right">
+        <!-- Center: title -->
+        <a class="brandTitle" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">LineAgeMap</a>
+
+        <!-- Right: actions -->
+        <div class="topbar-right" aria-label="Actions">
           <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M3 11.5l9-8 9 8" />
@@ -37,8 +35,7 @@
             </svg>
           </a>
 
-          <!-- replaces the old "Open" button -->
-          <button class="navbtn" id="navBtn" type="button" aria-expanded="false" aria-controls="topnavPanel">
+          <button class="navbtn" id="navBtn" type="button" aria-expanded="false" aria-controls="topnavPanel" aria-label="Menu">
             <span class="navbtn-bars" aria-hidden="true"></span>
           </button>
         </div>
@@ -75,8 +72,6 @@
 
       <section class="tlWrap tlWrap--snake">
   <div class="tlStatusRow">
-    <div id="tlStatus" class="tlStatus">Loading timeline…</div>
-
     <div class="tlSnakeControls" aria-label="Timeline layout controls">
       <label class="tlLabel">
         Density
@@ -95,7 +90,13 @@
           <option value="5">5</option>
         </select>
       </label>
+      <label class="tlLabel">
+        Sort
+        <button id="tlSort" class="tlSelect tlSortBtn" type="button" data-order="asc" aria-label="Sort timeline">Asc</button>
+      </label>
     </div>
+
+    <div id="tlStatus" class="tlStatus">Loading timeline…</div>
   </div>
 
   <div id="tlSnakeRoot" class="tlSnakeRoot" data-density="airy">

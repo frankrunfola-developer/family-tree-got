@@ -20,16 +20,18 @@
     <!-- Header / Nav -->
     <header class="topbar">
       <div class="topbar-inner">
-        <nav class="topbar-links" aria-label="Primary">
-          <a class="is-active" href="{{ url_for('tree_view') }}">Tree</a>
-          <a href="{{ url_for('map_view') }}">Map</a>
-          <a href="{{ url_for('timeline_view') }}">Timeline</a>
-        </nav>
+        <div class="topbar-left">
+          <a class="brandIcon" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+            <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt="" aria-hidden="true" />
+          </a>
+          <nav class="topbar-links" aria-label="Primary">
+            <a class="is-active" href="{{ url_for('tree_view') }}">Tree</a>
+            <a href="{{ url_for('map_view') }}">Map</a>
+            <a href="{{ url_for('timeline_view') }}">Timeline</a>
+          </nav>
+        </div>
 
-        <a class="brand brandCenter" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-          <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt aria-hidden="true" />
-          <div class="logo">LineAgeMap</div>
-        </a>
+        <a class="brandTitle" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">LineAgeMap</a>
 
         <div class="topbar-right" aria-label="Actions">
           <a class="home-btn" href="{{ url_for('index') }}" aria-label="Home">
@@ -39,7 +41,7 @@
             </svg>
           </a>
 
-          <button class="menu-btn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel">
+          <button class="menu-btn" id="navbtn" type="button" aria-expanded="false" aria-controls="navpanel" aria-label="Menu">
             <span class="menu-icon" aria-hidden="true"></span>
             <span class="sr-only">Menu</span>
           </button>
@@ -48,6 +50,7 @@
             <a href="{{ url_for('tree_view') }}">Tree</a>
             <a href="{{ url_for('map_view') }}">Map</a>
             <a href="{{ url_for('timeline_view') }}">Timeline</a>
+            <a href="{{ url_for('index') }}">Home</a>
           </div>
         </div>
       </div>
