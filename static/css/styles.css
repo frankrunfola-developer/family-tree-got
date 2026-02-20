@@ -732,7 +732,7 @@ main{ padding: 10px var(--page-pad) 22px; max-width: var(--content-max); margin:
 @media (max-width: 420px){
   .tileRow{ width: min(520px, 92vw); }
   .navTile{ height: 165px; grid-template-columns: 66px 1fr; padding: 12px 14px; }
-  .navTile img.tileIcon{ width: 44px; height: 44px; }
+  .navTile img.tileIcon{ width: 120px; height: 44px; }
   .tileLabel{ font-size: 22px; }
 }
 

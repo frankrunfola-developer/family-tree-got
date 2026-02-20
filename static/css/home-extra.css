@@ -1,262 +1,266 @@
-/* Home sprigs (extra branches) */
-.homeSprig{position:absolute;width:160px;opacity:.30;pointer-events:none}
-.homeSprig img{width:100%;height:auto;display:block}
-.homeSprig--tl{left:-22px;top:-22px;transform:rotate(-8deg)}
-.homeSprig--br{right:-24px;bottom:-26px;transform:rotate(172deg)}
-.landingHero{position:relative}
-
-/* Tighten the hero typography a bit and give it more breathing room */
-.landingHero{
-  padding-top: 24px;
-  padding-bottom: 8px;
-  gap: 26px;
-  transform: none;
-}
-
-.landingHero h1{
-  font-size: clamp(32px, 4.2vw, 52px);
-}
-
 /* =========================================================
-   Home (auth + previews) — keep the existing look
-   ========================================================= */
+   LineAgeMap — Landing (Marketing) styles
+   Loaded ONLY on the landing page via templates/index.html
+========================================================= */
 
-.landingSub{
-  margin: 10px auto 18px;
-  max-width: 720px;
-  text-align:center;
-  color: var(--ink-2);
-  font-size: 1.02rem;
+:root{
+  --ink: #5b3f2d;
+  --inkSoft: rgba(91,63,45,.92);
+  --rule: rgba(120,88,60,.30);
+  --panel: rgba(255,255,255,.55);
+  --panel2: rgba(255,255,255,.35);
+  --paper: rgba(246,238,226,.55);
+  --shadowA: rgba(60,40,24,.16);
+  --shadowB: rgba(60,40,24,.10);
+  --gold1: #caa462;
+  --gold2: #b28a45;
 }
 
-.authCard{
-  width: min(560px, 92vw);
-  margin: 12px auto 22px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.55);
-  border: 1px solid rgba(120,92,70,.25);
-  box-shadow: 0 10px 24px rgba(60,40,25,.14);
-  overflow: hidden;
+/* Outer wrappers */
+.marketingLanding{
+  padding: 28px 18px 18px;
 }
 
-@media (max-width: 520px){
-  .landingHero{ padding-top: 16px; gap: 18px; }
-  .landingHero h1{ font-size: clamp(24px, 7.5vw, 34px); }
-  .landingSub{ font-size: .98rem; }
+/* Main hero frame */
+.heroFrame{
+  max-width: 1180px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.authTabs{
-  display:flex;
-  gap:0;
-  background: rgba(110,80,58,.18);
-  border-bottom: 1px solid rgba(120,92,70,.18);
+/* Headline */
+.heroTitle{
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  font-size: clamp(34px, 3.4vw, 54px);
+  line-height: 1.06;
+  color: var(--ink);
+  margin: 18px auto 10px;
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 
-.authTab{
-  flex:1;
-  padding: 12px 14px;
-  font-family: inherit;
-  font-size: 1.05rem;
-  color: var(--ink-1);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.authTab.is-active{
-  background: rgba(255,255,255,.55);
-  box-shadow: inset 0 -2px 0 rgba(120,92,70,.35);
-}
-
-.authPanel{display:none;padding: 14px 16px 16px;}
-.authPanel.is-active{display:block;}
-
-.authLabel{
-  display:block;
-  font-weight: 600;
-  color: var(--ink-1);
-  margin: 8px 0 6px;
-}
-
-.authField{
+/* Ornament divider under headline */
+.heroOrnament{
   display:flex;
   align-items:center;
-  gap:10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(120,92,70,.25);
-  background: rgba(255,255,255,.65);
+  justify-content:center;
+  gap:14px;
+  margin: 8px auto 22px;
+  opacity:.85;
+}
+.heroOrnament .line{
+  width:min(260px, 26vw);
+  height:1px;
+  background: linear-gradient(to right,
+    rgba(120,88,60,0),
+    rgba(120,88,60,.55),
+    rgba(120,88,60,0));
+}
+.heroOrnament .glyph{
+  color: rgba(120,88,60,.78);
+  font-size: 18px;
+  transform: translateY(1px);
 }
 
-.authIcon{opacity:.65; width: 22px; text-align:center;}
-
-.authField input{
-  width: 100%;
-  border: none;
-  outline: none;
+/* Remove big container panel behind cards (you asked for this) */
+.featureShell{
   background: transparent;
-  font-size: 1rem;
-  color: var(--ink-1);
+  border: 0;
+  box-shadow: none;
+  padding: 5px;
 }
 
-.authBtn{
-  display:block;
-  width: min(340px, 92%);
-  margin: 14px auto 8px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(120,92,70,.45);
-  background: rgba(160,120,80,.55);
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(60,40,25,.18);
+/* Cards grid */
+.featureGrid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  justify-items: center;
+  margin: 0 auto;
+  max-width: 1120px;
 }
 
-.authBtn:hover{filter: brightness(1.02);}
-
-.authMetaRow{display:flex;justify-content:center;margin-top:6px;}
-.authLink{color: var(--ink-2); text-decoration: underline;}
-.authHint{color: var(--ink-2); font-size: .92rem; text-align:center;}
-
-.authStatus{
-  padding: 10px 14px;
-  border-top: 1px solid rgba(120,92,70,.18);
-  background: rgba(255,255,255,.6);
-  color: var(--ink-1);
-}
-
-.homePreviewRow{
-  width: min(980px, 92vw);
-  margin: 18px auto 8px;
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.homePreviewCard{
-  border-radius: 18px;
-  background: rgba(255,255,255,.50);
-  border: 1px solid rgba(120,92,70,.20);
-  box-shadow: 0 10px 20px rgba(60,40,25,.12);
-  overflow:hidden;
-}
-
-.homePreviewHead{
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(120,92,70,.14);
-}
-
-.homePreviewHead h2{margin:0;font-size:1.22rem;color:var(--ink-1);}
-
-.homePreviewCta{
-  display:block;
-  padding: 10px 14px 14px;
-  text-align:right;
-  color: var(--ink-2);
-  text-decoration:none;
-}
-.homePreviewCta:hover{text-decoration: underline;}
-
-/* --- Tree preview --- */
-.treePreview{position:relative;padding: 10px 14px 6px;}
-.treePreviewRow{display:flex;justify-content:center;gap: 12px;flex-wrap:wrap;}
-.treeNode{
-  width: 88px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.6);
-  border: 1px solid rgba(120,92,70,.18);
-  padding: 8px 8px 6px;
-  text-align:center;
-}
-.nodePhoto{
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(120,92,70,.22);
-  box-shadow: 0 6px 10px rgba(60,40,25,.12);
-}
-.nodeName{margin-top:6px;font-size:.86rem;color:var(--ink-1);font-weight:600;}
-
-.treePreviewLinks{position:relative;height: 22px;margin: 6px 0;}
-.treeLinkStem{
-  position:absolute;left:50%;top:0;transform:translateX(-50%);
-  width:2px;height:22px;background: rgba(120,92,70,.35);
-  border-radius: 2px;
-}
-.treeLinkBar{
-  position:absolute;left: 18%;right: 18%;top: 12px;
-  height:2px;background: rgba(120,92,70,.35);
-  border-radius: 2px;
-}
-
-/* --- Timeline preview --- */
-.timelinePreview{position:relative;padding: 10px 14px 6px;}
-.tlLine{position:absolute;left: 28px;top: 16px;bottom: 16px;width:2px;background: rgba(120,92,70,.32);border-radius:2px;}
-.tlItem{display:flex;align-items:center;gap: 12px;padding: 10px 0;}
-.tlPhoto{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid rgba(120,92,70,.22);background:#fff;}
-.tlText{display:flex;flex-direction:column;gap:2px;}
-.tlName{font-weight:700;color:var(--ink-1);}
-.tlSub{color:var(--ink-2);font-size:.92rem;}
-
-/* Compact timeline preview (used on landing/samples feature cards) */
-.timelinePreview .miniLine{
-  width: 86%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(95,65,46,.32);
-  margin: 16px auto 0;
-}
-
-.timelinePreview .miniAvatarRow{
+/* Card = “vertical poster” with 75/25 split */
+.featureCard{
   width: 100%;
-  display:flex;
-  justify-content: space-evenly;
-  gap: 10px;
-  padding: 14px 8px 12px;
+  max-width: 360px;
+
+  display: grid;
+  grid-template-rows: 3.5fr 0.5fr;  /* 75% image, 25% text */
+  min-height: 540px;           /* overall height; adjust if you want */
+
+  padding: 10px;
+  overflow: hidden;
+
+  background: var(--panel);
+  border: 1px solid rgba(120,88,60,.22);
+  border-radius: 18px;
+
+  box-shadow:
+    0 22px 44px var(--shadowA),
+    0 2px 0 rgba(255,255,255,.55) inset;
 }
 
-.timelinePreview .miniAvatar{
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.82);
-  border: 1px solid rgba(120,92,70,.25);
-  box-shadow: 0 10px 18px rgba(60,40,25,.10);
-  overflow:hidden;
+/* Image panel (~75% height) */
+.featureIcon{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 14px;
+
+  background: var(--paper);
+  border-bottom: 1px solid rgba(120,88,60,.18);
 }
 
-.timelinePreview .miniAvatar img{
+.featureIcon img{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display:block;
+  border-radius: 14px;
+  display: block;
+  filter: saturate(.96) contrast(.98);
 }
 
-@media (max-width: 760px){
-  .homePreviewRow{grid-template-columns: 1fr;}
+/* Text panel (~25% height) */
+.featureCard h2{
+  margin: 0;
+  padding: 16px 18px 6px;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
 }
 
-/* Feature previews used inside homePreviewCard */
-.treePreviewSvg{
-  width: 100%;
-  height: 150px;
-  display:block;
-  border-radius: 16px;
+.featureCard p{
+  margin: 0;
+  padding: 0 18px 16px;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--inkSoft);
 }
 
-.mapPreview{
-  height: 150px;
-  border-radius: 16px;
-  border: 1px solid rgba(120,92,70,.22);
-  background: rgba(255,255,255,.45);
-  display:grid;
-  place-items:center;
-  overflow:hidden;
+/* CTA below cards */
+.heroCTA{
+  margin: 18px auto 0;
 }
 
-.mapPreviewInner{
-  font-weight: 800;
-  opacity: .78;
+/* Make your existing CTA class look more “antique gold” */
+.ctaGold{
+  display: inline-block;
+  padding: 14px 26px;
+  border-radius: 14px;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 18px;
+
+  color: #fff;
+  text-decoration: none;
+
+  background:
+    linear-gradient(var(--gold1), var(--gold2));
+  border: 1px solid rgba(90,60,30,.35);
+
+  box-shadow:
+    0 10px 22px var(--shadowB),
+    0 1px 0 rgba(255,255,255,.35) inset;
+
+  text-shadow: 0 1px 0 rgba(0,0,0,.18);
+}
+
+.ctaGold:hover{
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+/* Divider + footer styling */
+.landingDivider{
+  height: 1px;
+  max-width: 980px;
+  margin: 22px auto 0;
+  background: linear-gradient(to right,
+    rgba(120,88,60,0),
+    rgba(120,88,60,.35),
+    rgba(120,88,60,0));
+  opacity: .9;
+}
+
+.landingFooter{
+  margin-top: 14px;
+  padding: 10px 0 0;
+  color: rgba(91,63,45,.86);
+}
+
+.landingFooterRow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.landingFooterRow a{
+  color: rgba(91,63,45,.9);
+  text-decoration: none;
+}
+
+.landingFooterRow a:hover{
+  text-decoration: underline;
+}
+
+.dotSep{
+  opacity: .7;
+}
+
+.landingSocial{
+  display:flex;
+  gap: 10px;
+  margin-left: 6px;
+}
+
+.socialIcon{
+  width: 28px;
+  height: 28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color: rgba(91,63,45,.75);
+  border-radius: 10px;
+  border: 1px solid rgba(120,88,60,.18);
+  background: rgba(255,255,255,.35);
+}
+
+.socialIcon svg{
+  width: 18px;
+  height: 18px;
+}
+
+.landingFooterSub{
+  margin-top: 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  color: rgba(91,63,45,.70);
+}
+
+/* Responsive: stack the posters */
+@media (max-width: 980px){
+  .featureGrid{
+    grid-template-columns: 1fr;
+    max-width: 560px;
+    gap: 14px;
+  }
+  .featureCard{
+    max-width: 560px;
+    min-height: 560px;
+  }
 }
