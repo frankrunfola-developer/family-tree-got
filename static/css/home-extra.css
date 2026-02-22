@@ -191,32 +191,7 @@
   opacity: .9;
 }
 
-.landingFooter{
-  margin-top: 14px;
-  padding: 10px 0 0;
-  color: rgba(91,63,45,.86);
-}
 
-.landingFooterRow{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap: 12px;
-  flex-wrap: wrap;
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.landingFooterRow a{
-  color: rgba(91,63,45,.9);
-  text-decoration: none;
-}
-
-.landingFooterRow a:hover{
-  text-decoration: underline;
-}
 
 .dotSep{
   opacity: .7;

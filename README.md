@@ -90,6 +90,29 @@ Each user row includes:
 
 ---
 
+SQLite
+1. Install package
+
+```bash
+sudo apt update
+sudo apt install sqlite3
+which sqlite3
+sqlite3 --version
+
+cd data
+sqlite3 users.db
+```
+
+2. Query Data
+```bash
+.tables
+SELECT * FROM users;
+DELETE FROM users WHERE id=1;
+DELETE FROM users;   -- wipe all rows
+.quit
+```
+---
+
 ## How to link a specific login to a specific saved JSON family file
 
 This build supports the **real product** model:
@@ -186,4 +209,11 @@ lineagemap/
       ├─ favicon.ico
       ├─ world-muted.png
       └─ placeholder-avatar.png
+```
+
+
+## Delete .Identiier files
+
+```bash
+find . -type f -name '*\.Identifier'
 ```

@@ -1,102 +1,34 @@
-{# templates/_topbar.html #}
-{% set _mode = body_class|default('app') %}
-<header class="topbar" role="banner">
+<header class="topbar">
   <div class="topbar-inner">
-    <!-- Brand (always left, consistent across all pages) -->
-    <a class="brand brandLeft" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
-      <img class="brandMark" src="{{ url_for('static', filename='img/favicon.ico') }}" alt aria-hidden="true" />
-      <div class="logo">LineAgeMap</div>
-    </a>
 
-    {% if _mode == 'marketing' %}
-    <!-- Marketing nav -->
-    <nav class="topbar-links centerLinks" aria-label="Primary">
-      <a class="{% if active_page=='samples' %}is-active{% endif %}" href="{{ url_for('samples_view') }}">Samples</a>
-      <a href="{{ url_for('index') }}#features">Features</a>
-      <a href="{{ url_for('index') }}#pricing">Pricing</a>
+    <!-- Left: brand -->
+    <div class="topbar-left">
+      <a class="brandIcon" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+        <img class="brandMark" src="{{ url_for('static', filename='img/lam.png') }}" alt="LineAgeMap" />
+      </a>
+      <a class="brandTitle" href="{{ url_for('index') }}">LineAgeMap</a>
+    </div>
+
+    <!-- Center: nav links -->
+    <nav class="topbar-links" aria-label="Primary">
+      <a href="{{ url_for('tree_view', family='me') }}" class="{% if active_page=='tree' %}is-active{% endif %}">Tree</a>
+      <a href="{{ url_for('timeline_view', family='me') }}" class="{% if active_page=='timeline' %}is-active{% endif %}">Timeline</a>
+      <a href="{{ url_for('map_view', family='me') }}" class="{% if active_page=='map' %}is-active{% endif %}">Map</a>
     </nav>
 
-    <div class="topbar-right" aria-label="Actions">
-      {% if current_user %}
-      <a class="btn ghost" href="{{ url_for('tree_view') }}">Open app</a>
-      <div class="userBadge" title="Signed in">
-        <span class="dot" aria-hidden="true"></span>
-        <span class="email">{{ current_user.email }}</span>
-        <a class="logoutLink" href="{{ url_for('logout') }}">Log out</a>
-      </div>
+    <!-- Right: auth actions -->
+    <div class="topbar-right">
+      {% if session.get('user_email') %}
+        <div class="userBadge" title="{{ session.get('user_email') }}">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="email">{{ session.get('user_email') }}</span>
+          <a class="logoutLink" href="{{ url_for('logout') }}">Log out</a>
+        </div>
       {% else %}
-      <a class="btn pill ghost" href="{{ url_for('login') }}">
-        <span class="ico" aria-hidden="true">⌕</span>
-        <span class="btnLabel">Log in</span>
-      </a>
-      <a class="btn pill primary" href="{{ url_for('register') }}">
-        <span class="btnLabel">Sign Up</span>
-      </a>
+        <a class="btn ghost" href="{{ url_for('login') }}">Log In</a>
+        <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
       {% endif %}
-
-      <!-- Mobile menu toggle (kept for existing JS) -->
-      <button id="navbtn" class="navbtn" type="button" aria-label="Menu" aria-expanded="false">
-        <span class="hamburger" aria-hidden="true"></span>
-        <span class="navbtnText">Menu</span>
-      </button>
     </div>
-    {% else %}
-    <!-- App nav -->
-    <nav class="topbar-links centerLinks" aria-label="Primary">
-      <a class="{% if active_page=='tree' %}is-active{% endif %}" href="{{ url_for('tree_view') }}">Tree</a>
-      <a class="{% if active_page=='map' %}is-active{% endif %}" href="{{ url_for('map_view') }}">Map</a>
-      <a class="{% if active_page=='timeline' %}is-active{% endif %}" href="{{ url_for('timeline_view') }}">Timeline</a>
-      <a class="{% if active_page=='samples' %}is-active{% endif %}" href="{{ url_for('samples_view') }}">Samples</a>
-    </nav>
 
-    <div class="topbar-right" aria-label="Actions">
-      {% if current_user %}
-      <div class="userBadge" title="Signed in">
-        <span class="dot" aria-hidden="true"></span>
-        <span class="email">{{ current_user.email }}</span>
-        <a class="logoutLink" href="{{ url_for('logout') }}">Log out</a>
-      </div>
-      {% else %}
-      <a class="btn pill ghost" href="{{ url_for('login') }}">
-        <span class="btnLabel">Log in</span>
-      </a>
-      <a class="btn pill primary" href="{{ url_for('register') }}">
-        <span class="btnLabel">Sign Up</span>
-      </a>
-      {% endif %}
-
-      <!-- Mobile menu toggle (kept for existing JS) -->
-      <button id="navbtn" class="navbtn" type="button" aria-label="Menu" aria-expanded="false">
-        <span class="hamburger" aria-hidden="true"></span>
-        <span class="navbtnText">Menu</span>
-      </button>
-    </div>
-    {% endif %}
-  </div>
-
-  <div id="navpanel" class="navpanel" hidden>
-    {% if _mode == 'marketing' %}
-    <a href="{{ url_for('samples_view') }}">Samples</a>
-    <a href="{{ url_for('index') }}#features">Features</a>
-    <a href="{{ url_for('index') }}#pricing">Pricing</a>
-    {% if current_user %}
-    <a href="{{ url_for('tree_view') }}">Open app</a>
-    <a href="{{ url_for('logout') }}">Log out</a>
-    {% else %}
-    <a href="{{ url_for('login') }}">Log in</a>
-    <a href="{{ url_for('register') }}">Sign Up</a>
-    {% endif %}
-    {% else %}
-    <a href="{{ url_for('tree_view') }}">Tree</a>
-    <a href="{{ url_for('map_view') }}">Map</a>
-    <a href="{{ url_for('timeline_view') }}">Timeline</a>
-    <a href="{{ url_for('samples_view') }}">Samples</a>
-    {% if current_user %}
-    <a href="{{ url_for('logout') }}">Log out</a>
-    {% else %}
-    <a href="{{ url_for('login') }}">Log in</a>
-    <a href="{{ url_for('register') }}">Sign Up</a>
-    {% endif %}
-    {% endif %}
   </div>
 </header>

@@ -1,89 +1,69 @@
 {% extends "base.html" %}
-{% set active_page = "" %}
 {% set body_class = "marketing" %}
+{% set active_page = "" %}
 
-{% block title %}LineAgeMap{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home-extra.css') }}" />
-{% endblock %}
+{% block title %}LineAgeMap — Preserve • Connect • Pass Down{% endblock %}
 
 {% block content %}
-<div class="landing marketingLanding">
-  <section class="heroFrame" aria-label="LineAgeMap overview">
-    <h1 class="heroTitle">Preserve your family’s journey<br>across generations.</h1>
+<div class="landing" role="main">
+  <section class="hero">
+    <img
+      class="hero-logo"
+      src="{{ url_for('static', filename='img/lineagemap_logo_gold.png') }}"
+      alt="LineAgeMap — Preserve • Connect • Pass Down"
+      loading="eager"
+      decoding="async"
+    />
 
-    <!-- Optional: vintage divider lines + ornament (matches your reference vibe) -->
-    <div class="heroOrnament" aria-hidden="true">
-      <span class="line"></span>
-      <span class="glyph">❦</span>
-      <span class="line"></span>
+    <h1 class="hero-title">Your Family’s Story<br/>Preserved for Generations.</h1>
+
+    <p class="hero-subtitle">
+      Build your family tree, trace migration across the world, and turn history into something worth keeping.
+    </p>
+
+
+  </section>
+
+  <section class="previews" aria-label="Previews">
+    <article class="preview-card" id="preview-tree">
+      <h2 class="preview-title">Family Tree</h2>
+      <div class="preview-body" data-preview="tree" aria-label="Family Tree preview"></div>
+      <a class="preview-link" href="/tree">+ View Full Tree →</a>
+    </article>
+
+    <article class="preview-card" id="preview-timeline">
+      <h2 class="preview-title">Timeline</h2>
+      <div class="preview-body" data-preview="timeline" aria-label="Timeline preview"></div>
+      <a class="preview-link" href="/timeline">+ View Full Timeline →</a>
+    </article>
+
+    <article class="preview-card" id="preview-map">
+      <h2 class="preview-title">Migration Map</h2>
+      <div class="preview-body" data-preview="map" aria-label="Migration Map preview"></div>
+      <a class="preview-link" href="/map">+ View Full Map →</a>
+    </article>
+  </section>
+
+  <section class="trust" aria-label="Trust points">
+    <div class="trust-item">
+      <div class="trust-icon" aria-hidden="true">🔒</div>
+      <h3>Private &amp; Secure</h3>
+      <p>Your data is confidential and encrypted.</p>
     </div>
 
-    <div class="featureShell" id="features" aria-label="Key features">
-      <div class="featureGrid">
-        <article class="featureCard">
-          <div class="featureIcon">
-            <img src="{{ url_for('static', filename='img/home-tree.png') }}" alt aria-hidden="true">
-          </div>
-          <h2>Family Tree</h2>
-          <p>Easily create your family tree.</p>
-        </article>
-
-        <article class="featureCard">
-          <div class="featureIcon">
-            <img src="{{ url_for('static', filename='img/home-timeline.png') }}" alt aria-hidden="true">
-          </div>
-          <h2>Timeline</h2>
-          <p>View and explore your family history.</p>
-        </article>
-
-        <article class="featureCard">
-          <div class="featureIcon">
-            <img src="{{ url_for('static', filename='img/home-map.png') }}" alt aria-hidden="true">
-          </div>
-          <h2>Travel Map</h2>
-          <p>Trace your ancestors’ journeys on the map.</p>
-        </article>
-      </div>
-
-      <div class="heroCTA">
-        {% if current_user %}
-        <a class="ctaGold" href="{{ url_for('tree_view') }}">Open my tree</a>
-        {% else %}
-        <a class="ctaGold" href="{{ url_for('register') }}">Create Your Family Map</a>
-        {% endif %}
-      </div>
+    <div class="trust-item">
+      <div class="trust-icon" aria-hidden="true">🧭</div>
+      <h3>Beautifully Designed</h3>
+      <p>Elegant, intuitive, and easy to use.</p>
     </div>
 
-    <div class="landingDivider" aria-hidden="true"></div>
-    <footer class="landingFooter" aria-label="Footer">
-      <div class="landingFooterRow" id="pricing">
-        <a href="{{ url_for('samples_view') }}">Samples</a>
-        <span class="dotSep" aria-hidden="true">•</span>
-        <a href="{{ url_for('index') }}#features">Features</a>
-        <span class="dotSep" aria-hidden="true">•</span>
-        <a href="{{ url_for('index') }}#pricing">Pricing</a>
-
-        <div class="landingSocial" aria-label="Social">
-          <a class="socialIcon" href="#" aria-label="Twitter">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path
-                d="M20 7.3c-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.4-1.8-.6.4-1.3.7-2.1.9a3.3 3.3 0 0 0-5.7 2.2c0 .3 0 .6.1.9A9.4 9.4 0 0 1 4.4 6.1a3.3 3.3 0 0 0 1 4.4c-.5 0-1-.2-1.5-.4v.1a3.3 3.3 0 0 0 2.6 3.2c-.4.1-.9.1-1.3.1.3 1 1.3 1.8 2.4 1.8A6.6 6.6 0 0 1 3 16.6a9.3 9.3 0 0 0 5.1 1.5c6.1 0 9.5-5.2 9.5-9.7v-.4c.6-.5 1.2-1 1.7-1.7Z"
-                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </a>
-          <a class="socialIcon" href="#" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 8h2V5h-2c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h2.3l.7-3H13V9c0-.6.4-1 1-1Z"
-                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </a>
-          <a class="socialIcon" href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 7h10v10H7V7Z" stroke="currentColor" stroke-width="1.6" />
-              <path d="M16.2 7.8h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
-              <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.6" /></svg>
-          </a>
-        </div>
-      </div>
-      <div class="landingFooterSub">Preserving family stories across generations.</div>
-    </footer>
+    <div class="trust-item">
+      <div class="trust-icon" aria-hidden="true">🌿</div>
+      <h3>Built for Generations</h3>
+      <p>Preserve your legacy for decades to come.</p>
+    </div>
   </section>
 </div>
+
+<script src="{{ url_for('static', filename='js/home-previews.js') }}" defer></script>
 {% endblock %}

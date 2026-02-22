@@ -419,65 +419,6 @@ def map_view():
     )
 
 
-@app.get("/samples")
-def samples_view():
-    """Public sample gallery."""
-    db_init()
-    got = load_family_file(family_path("got"))
-
-    people_by_id = {str(p.get("id")): p for p in (got.get("people") or [])}
-    rels = got.get("relationships") or []
-    parents = ["eddard", "catelyn"]
-    parents_children: dict[str, set[str]] = {pid: set() for pid in parents}
-    for r in rels:
-        parent = r.get("parentId") or r.get("parent") or r.get("sourceId") or r.get("source")
-        child = r.get("childId") or r.get("child") or r.get("targetId") or r.get("target")
-        if not parent or not child:
-            continue
-        parent = str(parent)
-        child = str(child)
-        if parent in parents_children:
-            parents_children[parent].add(child)
-
-    common_children = sorted(list(parents_children.get("eddard", set()) & parents_children.get("catelyn", set())))
-    common_children = common_children[:8]
-    tree_preview = {
-        "parents": [people_by_id.get(pid) for pid in parents if pid in people_by_id],
-        "children": [people_by_id.get(cid) for cid in common_children if cid in people_by_id],
-    }
-
-    timeline_people = [p for p in (got.get("people") or []) if p.get("photo")]
-
-    def is_stark(p: dict) -> int:
-        return 0 if "stark" in str(p.get("name", "")).lower() else 1
-
-    timeline_people.sort(key=lambda p: (is_stark(p), str(p.get("name", ""))))
-    timeline_preview = timeline_people[:6]
-
-    samples = [
-        {
-            "id": "kennedy",
-            "title": "Kennedy Family",
-            "subtitle": "A recognizable family example",
-        },
-        {
-            "id": "got",
-            "title": "Game of Thrones",
-            "subtitle": "Fun demo data",
-        },
-        {
-            "id": "gupta",
-            "title": "Gupta Family",
-            "subtitle": "Multi-generation example",
-        },
-    ]
-    return render_template(
-        "samples.html",
-        samples=samples,
-        current_user=get_current_user(),
-        tree_preview=tree_preview,
-        timeline_preview=timeline_preview,
-    )
 
 
 #####################

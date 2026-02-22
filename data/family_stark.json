@@ -1,0 +1,193 @@
+{
+  "people": [
+    {
+      "id": "sansa",
+      "name": "Sansa Stark",
+      "born": "285 AC",
+      "died": "",
+      "photo": "/static/uploads/stark/sansa.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "eddard",
+      "name": "Eddard Stark",
+      "born": "250 AC",
+      "died": "298 AC",
+      "photo": "/static/uploads/stark/eddard.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "catelyn",
+      "name": "Catelyn Stark",
+      "born": "250 AC",
+      "died": "300 AC",
+      "photo": "/static/uploads/stark/catelyn.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "rob",
+      "name": "Robb Stark",
+      "born": "281 AC",
+      "died": "300 AC",
+      "photo": "/static/uploads/stark/robb.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "arya",
+      "name": "Arya Stark",
+      "born": "287 AC",
+      "died": "300 AC",
+      "photo": "/static/uploads/stark/arya.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "bran",
+      "name": "Bran Stark",
+      "born": "288 AC",
+      "died": "",
+      "photo": "/static/uploads/stark/bran.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    },
+    {
+      "id": "rickon",
+      "name": "Rickon Stark",
+      "born": "292 AC",
+      "died": "",
+      "photo": "/static/uploads/stark/rickon.png",
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      }
+    }
+  ],
+  "relationships": [
+    { "type": "spouse", "a": "tyrion", "b": "sansa" },
+    { "type": "spouse", "a": "catelyn", "b": "eddard" },
+
+    { "child": "sansa", "parent": "catelyn" },
+    { "child": "sansa", "parent": "eddard" },
+
+    { "child": "rob", "parent": "catelyn" },
+    { "child": "rob", "parent": "eddard" },
+
+    { "child": "arya", "parent": "catelyn" },
+    { "child": "arya", "parent": "eddard" },
+
+    { "child": "bran", "parent": "catelyn" },
+    { "child": "bran", "parent": "eddard" },
+
+    { "child": "rickon", "parent": "catelyn" },
+    { "child": "rickon", "parent": "eddard" }
+  ],
+  "events": [
+    {
+      "id": "evt_0270_catelyn_eddard_marriage",
+      "type": "marriage",
+      "date": "0270-01-01",
+      "people": ["catelyn", "eddard"],
+      "location": {
+        "city": "Winterfell",
+        "region": "The North",
+        "country": "Westeros",
+        "lat": 56.1,
+        "lng": -3.2
+      },
+      "description": "Married and became Lord and Lady of Winterfell."
+    },
+    {
+      "id": "evt_0298_eddard_death",
+      "type": "death",
+      "date": "0298-01-01",
+      "people": ["eddard"],
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      },
+      "description": "Died in King's Landing."
+    },
+    {
+      "id": "evt_0300_catelyn_death",
+      "type": "death",
+      "date": "0300-01-01",
+      "people": ["catelyn"],
+      "location": {
+        "city": "The Riverlands",
+        "region": "Riverlands",
+        "country": "Westeros",
+        "lat": 53.2,
+        "lng": -1.0
+      },
+      "description": "Died in the Riverlands."
+    },
+    {
+      "id": "evt_0300_rob_death",
+      "type": "death",
+      "date": "0300-01-01",
+      "people": ["rob"],
+      "location": {
+        "city": "The Riverlands",
+        "region": "Riverlands",
+        "country": "Westeros",
+        "lat": 53.2,
+        "lng": -1.0
+      },
+      "description": "Died in the Riverlands."
+    },
+    {
+      "id": "evt_0300_arya_death",
+      "type": "death",
+      "date": "0300-01-01",
+      "people": ["arya"],
+      "location": {
+        "city": "The Riverlands",
+        "region": "Riverlands",
+        "country": "Westeros",
+        "lat": 53.2,
+        "lng": -1.0
+      },
+      "description": "Died in the Riverlands."
+    }
+  ]
+}

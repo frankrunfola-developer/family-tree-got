@@ -7,7 +7,7 @@
 
         <!-- Global Styles -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/lam.png') }}">
 
         {% block head %}{% endblock %}
 
@@ -21,8 +21,6 @@
         <main class="page">
             {% block content %}{% endblock %}
         </main>
-
-        {% include "_footer.html" %}
 
         <!-- Global Scripts -->
         <script>
