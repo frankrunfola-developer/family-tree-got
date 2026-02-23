@@ -1,534 +1,946 @@
-/* map.js
-  accordion: Country -> State/Province -> City
-  Renders face-only pins and shows an info bubble on hover/tap.
-  Data source: /api/public/<slug>/tree OR /api/sample/<id>/tree OR /api/tree/<family>
+/* ----------------------------------------------------------------------------------
+ File:    map.js
+ Purpose: Accordion-driven Family Map UI (pins + tooltip + clustering + zoom/pan)
+ Author:  Frank Runfola
+ Date:    01/03/2025
+ Notes:
+   - Fetches window.MAP_API_URL which should return an object containing people:[...]
+   - Builds accordion grouped by Country -> Region -> City (best-effort parsing)
+   - Uses <img> stage architecture: image + pins share the same coordinate plane
+   - Zoom/pan uses transform scale + translate on the stage (image + pins together)
+   - Supports clustering when multiple people share coords
 
-  UPDATED:
-  - Westeros mode uses ONE hero map panel (no duplicate overview/country/state maps)
-  - Supports xPct/yPct OR lat/lng everywhere
-*/
+   UPDATED:
+   - parseCoords supports location.xPct / location.yPct (your JSON shape)
+   - Avatar config is OPTIONAL (no hard import that can break the page)
+   - Soft edge-nudge so pins don’t look jammed against borders
+   - Map-first UI (no grid / nested accordions)
 
-(function () {
-  var API_URL = window.MAP_API_URL || null;
-  var FAMILY_NAME = (window.MAP_FAMILY_ID || 'stark');
+   LATEST (Leader lines for clusters + keep avatars on map):
+   - Singles: avatar sits exactly on location (no leader line)
+   - Clusters: anchor dot marks true location; avatars float nearby (but CLAMPED inside map);
+              leader lines drawn from each avatar to anchor.
+---------------------------------------------------------------------------------- */
 
-  function isDesktop() {
-    return window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
+(() => {
+  "use strict";
+
+  // ------------------------------
+  // Config
+  // ------------------------------
+  const API_URL = window.MAP_API_URL || "/api/sample/stark/tree";
+  const FAMILY_ID = (window.MAP_FAMILY_ID || "stark").toLowerCase();
+  const MAP_IMAGE_URL = window.MAP_IMAGE_URL;
+
+  // OPTIONAL avatar config
+  // You can set window.AVATAR_CONFIG = { objectPosition: "50% 28%", scale: 0.78 } before loading map.js
+  const AVATAR = window.AVATAR_CONFIG || { objectPosition: "50% 28%", scale: 0.78 };
+
+  if (!MAP_IMAGE_URL) {
+    console.error("MAP_IMAGE_URL missing. Set window.MAP_IMAGE_URL before loading map.js");
   }
 
-  function proj(lat, lng) {
-    var x = (lng + 180) / 360 * 100;
-    var y = (90 - lat) / 180 * 100;
-    return { x: x, y: y };
+  const ROOT_ACC = document.getElementById("mapAccordion");
+
+  // ------------------------------
+  // Utilities
+  // ------------------------------
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
-  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
-
-  // -----------------------------
-  // Map background selection
-  // -----------------------------
-  function getMapBgUrl() {
-    var fam = String(FAMILY_NAME || '').toLowerCase();
-    var api = String(API_URL || '').toLowerCase();
-
-    var isStark = (fam.indexOf('stark') !== -1) || (api.indexOf('/sample/stark') !== -1);
-    var isLannister = (fam.indexOf('lannister') !== -1) || (api.indexOf('/sample/lannister') !== -1);
-
-    if (isStark || isLannister) return '/static/img/westeros-muted.png';
-    return '/static/img/world-muted.png';
-  }
-
-  function isWesterosMode() {
-    return getMapBgUrl().indexOf('westeros') !== -1;
-  }
-
-  // -----------------------------
-  // Zoom levels tuned per map
-  // -----------------------------
-  function getZoom() {
-    return isWesterosMode()
-      ? { world: 170, country: 220, state: 320, city: 450 }
-      : { world: 240, country: 360, state: 600, city: 900 };
-  }
-  var ZOOM = getZoom();
-
-  // -----------------------------
-  // Camera centers (percent)
-  // -----------------------------
-  var CENTER = {
-    // Earth examples
-    'Canada': { x: 40, y: 36 },
-    'United States': { x: 32, y: 48 },
-    'India': { x: 64, y: 52 },
-    'Ontario': { x: 52, y: 34 },
-    'New York': { x: 44, y: 40 },
-    'California': { x: 18, y: 54 },
-    'West Bengal': { x: 66, y: 47 },
-    'Maharashtra': { x: 58, y: 57 },
-
-    // Westeros
-    'Westeros': { x: 50, y: 45 },
-    'The North': { x: 50, y: 28 },
-    'Winterfell': { x: 50, y: 28 },
-    'The Riverlands': { x: 52, y: 52 },
-    "King's Landing": { x: 62, y: 58 },
-    'Crownlands': { x: 62, y: 58 },
-    'The Westerlands': { x: 36, y: 54 },
-    'Casterly Rock': { x: 34, y: 54 },
-    'Dorne': { x: 58, y: 86 }
-  };
-
-  function mapView(el, label, zoomPct) {
-    var c = CENTER[label] || { x: 50, y: 50 };
-    el.style.backgroundSize = String(zoomPct) + '% auto';
-    el.style.backgroundPosition =
-      String(clamp(c.x, 0, 100)) + '% ' + String(clamp(c.y, 0, 100)) + '%';
-  }
-
-  // -----------------------------
-  // Location support helpers
-  // -----------------------------
-  function hasXY(loc) { return loc && loc.xPct != null && loc.yPct != null; }
-  function hasLL(loc) { return loc && loc.lat != null && loc.lng != null; }
-
-  // -----------------------------
-  // Grouping
-  // -----------------------------
-  function groupPeople(people) {
-    var countries = {};
-    for (var i = 0; i < people.length; i++) {
-      var p = people[i];
-      var loc = p.location || {};
-      if (!loc.country || (!hasXY(loc) && !hasLL(loc))) continue;
-
-      var country = loc.country;
-      var region = loc.region || 'Unknown';
-      var city = loc.city || 'Unknown';
-
-      if (!countries[country]) countries[country] = { label: country, states: {} };
-      if (!countries[country].states[region]) countries[country].states[region] = { label: region, cities: {} };
-      if (!countries[country].states[region].cities[city]) countries[country].states[region].cities[city] = { label: city, people: [] };
-
-      countries[country].states[region].cities[city].people.push(p);
+  function el(tag, attrs = {}, children = []) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined) continue;
+      if (k === "class") node.className = v;
+      else if (k === "html") node.innerHTML = v;
+      else if (k === "style") node.setAttribute("style", String(v));
+      else if (k.startsWith("on") && typeof v === "function") node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, String(v));
     }
-    return countries;
+    for (const child of children) node.appendChild(child);
+    return node;
   }
 
-  // -----------------------------
-  // Tooltip
-  // -----------------------------
-  function createTip(mapEl) {
-    var tip = document.createElement('div');
-    tip.className = 'pinTip';
-    tip.innerHTML = '<div class="pinTip__inner"><div class="pinTip__name"></div><div class="pinTip__meta"></div></div>';
-    mapEl.appendChild(tip);
-    return tip;
+  function toTitle(s) {
+    if (!s) return "";
+    return String(s).trim().toLowerCase().replace(/\b\w/g, (m) => m.toUpperCase());
   }
 
-  function showTip(mapEl, tip, pin, data) {
-    tip.querySelector('.pinTip__name').textContent = data.name || '';
-    var bits = [];
-    if (data.age) bits.push('Age ' + data.age);
-    var loc = [data.city, data.region, data.country].filter(Boolean).join(', ');
-    if (loc) bits.push(loc);
-    tip.querySelector('.pinTip__meta').textContent = bits.join(' • ');
+  function safeName(p) {
+    return p?.name || p?.full_name || p?.display_name || p?.label || "Unknown";
+  }
 
-    var rect = mapEl.getBoundingClientRect();
-    var pr = pin.getBoundingClientRect();
-    var cx = (pr.left - rect.left) + pr.width / 2;
-    var top = (pr.top - rect.top);
+  function safePhoto(p) {
+    return (
+      p?.photo_url ||
+      p?.photo ||
+      p?.image_url ||
+      p?.img ||
+      p?.avatar_url ||
+      "/static/img/placeholder-avatar.png"
+    );
+  }
 
-    tip.style.left = String(cx) + 'px';
-    tip.style.top = String(top) + 'px';
-    tip.classList.add('open');
+  // One avatar builder (hard overrides to survive global img rules)
+  function avatarImgEl(person, extraClass = "") {
+    const scale = Number.isFinite(Number(AVATAR.scale)) ? Number(AVATAR.scale) : 0.82;
 
-    var inner = tip.querySelector('.pinTip__inner');
-    requestAnimationFrame(function () {
-      var w = inner.offsetWidth;
-      var h = inner.offsetHeight;
-      var left = clamp(cx - w / 2, 10, mapEl.clientWidth - w - 10);
-      var y = clamp(top - h - 10, 10, mapEl.clientHeight - h - 10);
-      inner.style.transform = 'translate(' + String(left - cx) + 'px,' + String(y - top) + 'px)';
+    return el("img", {
+      class: extraClass,
+      src: safePhoto(person),
+      alt: "",
+      style: `
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        object-fit: cover;
+        object-position: ${AVATAR.objectPosition};
+
+        /* de-zoom crop inside circle */
+        transform: scale(${scale});
+        transform-origin: center;
+
+        /* hard override for aggressive global img rules */
+        max-width: 100% !important;
+        max-height: 100% !important;
+      `,
     });
   }
 
-  function hideTip(tip) {
-    if (!tip) return;
-    tip.classList.remove('open');
-    var inner = tip.querySelector('.pinTip__inner');
-    if (inner) inner.style.transform = 'translate(0,0)';
+  function getContainBox(containerW, containerH, imgNaturalW, imgNaturalH) {
+    if (!imgNaturalW || !imgNaturalH) {
+      return { x: 0, y: 0, w: containerW, h: containerH };
+    }
+    const imgAspect = imgNaturalW / imgNaturalH;
+    const boxAspect = containerW / containerH;
+
+    let w, h, x, y;
+    if (imgAspect > boxAspect) {
+      w = containerW;
+      h = containerW / imgAspect;
+      x = 0;
+      y = (containerH - h) / 2;
+    } else {
+      h = containerH;
+      w = containerH * imgAspect;
+      x = (containerW - w) / 2;
+      y = 0;
+    }
+    return { x, y, w, h };
   }
 
-  // -----------------------------
-  // Pins
-  // -----------------------------
-  function guessAge(person) {
-    var born = person.born;
-    if (!born) return '';
-    var m = String(born).match(/(\d{4})/);
-    if (!m) return '';
-    var y = parseInt(m[1], 10);
-    var now = new Date().getFullYear();
-    var age = now - y;
-    if (age < 0 || age > 120) return '';
-    return String(age);
+  // ------------------------------
+  // Location parsing (best effort)
+  // ------------------------------
+  function parseLocation(p) {
+    const locObj =
+      (Array.isArray(p?.locations) && p.locations[0]) ||
+      p?.location ||
+      p?.place ||
+      p?.birth_place ||
+      p?.birthPlace ||
+      p?.residence ||
+      p?.home ||
+      "";
+
+    let city = "";
+    let region = "";
+    let country = "";
+
+    if (typeof locObj === "string") {
+      const parts = locObj.split(",").map((x) => x.trim()).filter(Boolean);
+      if (parts.length === 1) {
+        city = parts[0];
+      } else if (parts.length === 2) {
+        city = parts[0];
+        region = parts[1];
+      } else if (parts.length >= 3) {
+        city = parts[0];
+        region = parts[1];
+        country = parts.slice(2).join(", ");
+      }
+    } else if (locObj && typeof locObj === "object") {
+      city = locObj.city || locObj.town || locObj.locality || "";
+      region = locObj.region || locObj.state || locObj.province || locObj.area || "";
+      country = locObj.country || locObj.nation || "";
+    }
+
+    // Westeros-style: "Winterfell, The North" (no country)
+    if (!country && region) {
+      country = region;
+      region = "";
+    }
+
+    city = toTitle(city) || "Unknown City";
+    region = toTitle(region);
+    country = toTitle(country) || "Unknown";
+
+    return { city, region, country, raw: locObj };
   }
 
-  function pinEl(person, country, region, city) {
-    var loc = person.location || {};
-    var xy = hasXY(loc) ? { x: Number(loc.xPct), y: Number(loc.yPct) } : proj(loc.lat, loc.lng);
+  // ------------------------------
+  // Coordinate parsing (best effort)
+  // ------------------------------
+  function parseCoords(p) {
+    const candidates = [p?.map, p?.coords, p?.pin, p?.location, p?.place, p?.geo, p];
 
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'pin';
-    btn.style.left = String(xy.x) + '%';
-    btn.style.top = String(xy.y) + '%';
-    btn.setAttribute('aria-label', person.name || 'Location pin');
+    let x = null;
+    let y = null;
 
-    var img = document.createElement('img');
-    img.src = person.photo || '/static/img/placeholder-avatar.png';
-    img.alt = '';
-    btn.appendChild(img);
+    for (const c of candidates) {
+      if (!c || typeof c !== "object") continue;
 
-    btn._meta = {
-      name: person.name,
-      age: guessAge(person),
-      city: city,
-      region: region,
-      country: country
-    };
-    return btn;
+      const cx =
+        c.x ??
+        c.xPct ??
+        c.left ??
+        c.lngPct ??
+        c.lonPct ??
+        c.px ??
+        c.posX ??
+        c.mapX ??
+        c.pinX ??
+        null;
+
+      const cy =
+        c.y ??
+        c.yPct ??
+        c.top ??
+        c.latPct ??
+        c.py ??
+        c.posY ??
+        c.mapY ??
+        c.pinY ??
+        null;
+
+      if (Number.isFinite(Number(cx)) && Number.isFinite(Number(cy))) {
+        x = Number(cx);
+        y = Number(cy);
+        break;
+      }
+    }
+
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+
+    if (x >= 0 && x <= 1 && y >= 0 && y <= 1) {
+      x *= 100;
+      y *= 100;
+    }
+
+    x = clamp(x, 0, 100);
+    y = clamp(y, 0, 100);
+
+    return { x, y };
   }
 
-  // -----------------------------
-  // Map container
-  // -----------------------------
-  function buildMapCard(label, zoomLevel) {
-    var map = document.createElement('div');
-    map.className = 'accMap';
-    map.style.backgroundImage = 'url(' + getMapBgUrl() + ')';
-    mapView(map, label, zoomLevel);
+  // ------------------------------
+  // Grouping
+  // ------------------------------
+  function groupPeople(people) {
+    const tree = new Map();
+
+    for (const p of people) {
+      const { country, region, city } = parseLocation(p);
+
+      if (!tree.has(country)) tree.set(country, new Map());
+      const regionMap = tree.get(country);
+
+      const regionKey = region || "—";
+      if (!regionMap.has(regionKey)) regionMap.set(regionKey, new Map());
+      const cityMap = regionMap.get(regionKey);
+
+      if (!cityMap.has(city)) cityMap.set(city, []);
+      cityMap.get(city).push(p);
+    }
+
+    return tree;
+  }
+
+  function sortKeys(arr) {
+    return arr.sort((a, b) => {
+      if (a === "Unknown") return 1;
+      if (b === "Unknown") return -1;
+      if (a === "—") return 1;
+      if (b === "—") return -1;
+      return a.localeCompare(b);
+    });
+  }
+
+  // ------------------------------
+  // UI: Loading / Error
+  // ------------------------------
+  function setLoading() {
+    if (!ROOT_ACC) return;
+    ROOT_ACC.innerHTML = "";
+    ROOT_ACC.appendChild(
+      el("div", { class: "mapLoading" }, [
+        el("div", { html: "<strong>Loading map…</strong>" }),
+        el("div", {
+          style: "margin-top:6px; opacity:0.85;",
+          html: "Fetching family locations and pins.",
+        }),
+      ])
+    );
+  }
+
+  function setError(msg) {
+    if (!ROOT_ACC) return;
+    ROOT_ACC.innerHTML = "";
+    ROOT_ACC.appendChild(
+      el("div", { class: "mapLoading" }, [
+        el("div", { html: "<strong>Couldn’t load map.</strong>" }),
+        el("div", { style: "margin-top:6px; opacity:0.85;", html: escapeHtml(msg) }),
+      ])
+    );
+  }
+
+  // ------------------------------
+  // Tooltip
+  // ------------------------------
+  function buildPinTip(accMap) {
+    const tip = el("div", { class: "pinTip" }, [
+      el("div", { class: "pinTip__inner" }, [
+        el("div", { class: "pinTip__name" }),
+        el("div", { class: "pinTip__meta" }),
+      ]),
+    ]);
+    accMap.appendChild(tip);
+
+    const inner = tip.querySelector(".pinTip__inner");
+    const nameEl = tip.querySelector(".pinTip__name");
+    const metaEl = tip.querySelector(".pinTip__meta");
+
+    function openAt(clientX, clientY, name, meta) {
+      const rect = accMap.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      nameEl.textContent = name;
+      metaEl.textContent = meta;
+
+      tip.style.left = `${x}px`;
+      tip.style.top = `${y}px`;
+      tip.classList.add("open");
+
+      requestAnimationFrame(() => {
+        const tRect = inner.getBoundingClientRect();
+        const aRect = accMap.getBoundingClientRect();
+
+        let left = x - tRect.width / 2;
+        let top = y - tRect.height - 14;
+
+        left = clamp(left, 8, aRect.width - tRect.width - 8);
+        top = clamp(top, 8, aRect.height - tRect.height - 14);
+
+        tip.style.left = `${left}px`;
+        tip.style.top = `${top}px`;
+      });
+    }
+
+    function close() {
+      tip.classList.remove("open");
+    }
+
+    accMap.addEventListener("click", (e) => {
+      if (e.target === accMap) close();
+    });
+
+    return { openAt, close };
+  }
+
+  // ------------------------------
+  // Map Canvas (IMG stage)
+  // ------------------------------
+  function buildMapCanvas() {
+    const map = el("div", {
+      class: "accMap",
+      role: "group",
+      "aria-label": "Map canvas",
+    });
+
+    const stage = el("div", { class: "mapStage" });
+
+    const img = el("img", {
+      class: "mapImage",
+      src: MAP_IMAGE_URL || "",
+      alt: "",
+      draggable: "false",
+    });
+
+    // SVG overlay for leader lines (lives in stage so it zoom/pans with pins)
+    const lines = el("svg", {
+      class: "pinLines",
+      viewBox: "0 0 100 100",
+      preserveAspectRatio: "none",
+      "aria-hidden": "true",
+    });
+
+    const pinLayer = el("div", { class: "pinLayer" });
+
+    stage.appendChild(img);
+    stage.appendChild(lines);
+    stage.appendChild(pinLayer);
+    map.appendChild(stage);
+
     return map;
   }
 
-  // -----------------------------
-  // People UI
-  // -----------------------------
-  function buildPeopleGrid(people, compact) {
-    var grid = document.createElement('div');
-    grid.className = compact ? 'peopleGrid peopleGrid--compact' : 'peopleGrid';
+  // ------------------------------
+  // Zoom/Pan (transform stage)
+  // ------------------------------
+  function attachZoomPan(accMap) {
+    if (accMap.dataset.zoomPan === "1") return;
+    accMap.dataset.zoomPan = "1";
 
-    people = people.slice().sort(function (a, b) {
-      return String(a.name || '').localeCompare(String(b.name || ''));
+    const stage = accMap.querySelector(".mapStage");
+    if (!stage) return;
+
+    const ui = el("div", { class: "mapZoomUI" }, [
+      el("button", { class: "mapZoomBtn", type: "button", "aria-label": "Zoom in", html: "+" }),
+      el("button", { class: "mapZoomBtn", type: "button", "aria-label": "Zoom out", html: "−" }),
+      el("button", { class: "mapZoomBtn", type: "button", "aria-label": "Fit map", html: "⤢" }),
+    ]);
+    accMap.appendChild(ui);
+
+    let scale = 1.0;
+    let tx = 0;
+    let ty = 0;
+
+    const MIN = 1.0;
+    const MAX = 3.2;
+    const STEP = 0.18;
+
+    function apply() {
+      stage.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      if (scale > 1.001) accMap.classList.add("isPannable");
+      else accMap.classList.remove("isPannable");
+    }
+
+    function fit() {
+      scale = 1.0;
+      tx = 0;
+      ty = 0;
+      apply();
+    }
+
+    function zoomTo(nextScale, anchorClientX, anchorClientY) {
+      const rect = accMap.getBoundingClientRect();
+      const ax = clamp(anchorClientX - rect.left, 0, rect.width);
+      const ay = clamp(anchorClientY - rect.top, 0, rect.height);
+
+      const prev = scale;
+      scale = clamp(nextScale, MIN, MAX);
+      if (Math.abs(scale - prev) < 0.0001) return;
+
+      const stageX = (ax - tx) / prev;
+      const stageY = (ay - ty) / prev;
+
+      tx = ax - stageX * scale;
+      ty = ay - stageY * scale;
+
+      apply();
+    }
+
+    function centerAnchor() {
+      const r = accMap.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    const btns = ui.querySelectorAll(".mapZoomBtn");
+    const btnIn = btns[0];
+    const btnOut = btns[1];
+    const btnFit = btns[2];
+
+    btnIn.addEventListener("click", () => {
+      const a = centerAnchor();
+      zoomTo(scale + STEP, a.x, a.y);
     });
 
-    for (var i = 0; i < people.length; i++) {
-      var p = people[i];
-      var loc = p.location || {};
-      var age = guessAge(p);
+    btnOut.addEventListener("click", () => {
+      const a = centerAnchor();
+      zoomTo(scale - STEP, a.x, a.y);
+    });
 
-      var card = document.createElement('div');
-      card.className = 'personCard';
-      card.innerHTML =
-        '<img class="personPhoto" alt="" src="' + escapeAttr(p.photo || '/static/img/placeholder-avatar.png') + '">' +
-        '<div class="personMeta">' +
-          '<div class="personName">' + escapeHtml(p.name || '') + '</div>' +
-          '<div class="personSub">' +
-            (age ? ('Age ' + escapeHtml(age) + ' • ') : '') +
-            escapeHtml([loc.city, loc.region].filter(Boolean).join(', ')) +
-          '</div>' +
-        '</div>';
+    btnFit.addEventListener("click", () => {
+      fit();
+    });
 
-      var extra = [loc.city, loc.region, loc.country].filter(Boolean).join(', ');
-      if (extra) card.title = extra;
+    accMap.addEventListener(
+      "wheel",
+      (e) => {
+        e.preventDefault();
+        const dir = e.deltaY < 0 ? 1 : -1;
+        zoomTo(scale + dir * STEP, e.clientX, e.clientY);
+      },
+      { passive: false }
+    );
 
-      grid.appendChild(card);
-    }
-    return grid;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    accMap.addEventListener("pointerdown", (e) => {
+      if (scale <= 1.001) return;
+      dragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      accMap.classList.add("isDragging");
+      accMap.setPointerCapture(e.pointerId);
+    });
+
+    accMap.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      tx += dx;
+      ty += dy;
+      apply();
+    });
+
+    const endDrag = () => {
+      dragging = false;
+      accMap.classList.remove("isDragging");
+    };
+    accMap.addEventListener("pointerup", endDrag);
+    accMap.addEventListener("pointercancel", endDrag);
+
+    fit();
   }
 
-  function buildRegionPills(countryObj) {
-    var wrap = document.createElement('div');
-    wrap.className = 'regionRow';
-
-    var states = countryObj.states || {};
-    var names = Object.keys(states).sort();
-    for (var i = 0; i < names.length; i++) {
-      var r = names[i];
-      var count = 0;
-      var cities = states[r].cities || {};
-      var cn = Object.keys(cities);
-      for (var j = 0; j < cn.length; j++) count += (cities[cn[j]].people || []).length;
-
-      var pill = document.createElement('button');
-      pill.type = 'button';
-      pill.className = 'regionPill';
-      pill.textContent = r + ' (' + String(count) + ')';
-      pill._regionName = r;
-      wrap.appendChild(pill);
+  // ------------------------------
+  // Pins + clusters
+  // ------------------------------
+  function clusterByCoords(peopleWithCoords) {
+    const m = new Map();
+    for (const item of peopleWithCoords) {
+      const key = `${item.coords.x.toFixed(2)}|${item.coords.y.toFixed(2)}`;
+      if (!m.has(key)) m.set(key, []);
+      m.get(key).push(item);
     }
-    return wrap;
+    return m;
   }
 
-  // -----------------------------
-  // ONE-PANEL Westeros view
-  // -----------------------------
-  function buildSinglePanel(root, countries, allPeople) {
-    root.innerHTML = '';
+  function spiralOffset(index, pinPx, gapPx) {
+    const golden = 2.399963229728653;
+    const angle = index * golden;
 
-    var isW = isWesterosMode();
-    var title = isW ? 'Westeros' : 'World';
+    const base = pinPx * 0.95 + gapPx;
+    const growth = pinPx * 0.55 + gapPx * 0.65;
 
-    var wrap = document.createElement('div');
-    wrap.className = 'mapSingle';
+    const r = base + Math.sqrt(index) * growth;
+    return { dx: Math.cos(angle) * r, dy: Math.sin(angle) * r, r };
+  }
 
-    // Header strip
-    var head = document.createElement('div');
-    head.className = 'mapSingleHead';
-    head.innerHTML =
-      '<div class="mapSingleTitle">' + escapeHtml(title) + '</div>' +
-      '<div class="mapSingleSub">Tap a pin to view details. Use regions below to refocus the map.</div>';
-    wrap.appendChild(head);
+  function svgClear(svg) {
+    if (!svg) return;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+  }
 
-    // Hero map
-    var map = buildMapCard(title, ZOOM.world);
-    var tip = createTip(map);
+  function svgSetViewBox(svg, w, h) {
+    if (!svg) return;
+    svg.setAttribute("viewBox", `0 0 ${Math.max(1, Math.round(w))} ${Math.max(1, Math.round(h))}`);
+  }
 
-    // Pins (all people)
-    for (var i = 0; i < allPeople.length; i++) {
-      var p = allPeople[i];
-      var loc = p.location || {};
-      if (!loc.country || (!hasXY(loc) && !hasLL(loc))) continue;
+  function svgLine(svg, x1, y1, x2, y2, extraClass = "") {
+    if (!svg) return;
+    const ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    ln.setAttribute("x1", String(x1));
+    ln.setAttribute("y1", String(y1));
+    ln.setAttribute("x2", String(x2));
+    ln.setAttribute("y2", String(y2));
+    ln.setAttribute("class", `pinLine${extraClass ? " " + extraClass : ""}`);
+    svg.appendChild(ln);
+  }
 
-      var pin = pinEl(p, loc.country, loc.region || '', loc.city || '');
-      map.appendChild(pin);
+  // Pick a good cluster badge location (still inside contain box)
+  function chooseLabelPoint(anchorX, anchorY, box, rect, pinPx) {
+    const dx = clamp(rect.width * 0.16, 110, 180);
+    const dy = clamp(rect.height * 0.14, 90, 160);
 
-      (function (pinRef, meta) {
-        pinRef.addEventListener('mouseenter', function () { showTip(map, tip, pinRef, meta); });
-        pinRef.addEventListener('mouseleave', function () { hideTip(tip); });
-        pinRef.addEventListener('focus', function () { showTip(map, tip, pinRef, meta); });
-        pinRef.addEventListener('blur', function () { hideTip(tip); });
-        pinRef.addEventListener('click', function (e) {
-          e.stopPropagation();
-          var open = tip.classList.contains('open') && tip._openFor === pinRef;
-          if (open) { hideTip(tip); tip._openFor = null; }
-          else { tip._openFor = pinRef; showTip(map, tip, pinRef, meta); }
+    const candidates = [
+      { x: anchorX + dx, y: anchorY - dy },
+      { x: anchorX - dx, y: anchorY - dy },
+      { x: anchorX + dx, y: anchorY + dy },
+      { x: anchorX - dx, y: anchorY + dy },
+    ];
+
+    const margin = Math.max(14, Math.round(pinPx * 1.35));
+
+    const clampToBox = (pt) => ({
+      x: clamp(pt.x, box.x + margin, box.x + box.w - margin),
+      y: clamp(pt.y, box.y + margin, box.y + box.h - margin),
+    });
+
+    const score = (pt) => {
+      const edge = Math.min(
+        pt.x - box.x,
+        pt.y - box.y,
+        box.x + box.w - pt.x,
+        box.y + box.h - pt.y
+      );
+      const dist = Math.hypot(pt.x - anchorX, pt.y - anchorY);
+      return edge * 1.6 + dist * 0.4;
+    };
+
+    let best = null;
+    for (const c of candidates) {
+      const clamped = clampToBox(c);
+      const s = score(clamped);
+      if (!best || s > best.s) best = { ...clamped, s };
+    }
+
+    return { x: best.x, y: best.y };
+  }
+
+  function renderPins(accMap, people, onSelect) {
+    const pinLayer = accMap.querySelector(".pinLayer");
+    if (!pinLayer) return;
+
+    const svg = accMap.querySelector(".pinLines");
+
+    pinLayer.innerHTML = "";
+    svgClear(svg);
+
+    const img = accMap.querySelector(".mapImage");
+    const rect = accMap.getBoundingClientRect();
+
+    if (img && !img.complete) {
+      img.addEventListener("load", () => renderPins(accMap, people, onSelect), { once: true });
+      return;
+    }
+
+    svgSetViewBox(svg, rect.width, rect.height);
+
+    const box = getContainBox(rect.width, rect.height, img?.naturalWidth || 0, img?.naturalHeight || 0);
+
+    const pctToPx = (coords) => {
+      const px = box.x + (coords.x / 100) * box.w;
+      const py = box.y + (coords.y / 100) * box.h;
+      return { px, py };
+    };
+
+    const edgeNudge = (px, py) => {
+      const margin = clamp(rect.width * 0.035, 18, 34);
+      let x = px;
+      let y = py;
+      if (x - box.x < margin) x = box.x + margin;
+      if (box.x + box.w - x < margin) x = box.x + box.w - margin;
+      if (y - box.y < margin) y = box.y + margin;
+      if (box.y + box.h - y < margin) y = box.y + box.h - margin;
+      return { px: x, py: y };
+    };
+
+    // Approx matches CSS clamp(34px, 2.9vw, 54px)
+    const pinPx = clamp(rect.width * 0.029, 34, 54);
+    const gapPx = clamp(pinPx * 0.55, 16, 28);
+
+    // Keep avatar centers inside visible image box
+    const avatarClampMargin = Math.round(pinPx * 0.85 + 10); // room for ring + shadow
+
+    const clampAvatarCenterToBox = (cx, cy) => ({
+      x: clamp(cx, box.x + avatarClampMargin, box.x + box.w - avatarClampMargin),
+      y: clamp(cy, box.y + avatarClampMargin, box.y + box.h - avatarClampMargin),
+    });
+
+    const tip = buildPinTip(accMap);
+
+    const withCoords = [];
+    for (const p of people) {
+      const coords = parseCoords(p);
+      if (!coords) continue;
+      withCoords.push({ p, coords });
+    }
+    if (withCoords.length === 0) return;
+
+    const clusters = clusterByCoords(withCoords);
+
+    for (const items of clusters.values()) {
+      // -------------------------
+      // SINGLE PERSON PIN
+      // -------------------------
+      if (items.length === 1) {
+        const { p, coords } = items[0];
+        let { px, py } = pctToPx(coords);
+        ({ px, py } = edgeNudge(px, py));
+
+        const pin = el(
+          "button",
+          {
+            class: "pin",
+            type: "button",
+            style: `left:${px}px; top:${py}px;`,
+            "aria-label": `Show ${safeName(p)}`,
+          },
+          [avatarImgEl(p)]
+        );
+
+        pin.addEventListener("mouseenter", (e) => {
+          const loc = parseLocation(p);
+          tip.openAt(e.clientX, e.clientY, safeName(p), `${loc.city}${loc.country ? `, ${loc.country}` : ""}`);
         });
-      })(pin, pin._meta);
-    }
-    map.addEventListener('click', function () { hideTip(tip); });
+        pin.addEventListener("mouseleave", () => tip.close());
 
-    wrap.appendChild(map);
+        pin.addEventListener("focus", () => {
+          const r = pin.getBoundingClientRect();
+          const loc = parseLocation(p);
+          tip.openAt(r.left + r.width / 2, r.top, safeName(p), `${loc.city}${loc.country ? `, ${loc.country}` : ""}`);
+        });
+        pin.addEventListener("blur", () => tip.close());
 
-    // Region pills (only makes sense when there are regions)
-    // If there is exactly 1 country, use that. Otherwise pick first.
-    var cNames = Object.keys(countries);
-    if (cNames.length > 0) {
-      var primary = countries[cNames[0]];
-      var pills = buildRegionPills(primary);
+        pin.addEventListener("click", (e) => {
+          e.stopPropagation();
+          onSelect?.(p);
+        });
 
-      pills.addEventListener('click', function (e) {
-        var btn = e.target && e.target.closest ? e.target.closest('.regionPill') : null;
-        if (!btn) return;
-        var regionName = btn._regionName;
-        mapView(map, regionName, ZOOM.state);
+        pinLayer.appendChild(pin);
+        continue;
+      }
+
+      // -------------------------
+      // CLUSTER (avatars stay on-map; lines to anchor)
+      // -------------------------
+      const anchorCoords = items[0].coords;
+      let { px, py } = pctToPx(anchorCoords);
+      ({ px, py } = edgeNudge(px, py));
+
+      // Anchor dot at the true city location
+      const anchor = el("div", {
+        class: "pinAnchor",
+        style: `left:${px}px; top:${py}px;`,
+        "aria-hidden": "true",
+      });
+      pinLayer.appendChild(anchor);
+
+      const n = items.length;
+
+      // Badge base point (also clamped inside image)
+      const label = chooseLabelPoint(px, py, box, rect, pinPx);
+      const labelX = label.x;
+      const labelY = label.y;
+
+      // Center cluster badge sits at label point
+      const head = items[0].p;
+      const cluster = el(
+        "button",
+        {
+          class: "pinCluster",
+          type: "button",
+          style: `left:${labelX}px; top:${labelY}px;`,
+          "aria-label": `Show ${items.length} people at this location`,
+        },
+        [
+          el("div", { class: "pinCluster__ring" }, [avatarImgEl(head)]),
+          el("div", { class: "pinCluster__count", html: String(items.length) }),
+        ]
+      );
+
+      cluster.addEventListener("mouseenter", (e) => {
+        tip.openAt(e.clientX, e.clientY, `${items.length} people`, "Click for group");
+      });
+      cluster.addEventListener("mouseleave", () => tip.close());
+      cluster.addEventListener("click", (e) => {
+        e.stopPropagation();
+        onSelect?.(null, items.map((x) => x.p));
       });
 
-      wrap.appendChild(pills);
-    }
+      pinLayer.appendChild(cluster);
 
-    // People grid
-    wrap.appendChild(buildPeopleGrid(allPeople, true));
+      // Main subtle line from badge to anchor
+      svgLine(svg, labelX, labelY, px, py, " pinLine--main");
 
-    root.appendChild(wrap);
-  }
+      const useFan = n <= 3;
 
-  // -----------------------------
-  // Default accordion view (Earth / multi-country)
-  // -----------------------------
-  function buildAccordion(root, countries) {
-    root.innerHTML = '';
+      for (let i = 0; i < n; i++) {
+        const p = items[i].p;
 
-    // Desktop: add a single overview first
-    if (isDesktop()) {
-      var allPeople = flattenPeople(countries);
-      root.appendChild(buildWorldOverview(allPeople));
-    }
+        // Desired offsets
+        let dx = 0;
+        let dy = 0;
 
-    var countryNames = Object.keys(countries).sort();
-    for (var i = 0; i < countryNames.length; i++) {
-      var cName = countryNames[i];
-      var c = countries[cName];
+        if (useFan) {
+          const spread = n === 2 ? 44 : 64;
+          const start = -spread / 2;
+          const angleDeg = start + (n === 1 ? 0 : i * (spread / (n - 1)));
+          const angle = (angleDeg * Math.PI) / 180;
 
-      var cWrap = document.createElement('details');
-      cWrap.className = 'acc';
-      cWrap.open = true;
-
-      var cSum = document.createElement('summary');
-      cSum.className = 'accHead';
-      cSum.innerHTML = '<span class="accTitle">' + escapeHtml(cName) + '</span>';
-      cWrap.appendChild(cSum);
-
-      var cBody = document.createElement('div');
-      cBody.className = 'accBody';
-
-      var cMap = buildMapCard(cName, ZOOM.country);
-      var cTip = createTip(cMap);
-
-      var states = c.states;
-      var stateNames = Object.keys(states).sort();
-      for (var s = 0; s < stateNames.length; s++) {
-        var sName = stateNames[s];
-        var st = states[sName];
-        var cityNames = Object.keys(st.cities).sort();
-
-        for (var ci = 0; ci < cityNames.length; ci++) {
-          var city = st.cities[cityNames[ci]];
-          for (var p = 0; p < city.people.length; p++) {
-            var pe = city.people[p];
-            var pin = pinEl(pe, cName, sName, city.label);
-            cMap.appendChild(pin);
-
-            (function (pinRef, meta) {
-              pinRef.addEventListener('mouseenter', function () { showTip(cMap, cTip, pinRef, meta); });
-              pinRef.addEventListener('mouseleave', function () { hideTip(cTip); });
-              pinRef.addEventListener('focus', function () { showTip(cMap, cTip, pinRef, meta); });
-              pinRef.addEventListener('blur', function () { hideTip(cTip); });
-              pinRef.addEventListener('click', function (e) {
-                e.stopPropagation();
-                var open = cTip.classList.contains('open') && cTip._openFor === pinRef;
-                if (open) { hideTip(cTip); cTip._openFor = null; }
-                else { cTip._openFor = pinRef; showTip(cMap, cTip, pinRef, meta); }
-              });
-            })(pin, pin._meta);
-          }
+          const r = pinPx * 1.35 + gapPx;
+          dx = Math.cos(angle) * r;
+          dy = Math.sin(angle) * r;
+        } else {
+          ({ dx, dy } = spiralOffset(i + 4, pinPx, gapPx));
         }
-      }
 
-      cMap.addEventListener('click', function () { hideTip(cTip); });
-      cBody.appendChild(cMap);
-      cBody.appendChild(buildPeopleGrid(flattenCountryPeople(c), true));
+        // Proposed avatar center
+        const proposedX = labelX + dx;
+        const proposedY = labelY + dy;
 
-      cWrap.appendChild(cBody);
-      root.appendChild(cWrap);
+        // ✅ Clamp avatar center into the visible image area
+        const clamped = clampAvatarCenterToBox(proposedX, proposedY);
 
-      (function (mapEl, lab, z) {
-        cWrap.addEventListener('toggle', function () { mapView(mapEl, lab, z); });
-      })(cMap, cName, ZOOM.country);
-    }
-  }
+        // ✅ Recompute actual dx/dy so the CSS transform lands exactly on the clamped point
+        const finalDx = clamped.x - labelX;
+        const finalDy = clamped.y - labelY;
 
-  function flattenCountryPeople(countryObj) {
-    var people = [];
-    var states = countryObj.states || {};
-    var sNames = Object.keys(states);
-    for (var i = 0; i < sNames.length; i++) {
-      var st = states[sNames[i]];
-      var cNames = Object.keys(st.cities || {});
-      for (var j = 0; j < cNames.length; j++) {
-        var city = st.cities[cNames[j]];
-        for (var k = 0; k < (city.people || []).length; k++) people.push(city.people[k]);
-      }
-    }
-    return people;
-  }
+        const pin = el(
+          "button",
+          {
+            class: "pin",
+            type: "button",
+            style: `left:${labelX}px; top:${labelY}px; --dx:${Math.round(finalDx)}px; --dy:${Math.round(finalDy)}px;`,
+            "aria-label": `Show ${safeName(p)}`,
+          },
+          [avatarImgEl(p)]
+        );
 
-  function flattenPeople(countries) {
-    var all = [];
-    var cn = Object.keys(countries);
-    for (var i = 0; i < cn.length; i++) {
-      all = all.concat(flattenCountryPeople(countries[cn[i]]));
-    }
-    return all;
-  }
-
-  function buildWorldOverview(people) {
-    var wrap = document.createElement('details');
-    wrap.className = 'acc accWorld';
-    wrap.open = true;
-
-    var sum = document.createElement('summary');
-    sum.className = 'accHead';
-
-    var isW = isWesterosMode();
-    sum.innerHTML = '<span class="accTitle">' + (isW ? 'Westeros' : 'World') + '</span>';
-    wrap.appendChild(sum);
-
-    var body = document.createElement('div');
-    body.className = 'accBody';
-
-    var map = buildMapCard(isW ? 'Westeros' : 'World', ZOOM.world);
-    var tip = createTip(map);
-
-    for (var i = 0; i < people.length; i++) {
-      var p = people[i];
-      var loc = p.location || {};
-      if (!loc.country || (!hasXY(loc) && !hasLL(loc))) continue;
-
-      var pin = pinEl(p, loc.country, loc.region || '', loc.city || '');
-      map.appendChild(pin);
-
-      (function (pinRef, meta) {
-        pinRef.addEventListener('mouseenter', function () { showTip(map, tip, pinRef, meta); });
-        pinRef.addEventListener('mouseleave', function () { hideTip(tip); });
-        pinRef.addEventListener('focus', function () { showTip(map, tip, pinRef, meta); });
-        pinRef.addEventListener('blur', function () { hideTip(tip); });
-        pinRef.addEventListener('click', function (e) {
-          e.stopPropagation();
-          var open = tip.classList.contains('open') && tip._openFor === pinRef;
-          if (open) { hideTip(tip); tip._openFor = null; }
-          else { tip._openFor = pinRef; showTip(map, tip, pinRef, meta); }
+        pin.addEventListener("mouseenter", (e) => {
+          const loc = parseLocation(p);
+          tip.openAt(e.clientX, e.clientY, safeName(p), `${loc.city}${loc.country ? `, ${loc.country}` : ""}`);
         });
-      })(pin, pin._meta);
+        pin.addEventListener("mouseleave", () => tip.close());
+
+        pin.addEventListener("focus", () => {
+          const r = pin.getBoundingClientRect();
+          const loc = parseLocation(p);
+          tip.openAt(r.left + r.width / 2, r.top, safeName(p), `${loc.city}${loc.country ? `, ${loc.country}` : ""}`);
+        });
+        pin.addEventListener("blur", () => tip.close());
+
+        pin.addEventListener("click", (e) => {
+          e.stopPropagation();
+          onSelect?.(p);
+        });
+
+        pinLayer.appendChild(pin);
+
+        // ✅ Leader line from ACTUAL avatar center (clamped) to true anchor
+        svgLine(svg, clamped.x, clamped.y, px, py, "");
+      }
     }
-    map.addEventListener('click', function () { hideTip(tip); });
-
-    body.appendChild(map);
-    body.appendChild(buildPeopleGrid(people, true));
-    wrap.appendChild(body);
-    return wrap;
   }
 
-  // -----------------------------
-  // Escaping
-  // -----------------------------
-  function escapeAttr(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  // ------------------------------
+  // Accordion Builders
+  // ------------------------------
+  function buildAcc(title, subText) {
+    const details = el("details", { class: "acc" });
+    const summary = el("summary", { class: "accHead" }, [
+      el("div", {}, [
+        el("div", { class: "accTitle", html: escapeHtml(title) }),
+        subText
+          ? el("div", { style: "margin-top:2px;font-size:12px;opacity:0.75;", html: escapeHtml(subText) })
+          : el("span"),
+      ]),
+      el("div", { style: "opacity:0.75;font-weight:900;", html: "▾" }),
+    ]);
+    const body = el("div", { class: "accBody" });
+    details.appendChild(summary);
+    details.appendChild(body);
+    return { details, body };
   }
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] || c;
-    });
+  // ------------------------------
+  // Render
+  // ------------------------------
+  function renderAccordion(people) {
+    if (!ROOT_ACC) return;
+
+    ROOT_ACC.innerHTML = "";
+
+    const grouped = groupPeople(people);
+    const countries = sortKeys(Array.from(grouped.keys()));
+
+    if (countries.length === 0) {
+      ROOT_ACC.appendChild(
+        el("div", { class: "mapLoading" }, [
+          el("div", { html: "<strong>No location data found.</strong>" }),
+          el("div", {
+            style: "margin-top:6px; opacity:0.85;",
+            html: "Add location fields to people records to populate the map.",
+          }),
+        ])
+      );
+      return;
+    }
+
+    for (const country of countries) {
+      const regionMap = grouped.get(country);
+
+      const totalPeople = Array.from(regionMap.values())
+        .flatMap((cityMap) => Array.from(cityMap.values()).flat())
+        .length;
+
+      const { details: cAcc, body: cBody } = buildAcc(
+        country,
+        `${totalPeople} ${totalPeople === 1 ? "person" : "people"}`
+      );
+      ROOT_ACC.appendChild(cAcc);
+
+      const countryPeople = [];
+      for (const cityMap of regionMap.values()) {
+        for (const list of cityMap.values()) countryPeople.push(...list);
+      }
+
+      const map = buildMapCanvas();
+      attachZoomPan(map);
+
+      const rerender = () => renderPins(map, countryPeople, () => {});
+      rerender();
+      cBody.appendChild(map);
+
+      // Re-render on resize so contain math + line geometry stay correct
+      let raf = 0;
+      const onResize = () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(rerender);
+      };
+      window.addEventListener("resize", onResize);
+    }
+
+    const first = ROOT_ACC.querySelector("details.acc");
+    if (first) first.open = true;
   }
 
-  // -----------------------------
-  // Boot
-  // -----------------------------
-  function boot() {
-    var root = document.getElementById('mapAccordion') || document.getElementById('mapAccRoot');
-    if (!root) return;
+  // ------------------------------
+  // Fetch
+  // ------------------------------
+  async function load() {
+    if (!ROOT_ACC) return;
 
-    var url = API_URL ? API_URL : ('/api/tree/' + encodeURIComponent(FAMILY_NAME));
-    fetch(url)
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        var people = (data && data.people) ? data.people : [];
-        var grouped = groupPeople(people);
-        var allPeople = flattenPeople(grouped);
+    setLoading();
 
-        // ✅ One-panel in Westeros mode
-        if (isWesterosMode()) buildSinglePanel(root, grouped, allPeople);
-        else buildAccordion(root, grouped);
-      })
-      .catch(function (err) {
-        root.innerHTML = '<div class="mapLoading">Could not load map data.</div>';
-        console.error('Map load failed:', err);
-      });
+    try {
+      const res = await fetch(API_URL, { credentials: "include" });
+      if (!res.ok) throw new Error(`HTTP ${res.status} from ${API_URL}`);
+
+      const data = await res.json();
+      const people = data?.people || data?.nodes || data?.members || data?.family?.people || [];
+
+      if (!Array.isArray(people)) {
+        throw new Error("API response did not contain an array of people/nodes.");
+      }
+
+      renderAccordion(people);
+    } catch (err) {
+      console.error(err);
+      setError(err?.message || String(err));
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', boot);
+  // ------------------------------
+  // Init
+  // ------------------------------
+  document.addEventListener("DOMContentLoaded", load);
 })();

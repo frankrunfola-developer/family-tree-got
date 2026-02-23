@@ -1,22 +1,32 @@
 <header class="topbar">
   <div class="topbar-inner">
 
-    <!-- Left: brand -->
     <div class="topbar-left">
-      <a class="brandIcon" href="{{ url_for('index') }}" aria-label="LineAgeMap Home">
+      <a class="brandIcon" href="{{ url_for('index', sample=(demo_sample or None)) }}" aria-label="LineAgeMap Home">
         <img class="brandMark" src="{{ url_for('static', filename='img/lineagemap_logo.png') }}" alt="LineAgeMap" />
       </a>
-      <a class="brandTitle" href="{{ url_for('index') }}">LineAgeMap</a>
+      <a class="brandTitle" href="{{ url_for('index', sample=(demo_sample or None)) }}">LineAgeMap</a>
     </div>
 
-    <!-- Center: desktop nav links only -->
+    <!-- Center: desktop nav-links only -->
     <nav class="topbar-links" aria-label="Primary">
-      <a href="{{ url_for('tree_view') }}" class="{% if active_page=='tree' %}is-active{% endif %}">Tree</a>
-      <a href="{{ url_for('timeline_view') }}" class="{% if active_page=='timeline' %}is-active{% endif %}">Timeline</a>
-      <a href="{{ url_for('map_view') }}" class="{% if active_page=='map' %}is-active{% endif %}">Map</a>
+      <a
+        href="{{ url_for('tree_view', sample=(demo_sample or None)) }}"
+        class="{% if active_page == 'tree' %}is-active{% endif %}"
+        data-preserve-sample="1">Tree</a>
+
+      <a
+        href="{{ url_for('timeline_view', sample=(demo_sample or None)) }}"
+        class="{% if active_page == 'timeline' %}is-active{% endif %}"
+        data-preserve-sample="1">Timeline</a>
+
+      <a
+        href="{{ url_for('map_view', sample=(demo_sample or None)) }}"
+        class="{% if active_page == 'map' %}is-active{% endif %}"
+        data-preserve-sample="1">Map</a>
     </nav>
 
-    <!-- Right: hamburger + auth actions -->
+    <!-- Right: hamburger + auth/actions -->
     <div class="topbar-right">
 
       <!-- Mobile hamburger -->
@@ -26,43 +36,121 @@
         type="button"
         aria-label="Open menu"
         aria-controls="navpanel"
-        aria-expanded="false"
-      >
+        aria-expanded="false">
         <span class="navToggleIcon" aria-hidden="true"></span>
       </button>
 
       {% if current_user %}
-        <div class="userBadge" title="{{ current_user.email }}">
-          <span class="dot" aria-hidden="true"></span>
-          <span class="email">{{ current_user.email }}</span>
-          <a
-            class="logoutLink"
-            href="{{ url_for('logout') }}"
-            onclick="return confirm('Are you sure you want to log out?');"
-          >Log out</a>
-        </div>
+      <div class="userBadge" title="{{ current_user.email }}">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="email">{{ current_user.email }}</span>
+        <a
+          class="logoutLink"
+          href="{{ url_for('logout') }}"
+          onclick="return confirm('Are you sure you want to log out?')">Log out</a>
+      </div>
       {% else %}
-        <a class="btn ghost desktopOnly" href="{{ url_for('login') }}">Log In</a>
-        <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
-      {% endif %}
-    </div>
 
+      {# ------------------------------------------------------------
+      Demo Family dropdown (desktop only)
+      - shows only if demo_sample and samples are provided
+      ------------------------------------------------------------- #}
+      {% if demo_sample and samples %}
+      <div class="demoPicker desktopOnly">
+        <label class="demoPickerLabel" for="demoSampleSelect">Demo Family</label>
+        <select id="demoSampleSelect" class="demoPickerSelect">
+          {% for s in samples %}
+          <option value="{{ s }}" {% if s == demo_sample %}selected{% endif %}>{{ s|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <a class="btn ghost desktopOnly" href="{{ url_for('login') }}">Log In</a>
+      <a class="btn primary desktopOnly" href="{{ url_for('register') }}">Get Started</a>
+      {% endif %}
+
+    </div>
   </div>
 
   <!-- Mobile dropdown panel -->
   <nav id="navpanel" class="mobileNav" aria-label="Mobile">
-    <a href="{{ url_for('tree_view') }}" class="{% if active_page=='tree' %}is-active{% endif %}">Tree</a>
-    <a href="{{ url_for('timeline_view') }}" class="{% if active_page=='timeline' %}is-active{% endif %}">Timeline</a>
-    <a href="{{ url_for('map_view') }}" class="{% if active_page=='map' %}is-active{% endif %}">Map</a>
+    <a
+      href="{{ url_for('tree_view', sample=(demo_sample or None)) }}"
+      class="{% if active_page == 'tree' %}is-active{% endif %}"
+      data-preserve-sample="1">Tree</a>
+
+    <a
+      href="{{ url_for('timeline_view', sample=(demo_sample or None)) }}"
+      class="{% if active_page == 'timeline' %}is-active{% endif %}"
+      data-preserve-sample="1">Timeline</a>
+
+    <a
+      href="{{ url_for('map_view', sample=(demo_sample or None)) }}"
+      class="{% if active_page == 'map' %}is-active{% endif %}"
+      data-preserve-sample="1">Map</a>
 
     {% if not current_user %}
-      <a href="{{ url_for('login') }}">Log In</a>
-      <a href="{{ url_for('register') }}">Get Started</a>
+
+    {# Demo Family dropdown (mobile) #}
+    {% if demo_sample and samples %}
+    <div class="demoPicker mobileOnly" style="margin-top: 10px;">
+      <label class="demoPickerLabel" for="demoSampleSelectMobile">Demo Family</label>
+      <select id="demoSampleSelectMobile" class="demoPickerSelect">
+        {% for s in samples %}
+        <option value="{{ s }}" {% if s == demo_sample %}selected{% endif %}>{{ s|capitalize }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('login') }}">Log In</a>
+    <a href="{{ url_for('register') }}">Get Started</a>
     {% else %}
-      <a
-        href="{{ url_for('logout') }}"
-        onclick="return confirm('Are you sure you want to log out?');"
-      >Log out</a>
+    <a
+      href="{{ url_for('logout') }}"
+      onclick="return confirm('Are you sure you want to log out?')">Log out</a>
     {% endif %}
   </nav>
+
+  <script>
+    (function () {
+      // Only in demo mode
+      const sample = (window.DEMO_SAMPLE || "").trim();
+      if (!sample) return;
+
+      // Keep nav links consistent if anything rendered without sample (extra safety)
+      document.querySelectorAll('a[data-preserve-sample="1"]').forEach(a => {
+        try {
+          const u = new URL(a.getAttribute("href"), window.location.origin);
+
+          // Don’t override public-family links
+          if (!u.searchParams.get("sample") && !u.searchParams.get("public")) {
+            u.searchParams.set("sample", sample);
+            a.setAttribute("href", u.pathname + u.search + u.hash);
+          }
+        } catch (e) {}
+      });
+
+      // Desktop dropdown behavior
+      const sel = document.getElementById("demoSampleSelect");
+      if (sel) {
+        sel.addEventListener("change", () => {
+          const url = new URL(window.location.href);
+          url.searchParams.set("sample", sel.value);
+          window.location.href = url.toString();
+        });
+      }
+
+      // Mobile dropdown behavior
+      const selM = document.getElementById("demoSampleSelectMobile");
+      if (selM) {
+        selM.addEventListener("change", () => {
+          const url = new URL(window.location.href);
+          url.searchParams.set("sample", selM.value);
+          window.location.href = url.toString();
+        });
+      }
+    })();
+  </script>
 </header>

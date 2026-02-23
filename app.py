@@ -7,12 +7,20 @@ LineAgeMap — app.py (cleaned + hardened)
 - Persistent storage under DATA_DIR (Render sets DATA_DIR)
 - Built-in sample datasets (includes stark)
 - Not-logged-in behavior:
-    • Tree / Timeline / Map templates should use /api/sample/stark/tree
-    • /api/tree/me fallback returns stark sample
-    • Landing previews use stark sample
+    • Tree / Timeline / Map templates should use /api/sample/<demo>/tree
+    • /api/tree/me fallback returns demo sample
+    • Landing previews use demo sample
 - Normalizes sample/user JSON into a stable schema:
     { "people": [...], "relationships": [...] }
   including relationship key normalization to parentId/childId.
+
+NEW (Demo Sample Toggle + Shared Map Background)
+- Demo sample selection is controlled by:
+    1) query string ?sample=<id>
+    2) session["demo_sample"]
+    3) DEFAULT_SAMPLE_ID
+- Exposes GET /api/samples to drive a dropdown
+- Provides map_bg_url to templates so landing Migration card can match /map background
 """
 
 import json
@@ -46,8 +54,14 @@ SECRET = os.environ.get("LINEAGEMAP_SECRET", "dev-secret-change-me")
 # Default demo dataset when not logged in (previews + fallback)
 DEFAULT_SAMPLE_ID = "stark"
 
-# Allow-list for /api/sample/<sample_id>/tree
-ALLOWED_SAMPLES = {"stark", "got", "gupta", "kennedy"}
+# Map backgrounds (used by BOTH: landing migration preview + /map page)
+# Put your real filenames in static/img/maps/
+MAP_BG_BY_SAMPLE = {
+    # Westeros demo samples → Westeros parchment map background
+    "stark": "img/maps/westeros-parchment.jpg",
+    "lannister": "img/maps/westeros-parchment.jpg",
+}
+DEFAULT_MAP_BG = "img/maps/world-parchment.jpg"
 
 app = Flask(
     __name__,
@@ -74,6 +88,7 @@ def get_session_uid() -> int | None:
     if isinstance(raw, str) and raw.isdigit():
         return int(raw)
     return None
+
 
 # -----------------------------
 # DB (Users)
@@ -241,14 +256,21 @@ def samples_disk_dir() -> Path:
 
 
 def samples_repo_dir() -> Path:
-    # Canonical "shipped" samples in repo (copied to disk on first boot)
-    return APP_DIR / "samples"
+    """
+    Canonical "shipped" samples in repo.
+
+    Your screenshot shows:
+        ./data/samples/*.json
+
+    So we treat APP_DIR/data/samples as the repo canonical location.
+    """
+    return APP_DIR / "data" / "samples"
 
 
 def seed_samples_if_missing() -> None:
     """
     Render persistent disk starts empty.
-    Keep canonical samples in repo ./samples/*.json
+    Keep canonical samples in repo ./data/samples/*.json
     Copy missing ones to DATA_DIR/samples on boot.
     """
     repo = samples_repo_dir()
@@ -270,6 +292,7 @@ def _sample_paths(sample_id: str) -> list[Path]:
         samples_disk_dir() / fname,
         # dev/legacy fallbacks
         samples_repo_dir() / fname,
+        APP_DIR / "samples" / fname,              # legacy repo location (if you had it before)
         APP_DIR / "static" / "samples" / fname,
         APP_DIR / "static" / "data" / fname,
         APP_DIR / "data" / "samples" / fname,
@@ -298,7 +321,10 @@ def _normalize_tree(payload: dict) -> dict:
     """
     people = payload.get("people") or payload.get("persons") or payload.get("nodes") or []
     rels = payload.get("relationships") or payload.get("edges") or payload.get("links") or []
-    return {"people": people if isinstance(people, list) else [], "relationships": _normalize_relationships(rels)}
+    return {
+        "people": people if isinstance(people, list) else [],
+        "relationships": _normalize_relationships(rels),
+    }
 
 
 def load_sample_tree(sample_id: str) -> Dict[str, Any]:
@@ -307,6 +333,80 @@ def load_sample_tree(sample_id: str) -> Dict[str, Any]:
     if not tree["people"]:
         abort(500, description=f"Sample '{sample_id}' loaded but produced 0 people. Check JSON schema/keys.")
     return tree
+
+
+def list_sample_ids() -> list[str]:
+    """
+    Enumerate sample IDs from both persistent disk and repo (best effort).
+    Returns unique, sorted list like: ['gupta','kennedy','lannister','stark']
+    """
+    ids: set[str] = set()
+
+    # disk
+    try:
+        for p in samples_disk_dir().glob("*.json"):
+            ids.add(p.stem.lower())
+    except Exception:
+        pass
+
+    # repo
+    repo = samples_repo_dir()
+    if repo.exists():
+        for p in repo.glob("*.json"):
+            ids.add(p.stem.lower())
+
+    # legacy repo location
+    legacy = APP_DIR / "samples"
+    if legacy.exists():
+        for p in legacy.glob("*.json"):
+            ids.add(p.stem.lower())
+
+    out = sorted(ids)
+    return out
+
+
+def get_demo_sample_id() -> str:
+    """
+    Decide which demo sample to use for non-auth views.
+    Priority:
+      1) query string ?sample=
+      2) session['demo_sample']
+      3) DEFAULT_SAMPLE_ID if available
+      4) first available sample
+      5) DEFAULT_SAMPLE_ID (even if missing) as last resort
+    """
+    available = set(list_sample_ids())
+
+    qs = (request.args.get("sample") or "").strip().lower()
+    if qs and qs in available:
+        session["demo_sample"] = qs
+        return qs
+
+    ss = (session.get("demo_sample") or "").strip().lower()
+    if ss and ss in available:
+        return ss
+
+    if DEFAULT_SAMPLE_ID in available:
+        session["demo_sample"] = DEFAULT_SAMPLE_ID
+        return DEFAULT_SAMPLE_ID
+
+    # pick something real if we can
+    if available:
+        pick = sorted(available)[0]
+        session["demo_sample"] = pick
+        return pick
+
+    # last resort: keep old behavior
+    session["demo_sample"] = DEFAULT_SAMPLE_ID
+    return DEFAULT_SAMPLE_ID
+
+
+def resolve_map_bg(sample_id: str) -> str:
+    """
+    Return static path for the background image used by /map AND the landing Migration card.
+    """
+    sid = (sample_id or "").strip().lower()
+    return MAP_BG_BY_SAMPLE.get(sid, DEFAULT_MAP_BG)
 
 
 # Seed samples once on import (safe + fast)
@@ -515,7 +615,13 @@ def login_required(view):
 # -----------------------------
 @app.get("/")
 def index():
-    fam = load_sample_tree(DEFAULT_SAMPLE_ID)
+    user = get_current_user()
+
+    samples = list_sample_ids()
+    demo_sample = get_demo_sample_id() if not user else None
+    effective_sample = demo_sample or DEFAULT_SAMPLE_ID
+
+    fam = load_sample_tree(effective_sample)
 
     people = fam.get("people") or []
     rels = fam.get("relationships") or []
@@ -535,10 +641,16 @@ def index():
     timeline_people.sort(key=lambda p: str(p.get("name", "")))
     timeline_preview = timeline_people[:5]
 
+    # shared map background for landing migration card
+    map_bg_url = url_for("static", filename=resolve_map_bg(effective_sample))
+
     return render_template(
         "index.html",
         tree_preview=tree_preview,
         timeline_preview=timeline_preview,
+        samples=samples,
+        demo_sample=demo_sample,
+        map_bg_url=map_bg_url,
     )
 
 
@@ -575,34 +687,71 @@ def public_family(slug: str):
 
 @app.get("/tree")
 def tree_view():
+    user = get_current_user()
+
     public_slug = request.args.get("public")
     sample_id = (request.args.get("sample") or "").strip().lower() or None
+
+    samples = list_sample_ids()
+    demo_sample = get_demo_sample_id() if not user else None
+
+    # If user not logged in and a sample is selected, prefer the selection
+    if not user:
+        sample_id = sample_id or demo_sample
+
     return render_template(
         "tree.html",
         public_slug=slugify(public_slug) if public_slug else None,
         sample_id=sample_id,
+        samples=samples,
+        demo_sample=demo_sample,
+        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
     )
 
 
 @app.get("/timeline")
 def timeline_view():
+    user = get_current_user()
+
     public_slug = request.args.get("public")
     sample_id = (request.args.get("sample") or "").strip().lower() or None
+
+    samples = list_sample_ids()
+    demo_sample = get_demo_sample_id() if not user else None
+
+    if not user:
+        sample_id = sample_id or demo_sample
+
     return render_template(
         "timeline.html",
         public_slug=slugify(public_slug) if public_slug else None,
         sample_id=sample_id,
+        samples=samples,
+        demo_sample=demo_sample,
+        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
     )
 
 
 @app.get("/map")
 def map_view():
+    user = get_current_user()
+
     public_slug = request.args.get("public")
     sample_id = (request.args.get("sample") or "").strip().lower() or None
+
+    samples = list_sample_ids()
+    demo_sample = get_demo_sample_id() if not user else None
+
+    if not user:
+        sample_id = sample_id or demo_sample
+
     return render_template(
         "map.html",
         public_slug=slugify(public_slug) if public_slug else None,
         sample_id=sample_id,
+        samples=samples,
+        demo_sample=demo_sample,
+        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
     )
 
 
@@ -763,6 +912,17 @@ def api_me_state():
 
 
 # -----------------------------
+# DEMO SAMPLES API
+# -----------------------------
+@app.get("/api/samples")
+def api_samples():
+    """
+    Used by the demo-family dropdown.
+    """
+    return jsonify({"samples": list_sample_ids(), "default": DEFAULT_SAMPLE_ID})
+
+
+# -----------------------------
 # TREE DATA API
 # -----------------------------
 @app.get("/api/tree/<name>")
@@ -782,8 +942,9 @@ def api_tree_me():
         if path.exists():
             return jsonify(load_family_file(path))
 
-    # Not logged in or missing file -> default sample dataset (from samples store)
-    return jsonify(load_sample_tree(DEFAULT_SAMPLE_ID))
+    # Not logged in or missing file -> demo sample dataset (session/query controlled)
+    demo = get_demo_sample_id()
+    return jsonify(load_sample_tree(demo))
 
 
 @app.get("/api/public/<slug>/tree")
@@ -797,9 +958,8 @@ def api_public_tree(slug: str):
 @app.get("/api/sample/<sample_id>/tree")
 def api_sample_tree(sample_id: str):
     sample_id = (sample_id or "").strip().lower()
-    if sample_id not in ALLOWED_SAMPLES:
+    if sample_id not in set(list_sample_ids()):
         abort(404, description="Sample not found.")
-
     return jsonify(load_sample_tree(sample_id))
 
 

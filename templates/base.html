@@ -16,6 +16,16 @@
 
     <body class="{{ body_class|default('app') }}">
 
+        {# ---------------------------------------------------------------
+        Demo sample context for nav + dropdown (used by _topbar.html)
+        - demo_sample exists only for non-auth views (as set in app.py)
+        - samples is the list of sample ids from disk/repo
+        ---------------------------------------------------------------- #}
+        <script>
+          window.DEMO_SAMPLE = "{{ demo_sample or '' }}";
+          window.DEMO_SAMPLES = {{ (samples or [])|tojson }};
+        </script>
+
         {% include "_topbar.html" %}
 
         <main class="page">

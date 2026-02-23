@@ -36,21 +36,42 @@
 {% endblock %}
 
 {% block scripts %}
-{# Map accordion JS expects {people:[...]} so we use TREE endpoints. #}
+{# -------------------------------------------------------------------------
+Map accordion JS expects {people:[...]} so we keep using TREE endpoints.
+Priority order:
+1) public_slug (public tree)
+2) explicit sample_id in URL
+3) logged-in user => /api/tree/me
+4) demo_sample (session/query chosen)
+5) DEFAULT fallback stark
+------------------------------------------------------------------------- #}
+
 {% if public_slug %}
 {% set MAP_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
 {% elif sample_id %}
 {% set MAP_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
 {% elif current_user %}
 {% set MAP_API_URL = "/api/tree/me" %}
+{% elif demo_sample %}
+{% set MAP_API_URL = "/api/sample/" ~ demo_sample ~ "/tree" %}
 {% else %}
 {% set MAP_API_URL = "/api/sample/stark/tree" %}
 {% endif %}
 
 <script>
+  // Data endpoint (tree-shaped payload)
   window.MAP_API_URL = "{{ MAP_API_URL }}";
-  if (!window.MAP_FAMILY_ID) window.MAP_FAMILY_ID = "stark";
+
+  // Selected family id (used for any internal labels / debug / state)
+  // Prefer sample_id, then demo_sample, else stark.
+  window.MAP_FAMILY_ID = "{{ (sample_id or demo_sample or 'stark') }}";
 </script>
 
-<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script>
+  // IMPORTANT: map image background should match landing Migration card AND map page.
+  // app.py now passes map_bg_url (resolved per selected demo sample).
+  window.MAP_IMAGE_URL = "{{ map_bg_url }}";
+</script>
+
+<script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
 {% endblock %}

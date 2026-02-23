@@ -1,14 +1,21 @@
 /* map.css
    Single source of truth for Map UI
-   UPDATED:
-   - museum-grade single-panel styling (Westeros mode)
-   - tighter vertical rhythm
-   - better map frame + pins + grid
+   - Accordion map (acc + accMap + pins + tip)
+   - Designed to survive aggressive global button/img rules
+   - UPDATED: bigger map + responsive pins + cluster leader lines + anchor dot
 */
 
+/* ================================
+   Global knobs (optional)
+================================ */
+:root{
+  --pinSize: clamp(34px, 2.9vw, 54px);
+  --pinRing: 3px;
+}
+
 /* ===========================
-   Map page sizing
-   =========================== */
+   Map page layout sizing
+=========================== */
 
 .mapShell{
   width: min(1600px, calc(100% - (var(--page-pad) * 2)));
@@ -28,8 +35,8 @@
 }
 
 /* ===========================
-   Loading / cards
-   =========================== */
+   Loading
+=========================== */
 
 .mapLoading{
   margin: 0 auto;
@@ -41,7 +48,10 @@
   color: rgba(40,32,24,0.75);
 }
 
-/* Default accordion containers (Earth mode) */
+/* ===========================
+   Accordion containers
+=========================== */
+
 .acc{
   margin: 0 auto 12px;
   border: 1px solid rgba(40,32,24,0.14);
@@ -50,8 +60,6 @@
   box-shadow: 0 14px 28px rgba(40,32,24,0.10);
   overflow: hidden;
 }
-
-.acc.sub{ margin-top: 10px; margin-bottom: 10px; }
 
 .accHead{
   list-style: none;
@@ -73,93 +81,86 @@
   color: rgba(70,50,36,0.92);
 }
 
-.accBody{ padding: 12px 12px 14px; }
-
-/* ===========================
-   Single-panel (Westeros mode)
-   =========================== */
-
-.mapSingle{
-  border: 1px solid rgba(40,32,24,0.14);
-  border-radius: 18px;
-  background: rgba(255,255,255,0.40);
-  box-shadow: 0 18px 36px rgba(40,32,24,0.12);
-  overflow: hidden;
+.accBody{
+  padding: 18px 18px 20px;
 }
-
-.mapSingleHead{
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid rgba(40,32,24,0.10);
-  background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.30));
-}
-
-.mapSingleTitle{
-  font-weight: 900;
-  font-size: 16px;
-  letter-spacing: 0.2px;
-  color: rgba(70,50,36,0.92);
-}
-
-.mapSingleSub{
-  margin-top: 4px;
-  font-size: 12.5px;
-  color: rgba(70,50,36,0.70);
-}
-
-/* Region row */
-.regionRow{
-  display:flex;
-  flex-wrap:wrap;
-  gap: 8px;
-  padding: 10px 12px 0;
-}
-
-.regionPill{
-  border: 1px solid rgba(40,32,24,0.14);
-  background: rgba(255,255,255,0.58);
-  padding: 7px 10px;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 12.5px;
-  color: rgba(70,50,36,0.92);
-  cursor: pointer;
-}
-
-.regionPill:hover{ filter: brightness(1.02); }
-.regionPill:active{ transform: translateY(1px); }
 
 /* ===========================
    Map canvas
-   =========================== */
+=========================== */
 
 .accMap{
   position: relative;
   isolation: isolate;
-  border-radius: 16px;
-  border: 1px solid rgba(40,32,24,0.16);
-  background-color: rgba(239,230,216,0.55);
+  border-radius: 18px;
+  border: 1px solid rgba(40,32,24,0.14);
+
+  background-color: rgba(239,230,216,0.18);
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: cover;
+  background-size: contain;
 
-  height: clamp(360px, 56vh, 760px);
+  height: clamp(520px, 72vh, 980px);
+
   overflow: hidden;
 
   box-shadow:
-    0 20px 40px rgba(40,32,24,0.18),
-    0 6px 12px rgba(40,32,24,0.08),
-    inset 0 0 0 1px rgba(255,255,255,0.20);
+    0 26px 56px rgba(40,32,24,0.18),
+    0 8px 16px rgba(40,32,24,0.08),
+    inset 0 0 0 1px rgba(255,255,255,0.22);
 }
 
+.mapStage{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.mapImage{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* SVG leader-line overlay (under pins) */
+.pinLines{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 12;
+}
+
+/* pinLayer */
+.pinLayer{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.pin,
+.pinCluster{
+  pointer-events: auto;
+}
+
+/* Mobile */
 @media (max-width: 520px){
-  .accMap{ height: clamp(320px, 52vh, 560px); }
+  .accMap{ height: clamp(380px, 62vh, 680px); }
 }
 
+/* Desktop */
 @media (min-width: 1100px){
-  .accMap{ height: clamp(520px, calc(100vh - 250px), 860px); }
+  .accMap{ height: clamp(620px, calc(100vh - 230px), 980px); }
 }
 
-/* Soft vignette behind pins */
+/* Vignette */
 .accMap::before{
   content:"";
   position:absolute;
@@ -175,17 +176,64 @@
 }
 
 /* ===========================
-   Pins (refined)
-   =========================== */
+   Zoom controls
+=========================== */
+
+.accMap .mapZoomUI{
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 60;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 12px 26px rgba(40,32,24,0.14);
+  backdrop-filter: blur(6px);
+}
+
+.accMap .mapZoomBtn{
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.85);
+  color: rgba(70,50,36,0.92);
+  font-weight: 900;
+  cursor: pointer;
+  display:grid;
+  place-items:center;
+  box-shadow: 0 10px 18px rgba(40,32,24,0.10);
+}
+
+.accMap .mapZoomBtn:hover{ filter: brightness(1.02); }
+.accMap .mapZoomBtn:active{ transform: translateY(1px); }
+
+.accMap.isPannable{ cursor: grab; }
+.accMap.isPannable.isDragging{ cursor: grabbing; }
+
+/* ===========================
+   Pins
+=========================== */
+
+.accMap .pin > img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 50% 30% !important;
+  transform-origin: center !important;
+  display: block !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
 
 .accMap .pin{
   position: absolute !important;
-  width: 34px !important;
-  height: 34px !important;
-  min-width: 34px !important;
-  min-height: 34px !important;
-  max-width: 34px !important;
-  max-height: 34px !important;
+
+  width: var(--pinSize) !important;
+  height: var(--pinSize) !important;
 
   padding: 0 !important;
   margin: 0 !important;
@@ -196,27 +244,22 @@
 
   border-radius: 999px !important;
 
-  border: 2px solid rgba(255,255,255,0.92);
-  box-shadow:
-    0 12px 22px rgba(40,32,24,0.22),
-    0 0 0 1px rgba(120, 85, 35, 0.32);
+  border: var(--pinRing) solid rgba(245,236,223,0.95) !important;
 
-  background: rgba(255,255,255,0.70);
+  box-shadow:
+    0 14px 24px rgba(40,32,24,0.22),
+    0 0 0 8px rgba(245,236,223,0.85);
+
+  background: rgba(255,255,255,0.74);
   overflow: hidden !important;
 
-  transform: translate(-50%, -50%) !important;
+  transform: translate(
+    calc(-50% + var(--dx, 0px)),
+    calc(-50% + var(--dy, 0px))
+  ) !important;
+
   cursor: pointer;
   z-index: 25;
-}
-
-.accMap .pin img{
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: cover !important;
-  display: block !important;
-  filter: contrast(1.06) saturate(1.06);
 }
 
 .accMap .pin:focus{
@@ -224,10 +267,105 @@
   outline-offset: 2px;
 }
 
-/* ===========================
-   Tooltip
-   =========================== */
+/* Cluster badge */
+.accMap .pinCluster{
+  position: absolute !important;
 
+  width: clamp(34px, 3.2vw, 48px) !important;
+  height: clamp(34px, 3.2vw, 48px) !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  border-radius: 999px !important;
+  border: 2px solid rgba(255,255,255,0.92);
+
+  background: rgba(255,255,255,0.78);
+
+  box-shadow:
+    0 16px 30px rgba(40,32,24,0.26),
+    0 0 0 1px rgba(120, 85, 35, 0.34);
+
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer;
+
+  z-index: 28;
+}
+
+.accMap .pinCluster__count{
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.95);
+
+  background: rgba(189, 145, 63, 0.95);
+  color: rgba(255,255,255,0.98);
+
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+
+  box-shadow: 0 10px 18px rgba(40,32,24,0.22);
+}
+
+.accMap .pinCluster__ring{
+  width: 68%;
+  height: 68%;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.88);
+  box-shadow: inset 0 0 0 1px rgba(40,32,24,0.10);
+}
+
+.accMap .pinCluster__ring img{
+  width: 100%;
+  height: 100%;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover;
+  display:block;
+  filter: contrast(1.05) saturate(1.05);
+}
+
+/* True location anchor dot */
+.pinAnchor{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  z-index: 18;
+  pointer-events: none;
+
+  background: rgba(189, 145, 63, 0.95);
+  box-shadow:
+    0 10px 18px rgba(40,32,24,0.22),
+    0 0 0 6px rgba(245,236,223,0.40),
+    inset 0 0 0 1px rgba(40,32,24,0.18);
+}
+
+/* Leader lines */
+.pinLine{
+  stroke: rgba(60, 35, 15, 0.65);
+  stroke-width: 3;
+}
+.pinLine--main{
+  stroke: rgba(60, 35, 15, 0.40);
+  stroke-width: 4;
+}
+/* Tooltip */
 .accMap .pinTip{
   position:absolute;
   left:0; top:0;
@@ -236,8 +374,8 @@
 }
 
 .accMap .pinTip__inner{
-  min-width: 180px;
-  max-width: 260px;
+  min-width: 190px;
+  max-width: 280px;
   border-radius: 14px;
   border: 1px solid rgba(40,32,24,0.14);
   background: rgba(255,255,255,0.94);
@@ -277,64 +415,65 @@
   line-height: 1.25;
 }
 
-/* ===========================
-   People grid (tight + premium)
-   =========================== */
-
-.peopleGrid{
-  margin: 10px 12px 14px;
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px;
+/* City pills (kept) */
+.cityRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.peopleGrid--compact{
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+.cityPill{
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.58);
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(70,50,36,0.92);
 }
 
-.personCard{
+
+.demoPicker{
   display:flex;
   align-items:center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(40,32,24,0.14);
-  background: rgba(255,255,255,0.62);
-  box-shadow: 0 10px 20px rgba(40,32,24,0.08);
-}
-
-.personPhoto{
-  width: 44px;
-  height: 44px;
+  gap:.5rem;
+  padding:.35rem .6rem;
+  border:1px solid rgba(60,40,20,.18);
+  background: rgba(255,255,255,.35);
   border-radius: 999px;
-  object-fit: cover;
-  border: 2px solid rgba(255,255,255,0.92);
-  box-shadow:
-    0 10px 18px rgba(40,32,24,0.10),
-    0 0 0 1px rgba(120, 85, 35, 0.25);
-  flex: 0 0 auto;
+  backdrop-filter: blur(6px);
 }
 
-.personName{
-  font-weight: 900;
-  color: rgba(70,50,36,0.92);
-  line-height: 1.1;
+.demoPickerLabel{
+  font-size:.85rem;
+  color: rgba(35,25,15,.72);
+  letter-spacing:.02em;
 }
 
-.personSub{
-  margin-top: 3px;
-  font-size: 12px;
-  color: rgba(70,50,36,0.70);
-  line-height: 1.2;
+.demoPickerSelect{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  border:1px solid rgba(60,40,20,.22);
+  background: rgba(255,255,255,.55);
+  color: rgba(25,18,10,.88);
+
+  padding:.35rem 2.0rem .35rem .7rem;
+  border-radius: 999px;
+  font-size:.9rem;
+  cursor:pointer;
+  outline:none;
 }
 
-.personCard:hover{ filter: brightness(1.02); }
-
-@media (max-width: 700px){
-  .peopleGrid,
-  .peopleGrid--compact{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .personCard{ padding: 10px; }
-  .personPhoto{ width: 40px; height: 40px; }
+.demoPickerSelect{
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(50,35,20,.7) 50%),
+    linear-gradient(135deg, rgba(50,35,20,.7) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.1rem) 55%,
+    calc(100% - .85rem) 55%;
+  background-size: .28rem .28rem, .28rem .28rem;
+  background-repeat:no-repeat;
 }
