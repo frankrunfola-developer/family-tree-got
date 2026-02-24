@@ -7,20 +7,12 @@ LineAgeMap — app.py (cleaned + hardened)
 - Persistent storage under DATA_DIR (Render sets DATA_DIR)
 - Built-in sample datasets (includes stark)
 - Not-logged-in behavior:
-    • Tree / Timeline / Map templates should use /api/sample/<demo>/tree
-    • /api/tree/me fallback returns demo sample
-    • Landing previews use demo sample
+    • Tree / Timeline / Map templates should use /api/sample/<sample>/tree when sample_id present
+    • /api/tree/me fallback returns DEFAULT_SAMPLE_ID sample
+    • Landing page is driven ONLY by ?sample=<id> (no heavy JSON work on "/")
 - Normalizes sample/user JSON into a stable schema:
     { "people": [...], "relationships": [...] }
   including relationship key normalization to parentId/childId.
-
-NEW (Demo Sample Toggle + Shared Map Background)
-- Demo sample selection is controlled by:
-    1) query string ?sample=<id>
-    2) session["demo_sample"]
-    3) DEFAULT_SAMPLE_ID
-- Exposes GET /api/samples to drive a dropdown
-- Provides map_bg_url to templates so landing Migration card can match /map background
 """
 
 import json
@@ -54,14 +46,8 @@ SECRET = os.environ.get("LINEAGEMAP_SECRET", "dev-secret-change-me")
 # Default demo dataset when not logged in (previews + fallback)
 DEFAULT_SAMPLE_ID = "stark"
 
-# Map backgrounds (used by BOTH: landing migration preview + /map page)
-# Put your real filenames in static/img/maps/
-MAP_BG_BY_SAMPLE = {
-    # Westeros demo samples → Westeros parchment map background
-    "stark": "img/maps/westeros-parchment.jpg",
-    "lannister": "img/maps/westeros-parchment.jpg",
-}
-DEFAULT_MAP_BG = "img/maps/world-parchment.jpg"
+# Allow-list for /api/sample/<sample_id>/tree and demo pages
+ALLOWED_SAMPLES = {"stark", "got", "gupta", "kennedy", "lannister"}
 
 app = Flask(
     __name__,
@@ -88,6 +74,24 @@ def get_session_uid() -> int | None:
     if isinstance(raw, str) and raw.isdigit():
         return int(raw)
     return None
+
+
+def sanitize_sample_id(raw: str | None) -> str:
+    s = (raw or "").strip().lower()
+    return s if s in ALLOWED_SAMPLES else DEFAULT_SAMPLE_ID
+
+
+def optional_sample_id(raw: str | None) -> str | None:
+    """
+    For pages like /tree?sample=kennedy:
+    return None if missing; else return sanitized if allowed; else DEFAULT_SAMPLE_ID.
+    """
+    if raw is None:
+        return None
+    s = (raw or "").strip().lower()
+    if not s:
+        return None
+    return s if s in ALLOWED_SAMPLES else DEFAULT_SAMPLE_ID
 
 
 # -----------------------------
@@ -256,21 +260,14 @@ def samples_disk_dir() -> Path:
 
 
 def samples_repo_dir() -> Path:
-    """
-    Canonical "shipped" samples in repo.
-
-    Your screenshot shows:
-        ./data/samples/*.json
-
-    So we treat APP_DIR/data/samples as the repo canonical location.
-    """
-    return APP_DIR / "data" / "samples"
+    # Canonical "shipped" samples in repo ./samples/*.json
+    return APP_DIR / "samples"
 
 
 def seed_samples_if_missing() -> None:
     """
     Render persistent disk starts empty.
-    Keep canonical samples in repo ./data/samples/*.json
+    Keep canonical samples in repo ./samples/*.json
     Copy missing ones to DATA_DIR/samples on boot.
     """
     repo = samples_repo_dir()
@@ -287,12 +284,9 @@ def seed_samples_if_missing() -> None:
 
 def _sample_paths(sample_id: str) -> list[Path]:
     fname = sample_id if sample_id.endswith(".json") else f"{sample_id}.json"
-    # prefer persistent disk first
     return [
-        samples_disk_dir() / fname,
-        # dev/legacy fallbacks
-        samples_repo_dir() / fname,
-        APP_DIR / "samples" / fname,              # legacy repo location (if you had it before)
+        samples_disk_dir() / fname,          # preferred (persistent)
+        samples_repo_dir() / fname,          # shipped in repo
         APP_DIR / "static" / "samples" / fname,
         APP_DIR / "static" / "data" / fname,
         APP_DIR / "data" / "samples" / fname,
@@ -335,128 +329,8 @@ def load_sample_tree(sample_id: str) -> Dict[str, Any]:
     return tree
 
 
-def list_sample_ids() -> list[str]:
-    """
-    Enumerate sample IDs from both persistent disk and repo (best effort).
-    Returns unique, sorted list like: ['gupta','kennedy','lannister','stark']
-    """
-    ids: set[str] = set()
-
-    # disk
-    try:
-        for p in samples_disk_dir().glob("*.json"):
-            ids.add(p.stem.lower())
-    except Exception:
-        pass
-
-    # repo
-    repo = samples_repo_dir()
-    if repo.exists():
-        for p in repo.glob("*.json"):
-            ids.add(p.stem.lower())
-
-    # legacy repo location
-    legacy = APP_DIR / "samples"
-    if legacy.exists():
-        for p in legacy.glob("*.json"):
-            ids.add(p.stem.lower())
-
-    out = sorted(ids)
-    return out
-
-
-def get_demo_sample_id() -> str:
-    """
-    Decide which demo sample to use for non-auth views.
-    Priority:
-      1) query string ?sample=
-      2) session['demo_sample']
-      3) DEFAULT_SAMPLE_ID if available
-      4) first available sample
-      5) DEFAULT_SAMPLE_ID (even if missing) as last resort
-    """
-    available = set(list_sample_ids())
-
-    qs = (request.args.get("sample") or "").strip().lower()
-    if qs and qs in available:
-        session["demo_sample"] = qs
-        return qs
-
-    ss = (session.get("demo_sample") or "").strip().lower()
-    if ss and ss in available:
-        return ss
-
-    if DEFAULT_SAMPLE_ID in available:
-        session["demo_sample"] = DEFAULT_SAMPLE_ID
-        return DEFAULT_SAMPLE_ID
-
-    # pick something real if we can
-    if available:
-        pick = sorted(available)[0]
-        session["demo_sample"] = pick
-        return pick
-
-    # last resort: keep old behavior
-    session["demo_sample"] = DEFAULT_SAMPLE_ID
-    return DEFAULT_SAMPLE_ID
-
-
-def resolve_map_bg(sample_id: str) -> str:
-    """
-    Return static path for the background image used by /map AND the landing Migration card.
-    """
-    sid = (sample_id or "").strip().lower()
-    return MAP_BG_BY_SAMPLE.get(sid, DEFAULT_MAP_BG)
-
-
 # Seed samples once on import (safe + fast)
 seed_samples_if_missing()
-
-
-# -----------------------------
-# PUBLIC SLUGS
-# -----------------------------
-def slugify(s: str) -> str:
-    s = (s or "").strip().lower()
-    out: list[str] = []
-    for c in s:
-        if c.isalnum():
-            out.append(c)
-        elif c in ("-", "_", "."):
-            out.append("-")
-        elif c.isspace():
-            out.append("-")
-    slug = "".join(out).strip("-")
-    while "--" in slug:
-        slug = slug.replace("--", "-")
-    return slug[:64] or "family"
-
-
-def unique_public_slug(con: sqlite3.Connection, base: str) -> str:
-    base = slugify(base)
-    slug = base
-    i = 2
-    while True:
-        row = con.execute("SELECT 1 FROM users WHERE public_slug = ?", (slug,)).fetchone()
-        if not row:
-            return slug
-        slug = f"{base}-{i}"
-        i += 1
-
-
-def load_public_family_by_slug(slug: str) -> Optional[Dict[str, Any]]:
-    safe_slug = slugify(slug)
-    with db_connect() as con:
-        row = con.execute(
-            "SELECT id, is_public FROM users WHERE public_slug = ?",
-            (safe_slug,),
-        ).fetchone()
-
-    if not row:
-        return None
-    if int(row["is_public"]) != 1:
-        return None
-    return load_user_family(int(row["id"]))
 
 
 # -----------------------------
@@ -492,18 +366,20 @@ def get_current_user() -> Optional[dict]:
     }
 
 
-def set_user_state(uid: int, state: dict) -> None:
-    with db_connect() as con:
-        con.execute(
-            "UPDATE users SET state_json = ? WHERE id = ?",
-            (json.dumps(state, ensure_ascii=False), uid),
-        )
-        con.commit()
-
-
 @app.context_processor
 def inject_current_user() -> dict:
     return {"current_user": get_current_user()}
+
+
+@app.context_processor
+def inject_sample_id() -> dict:
+    """
+    Always expose a safe demo sample_id to templates.
+    - If a page explicitly passes sample_id, that wins.
+    - Otherwise it falls back to sanitized request arg or DEFAULT_SAMPLE_ID.
+    """
+    # If a view already passed sample_id, Jinja will use that value anyway.
+    return {"sample_id": sanitize_sample_id(request.args.get("sample"))}
 
 
 # -----------------------------
@@ -519,24 +395,8 @@ def starter_family_payload() -> Dict[str, Any]:
             "starter": True,
         },
         "people": [
-            {
-                "id": p1,
-                "name": "",
-                "born": "",
-                "died": "",
-                "photo": "",
-                "location": {"city": "", "region": "", "country": ""},
-                "events": [],
-            },
-            {
-                "id": p2,
-                "name": "",
-                "born": "",
-                "died": "",
-                "photo": "",
-                "location": {"city": "", "region": "", "country": ""},
-                "events": [],
-            },
+            {"id": p1, "name": "", "born": "", "died": "", "photo": "", "location": {"city": "", "region": "", "country": ""}, "events": []},
+            {"id": p2, "name": "", "born": "", "died": "", "photo": "", "location": {"city": "", "region": "", "country": ""}, "events": []},
         ],
         "relationships": [],
     }
@@ -578,12 +438,9 @@ def create_user(email: str, password: str) -> int:
 
     try:
         with db_connect() as con:
-            base_slug = email.split("@", 1)[0]
-            pub_slug = unique_public_slug(con, base_slug)
-
             cur = con.execute(
                 "INSERT INTO users (email, password_hash, public_slug, state_json) VALUES (?, ?, ?, ?)",
-                (email, pw_hash, pub_slug, json.dumps(default_state)),
+                (email, pw_hash, "", json.dumps(default_state)),
             )
             uid = require_lastrowid(cur)
 
@@ -606,7 +463,6 @@ def login_required(view):
         if get_session_uid() is None:
             return redirect(url_for("login", next=request.path))
         return view(*args, **kwargs)
-
     return wrapped
 
 
@@ -615,144 +471,31 @@ def login_required(view):
 # -----------------------------
 @app.get("/")
 def index():
-    user = get_current_user()
-
-    samples = list_sample_ids()
-    demo_sample = get_demo_sample_id() if not user else None
-    effective_sample = demo_sample or DEFAULT_SAMPLE_ID
-
-    fam = load_sample_tree(effective_sample)
-
-    people = fam.get("people") or []
-    rels = fam.get("relationships") or []
-
-    # roots = people with no incoming child links
-    child_ids = set()
-    for r in rels:
-        child = r.get("childId")
-        if child:
-            child_ids.add(str(child))
-
-    roots = [p for p in people if str(p.get("id")) not in child_ids]
-    roots = roots[:2] if roots else people[:2]
-    tree_preview = {"parents": roots, "children": []}
-
-    timeline_people = [p for p in people if p.get("photo")]
-    timeline_people.sort(key=lambda p: str(p.get("name", "")))
-    timeline_preview = timeline_people[:5]
-
-    # shared map background for landing migration card
-    map_bg_url = url_for("static", filename=resolve_map_bg(effective_sample))
+    # Demo families only: landing is driven by ?sample=<id>
+    sample_id = sanitize_sample_id(request.args.get("sample"))
 
     return render_template(
         "index.html",
-        tree_preview=tree_preview,
-        timeline_preview=timeline_preview,
-        samples=samples,
-        demo_sample=demo_sample,
-        map_bg_url=map_bg_url,
-    )
-
-
-@app.get("/f/<slug>")
-def public_family(slug: str):
-    fam = load_public_family_by_slug(slug)
-    if fam is None:
-        abort(404)
-
-    people = fam.get("people") or []
-    rels = fam.get("relationships") or []
-
-    child_ids = set()
-    for r in rels:
-        child = r.get("childId")
-        if child:
-            child_ids.add(str(child))
-
-    roots = [p for p in people if str(p.get("id")) not in child_ids]
-    roots = roots[:2] if roots else people[:2]
-    tree_preview = {"parents": roots, "children": []}
-
-    timeline_people = [p for p in people if p.get("photo")]
-    timeline_preview = timeline_people[:5]
-
-    return render_template(
-        "public_family.html",
-        public_slug=slugify(slug),
-        family_name=(fam.get("meta") or {}).get("family_name") or "Family",
-        tree_preview=tree_preview,
-        timeline_preview=timeline_preview,
+        sample_id=sample_id
     )
 
 
 @app.get("/tree")
 def tree_view():
-    user = get_current_user()
-
-    public_slug = request.args.get("public")
-    sample_id = (request.args.get("sample") or "").strip().lower() or None
-
-    samples = list_sample_ids()
-    demo_sample = get_demo_sample_id() if not user else None
-
-    # If user not logged in and a sample is selected, prefer the selection
-    if not user:
-        sample_id = sample_id or demo_sample
-
-    return render_template(
-        "tree.html",
-        public_slug=slugify(public_slug) if public_slug else None,
-        sample_id=sample_id,
-        samples=samples,
-        demo_sample=demo_sample,
-        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
-    )
+    sample_id = optional_sample_id(request.args.get("sample"))
+    return render_template("tree.html", public_slug=None, sample_id=sample_id)
 
 
 @app.get("/timeline")
 def timeline_view():
-    user = get_current_user()
-
-    public_slug = request.args.get("public")
-    sample_id = (request.args.get("sample") or "").strip().lower() or None
-
-    samples = list_sample_ids()
-    demo_sample = get_demo_sample_id() if not user else None
-
-    if not user:
-        sample_id = sample_id or demo_sample
-
-    return render_template(
-        "timeline.html",
-        public_slug=slugify(public_slug) if public_slug else None,
-        sample_id=sample_id,
-        samples=samples,
-        demo_sample=demo_sample,
-        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
-    )
+    sample_id = optional_sample_id(request.args.get("sample"))
+    return render_template("timeline.html", public_slug=None, sample_id=sample_id)
 
 
 @app.get("/map")
 def map_view():
-    user = get_current_user()
-
-    public_slug = request.args.get("public")
-    sample_id = (request.args.get("sample") or "").strip().lower() or None
-
-    samples = list_sample_ids()
-    demo_sample = get_demo_sample_id() if not user else None
-
-    if not user:
-        sample_id = sample_id or demo_sample
-
-    return render_template(
-        "map.html",
-        public_slug=slugify(public_slug) if public_slug else None,
-        sample_id=sample_id,
-        samples=samples,
-        demo_sample=demo_sample,
-        map_bg_url=url_for("static", filename=resolve_map_bg(sample_id or demo_sample or DEFAULT_SAMPLE_ID)),
-    )
+    sample_id = optional_sample_id(request.args.get("sample"))
+    return render_template("map.html", public_slug=None, sample_id=sample_id)
 
 
 # -----------------------------
@@ -773,7 +516,6 @@ def login_post():
         return render_template("login.html", error="Invalid email or password.")
 
     session["user_id"] = user["id"]
-
     next_url = request.args.get("next") or request.form.get("next")
     return redirect(next_url or url_for("tree_view"))
 
@@ -805,124 +547,6 @@ def logout():
 
 
 # -----------------------------
-# AUTH API
-# -----------------------------
-@app.post("/api/register")
-def api_register():
-    payload = request.get_json(silent=True) or {}
-    email = str(payload.get("email", "")).strip().lower()
-    password = str(payload.get("password", ""))
-
-    if not email or "@" not in email or len(email) > 254:
-        return jsonify({"ok": False, "error": "Please enter a valid email."}), 400
-    if not password or len(password) < 8:
-        return jsonify({"ok": False, "error": "Password must be at least 8 characters."}), 400
-
-    try:
-        uid = create_user(email, password)
-    except ValueError as e:
-        msg = str(e)
-        code = 409 if "already registered" in msg.lower() else 400
-        return jsonify({"ok": False, "error": msg}), code
-
-    session["user_id"] = uid
-    return jsonify({"ok": True, "email": email, "state": {"family_id": "me"}})
-
-
-@app.post("/api/login")
-def api_login():
-    payload = request.get_json(silent=True) or {}
-    email = str(payload.get("email", "")).strip().lower()
-    password = str(payload.get("password", ""))
-
-    if not email or not password:
-        return jsonify({"ok": False, "error": "Email and password are required."}), 400
-
-    with db_connect() as con:
-        row = con.execute(
-            "SELECT id, email, password_hash, state_json FROM users WHERE email = ?",
-            (email,),
-        ).fetchone()
-
-    if not row or not check_password_hash(row["password_hash"], password):
-        return jsonify({"ok": False, "error": "Invalid email or password."}), 401
-
-    session["user_id"] = int(row["id"])
-    try:
-        state = json.loads(row["state_json"] or "{}")
-    except Exception:
-        state = {}
-
-    return jsonify({"ok": True, "email": row["email"], "state": state})
-
-
-@app.post("/api/logout")
-def api_logout():
-    session.pop("user_id", None)
-    return jsonify({"ok": True})
-
-
-@app.get("/api/me")
-def api_me():
-    user = get_current_user()
-    if not user:
-        return jsonify({"authenticated": False})
-    return jsonify(
-        {
-            "authenticated": True,
-            "email": user["email"],
-            "state": user.get("state", {}),
-            "public_slug": user.get("public_slug", ""),
-            "is_public": bool(user.get("is_public")),
-        }
-    )
-
-
-@app.post("/api/me/public")
-def api_me_public_toggle():
-    user = get_current_user()
-    if not user:
-        return jsonify({"ok": False, "error": "Not authenticated."}), 401
-
-    payload = request.get_json(silent=True) or {}
-    is_public = 1 if bool(payload.get("is_public")) else 0
-
-    with db_connect() as con:
-        con.execute("UPDATE users SET is_public = ? WHERE id = ?", (is_public, int(user["id"])))
-        con.commit()
-
-    return jsonify({"ok": True, "is_public": bool(is_public), "public_slug": user.get("public_slug", "")})
-
-
-@app.post("/api/me/state")
-def api_me_state():
-    user = get_current_user()
-    if not user:
-        return jsonify({"ok": False, "error": "Not authenticated."}), 401
-
-    payload = request.get_json(silent=True) or {}
-    state = dict(user.get("state", {}))
-
-    fam = payload.get("family_id")
-    if fam:
-        state["family_id"] = str(fam)
-
-    set_user_state(int(user["id"]), state)
-    return jsonify({"ok": True, "state": state})
-
-
-# -----------------------------
-# DEMO SAMPLES API
-# -----------------------------
-@app.get("/api/samples")
-def api_samples():
-    """
-    Used by the demo-family dropdown.
-    """
-    return jsonify({"samples": list_sample_ids(), "default": DEFAULT_SAMPLE_ID})
-
-
-# -----------------------------
 # TREE DATA API
 # -----------------------------
 @app.get("/api/tree/<name>")
@@ -942,23 +566,13 @@ def api_tree_me():
         if path.exists():
             return jsonify(load_family_file(path))
 
-    # Not logged in or missing file -> demo sample dataset (session/query controlled)
-    demo = get_demo_sample_id()
-    return jsonify(load_sample_tree(demo))
-
-
-@app.get("/api/public/<slug>/tree")
-def api_public_tree(slug: str):
-    fam = load_public_family_by_slug(slug)
-    if fam is None:
-        return jsonify({"error": "not found"}), 404
-    return jsonify(fam)
+    return jsonify(load_sample_tree(DEFAULT_SAMPLE_ID))
 
 
 @app.get("/api/sample/<sample_id>/tree")
 def api_sample_tree(sample_id: str):
     sample_id = (sample_id or "").strip().lower()
-    if sample_id not in set(list_sample_ids()):
+    if sample_id not in ALLOWED_SAMPLES:
         abort(404, description="Sample not found.")
     return jsonify(load_sample_tree(sample_id))
 

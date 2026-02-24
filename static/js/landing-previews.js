@@ -1,117 +1,182 @@
-// static/js/landing-previews.js
-// Renders the 3 mini previews on the marketing landing page.
+/* landing-previews.js
+   Visual mini-previews for landing cards:
+     - Tree: avatar pills in 2 rows (root + children)
+     - Timeline: 4 person rows with avatar + location
+     - Map: parchment map background + pins + 2 avatars
+   Data:
+     GET /api/sample/<sample>/tree
+*/
 
-function esc(s) {
-  return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-}
+(function () {
+  "use strict";
 
-function photoOf(p) {
-  if (!p) return "";
-  return p.photoUrl || p.photo || p.imageUrl || "";
-}
+  const treeEl = document.getElementById("treePreview");
+  const tlEl = document.getElementById("timelinePreview");
+  const mapEl = document.getElementById("mapPreview");
+  if (!treeEl && !tlEl && !mapEl) return;
 
-function renderTree(demo) {
-  const coupleEl = document.getElementById("miniCouple");
-  const kidsEl = document.getElementById("miniKids");
-  if (!coupleEl || !kidsEl) return;
+  const url = new URL(window.location.href);
+  const sample = (url.searchParams.get("sample") || "stark").toLowerCase();
 
-  const couple = (demo?.tree?.couple || []).filter(Boolean);
-  const kids = (demo?.tree?.kids || []).filter(Boolean).slice(0, 6);
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
 
-  const p1 = couple[0];
-  const p2 = couple[1];
-  const coupleLabel = [p1?.name, p2?.name].filter(Boolean).join("  +  ").replace("  +  ", " & ");
+  function avatarHtml(p) {
+    const name = p?.name || p?.id || "Unknown";
+    const photo = p?.photo || "";
+    if (photo) {
+      return `<span class="pAvatar"><img src="${esc(photo)}" alt="${esc(name)}"></span>`;
+    }
+    return `<span class="pAvatar" aria-label="${esc(name)}"></span>`;
+  }
 
-  coupleEl.innerHTML = `
-    <div class="miniAvatarPair">
-      ${[p1, p2]
-        .filter(Boolean)
-        .map((p) => {
-          const src = photoOf(p);
-          return `
-            <div class="miniAvatarCircle" title="${esc(p.name)}">
-              ${src ? `<img src="${esc(src)}" alt="" loading="lazy"/>` : ""}
-            </div>`;
-        })
-        .join("")}
-    </div>
-    <div class="miniCoupleLabel">${esc(coupleLabel || "Family")}</div>
-  `;
+  function locationLine(p) {
+    const loc = p?.location || {};
+    const parts = [loc.city, loc.region, loc.country].filter(Boolean);
+    return parts.join(", ");
+  }
 
-  kidsEl.innerHTML = kids
-    .map((k) => {
-      const src = photoOf(k);
-      const first = String(k?.name || "").split(" ")[0] || k?.name || "";
-      return `
-        <div class="miniKid" title="${esc(k.name)}">
-          <div class="miniKidAvatar">${src ? `<img src="${esc(src)}" alt="" loading="lazy"/>` : ""}</div>
-          <div class="miniKidName">${esc(first)}</div>
-        </div>`;
-    })
-    .join("");
-}
+  function getPeopleById(people) {
+    const m = new Map();
+    (people || []).forEach(p => m.set(String(p.id), p));
+    return m;
+  }
 
-function renderTimeline(demo) {
-  const root = document.getElementById("miniTimeline");
-  if (!root) return;
-  const items = (demo?.timeline || []).filter(Boolean).slice(0, 6);
+  function childrenOf(tree, parentId) {
+    const rels = tree.relationships || [];
+    return rels.filter(r => String(r.parentId) === String(parentId)).map(r => String(r.childId));
+  }
 
-  root.innerHTML = items
-    .map((it, idx) => {
-      const src = it.photo || "";
-      const born = it.born ? String(it.born) : "";
-      const loc = it.location ? String(it.location) : "";
-      const sub = [born, loc].filter(Boolean).join(" • ");
-      return `
-        <div class="miniTlRow">
-          <div class="miniTlDot" aria-hidden="true"></div>
-          <div class="miniTlAvatar">${src ? `<img src="${esc(src)}" alt="" loading="lazy"/>` : ""}</div>
-          <div class="miniTlText">
-            <div class="miniTlName">${esc(it.name || "")}</div>
-            <div class="miniTlSub">${esc(sub)}</div>
-          </div>
-        </div>`;
-    })
-    .join("");
-}
+  function pickRootishPerson(tree) {
+    const people = tree.people || [];
+    if (!people.length) return null;
+    const rels = tree.relationships || [];
+    const childSet = new Set(rels.map(r => String(r.childId)));
+    return people.find(p => !childSet.has(String(p.id))) || people[0];
+  }
 
-function clamp(n, a, b) {
-  return Math.max(a, Math.min(b, n));
-}
+  function hash01(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0) / 4294967295;
+  }
 
-function renderMap(demo) {
-  const pins = document.getElementById("miniPins");
-  if (!pins) return;
+  function renderTree(tree) {
+    if (!treeEl) return;
 
-  const items = (demo?.map || []).filter(Boolean).slice(0, 6);
+    const people = tree.people || [];
+    const byId = getPeopleById(people);
+    const root = pickRootishPerson(tree);
+    if (!root) return;
 
-  // Equirectangular projection to percentages.
-  // Works well for "world-muted.png".
-  const toXY = (lat, lng) => {
-    const x = ((Number(lng) + 180) / 360) * 100;
-    const y = ((90 - Number(lat)) / 180) * 100;
-    return { x: clamp(x, 3, 97), y: clamp(y, 6, 94) };
-  };
+    const kids = childrenOf(tree, root.id)
+      .map(id => byId.get(id))
+      .filter(Boolean)
+      .slice(0, 4);
 
-  pins.innerHTML = items
-    .map((p, i) => {
-      const { x, y } = toXY(p.lat, p.lng);
-      const src = p.photo || "";
-      const label = p.label || "";
-      const size = i === 0 ? 48 : i === 1 ? 42 : 34;
-      return `
-        <div class="miniPin" style="left:${x}%; top:${y}%; --pinSize:${size}px" title="${esc(p.name)}">
-          <div class="miniPinFace">${src ? `<img src="${esc(src)}" alt="" loading="lazy"/>` : ""}</div>
-          <div class="miniPinLabel">${esc(label)}</div>
-        </div>`;
-    })
-    .join("");
-}
+    const node = (p) => `
+      <div class="treeNode">
+        ${avatarHtml(p)}
+        <div>
+          <div class="pName">${esc(p.name || p.id)}</div>
+          <div class="pMeta">${esc([p.born, p.died].filter(Boolean).join("–"))}</div>
+        </div>
+      </div>
+    `;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const demo = window.LANDING_DEMO;
-  if (!demo) return;
-  renderTree(demo);
-  renderTimeline(demo);
-  renderMap(demo);
-});
+    treeEl.innerHTML = `
+      <div class="treeMini">
+        <div class="treeMiniRow">${node(root)}</div>
+        <div class="treeMiniRow">${kids.length ? kids.map(node).join("") : ""}</div>
+      </div>
+    `;
+  }
+
+  function renderTimeline(tree) {
+    if (!tlEl) return;
+
+    const people = (tree.people || [])
+      .filter(p => p && (p.name || p.id))
+      .slice(0, 4);
+
+    const row = (p) => `
+      <div class="pItem">
+        ${avatarHtml(p)}
+        <div>
+          <div class="pName">${esc(p.name || p.id)}</div>
+          <div class="pMeta">${esc(locationLine(p))}</div>
+        </div>
+      </div>
+    `;
+
+    tlEl.innerHTML = `
+      <div class="timelineMini pRow">
+        ${people.map(row).join("")}
+      </div>
+    `;
+  }
+
+  function mapBgForSample(sampleId) {
+    // If you have different filenames, change these two paths:
+    const isWesteros = ["stark", "lannister", "got"].includes(sampleId);
+    return isWesteros
+      ? "/static/img/westeros-muted.png"
+      : "/static/img/world-muted.png";
+  }
+
+  function renderMap(tree) {
+    if (!mapEl) return;
+
+    const bg = mapBgForSample(sample);
+
+    // create some deterministic pins from locations (or from person id)
+    const people = (tree.people || []).slice(0, 8);
+    const pins = people.map(p => {
+      const loc = p.location || {};
+      const key = [loc.city, loc.region, loc.country, p.id].filter(Boolean).join("|") || String(p.id || "");
+      const x = 0.12 + hash01("x:" + key) * 0.76; // keep inside frame
+      const y = 0.12 + hash01("y:" + key) * 0.68;
+      return { x, y };
+    });
+
+    const avatars = (tree.people || []).filter(p => p.photo).slice(0, 2);
+
+    mapEl.innerHTML = `
+      <div class="mapMini">
+        <div class="mapMiniBg" style="background-image:url('${bg}')"></div>
+        ${pins.slice(0, 5).map(p => `
+          <span class="mapPin" style="left:${(p.x*100).toFixed(1)}%; top:${(p.y*100).toFixed(1)}%"></span>
+        `).join("")}
+        <div class="mapMiniAvatars">
+          ${avatars.map(a => avatarHtml(a)).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  async function run() {
+    try {
+      const res = await fetch(`/api/sample/${encodeURIComponent(sample)}/tree`, { credentials: "same-origin" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const tree = await res.json();
+
+      renderTree(tree);
+      renderTimeline(tree);
+      renderMap(tree);
+    } catch (e) {
+      // Fail quietly with minimal noise
+      if (treeEl) treeEl.innerHTML = "";
+      if (tlEl) tlEl.innerHTML = "";
+      if (mapEl) mapEl.innerHTML = "";
+      console.warn("landing-previews failed:", e);
+    }
+  }
+
+  run();
+})();

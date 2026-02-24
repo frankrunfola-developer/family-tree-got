@@ -1,69 +1,88 @@
 {% extends "base.html" %}
-{% set body_class = "marketing" %}
-{% set active_page = "" %}
-
-{% block title %}LineAgeMap — Preserve • Connect • Pass Down{% endblock %}
 
 {% block content %}
-<div class="landing" role="main">
-  <section class="hero">
-   <!-- <img
-      class="hero-logo"
-      src="{{ url_for('static', filename='img/lineagemap_logo.png') }}"
-      alt="LineAgeMap — Preserve • Connect • Pass Down"
-      loading="eager"
-      decoding="async"
-    />-->
+<div class="appFrameShell">
+  <div class="appFrameCard">
+    <div class="landing">
 
-    <h1 class="hero-title">Your Family’s Story<br/>Preserved for Generations.</h1>
+      {% set sid = (sample_id or "stark")|lower %}
 
-    <p class="hero-subtitle">
-      Build your family tree, trace migration across the world, and turn history into something worth keeping.
-    </p>
+      <section class="landingHero">
+        <div class="heroLine">
+          <span class="flourish-left" aria-hidden="true"></span>
+          <h1>{{ tagline or "A Living Family Archive." }}</h1>
+          <span class="flourish-right" aria-hidden="true"></span>
+        </div>
 
+        <p class="landingSub">
+          Explore a demo family across the Tree, Timeline, and Map — and see how stories stay connected through time and place.
+        </p>
+      </section>
 
-  </section>
+      <section class="featureGrid" aria-label="Product previews">
 
-  <section class="previews" aria-label="Previews">
-    <article class="preview-card" id="preview-tree">
-      <h2 class="preview-title">Family Tree</h2>
-      <div class="preview-body" data-preview="tree" aria-label="Family Tree preview"></div>
-      <a class="preview-link" href="/tree">+ View Full Tree →</a>
-    </article>
+        <!-- TREE -->
+        <article class="featureCard">
+          <header class="featureHead">
+            <h2 class="featureTitle">Family Tree</h2>
+            <p class="featureSub">See lineage connections and relationships.</p>
+          </header>
 
-    <article class="preview-card" id="preview-timeline">
-      <h2 class="preview-title">Timeline</h2>
-      <div class="preview-body" data-preview="timeline" aria-label="Timeline preview"></div>
-      <a class="preview-link" href="/timeline">+ View Full Timeline →</a>
-    </article>
+          <div class="featurePreview" id="treePreview" aria-label="Tree preview"></div>
 
-    <article class="preview-card" id="preview-map">
-      <h2 class="preview-title">Migration Map</h2>
-      <div class="preview-body" data-preview="map" aria-label="Migration Map preview"></div>
-      <a class="preview-link" href="/map">+ View Full Map →</a>
-    </article>
-  </section>
+          <div class="featureCtaRow">
+            <a class="featureCta"
+              href="{{ url_for('tree_view') }}"
+              data-preserve-sample="1">+ View Full Tree →</a>
+          </div>
+        </article>
 
-  <section class="trust" aria-label="Trust points">
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🔒</div>
-      <h3>Private &amp; Secure</h3>
-      <p>Your data is confidential and encrypted.</p>
+        <!-- TIMELINE -->
+        <article class="featureCard">
+          <header class="featureHead">
+            <h2 class="featureTitle">Timeline</h2>
+            <p class="featureSub">Follow events across generations.</p>
+          </header>
+
+          <div class="featurePreview" id="timelinePreview" aria-label="Timeline preview"></div>
+
+          <div class="featureCtaRow">
+            <a class="featureCta"
+              href="{{ url_for('timeline_view') }}"
+              data-preserve-sample="1">+ View Full Timeline →</a>
+          </div>
+        </article>
+
+        <!-- MAP -->
+        <article class="featureCard">
+          <header class="featureHead">
+            <h2 class="featureTitle">Migration Map</h2>
+            <p class="featureSub">View locations and clustered family pins.</p>
+          </header>
+
+          <div class="featurePreview featurePreview--map" id="mapPreview" aria-label="Map preview"></div>
+
+          <div class="featureCtaRow">
+            <a class="featureCta"
+              href="{{ url_for('map_view') }}"
+              data-preserve-sample="1">+ View Full Map →</a>
+          </div>
+        </article>
+
+      </section>
+
+      {% if not current_user %}
+      <div class="landingAuthWrap">
+        {% include "_auth_panel.html" %}
+      </div>
+      {% endif %}
+
     </div>
-
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🧭</div>
-      <h3>Beautifully Designed</h3>
-      <p>Elegant, intuitive, and easy to use.</p>
-    </div>
-
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🌿</div>
-      <h3>Built for Generations</h3>
-      <p>Preserve your legacy for decades to come.</p>
-    </div>
-  </section>
+  </div>
 </div>
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/home-previews.js') }}" defer></script>
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/landing-previews.js') }}"></script>
 {% endblock %}

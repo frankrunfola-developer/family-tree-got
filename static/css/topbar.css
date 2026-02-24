@@ -41,6 +41,9 @@
   height: 74px;
 }
 
+/* ------------------------------------------------------------
+   Brand title (subtle nostalgic frame)
+------------------------------------------------------------ */
 .brandTitle{
   font-family: var(--serif);
   font-weight: 900;
@@ -50,6 +53,40 @@
   font-size: var(--brand-font);
   line-height: 1;
   white-space: nowrap;
+
+  /* subtle “nameplate” feel */
+  position: relative;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.brandTitle::before,
+.brandTitle::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1px;
+  opacity: .55;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0),
+    rgba(90,60,40,0.35),
+    rgba(0,0,0,0)
+  );
+  width: 18px;
+}
+
+.brandTitle::before{ left: -20px; }
+.brandTitle::after{ right: -20px; }
+
+.brandTitle span{ display:inline-block; }
+
+.brandTitle:focus-visible{
+  outline: 2px solid rgba(176,128,58,0.35);
+  outline-offset: 3px;
 }
 
 /* Mobile default: hide nav links */
@@ -59,7 +96,7 @@
   display: inline-flex;
   justify-content: flex-end;
   align-items: center;
-  gap: .6rem; /* or whatever matches your existing spacing */
+  gap: .6rem;
 }
 
 /* =========================================================
@@ -67,7 +104,7 @@
    - Works with static/js/nav.js which toggles class "open"
    ========================================================= */
 .navToggle{
-  display: inline-flex;        /* ✅ mobile-first: visible */
+  display: inline-flex;
   width: 40px;
   height: 40px;
   border-radius: 999px;
@@ -111,10 +148,9 @@
   margin: 0 auto;
   padding: 0 var(--page-pad);
   position: relative;
-  z-index: 1000; /* keep it above page content */
+  z-index: 1000;
 }
 
-/* opened state driven by nav.js */
 .mobileNav.open{
   display: block;
   padding-bottom: 12px;
@@ -262,16 +298,30 @@
 
 /* slightly wider phones */
 @media (max-width: 480px){
-  .brandMark{ width:40px; height:40px; }
+  .brandMark{ width: 55px; height: 55px;; }
+  .brandTitle{
+    padding: 5px 8px;
+  }
+  .brandTitle::before,
+  .brandTitle::after{
+    width: 12px;
+  }
+  .brandTitle::before{ left: -14px; }
+  .brandTitle::after{ right: -14px; }
 }
 
 /* ultra small */
 @media (max-width: 360px){
   .brandMark{ width: 35px; height:35px;}
+  .brandTitle{
+    padding: 4px 7px;
+    letter-spacing: .15px;
+  }
+  .brandTitle::before,
+  .brandTitle::after{
+    display: none; /* keep it clean when space is tight */
+  }
 }
-
-
-
 
 /* ------------------------------------------------------------
    Demo sample picker (Topbar)
@@ -287,13 +337,13 @@
 
 /* Make demo picker look like a proper item inside the mobile dropdown */
 .mobileNav .demoPicker{
-  display: flex;                 /* full-width row */
+  display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;              /* match mobileNav a spacing */
-  padding: 12px 12px;            /* match mobileNav a padding */
-  border-radius: 14px;           /* match mobileNav a radius */
+  margin-top: 10px;
+  padding: 12px 12px;
+  border-radius: 14px;
   background: rgba(255,255,255,0.28);
   border: 1px solid rgba(90, 60, 40, 0.16);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
@@ -354,7 +404,23 @@
   background-repeat: no-repeat;
 }
 
-/* Optional: tighter on very small screens */
+/* Demo picker visibility rules */
+.demoPicker--mobile{ display:none; }
+.demoPicker--desktop{ display:flex; align-items:center; gap:8px; }
+
+@media (max-width: 820px){
+  .demoPicker--desktop{ display:none; }
+  .demoPicker--mobile{ display:block; }
+
+  .demoPickerSelect--compact{
+    height: 34px;
+    border-radius: 999px;
+    padding: 0 10px;
+    font-weight: 700;
+  }
+}
+
+/* tighter on very small screens */
 @media (max-width: 480px){
   .demoPicker{ padding: .28rem .5rem; }
   .demoPickerLabel{ font-size: .8rem; }

@@ -10,6 +10,8 @@
 @import url("layout.css");
 @import url("topbar.css");
 @import url("landing.css");
+@import url("auth.css");
+
 /* Optional page imports (uncomment if you want always-on)
 @import url("tree.css");
 @import url("map.css");

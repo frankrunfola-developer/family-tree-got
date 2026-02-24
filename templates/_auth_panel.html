@@ -1,46 +1,101 @@
-<section id="authCard" class="authCard" aria-label="Login or register">
-          <div class="authTabs" role="tablist" aria-label="Authentication">
-            <button class="authTab is-active" id="tabLogin" type="button" role="tab" aria-selected="true" aria-controls="panelLogin">Login</button>
-            <button class="authTab" id="tabRegister" type="button" role="tab" aria-selected="false" aria-controls="panelRegister">Register</button>
-          </div>
+{# -----------------------------------------------------------------------------
+File: templates/_auth_panel.html
+Purpose: Landing page auth panel (Login + Register) — polished, parchment-styled
+Notes:
+- Uses your existing routes: /login, /register
+- Uses standard field names: email, password
+- Keeps things compact + mobile-friendly
+----------------------------------------------------------------------------- #}
 
-          <div class="authPanel is-active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
-            <label class="authLabel" for="loginEmail">Email:</label>
-            <div class="authField">
-              <span class="authIcon" aria-hidden="true">✉</span>
-              <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" />
-            </div>
+<section class="authPanel" aria-label="Account access">
+  <div class="authPanelInner">
 
-            <label class="authLabel" for="loginPassword">Password:</label>
-            <div class="authField">
-              <span class="authIcon" aria-hidden="true">🔒</span>
-              <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••" />
-            </div>
+    <!-- LOGIN -->
+    <div class="authCard">
+      <div class="authCardHead">
+        <div class="authKicker">Account</div>
+        <h2 class="authTitle">Log in</h2>
+        <p class="authSub">Pick up where you left off.</p>
+      </div>
 
-            <button class="authBtn" id="loginBtn" type="button">Continue</button>
-            <div class="authMetaRow">
-              <a class="authLink" href="#" onclick="return false;">Forgot password?</a>
-            </div>
-          </div>
+      <form class="authForm" method="post" action="{{ url_for('login_post') }}" autocomplete="on">
+        <input type="hidden" name="next" value="{{ request.args.get('next','') }}" />
 
-          <div class="authPanel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
-            <label class="authLabel" for="regEmail">Email:</label>
-            <div class="authField">
-              <span class="authIcon" aria-hidden="true">✉</span>
-              <input id="regEmail" type="email" autocomplete="email" placeholder="you@example.com" />
-            </div>
+        <div class="field">
+          <label class="fieldLabel" for="loginEmail">Email</label>
+          <input
+            class="fieldInput"
+            id="loginEmail"
+            name="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="you@domain.com"
+            required />
+        </div>
 
-            <label class="authLabel" for="regPassword">Password:</label>
-            <div class="authField">
-              <span class="authIcon" aria-hidden="true">🔒</span>
-              <input id="regPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters" />
-            </div>
+        <div class="field">
+          <label class="fieldLabel" for="loginPassword">Password</label>
+          <input
+            class="fieldInput"
+            id="loginPassword"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            required />
+          <div class="fieldHint">Case-sensitive. Minimum 8 characters recommended.</div>
+        </div>
 
-            <button class="authBtn" id="registerBtn" type="button">Continue</button>
-            <div class="authMetaRow">
-              <span class="authHint">By registering, your account + preferences are saved.</span>
-            </div>
-          </div>
+        <div class="authActions">
+          <button class="btn primary authBtn" type="submit">Log In</button>
+          <a class="authLink" href="{{ url_for('register') }}">Need an account?</a>
+        </div>
+      </form>
+    </div>
 
-          <div class="authStatus" id="authStatus" aria-live="polite" hidden></div>
-        </section>
+    <!-- REGISTER -->
+    <div class="authCard">
+      <div class="authCardHead">
+        <div class="authKicker">New here?</div>
+        <h2 class="authTitle">Create an account</h2>
+        <p class="authSub">Start your private family archive in minutes.</p>
+      </div>
+
+      <form class="authForm" method="post" action="{{ url_for('register_post') }}" autocomplete="on">
+        <div class="field">
+          <label class="fieldLabel" for="regEmail">Email</label>
+          <input
+            class="fieldInput"
+            id="regEmail"
+            name="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="you@domain.com"
+            required />
+        </div>
+
+        <div class="field">
+          <label class="fieldLabel" for="regPassword">Password</label>
+          <input
+            class="fieldInput"
+            id="regPassword"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="At least 8 characters"
+            minlength="8"
+            required />
+          <div class="fieldHint">Use 12+ characters if you can. A passphrase works great.</div>
+        </div>
+
+        <div class="authActions">
+          <button class="btn primary authBtn" type="submit">Get Started</button>
+          <a class="authLink" href="{{ url_for('login') }}">Already registered?</a>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>

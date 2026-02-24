@@ -1,46 +1,39 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{% block title %}LineAgeMap{% endblock %}</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}LineAgeMap{% endblock %}</title>
 
-        <!-- Global Styles -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/lam.png') }}">
+    <!-- Main CSS bundle (your styles.css imports core/layout/topbar/etc) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 
-        {% block head %}{% endblock %}
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lineagemap_logo.png') }}" />
 
-        {% include "_analytics.html" %}
-    </head>
+    {% block head %}{% endblock %}
+  </head>
 
-    <body class="{{ body_class|default('app') }}">
+  <body class="{{ body_class|default('app') }}">
+    {% include "_topbar.html" %}
 
-        {# ---------------------------------------------------------------
-        Demo sample context for nav + dropdown (used by _topbar.html)
-        - demo_sample exists only for non-auth views (as set in app.py)
-        - samples is the list of sample ids from disk/repo
-        ---------------------------------------------------------------- #}
-        <script>
-          window.DEMO_SAMPLE = "{{ demo_sample or '' }}";
-          window.DEMO_SAMPLES = {{ (samples or [])|tojson }};
-        </script>
+    <main class="page">
+      {% block content %}{% endblock %}
+    </main>
 
-        {% include "_topbar.html" %}
+    <!-- Global Scripts -->
+    <script>
+      // footer year helper (safe even if no #year exists)
+      (function () {
+        var y = document.getElementById("year");
+        if (y) y.textContent = String(new Date().getFullYear());
+      })();
+    </script>
 
-        <main class="page">
-            {% block content %}{% endblock %}
-        </main>
+    <!-- hamburger/menu toggles -->
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
 
-        <!-- Global Scripts -->
-        <script>
-            const y = document.getElementById("year");
-            if (y) y.textContent = String(new Date().getFullYear());
-        </script>
-
-        <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
-
-        {% block scripts %}{% endblock %}
-
-    </body>
+    <!-- Page-specific scripts injected by templates (index.html uses this) -->
+    {% block scripts %}{% endblock %}
+  </body>
 </html>

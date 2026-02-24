@@ -1,177 +1,324 @@
 /* landing.css
-   Marketing homepage (hero + preview cards + trust)
+   Landing page layout + feature cards (Tree/Timeline/Map)
+   “Before” style: clean framed previews + centered CTA
 */
 
-main.landing{
-  max-width: var(--content-max);
+.landing{
+  width: min(1200px, calc(100% - (var(--page-pad) * 2)));
   margin: 0 auto;
-  padding: 6px var(--page-pad) 18px; /* tighter top + bottom */
-  position: relative;
-  z-index: 2; /* above texture */
+  padding: 8px 0 18px;
 }
 
-.hero{
-  text-align: center;
-  padding: 0;
-}
-.hero-logo{
-  display: block; /* removes inline image baseline gap */
-  width: min(320px, 50%);
-  height: auto;
-  margin: 0 auto 6px; /* tighter */
-  filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.10));
-}
-.hero-title{
-  margin: 8px auto 8px;
-  font-family: var(--serif);
-  font-weight: 900;
-  font-size: var(--hero-font);
-  line-height: 1.04;
-  letter-spacing: .10px;
-  color: rgba(80,54,38,.94);
-  text-shadow:
-    0 2px 0 rgba(255,255,255,.50),
-    0 10px 20px rgba(60,40,25,.14);
-}
-.hero-subtitle{
-  margin: 0 auto;
-  max-width: 62ch;
-  font-size: var(--sub-font);
-  line-height: 1.5;
-  color: rgba(43, 30, 20, .84);
+/* Hero */
+.landingHero{
+  padding: 22px 0 14px;
 }
 
-/* ✅ Cards grid (mobile = 1 col) */
-.previews{
-  margin-top: 14px;
-  display:grid;
-  grid-template-columns: 1fr;
+.heroLine{
+  display: flex;
+  align-items: center;
   gap: 12px;
-  align-items: stretch;
 }
 
-/* card */
-.preview-card{
-  background: linear-gradient(180deg, var(--card-bg-a), var(--card-bg-b));
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 12px;
-  position: relative;
-  overflow: hidden;
-  box-shadow:
-    0 12px 26px rgba(0,0,0,.10),
-    inset 0 1px 10px rgba(255,255,255,.55);
-  display:flex;
-  flex-direction: column;
-}
-
-/* subtle edge wear only on cards */
-.preview-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(70% 55% at 12% 12%, rgba(0,0,0,.06), transparent 58%),
-    radial-gradient(70% 55% at 88% 16%, rgba(0,0,0,.05), transparent 62%),
-    radial-gradient(70% 55% at 14% 90%, rgba(0,0,0,.05), transparent 62%),
-    radial-gradient(70% 55% at 90% 92%, rgba(0,0,0,.05), transparent 62%);
-  opacity: .22;
-}
-
-.preview-title{
+.heroLine h1{
+  margin: 0;
   font-family: var(--serif);
-  text-align:left;
-  margin: 2px 2px 10px;
-  font-size: 20px;
   font-weight: 900;
-  color: rgba(70,46,32,.92);
+  font-size: clamp(34px, 4.4vw, 54px);
+  letter-spacing: .2px;
+  color: rgba(55, 35, 20, 0.95);
 }
 
-/* stable preview window */
-.preview-body{
+.flourish-left,
+.flourish-right{
   flex: 1 1 auto;
-  position: relative;
-  min-height: 185px;
-  border-radius: 12px;
-  border: 1px solid rgba(70,45,25,0.12);
-  background:
-    radial-gradient(380px 220px at 35% 45%, rgba(120,80,40,0.10), rgba(120,80,40,0) 60%),
-    radial-gradient(380px 220px at 70% 40%, rgba(90,60,30,0.08), rgba(90,60,30,0) 62%),
-    linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
-  overflow: hidden;
+  height: 1px;
+  opacity: .55;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0),
+    rgba(90,60,40,0.30),
+    rgba(0,0,0,0)
+  );
 }
 
-/* link */
-.preview-link{
-  margin: 10px auto 2px;
-  width: fit-content;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding: 9px 12px;
-  border-radius: 10px;
-  text-decoration:none;
-  font-family: var(--serif);
-  font-size: 14px;
-  font-weight: 800;
-  color: rgba(43, 30, 20, .88);
-  background: rgba(255,255,255,.35);
-  border: 1px solid rgba(90, 60, 40, .18);
-  box-shadow: inset 0 1px 6px rgba(20, 12, 6, 0.10);
-}
-@media (hover:hover){
-  .preview-link:hover{ transform: translateY(-1px); }
+.landingSub{
+  margin: 10px 0 0;
+  max-width: 740px;
+  color: rgba(55, 35, 20, 0.78);
+  line-height: 1.45;
 }
 
-/* Trust row (kept — NOT footer) */
-.trust{
-  margin-top: 14px;
-  display:grid;
+/* Feature cards grid */
+.featureGrid{
+  margin-top: 16px;
+  display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  text-align:center;
-  padding-top: 6px;
+  gap: 16px;
 }
-.trust-item h3{
-  margin: 8px 0 6px;
+
+@media (min-width: 980px){
+  .featureGrid{
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+}
+
+/* Card */
+.featureCard{
+  border-radius: 20px;
+  background: rgba(255,255,255,0.22);
+  border: 1px solid rgba(90,60,40,0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    0 14px 34px rgba(20, 12, 6, 0.08);
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+
+  /* Prevent child flex overflow from stretching the card */
+  min-width: 0;
+}
+
+.featureHead{
+  padding: 2px 2px 10px;
+}
+
+.featureTitle{
+  margin: 0;
   font-family: var(--serif);
-  font-size: 17px;
   font-weight: 900;
+  font-size: 22px;
+  letter-spacing: .15px;
+  color: rgba(55, 35, 20, 0.92);
 }
-.trust-item p{
-  margin: 0 auto;
-  color: rgba(43,30,20,.75);
-  font-size: 14px;
-  line-height: 1.4;
-  max-width: 48ch;
+
+.featureSub{
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: rgba(55, 35, 20, 0.70);
+  line-height: 1.35;
 }
-.trust-icon{ font-size: 22px; }
 
-/* tablet */
-@media (min-width: 760px){
-  main.landing{ padding: 22px var(--page-pad) 30px; }
+/* Preview frame */
+.featurePreview{
+  border-radius: 16px;
+  border: 1px solid rgba(90,60,40,0.14);
+  background: rgba(255,255,255,0.26);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+  padding: 12px;
+  min-height: 170px;
+  overflow: hidden;
+  position: relative;
 
-  .trust{
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-    text-align:left;
+  /* Prevent internal content from forcing width */
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 480px){
+  .featurePreview{ min-height: 150px; }
+}
+
+/* CTA row */
+.featureCtaRow{
+  padding-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.featureCta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: 13px;
+  text-decoration: none;
+  color: rgba(60, 40, 25, 0.86);
+  border: 1px solid rgba(90, 60, 40, 0.18);
+  background: rgba(255,255,255,0.30);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+}
+
+@media (hover:hover){
+  .featureCta:hover{
+    filter: brightness(1.03);
+    transform: translateY(-1px);
   }
-  .trust-item p{ margin: 0; max-width: none; }
 }
 
-/* desktop */
-@media (min-width: 900px){
-  .previews{
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+/* Auth wrapper */
+.landingAuthWrap{
+  max-width: 920px;
+  margin: 18px auto 0;
+}
+
+/* ---------------------------
+   Preview: shared avatar UI
+--------------------------- */
+
+.pRow{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* allow shrink */
+}
+
+.pItem > div{
+  min-width: 0; /* allow text to ellipsis */
+}
+
+.pAvatar{
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 2px solid rgba(90,60,40,0.18);
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 10px 18px rgba(20, 12, 6, 0.10), inset 0 1px 0 rgba(255,255,255,0.55);
+  overflow: hidden;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.pAvatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pName{
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: 13px;
+  color: rgba(55, 35, 20, 0.90);
+  line-height: 1.15;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pMeta{
+  font-size: 12px;
+  color: rgba(55, 35, 20, 0.65);
+  margin-top: 2px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------------------------
+   Preview: Tree (mini nodes)
+--------------------------- */
+
+.treeMini{
+  display: grid;
+  gap: 12px;
+}
+
+.treeMiniRow{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+
+  /* KEY FIX: allow wrap so long names don't stretch layout */
+  flex-wrap: wrap;
+}
+
+.treeNode{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.30);
+  border: 1px solid rgba(90,60,40,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.treeNode .pName{
+  max-width: 120px; /* mobile clamp */
+}
+
+/* slightly tighter on small screens */
+@media (max-width: 480px){
+  .treeNode{
+    padding: 7px 9px;
   }
-
-  .preview-title{ font-size: 22px; }
-  .preview-body{ min-height: 210px; }
+  .treeNode .pName{
+    max-width: 105px;
+  }
 }
 
-/* slightly wider phones */
-@media (min-width: 480px){
-  .preview-body{ min-height: 200px; }
+/* ---------------------------
+   Preview: Timeline (list)
+--------------------------- */
+
+.timelineMini .pItem{
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(90,60,40,0.10);
+}
+
+.timelineMini .pItem:last-child{
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* ---------------------------
+   Preview: Map (background + pins)
+--------------------------- */
+
+.mapMini{
+  height: 170px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(90,60,40,0.12);
+  background: rgba(255,255,255,0.20);
+  max-width: 100%;
+}
+
+.mapMiniBg{
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: .92;
+  filter: saturate(.92) contrast(.98);
+}
+
+.mapPin{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(176,128,58,0.90);
+  box-shadow: 0 0 0 3px rgba(176,128,58,0.14);
+}
+
+.mapMiniAvatars{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.mapMiniAvatars .pAvatar{
+  width: 40px;
+  height: 40px;
 }

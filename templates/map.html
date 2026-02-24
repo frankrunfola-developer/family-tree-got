@@ -15,7 +15,7 @@
       {% if public_slug %}
       <div class="pillTitle">PUBLIC FAMILY MAP</div>
       {% elif sample_id %}
-      <div class="pillTitle">SAMPLE MAP</div>
+      <div class="pillTitle">SAMPLE MAP — {{ sample_id|upper }}</div>
       {% else %}
       <div class="pillTitle">MY FAMILY MAP</div>
       {% endif %}
@@ -36,41 +36,33 @@
 {% endblock %}
 
 {% block scripts %}
-{# -------------------------------------------------------------------------
-Map accordion JS expects {people:[...]} so we keep using TREE endpoints.
-Priority order:
-1) public_slug (public tree)
-2) explicit sample_id in URL
-3) logged-in user => /api/tree/me
-4) demo_sample (session/query chosen)
-5) DEFAULT fallback stark
-------------------------------------------------------------------------- #}
-
+{# Map accordion JS expects {people:[...]} so we use TREE endpoints. #}
 {% if public_slug %}
 {% set MAP_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
+{% set MAP_FAMILY = "public" %}
 {% elif sample_id %}
 {% set MAP_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
+{% set MAP_FAMILY = sample_id %}
 {% elif current_user %}
 {% set MAP_API_URL = "/api/tree/me" %}
-{% elif demo_sample %}
-{% set MAP_API_URL = "/api/sample/" ~ demo_sample ~ "/tree" %}
+{% set MAP_FAMILY = "me" %}
 {% else %}
 {% set MAP_API_URL = "/api/sample/stark/tree" %}
+{% set MAP_FAMILY = "stark" %}
+{% endif %}
+
+{# Background map image selection #}
+{% set sid = (sample_id or "")|lower %}
+{% if sid in ["stark", "lannister"] %}
+{% set MAP_IMG = url_for('static', filename='img/westeros-muted.png') %}
+{% else %}
+{% set MAP_IMG = url_for('static', filename='img/world-muted.png') %}
 {% endif %}
 
 <script>
-  // Data endpoint (tree-shaped payload)
   window.MAP_API_URL = "{{ MAP_API_URL }}";
-
-  // Selected family id (used for any internal labels / debug / state)
-  // Prefer sample_id, then demo_sample, else stark.
-  window.MAP_FAMILY_ID = "{{ (sample_id or demo_sample or 'stark') }}";
-</script>
-
-<script>
-  // IMPORTANT: map image background should match landing Migration card AND map page.
-  // app.py now passes map_bg_url (resolved per selected demo sample).
-  window.MAP_IMAGE_URL = "{{ map_bg_url }}";
+  window.MAP_FAMILY_ID = "{{ MAP_FAMILY }}";
+  window.MAP_IMAGE_URL = "{{ MAP_IMG }}";
 </script>
 
 <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>

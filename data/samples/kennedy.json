@@ -1,61 +1,293 @@
 {
   "meta": {
     "family_name": "Kennedy Family (Sample)",
-    "note": "Sample dataset for exploring the app UI."
+    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events)."
   },
+
   "people": [
     {
-      "id": "joseph_kennedy",
+      "id": "joseph_sr",
       "name": "Joseph P. Kennedy Sr.",
       "born": "1888",
       "died": "1969",
-      "photo": "",
-      "location": {"city": "Boston", "region": "MA", "country": "USA"},
-      "events": []
+      "photo": "/static/uploads/kennedy/joseph_sr.png",
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
     },
     {
-      "id": "rose_kennedy",
+      "id": "rose",
       "name": "Rose Fitzgerald Kennedy",
       "born": "1890",
       "died": "1995",
-      "photo": "",
-      "location": {"city": "Boston", "region": "MA", "country": "USA"},
-      "events": []
+      "photo": "/static/uploads/kennedy/rose.png",
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
     },
+
     {
       "id": "jfk",
       "name": "John F. Kennedy",
       "born": "1917",
       "died": "1963",
-      "photo": "",
-      "location": {"city": "Brookline", "region": "MA", "country": "USA"},
-      "events": []
+      "photo": "/static/uploads/kennedy/jfk.png",
+      "location": { "city": "Brookline", "region": "MA", "country": "USA", "lat": 42.3318, "lng": -71.1212 }
     },
     {
-      "id": "rfk",
+      "id": "rfk_sr",
       "name": "Robert F. Kennedy",
       "born": "1925",
       "died": "1968",
-      "photo": "",
-      "location": {"city": "Brookline", "region": "MA", "country": "USA"},
-      "events": []
+      "photo": "/static/uploads/kennedy/rfk_sr.png",
+      "location": { "city": "Brookline", "region": "MA", "country": "USA", "lat": 42.3318, "lng": -71.1212 }
     },
     {
       "id": "ted",
       "name": "Edward 'Ted' Kennedy",
       "born": "1932",
       "died": "2009",
-      "photo": "",
-      "location": {"city": "Boston", "region": "MA", "country": "USA"},
-      "events": []
+      "photo": "/static/uploads/kennedy/ted.png",
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+    },
+
+    {
+      "id": "jackie",
+      "name": "Jacqueline Bouvier Kennedy",
+      "born": "1929",
+      "died": "1994",
+      "photo": "/static/uploads/kennedy/jackie.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+    },
+    {
+      "id": "ethel",
+      "name": "Ethel Skakel Kennedy",
+      "born": "1928",
+      "died": "2024",
+      "photo": "/static/uploads/kennedy/ethel.png",
+      "location": { "city": "McLean", "region": "VA", "country": "USA", "lat": 38.9339, "lng": -77.1773 }
+    },
+    {
+      "id": "joan",
+      "name": "Joan Bennett Kennedy",
+      "born": "1936",
+      "died": "",
+      "photo": "/static/uploads/kennedy/joan.png",
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+    },
+
+    {
+      "id": "caroline",
+      "name": "Caroline Kennedy",
+      "born": "1957",
+      "died": "",
+      "photo": "/static/uploads/kennedy/caroline.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+    },
+    {
+      "id": "john_jr",
+      "name": "John F. Kennedy Jr.",
+      "born": "1960",
+      "died": "1999",
+      "photo": "/static/uploads/kennedy/john_jr.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+    },
+    {
+      "id": "kerry",
+      "name": "Kerry Kennedy",
+      "born": "1959",
+      "died": "",
+      "photo": "/static/uploads/kennedy/kerry.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+    },
+    {
+      "id": "maria",
+      "name": "Maria Shriver",
+      "born": "1955",
+      "died": "",
+      "photo": "/static/uploads/kennedy/maria.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "rfk_jr",
+      "name": "Robert F. Kennedy Jr.",
+      "born": "1954",
+      "died": "",
+      "photo": "/static/uploads/kennedy/rfk_jr.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+    },
+
+    {
+      "id": "mary",
+      "name": "Mary Kennedy",
+      "born": "1959-10-04",
+      "died": "2012-05-16",
+      "photo": "/static/uploads/kennedy/mary.png",
+      "location": { "city": "Mount Kisco", "region": "NY", "country": "USA", "lat": 41.2043, "lng": -73.7271 }
     }
   ],
+
   "relationships": [
-    {"child": "jfk", "parent": "joseph_kennedy"},
-    {"child": "jfk", "parent": "rose_kennedy"},
-    {"child": "rfk", "parent": "joseph_kennedy"},
-    {"child": "rfk", "parent": "rose_kennedy"},
-    {"child": "ted", "parent": "joseph_kennedy"},
-    {"child": "ted", "parent": "rose_kennedy"}
+    { "type": "spouse", "a": "joseph_sr", "b": "rose" },
+    { "type": "spouse", "a": "jfk", "b": "jackie" },
+    { "type": "spouse", "a": "rfk_sr", "b": "ethel" },
+    { "type": "spouse", "a": "ted", "b": "joan" },
+    { "type": "spouse", "a": "rfk_jr", "b": "mary" },
+    
+
+    { "child": "jfk", "parent": "joseph_sr" },
+    { "child": "jfk", "parent": "rose" },
+
+    { "child": "rfk_sr", "parent": "joseph_sr" },
+    { "child": "rfk_sr", "parent": "rose" },
+
+    { "child": "ted", "parent": "joseph_sr" },
+    { "child": "ted", "parent": "rose" },
+
+    { "child": "caroline", "parent": "jfk" },
+    { "child": "caroline", "parent": "jackie" },
+
+    { "child": "john_jr", "parent": "jfk" },
+    { "child": "john_jr", "parent": "jackie" },
+
+    { "child": "rfk_jr", "parent": "rfk_sr" },
+    { "child": "rfk_jr", "parent": "ethel" },
+
+    { "child": "kerry", "parent": "rfk_sr" },
+    { "child": "kerry", "parent": "ethel" },
+
+    { "child": "maria", "parent": "rfk_sr" },
+    { "child": "maria", "parent": "ethel" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1914_joseph_rose_marriage",
+      "type": "marriage",
+      "date": "1914-10-07",
+      "people": ["joseph_sr", "rose"],
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 },
+      "description": "Married in Boston."
+    },
+    {
+      "id": "evt_1950_rfk_ethel_marriage",
+      "type": "marriage",
+      "date": "1950-06-17",
+      "people": ["rfk_sr", "ethel"],
+      "location": { "city": "Greenwich", "region": "CT", "country": "USA", "lat": 41.0262, "lng": -73.6282 },
+      "description": "Married in Greenwich."
+    },
+    {
+      "id": "evt_1953_jfk_jackie_marriage",
+      "type": "marriage",
+      "date": "1953-09-12",
+      "people": ["jfk", "jackie"],
+      "location": { "city": "Newport", "region": "RI", "country": "USA", "lat": 41.4901, "lng": -71.3128 },
+      "description": "Married in Newport."
+    },
+    {
+      "id": "evt_1958_ted_joan_marriage",
+      "type": "marriage",
+      "date": "1958-11-29",
+      "people": ["ted", "joan"],
+      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 },
+      "description": "Married in Boston."
+    },
+    {
+      "id": "evt_1959_mary_birth",
+      "type": "birth",
+      "date": "1959-10-04",
+      "people": ["mary"],
+      "location": {"city": "Bayonne","region": "NJ","country": "USA","lat": 40.6687,"lng": -74.1143},
+      "description": "Born in Bayonne, New Jersey."
+    },
+    {
+    "id": "evt_1994_rfk_jr_mary_marriage",
+    "type": "marriage",
+    "date": "1994-04-15",
+    "people": ["rfk_jr", "mary"],
+    "location": {"city": "New York","region": "NY","country": "USA","lat": 40.7128, "lng": -74.0060},
+    "description": "Married Robert F. Kennedy Jr."
+    },
+
+    {
+      "id": "evt_1994_rfk_jr_mary_marriage",
+      "type": "marriage",
+      "date": "1994-04-01",
+      "people": ["rfk_jr", "mary"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 },
+      "description": "Married in New York."
+    },
+
+    {
+      "id": "evt_1963_jfk_death",
+      "type": "death",
+      "date": "1963-11-22",
+      "people": ["jfk"],
+      "location": { "city": "Dallas", "region": "TX", "country": "USA", "lat": 32.7767, "lng": -96.7970 },
+      "description": "Died in Dallas."
+    },
+    {
+      "id": "evt_1968_rfk_sr_death",
+      "type": "death",
+      "date": "1968-06-06",
+      "people": ["rfk_sr"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Died in Los Angeles."
+    },
+    {
+      "id": "evt_1969_joseph_sr_death",
+      "type": "death",
+      "date": "1969-11-18",
+      "people": ["joseph_sr"],
+      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "description": "Passed away in Massachusetts."
+    },
+    {
+      "id": "evt_1994_jackie_death",
+      "type": "death",
+      "date": "1994-05-19",
+      "people": ["jackie"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 },
+      "description": "Passed away in New York."
+    },
+    {
+      "id": "evt_1995_rose_death",
+      "type": "death",
+      "date": "1995-01-22",
+      "people": ["rose"],
+      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "description": "Passed away in Massachusetts."
+    },
+    {
+      "id": "evt_1999_john_jr_death",
+      "type": "death",
+      "date": "1999-07-16",
+      "people": ["john_jr"],
+      "location": { "city": "Martha's Vineyard", "region": "MA", "country": "USA", "lat": 41.3800, "lng": -70.6455 },
+      "description": "Died near Martha's Vineyard."
+    },
+    {
+      "id": "evt_2009_ted_death",
+      "type": "death",
+      "date": "2009-08-25",
+      "people": ["ted"],
+      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "description": "Passed away in Massachusetts."
+    },
+
+    {
+      "id": "evt_1959_mary_birth",
+      "type": "birth",
+      "date": "1959-10-04",
+      "people": ["mary"],
+      "location": { "city": "Bayonne", "region": "NJ", "country": "USA", "lat": 40.6687, "lng": -74.1143 },
+      "description": "Born in Bayonne, New Jersey."
+    },
+    {
+      "id": "evt_2012_mary_death",
+      "type": "death",
+      "date": "2012-05-16",
+      "people": ["mary"],
+      "location": { "city": "Mount Kisco", "region": "NY", "country": "USA", "lat": 41.2043, "lng": -73.7271 },
+      "description": "Died in Mount Kisco, New York."
+    }
   ]
 }

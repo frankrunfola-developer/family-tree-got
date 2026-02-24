@@ -10,18 +10,9 @@
    - Zoom/pan uses transform scale + translate on the stage (image + pins together)
    - Supports clustering + stacked offsets when multiple people share coords
 
-   UPDATED:
-   - parseCoords supports location.xPct / location.yPct (your JSON shape)
-   - Avatar config is OPTIONAL (no hard import that can break the page)
-   - Soft edge-nudge so pins don’t look jammed against borders
-   - REMOVED: people grid + nested region/city accordions (map-first UI)
-
    LATEST:
-   - Leader lines + anchor dots:
-       * Avatar is nudged slightly for readability
-       * Line connects avatar-center -> true location point
-       * Anchor dot marks the exact location
-       * Offsets are intentionally SMALL so it doesn’t imply “they live there”
+   - Leader lines: avatar pins offset slightly, with a line + dot to the exact location
+   - Organic halo layout: golden-angle spiral for clusters
 ---------------------------------------------------------------------------------- */
 
 (() => {
@@ -31,11 +22,8 @@
   // Config
   // ------------------------------
   const API_URL = window.MAP_API_URL || "/api/sample/stark/tree";
-  const FAMILY_ID = (window.MAP_FAMILY_ID || "stark").toLowerCase();
-  const MAP_IMAGE_URL = window.MAP_IMAGE_URL;
-
-  // You can set window.AVATAR_CONFIG = { objectPosition: "50% 28%", scale: 0.82 } before loading map.js
-  const AVATAR = window.AVATAR_CONFIG || { objectPosition: "50% 28%", scale: 0.82 };
+  const MAP_IMAGE_URL = window.MAP_IMAGE_URL || "";
+  const AVATAR = window.AVATAR_CONFIG || { objectPosition: "50% 28%", scale: 0.78 };
 
   if (!MAP_IMAGE_URL) {
     console.error("MAP_IMAGE_URL missing. Set window.MAP_IMAGE_URL before loading map.js");
@@ -71,6 +59,15 @@
     return node;
   }
 
+  function svgEl(tag, attrs = {}) {
+    const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined) continue;
+      node.setAttribute(k, String(v));
+    }
+    return node;
+  }
+
   function toTitle(s) {
     if (!s) return "";
     return String(s).trim().toLowerCase().replace(/\b\w/g, (m) => m.toUpperCase());
@@ -91,15 +88,21 @@
     );
   }
 
-  // Stable 0..1 hash from a string (deterministic per person)
-  function hash01(str) {
-    const s = String(str ?? "");
+  // Deterministic hash (for stable offsets)
+  function hash32(s) {
+    const str = String(s ?? "");
     let h = 2166136261 >>> 0;
-    for (let i = 0; i < s.length; i++) {
-      h ^= s.charCodeAt(i);
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
       h = Math.imul(h, 16777619) >>> 0;
     }
-    return (h >>> 0) / 4294967296;
+    return h >>> 0;
+  }
+
+  // Approx pin size in pixels (matches your CSS clamp-ish range)
+  function approxPinPx(mapWidth) {
+    // pin is clamp(34px, 2.9vw, 54px)
+    return clamp(mapWidth * 0.029, 34, 54);
   }
 
   // One avatar builder (hard overrides to survive global img rules)
@@ -110,20 +113,14 @@
       class: extraClass,
       src: safePhoto(person),
       alt: "",
-      draggable: "false",
       style: `
         width: 100%;
         height: 100%;
         display: block;
-
         object-fit: cover;
         object-position: ${AVATAR.objectPosition};
-
-        /* de-zoom crop inside circle */
         transform: scale(${scale});
         transform-origin: center;
-
-        /* hard override for aggressive global img rules */
         max-width: 100% !important;
         max-height: 100% !important;
       `,
@@ -365,7 +362,6 @@
       tip.classList.remove("open");
     }
 
-    // Clicking blank map closes
     accMap.addEventListener("click", (e) => {
       if (e.target === accMap) close();
     });
@@ -384,23 +380,27 @@
     });
 
     const stage = el("div", { class: "mapStage" });
+
     const img = el("img", {
       class: "mapImage",
-      src: MAP_IMAGE_URL || "",
+      src: MAP_IMAGE_URL,
       alt: "",
       draggable: "false",
     });
 
-    // SVG layer for leader lines + anchor dots (moves with stage transform)
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "pinLines");
-    svg.setAttribute("viewBox", "0 0 100 100");
-    svg.setAttribute("preserveAspectRatio", "none");
+    // SVG layer for leader lines / dots (inside stage so it zooms/pans perfectly)
+    const lines = svgEl("svg", {
+      class: "pinLines",
+      width: "100%",
+      height: "100%",
+      viewBox: "0 0 100 100",
+      preserveAspectRatio: "none",
+    });
 
     const pinLayer = el("div", { class: "pinLayer" });
 
     stage.appendChild(img);
-    stage.appendChild(svg);
+    stage.appendChild(lines);
     stage.appendChild(pinLayer);
     map.appendChild(stage);
 
@@ -543,65 +543,42 @@
     return m;
   }
 
-  // Best-practice offsets: small nudges (readability) with a leader line back to the true point.
-  // DO NOT push far away — avoid “they live there” vibe.
-  function smallSpiralOffset(index, mapWidth) {
+  // Organic cluster layout (golden-angle spiral)
+  function spiralOffset(index, mapWidth) {
     const golden = 2.399963229728653; // ~137.5°
     const angle = index * golden;
 
-    // Tight spacing: stays close to anchor point
-    const base = clamp(mapWidth * 0.014, 14, 18);
-    const growth = clamp(mapWidth * 0.010, 9, 14);
+    const base = clamp(mapWidth * 0.040, 26, 40);
+    const growth = clamp(mapWidth * 0.022, 16, 28);
 
     const r = base + Math.sqrt(index) * growth;
-    const cap = clamp(mapWidth * 0.060, 48, 86); // hard cap, keeps everything tight
-    const rr = Math.min(r, cap);
 
-    return { dx: Math.cos(angle) * rr, dy: Math.sin(angle) * rr, r: rr };
+    return {
+      dx: Math.cos(angle) * r,
+      dy: Math.sin(angle) * r,
+      r,
+    };
   }
 
-  function svgEl(name) {
-    return document.createElementNS("http://www.w3.org/2000/svg", name);
-  }
+  // Short, “nearby” offset for singles
+  function singleLeaderOffset(person, mapWidth) {
+    const pin = approxPinPx(mapWidth);
+    const h = hash32(person?.id || person?.name || safeName(person) || "p");
+    const side = (h & 1) === 0 ? -1 : 1;
 
-  function clearSvg(svg) {
-    while (svg && svg.firstChild) svg.removeChild(svg.firstChild);
-  }
-
-  function drawLeader(svg, ax, ay, bx, by, kind = "single") {
-    // line from avatar center (ax,ay) -> anchor (bx,by)
-    const line = svgEl("line");
-    line.setAttribute("x1", String(ax));
-    line.setAttribute("y1", String(ay));
-    line.setAttribute("x2", String(bx));
-    line.setAttribute("y2", String(by));
-    line.setAttribute("class", kind === "cluster" ? "pinLine pinLine--cluster" : "pinLine");
-    svg.appendChild(line);
-  }
-
-  function drawAnchor(svg, x, y) {
-    const c = svgEl("circle");
-    c.setAttribute("cx", String(x));
-    c.setAttribute("cy", String(y));
-    c.setAttribute("r", "6");
-    c.setAttribute("class", "pinAnchorDot");
-    svg.appendChild(c);
-
-    const c2 = svgEl("circle");
-    c2.setAttribute("cx", String(x));
-    c2.setAttribute("cy", String(y));
-    c2.setAttribute("r", "3");
-    c2.setAttribute("class", "pinAnchorDot pinAnchorDot--inner");
-    svg.appendChild(c2);
+    return {
+      dx: side * clamp(pin * 0.55, 16, 26),
+      dy: -clamp(pin * 0.95, 26, 46),
+    };
   }
 
   function renderPins(accMap, people, onSelect) {
     const pinLayer = accMap.querySelector(".pinLayer");
-    const svg = accMap.querySelector(".pinLines");
-    if (!pinLayer) return;
+    const linesSvg = accMap.querySelector("svg.pinLines");
+    if (!pinLayer || !linesSvg) return;
 
     pinLayer.innerHTML = "";
-    if (svg) clearSvg(svg);
+    while (linesSvg.firstChild) linesSvg.removeChild(linesSvg.firstChild);
 
     const img = accMap.querySelector(".mapImage");
     const rect = accMap.getBoundingClientRect();
@@ -613,6 +590,9 @@
 
     const box = getContainBox(rect.width, rect.height, img?.naturalWidth || 0, img?.naturalHeight || 0);
 
+    // Keep SVG in the same pixel-coordinate space as pins
+    linesSvg.setAttribute("viewBox", `0 0 ${rect.width} ${rect.height}`);
+
     const pctToPx = (coords) => {
       const px = box.x + (coords.x / 100) * box.w;
       const py = box.y + (coords.y / 100) * box.h;
@@ -620,7 +600,7 @@
     };
 
     const edgeNudge = (px, py) => {
-      const margin = clamp(rect.width * 0.030, 16, 28);
+      const margin = clamp(rect.width * 0.035, 18, 34);
 
       let x = px;
       let y = py;
@@ -645,43 +625,49 @@
 
     const clusters = clusterByCoords(withCoords);
 
+    function drawLeader(anchor, display, isCluster = false) {
+      const line = svgEl("line", {
+        x1: anchor.px,
+        y1: anchor.py,
+        x2: display.px,
+        y2: display.py,
+        class: isCluster ? "pinLine pinLine--cluster" : "pinLine",
+      });
+      linesSvg.appendChild(line);
+    }
+
+    function drawDot(anchor, isCluster = false) {
+      const dot = svgEl("circle", {
+        cx: anchor.px,
+        cy: anchor.py,
+        r: isCluster ? 5.2 : 4.2,
+        class: isCluster ? "pinDot pinDot--cluster" : "pinDot",
+      });
+      linesSvg.appendChild(dot);
+    }
+
     for (const items of clusters.values()) {
-      // Anchor point is the TRUE location
-      const anchorCoords = items[0].coords;
-      let { px, py } = pctToPx(anchorCoords);
-      ({ px, py } = edgeNudge(px, py));
-
-      // Anchor dot always, even for singles (makes “true point” unambiguous)
-      if (svg) drawAnchor(svg, px, py);
-
       // -------------------------
-      // SINGLE PERSON (small nudge + line)
+      // SINGLE PERSON
       // -------------------------
       if (items.length === 1) {
-        const p = items[0].p;
+        const { p, coords } = items[0];
+        let { px, py } = pctToPx(coords);
+        ({ px, py } = edgeNudge(px, py));
 
-        // Tiny, consistent nudge per person so they don't sit exactly on top of the dot.
-        // Keep it close. Mostly “up-ish” so it reads like a label, not a different city.
-        const idStr = p?.id || safeName(p);
-        const t = hash01(idStr);
-        const mapWidth = rect.width;
+        const anchor = { px, py };
+        const off = singleLeaderOffset(p, rect.width);
+        const display = edgeNudge(px + off.dx, py + off.dy);
 
-        const up = clamp(mapWidth * 0.020, 14, 22);
-        const side = clamp(mapWidth * 0.010, 8, 14);
-        const dir = t < 0.5 ? -1 : 1;
-
-        const dx = dir * (side * (0.6 + t));
-        const dy = -up * (0.9 + t * 0.4);
-
-        // Draw leader line: avatar center -> anchor
-        if (svg) drawLeader(svg, px + dx, py + dy, px, py, "single");
+        drawDot(anchor, false);
+        drawLeader(anchor, display, false);
 
         const pin = el(
           "button",
           {
             class: "pin",
             type: "button",
-            style: `left:${px}px; top:${py}px; --dx:${Math.round(dx)}px; --dy:${Math.round(dy)}px;`,
+            style: `left:${display.px}px; top:${display.py}px;`,
             "aria-label": `Show ${safeName(p)}`,
           },
           [avatarImgEl(p)]
@@ -710,12 +696,33 @@
       }
 
       // -------------------------
-      // MULTI PERSON (tight halo + lines)
+      // MULTI PERSON (SAME COORDS)
       // -------------------------
+      const anchorCoords = items[0].coords;
+      let { px, py } = pctToPx(anchorCoords);
+      ({ px, py } = edgeNudge(px, py));
+
+      const anchor = { px, py };
       const n = items.length;
       const mapWidth = rect.width;
 
-      // Center cluster badge stays near anchor (no huge orbit)
+      drawDot(anchor, true);
+
+      // Orbit ring
+      let maxR = 0;
+      for (let i = 0; i < n; i++) {
+        const { r } = spiralOffset(i + 1, mapWidth);
+        if (r > maxR) maxR = r;
+      }
+      const orbitSize = Math.round(maxR * 2 + 64);
+
+      const orbit = el("div", {
+        class: "pinOrbit",
+        style: `left:${px}px; top:${py}px; --orbitSize:${orbitSize}px;`,
+      });
+      pinLayer.appendChild(orbit);
+
+      // Center cluster badge
       const head = items[0].p;
       const cluster = el(
         "button",
@@ -723,15 +730,17 @@
           class: "pinCluster",
           type: "button",
           style: `left:${px}px; top:${py}px;`,
-          "aria-label": `Show ${n} people at this location`,
+          "aria-label": `Show ${items.length} people at this location`,
         },
         [
           el("div", { class: "pinCluster__ring" }, [avatarImgEl(head)]),
-          el("div", { class: "pinCluster__count", html: String(n) }),
+          el("div", { class: "pinCluster__count", html: String(items.length) }),
         ]
       );
 
-      cluster.addEventListener("mouseenter", (e) => tip.openAt(e.clientX, e.clientY, `${n} people`, "Click for group"));
+      cluster.addEventListener("mouseenter", (e) => {
+        tip.openAt(e.clientX, e.clientY, `${items.length} people`, "Click for group");
+      });
       cluster.addEventListener("mouseleave", () => tip.close());
       cluster.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -740,23 +749,20 @@
 
       pinLayer.appendChild(cluster);
 
-      // Halo pins around it — tight spiral
-      // Start index > 0 so no halo sits dead center
+      // Halo pins
       for (let i = 0; i < n; i++) {
         const p = items[i].p;
+        const { dx, dy } = spiralOffset(i + 4, mapWidth);
+        const display = edgeNudge(px + dx, py + dy);
 
-        // Offset index starts at 3 to keep first pins off the cluster badge
-        const { dx, dy } = smallSpiralOffset(i + 3, mapWidth);
-
-        // Leader line: avatar center -> anchor
-        if (svg) drawLeader(svg, px + dx, py + dy, px, py, "cluster");
+        drawLeader(anchor, display, true);
 
         const pin = el(
           "button",
           {
             class: "pin",
             type: "button",
-            style: `left:${px}px; top:${py}px; --dx:${Math.round(dx)}px; --dy:${Math.round(dy)}px;`,
+            style: `left:${display.px}px; top:${display.py}px;`,
             "aria-label": `Show ${safeName(p)}`,
           },
           [avatarImgEl(p)]
@@ -849,6 +855,7 @@
 
       const map = buildMapCanvas();
       attachZoomPan(map);
+
       renderPins(map, countryPeople, () => {});
       cBody.appendChild(map);
     }
@@ -872,10 +879,7 @@
       const data = await res.json();
       const people = data?.people || data?.nodes || data?.members || data?.family?.people || [];
 
-      if (!Array.isArray(people)) {
-        throw new Error("API response did not contain an array of people/nodes.");
-      }
-
+      if (!Array.isArray(people)) throw new Error("API response did not contain an array of people/nodes.");
       renderAccordion(people);
     } catch (err) {
       console.error(err);
@@ -883,8 +887,5 @@
     }
   }
 
-  // ------------------------------
-  // Init
-  // ------------------------------
   document.addEventListener("DOMContentLoaded", load);
 })();
