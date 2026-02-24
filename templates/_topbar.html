@@ -9,6 +9,7 @@ JS expects:
 ----------------------------------------------------------------------------- #}
 
 {% set sid = (sample_id or "stark")|lower %}
+{% set is_auth = 'authPage' in (body_class|default('')) %}
 
 <header class="topbar" role="banner">
   <div class="topbar-inner">
@@ -16,11 +17,7 @@ JS expects:
     <!-- LEFT -->
     <div class="topbar-left">
       <a class="brandIcon" href="{{ url_for('index') }}" data-preserve-sample="1" aria-label="LineAgeMap home">
-        <img class="brandMark" src="{{ url_for('static', filename='img/lineagemap_logo.png') }}" alt="LineAgeMap" />
-      </a>
-
-      <a class="brandTitle" href="{{ url_for('index') }}" data-preserve-sample="1">
-        <span>LineAgeMap</span>
+        <img class="brandMark" src="{{ url_for('static', filename='img/scroll.png') }}" alt="LineAgeMap" />
       </a>
     </div>
 
@@ -39,6 +36,8 @@ JS expects:
     <!-- RIGHT -->
     <div class="topbar-right">
 
+      {# Demo picker should NOT appear on auth pages (kills the mood + clutters the header) #}
+      {% if not is_auth %}
       <!-- Desktop demo picker -->
       <div class="demoPicker demoPicker--desktop">
         <span class="demoPickerLabel">Demo</span>
@@ -47,13 +46,13 @@ JS expects:
           <option value="gupta" {{ 'selected' if sid == 'gupta' else '' }}>Gupta</option>
           <option value="kennedy" {{ 'selected' if sid == 'kennedy' else '' }}>Kennedy</option>
           <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
+          <option value="kardashian" {{ 'selected' if sid == 'kardashian' else '' }}>Kardashian</option>
+          <option value="jackson" {{ 'selected' if sid == 'jackson' else '' }}>Jackson</option>
+          <option value="windsor" {{ 'selected' if sid == 'windsor' else '' }}>Windsor</option>
+          <option value="ambani" {{ 'selected' if sid == 'ambani' else '' }}>Ambani</option>
         </select>
       </div>
-
-      <!-- Hamburger (nav.js expects #navbtn) -->
-      <button id="navbtn" class="navToggle" type="button" aria-label="Menu" aria-expanded="false">
-        <span class="navToggleIcon" aria-hidden="true"></span>
-      </button>
+      {% endif %}
 
       <!-- Auth / CTA -->
       {% if current_user %}
@@ -67,6 +66,12 @@ JS expects:
       {% else %}
       <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
       {% endif %}
+
+      <!-- Hamburger (nav.js expects #navbtn)
+           Place it last so it sits on the OUTSIDE edge. -->
+      <button id="navbtn" class="navToggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span class="navToggleIcon" aria-hidden="true"></span>
+      </button>
 
     </div>
   </div>
@@ -82,6 +87,7 @@ JS expects:
     <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
       class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
 
+    {% if not is_auth %}
     <!-- Mobile demo picker -->
     <div class="demoPicker demoPicker--mobile">
       <p class="demoPickerLabel">Demo Family</p>
@@ -92,5 +98,6 @@ JS expects:
         <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
       </select>
     </div>
+    {% endif %}
   </div>
 </header>

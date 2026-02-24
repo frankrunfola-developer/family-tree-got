@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "family_name": "My Family",
+    "created_at": "2026-02-22T20:55:31.201829Z",
+    "starter": true
+  },
+  "people": [
+    {
+      "id": "p_43e36f",
+      "name": "",
+      "born": "",
+      "died": "",
+      "photo": "",
+      "location": {
+        "city": "",
+        "region": "",
+        "country": ""
+      },
+      "events": []
+    },
+    {
+      "id": "p_33de22",
+      "name": "",
+      "born": "",
+      "died": "",
+      "photo": "",
+      "location": {
+        "city": "",
+        "region": "",
+        "country": ""
+      },
+      "events": []
+    }
+  ],
+  "relationships": []
+}

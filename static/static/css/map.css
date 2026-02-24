@@ -1,0 +1,456 @@
+/* map.css
+   Single source of truth for Map UI
+   - Accordion map (acc + accMap + pins + tip)
+   - Designed to survive aggressive global button/img rules
+   - UPDATED: leader lines + city dots + clearer separation
+*/
+
+/* ================================
+   PIN AVATAR (circle crop)
+================================ */
+
+:root{
+  --pinSize: clamp(34px, 2.9vw, 54px);
+  --pinRing: 3px;
+}
+
+/* ===========================
+   Map page layout sizing
+   =========================== */
+
+.mapShell{
+  width: min(1600px, calc(100% - (var(--page-pad) * 2)));
+  margin: 0 auto 18px;
+}
+
+.nav-family--wide{
+  width: min(1600px, calc(100% - (var(--page-pad) * 2)));
+  margin: 12px auto 6px;
+}
+
+@media (max-width: 980px){
+  .mapShell,
+  .nav-family--wide{
+    width: min(var(--content-max), calc(100% - (var(--page-pad) * 2)));
+  }
+}
+
+/* ===========================
+   Loading
+   =========================== */
+
+.mapLoading{
+  margin: 0 auto;
+  padding: 18px 18px;
+  border: 1px solid rgba(40,32,24,0.14);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: 0 12px 26px rgba(40,32,24,0.10);
+  color: rgba(40,32,24,0.75);
+}
+
+/* ===========================
+   Accordion containers
+   =========================== */
+
+.acc{
+  margin: 0 auto 12px;
+  border: 1px solid rgba(40,32,24,0.14);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.40);
+  box-shadow: 0 14px 28px rgba(40,32,24,0.10);
+  overflow: hidden;
+}
+
+.accHead{
+  list-style: none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 10px 14px;
+  cursor:pointer;
+  user-select:none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.30));
+  border-bottom: 1px solid rgba(40,32,24,0.10);
+}
+
+.accHead::-webkit-details-marker{ display:none; }
+
+.accTitle{
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  color: rgba(70,50,36,0.92);
+}
+
+.accBody{
+  padding: 18px 18px 20px;
+}
+
+/* ===========================
+   Map canvas
+   =========================== */
+
+.accMap{
+  position: relative;
+  isolation: isolate;
+  border-radius: 18px;
+  border: 1px solid rgba(40,32,24,0.14);
+
+  background-color: rgba(239,230,216,0.18);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: contain;
+
+  height: clamp(520px, 72vh, 980px);
+
+  overflow: hidden;
+
+  box-shadow:
+    0 26px 56px rgba(40,32,24,0.18),
+    0 8px 16px rgba(40,32,24,0.08),
+    inset 0 0 0 1px rgba(255,255,255,0.22);
+}
+
+.mapStage{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.mapImage{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Vignette behind pins */
+.accMap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index: 1;
+  background: radial-gradient(120% 90% at 50% 40%,
+    rgba(255,255,255,0.18),
+    rgba(40,32,24,0.06) 60%,
+    rgba(40,32,24,0.12) 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+}
+
+/* ===========================
+   Leader lines layer (SVG)
+   =========================== */
+
+.pinLines{
+  position: absolute;
+  inset: 0;
+  z-index: 18; /* above map, below faces */
+  pointer-events: none;
+}
+
+/* ✅ more noticeable lines */
+.pinLine{
+  stroke: rgba(110, 70, 30, 0.92);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+
+  filter: drop-shadow(0 2px 3px rgba(40,32,24,0.28));
+  opacity: 0.98;
+}
+
+.pinLine--cluster{
+  stroke: rgba(110, 70, 30, 0.78);
+  stroke-width: 3.0;
+}
+
+.pinDot{
+  fill: rgba(189, 145, 63, 0.98);
+  stroke: rgba(255,255,255,0.96);
+  stroke-width: 2.4;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 3px 5px rgba(40,32,24,0.30));
+}
+
+.pinDot--cluster{
+  fill: rgba(189, 145, 63, 0.99);
+}
+
+/* ===========================
+   pinLayer (pins)
+   =========================== */
+
+.pinLayer{
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+}
+
+/* pins re-enable pointer events */
+.pin,
+.pinCluster{
+  pointer-events: auto;
+}
+
+/* ===========================
+   Zoom controls
+   =========================== */
+
+.accMap .mapZoomUI{
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 60;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 12px 26px rgba(40,32,24,0.14);
+  backdrop-filter: blur(6px);
+}
+
+.accMap .mapZoomBtn{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.85);
+  color: rgba(70,50,36,0.92);
+  font-weight: 900;
+  cursor: pointer;
+  display:grid;
+  place-items:center;
+  box-shadow: 0 10px 18px rgba(40,32,24,0.10);
+}
+
+.accMap .mapZoomBtn:hover{ filter: brightness(1.02); }
+.accMap .mapZoomBtn:active{ transform: translateY(1px); }
+
+.accMap.isPannable{ cursor: grab; }
+.accMap.isPannable.isDragging{ cursor: grabbing; }
+
+@media (max-width: 520px){
+  .accMap{ height: clamp(380px, 62vh, 680px); }
+}
+
+@media (min-width: 1100px){
+  .accMap{ height: clamp(620px, calc(100vh - 230px), 980px); }
+}
+
+/* ===========================
+   Pins (smaller + clearer separation)
+   =========================== */
+
+.accMap .pin{
+  position: absolute !important;
+  width: var(--pinSize) !important;
+  height: var(--pinSize) !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: block !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
+
+  border-radius: 999px !important;
+
+  border: var(--pinRing) solid rgba(245,236,223,0.96) !important;
+
+  box-shadow:
+    0 14px 24px rgba(40,32,24,0.22),
+    0 0 0 9px rgba(245,236,223,0.80);
+
+  background: rgba(255,255,255,0.74);
+  overflow: hidden !important;
+
+  transform: translate(-50%, -50%) !important;
+
+  cursor: pointer;
+  z-index: 28;
+}
+
+.accMap .pin > img{
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.accMap .pin:focus{
+  outline: 2px solid rgba(122,90,69,0.42);
+  outline-offset: 2px;
+}
+
+/* ===========================
+   Cluster badge (center)
+   =========================== */
+
+.accMap .pinCluster{
+  position: absolute !important;
+
+  width: clamp(34px, 3.2vw, 48px) !important;
+  height: clamp(34px, 3.2vw, 48px) !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  border-radius: 999px !important;
+  border: 2px solid rgba(255,255,255,0.92);
+
+  background: rgba(255,255,255,0.78);
+
+  box-shadow:
+    0 16px 30px rgba(40,32,24,0.26),
+    0 0 0 1px rgba(120, 85, 35, 0.34);
+
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer;
+
+  z-index: 30;
+}
+
+.accMap .pinCluster__count{
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.95);
+
+  background: rgba(189, 145, 63, 0.95);
+  color: rgba(255,255,255,0.98);
+
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+
+  box-shadow: 0 10px 18px rgba(40,32,24,0.22);
+}
+
+.accMap .pinCluster__ring{
+  width: 68%;
+  height: 68%;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.88);
+  box-shadow: inset 0 0 0 1px rgba(40,32,24,0.10);
+}
+
+.accMap .pinCluster__ring img{
+  width: 100%;
+  height: 100%;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover;
+  display:block;
+}
+
+/* ===========================
+   Tooltip
+   =========================== */
+
+.accMap .pinTip{
+  position:absolute;
+  left:0; top:0;
+  pointer-events:none;
+  z-index: 50;
+}
+
+.accMap .pinTip__inner{
+  min-width: 190px;
+  max-width: 280px;
+  border-radius: 14px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.94);
+  box-shadow: 0 18px 38px rgba(40,32,24,0.18);
+  padding: 10px 12px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  position: relative;
+}
+
+.accMap .pinTip__inner:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-7px;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(255,255,255,0.94);
+  border-right: 1px solid rgba(40,32,24,0.14);
+  border-bottom: 1px solid rgba(40,32,24,0.14);
+}
+
+.accMap .pinTip.open .pinTip__inner{ opacity: 1; }
+
+.accMap .pinTip__name{
+  font-family: var(--serif);
+  font-weight: 900;
+  color: rgba(70,50,36,0.92);
+  line-height: 1.1;
+}
+
+.accMap .pinTip__meta{
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(40,32,24,0.72);
+  line-height: 1.25;
+}
+
+/* Orbit ring behind halo */
+.pinOrbit{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.pinOrbit::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width: var(--orbitSize, 160px);
+  height: var(--orbitSize, 160px);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow:
+    0 14px 34px rgba(40,32,24,0.10),
+    inset 0 0 0 1px rgba(40,32,24,0.07);
+
+  background: radial-gradient(circle at center,
+    rgba(255,255,255,0.07),
+    rgba(255,255,255,0.00) 58%);
+
+  opacity: 0.55;
+}

@@ -47,7 +47,7 @@ SECRET = os.environ.get("LINEAGEMAP_SECRET", "dev-secret-change-me")
 DEFAULT_SAMPLE_ID = "stark"
 
 # Allow-list for /api/sample/<sample_id>/tree and demo pages
-ALLOWED_SAMPLES = {"stark", "got", "gupta", "kennedy", "lannister"}
+ALLOWED_SAMPLES = {"stark", "got", "gupta", "kennedy", "lannister","kardashian", "jackson","ambani","sen"}
 
 app = Flask(
     __name__,

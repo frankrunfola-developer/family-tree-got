@@ -1,0 +1,19 @@
+/* styles.css (aggregator)
+   Split CSS entrypoint for LineAgeMap
+
+   Keep this as ONLY imports (or minimal glue).
+   Page CSS can be loaded per-template for performance,
+   but importing everything also works while you iterate.
+*/
+
+@import url("core.css");
+@import url("layout.css");
+@import url("topbar.css");
+@import url("landing.css");
+@import url("auth.css");
+
+/* Optional page imports (uncomment if you want always-on)
+@import url("tree.css");
+@import url("map.css");
+@import url("timeline.css");
+*/

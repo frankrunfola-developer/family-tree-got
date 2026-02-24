@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "family_name": "Ambani Family (Sample)",
+    "note": "Sample dataset for exploring Tree/Timeline/Map UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Focuses on Dhirubhai/Kokilaben → Mukesh/Anil branches + Mukesh/Nita children (Akash, Isha, Anant) with spouses + a few grandchildren."
+  },
+
+  "people": [
+    {
+      "id": "dhirubhai",
+      "name": "Dhirubhai Ambani",
+      "born": "1932-12-28",
+      "died": "2002-07-06",
+      "photo": "/static/uploads/ambani/dhirubhai.png",
+      "location": { "city": "Chorwad", "region": "Gujarat", "country": "India", "lat": 21.0187, "lng": 70.2160 }
+    },
+    {
+      "id": "kokilaben",
+      "name": "Kokilaben Ambani",
+      "born": "1934-02-24",
+      "died": "",
+      "photo": "/static/uploads/ambani/kokilaben.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "mukesh",
+      "name": "Mukesh Ambani",
+      "born": "1957-04-19",
+      "died": "",
+      "photo": "/static/uploads/ambani/mukesh.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "nita",
+      "name": "Nita Ambani",
+      "born": "1963",
+      "died": "",
+      "photo": "/static/uploads/ambani/nita.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "anil",
+      "name": "Anil Ambani",
+      "born": "1959-06-04",
+      "died": "",
+      "photo": "/static/uploads/ambani/anil.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "tina",
+      "name": "Tina Ambani (Tina Munim)",
+      "born": "1957-02-11",
+      "died": "",
+      "photo": "/static/uploads/ambani/tina.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "akash",
+      "name": "Akash Ambani",
+      "born": "1991-10-23",
+      "died": "",
+      "photo": "/static/uploads/ambani/akash.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "shloka",
+      "name": "Shloka Mehta Ambani",
+      "born": "1990",
+      "died": "",
+      "photo": "/static/uploads/ambani/shloka.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "isha",
+      "name": "Isha Ambani",
+      "born": "1991-10-23",
+      "died": "",
+      "photo": "/static/uploads/ambani/isha.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "anand_piramal",
+      "name": "Anand Piramal",
+      "born": "1985",
+      "died": "",
+      "photo": "/static/uploads/ambani/anand_piramal.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "anant",
+      "name": "Anant Ambani",
+      "born": "1995-04-10",
+      "died": "",
+      "photo": "/static/uploads/ambani/anant.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "radhika",
+      "name": "Radhika Merchant",
+      "born": "1994",
+      "died": "",
+      "photo": "/static/uploads/ambani/radhika.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "prithvi",
+      "name": "Prithvi Akash Ambani",
+      "born": "2020-12-10",
+      "died": "",
+      "photo": "/static/uploads/ambani/prithvi.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+
+    {
+      "id": "krishna",
+      "name": "Krishna Piramal",
+      "born": "2022-11-19",
+      "died": "",
+      "photo": "/static/uploads/ambani/krishna.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    },
+    {
+      "id": "aadiya",
+      "name": "Aadiya Shakti Piramal",
+      "born": "2022-11-19",
+      "died": "",
+      "photo": "/static/uploads/ambani/aadiya.png",
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "dhirubhai", "b": "kokilaben" },
+
+    { "child": "mukesh", "parent": "dhirubhai" },
+    { "child": "mukesh", "parent": "kokilaben" },
+
+    { "child": "anil", "parent": "dhirubhai" },
+    { "child": "anil", "parent": "kokilaben" },
+
+    { "type": "spouse", "a": "mukesh", "b": "nita" },
+    { "type": "spouse", "a": "anil", "b": "tina" },
+
+    { "child": "akash", "parent": "mukesh" },
+    { "child": "akash", "parent": "nita" },
+
+    { "child": "isha", "parent": "mukesh" },
+    { "child": "isha", "parent": "nita" },
+
+    { "child": "anant", "parent": "mukesh" },
+    { "child": "anant", "parent": "nita" },
+
+    { "type": "spouse", "a": "akash", "b": "shloka" },
+    { "type": "spouse", "a": "isha", "b": "anand_piramal" },
+    { "type": "spouse", "a": "anant", "b": "radhika" },
+
+    { "child": "prithvi", "parent": "akash" },
+    { "child": "prithvi", "parent": "shloka" },
+
+    { "child": "krishna", "parent": "isha" },
+    { "child": "krishna", "parent": "anand_piramal" },
+
+    { "child": "aadiya", "parent": "isha" },
+    { "child": "aadiya", "parent": "anand_piramal" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1958_reliance_founded",
+      "type": "other",
+      "date": "1958-01-01",
+      "people": ["dhirubhai"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Reliance founded (year-level date used)."
+    },
+    {
+      "id": "evt_2002_dhirubhai_death",
+      "type": "death",
+      "date": "2002-07-06",
+      "people": ["dhirubhai"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Dhirubhai Ambani died in Mumbai."
+    },
+
+    {
+      "id": "evt_1985_mukesh_nita_marriage",
+      "type": "marriage",
+      "date": "1985-01-01",
+      "people": ["mukesh", "nita"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Mukesh Ambani married Nita Ambani (year-level date used)."
+    },
+
+    {
+      "id": "evt_2018_isha_anand_marriage",
+      "type": "marriage",
+      "date": "2018-12-12",
+      "people": ["isha", "anand_piramal"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Isha Ambani married Anand Piramal in Mumbai."
+    },
+    {
+      "id": "evt_2019_akash_shloka_marriage",
+      "type": "marriage",
+      "date": "2019-03-09",
+      "people": ["akash", "shloka"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Akash Ambani married Shloka Mehta in Mumbai."
+    },
+
+    {
+      "id": "evt_2020_prithvi_birth",
+      "type": "birth",
+      "date": "2020-12-10",
+      "people": ["prithvi"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Prithvi Akash Ambani born in Mumbai."
+    },
+    {
+      "id": "evt_2022_isha_twins_birth",
+      "type": "birth",
+      "date": "2022-11-19",
+      "people": ["krishna", "aadiya"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Twins Krishna and Aadiya Shakti born (date used for timeline anchor)."
+    },
+
+    {
+      "id": "evt_2024_anant_radhika_wedding",
+      "type": "marriage",
+      "date": "2024-07-12",
+      "people": ["anant", "radhika"],
+      "location": { "city": "Mumbai", "region": "Maharashtra", "country": "India", "lat": 19.0760, "lng": 72.8777 },
+      "description": "Anant Ambani married Radhika Merchant in Mumbai."
+    }
+  ]
+}

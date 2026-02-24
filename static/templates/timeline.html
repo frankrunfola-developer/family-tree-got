@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set active_page = "timeline" %}
+
+{% block title %}LineAgeMap — Timeline{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="appFrameShell">
+  <div class="appFrameCard">
+    <div class="pillTitle">TIMELINE</div>
+
+    <section class="tlShell" aria-label="Family Timeline">
+      <div class="tlTop">
+        <div class="tlTitle">Lineage Map</div>
+        <div id="tlStatus" class="tlStatus">Loading timeline…</div>
+      </div>
+
+      <div id="tlSnakeRoot" class="tlSnakeRoot" data-density="airy">
+        <svg id="tlSnakeSvg" class="tlSnakeSvg" aria-hidden="true"></svg>
+        <div id="tlSnakeCards" class="tlSnakeCards" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{# Compute API URL outside JS so VSCode JS validator doesn't freak out #}
+{# Priority:
+1) public_slug
+2) sample_id (explicit)
+3) current_user
+4) demo_sample (session/query chosen)
+5) stark
+#}
+{% if public_slug %}
+{% set TIMELINE_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
+{% elif sample_id %}
+{% set TIMELINE_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
+{% elif current_user %}
+{% set TIMELINE_API_URL = "/api/tree/me" %}
+{% elif demo_sample %}
+{% set TIMELINE_API_URL = "/api/sample/" ~ demo_sample ~ "/tree" %}
+{% else %}
+{% set TIMELINE_API_URL = "/api/sample/stark/tree" %}
+{% endif %}
+
+<script>
+  // Data source selection for timeline.
+  window.TIMELINE_API_URL = "{{ TIMELINE_API_URL }}";
+</script>
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}

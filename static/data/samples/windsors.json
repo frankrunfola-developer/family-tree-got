@@ -1,0 +1,412 @@
+{
+  "meta": {
+    "family_name": "House of Windsor (Royal Family) (Sample)",
+    "note": "Sample dataset for exploring Tree/Timeline/Map UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes George VI → Elizabeth II → Charles III → William/Harry branches, plus key siblings/partners for a richer demo."
+  },
+
+  "people": [
+    {
+      "id": "george_vi",
+      "name": "King George VI",
+      "born": "1895-12-14",
+      "died": "1952-02-06",
+      "photo": "/static/uploads/windsor/george_vi.png",
+      "location": { "city": "Sandringham", "region": "England", "country": "UK", "lat": 52.8290, "lng": 0.5110 }
+    },
+    {
+      "id": "queen_mother",
+      "name": "Elizabeth Bowes-Lyon (Queen Mother)",
+      "born": "1900-08-04",
+      "died": "2002-03-30",
+      "photo": "/static/uploads/windsor/queen_mother.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "elizabeth_ii",
+      "name": "Queen Elizabeth II",
+      "born": "1926-04-21",
+      "died": "2022-09-08",
+      "photo": "/static/uploads/windsor/elizabeth_ii.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "margaret",
+      "name": "Princess Margaret, Countess of Snowdon",
+      "born": "1930-08-21",
+      "died": "2002-02-09",
+      "photo": "/static/uploads/windsor/margaret.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "philip",
+      "name": "Prince Philip, Duke of Edinburgh",
+      "born": "1921-06-10",
+      "died": "2021-04-09",
+      "photo": "/static/uploads/windsor/philip.png",
+      "location": { "city": "Windsor", "region": "England", "country": "UK", "lat": 51.4839, "lng": -0.6044 }
+    },
+
+    {
+      "id": "charles",
+      "name": "King Charles III",
+      "born": "1948-11-14",
+      "died": "",
+      "photo": "/static/uploads/windsor/charles.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5014, "lng": -0.1419 }
+    },
+    {
+      "id": "diana",
+      "name": "Diana, Princess of Wales",
+      "born": "1961-07-01",
+      "died": "1997-08-31",
+      "photo": "/static/uploads/windsor/diana.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "camilla",
+      "name": "Queen Camilla",
+      "born": "1947-07-17",
+      "died": "",
+      "photo": "/static/uploads/windsor/camilla.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5014, "lng": -0.1419 }
+    },
+
+    {
+      "id": "anne",
+      "name": "Anne, Princess Royal",
+      "born": "1950-08-15",
+      "died": "",
+      "photo": "/static/uploads/windsor/anne.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "andrew",
+      "name": "Prince Andrew, Duke of York",
+      "born": "1960-02-19",
+      "died": "",
+      "photo": "/static/uploads/windsor/andrew.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "edward",
+      "name": "Prince Edward, Duke of Edinburgh",
+      "born": "1964-03-10",
+      "died": "",
+      "photo": "/static/uploads/windsor/edward.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "mark_phillips",
+      "name": "Mark Phillips",
+      "born": "1948-09-22",
+      "died": "",
+      "photo": "/static/uploads/windsor/mark_phillips.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "tim_laurence",
+      "name": "Timothy Laurence",
+      "born": "1955-03-01",
+      "died": "",
+      "photo": "/static/uploads/windsor/tim_laurence.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "sarah_ferguson",
+      "name": "Sarah, Duchess of York",
+      "born": "1959-10-15",
+      "died": "",
+      "photo": "/static/uploads/windsor/sarah_ferguson.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "sophie",
+      "name": "Sophie, Duchess of Edinburgh",
+      "born": "1965-01-20",
+      "died": "",
+      "photo": "/static/uploads/windsor/sophie.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "william",
+      "name": "William, Prince of Wales",
+      "born": "1982-06-21",
+      "died": "",
+      "photo": "/static/uploads/windsor/william.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5010, "lng": -0.1416 }
+    },
+    {
+      "id": "catherine",
+      "name": "Catherine, Princess of Wales",
+      "born": "1982-01-09",
+      "died": "",
+      "photo": "/static/uploads/windsor/catherine.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5010, "lng": -0.1416 }
+    },
+    {
+      "id": "harry",
+      "name": "Prince Harry, Duke of Sussex",
+      "born": "1984-09-15",
+      "died": "",
+      "photo": "/static/uploads/windsor/harry.png",
+      "location": { "city": "Montecito", "region": "CA", "country": "USA", "lat": 34.4358, "lng": -119.6321 }
+    },
+    {
+      "id": "meghan",
+      "name": "Meghan, Duchess of Sussex",
+      "born": "1981-08-04",
+      "died": "",
+      "photo": "/static/uploads/windsor/meghan.png",
+      "location": { "city": "Montecito", "region": "CA", "country": "USA", "lat": 34.4358, "lng": -119.6321 }
+    },
+
+    {
+      "id": "george",
+      "name": "Prince George of Wales",
+      "born": "2013-07-22",
+      "died": "",
+      "photo": "/static/uploads/windsor/george.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "charlotte",
+      "name": "Princess Charlotte of Wales",
+      "born": "2015-05-02",
+      "died": "",
+      "photo": "/static/uploads/windsor/charlotte.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "louis",
+      "name": "Prince Louis of Wales",
+      "born": "2018-04-23",
+      "died": "",
+      "photo": "/static/uploads/windsor/louis.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "archie",
+      "name": "Prince Archie of Sussex",
+      "born": "2019-05-06",
+      "died": "",
+      "photo": "/static/uploads/windsor/archie.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "lilibet",
+      "name": "Princess Lilibet of Sussex",
+      "born": "2021-06-04",
+      "died": "",
+      "photo": "/static/uploads/windsor/lilibet.png",
+      "location": { "city": "Santa Barbara", "region": "CA", "country": "USA", "lat": 34.4208, "lng": -119.6982 }
+    },
+
+    {
+      "id": "beatrice",
+      "name": "Princess Beatrice",
+      "born": "1988-08-08",
+      "died": "",
+      "photo": "/static/uploads/windsor/beatrice.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "eugenie",
+      "name": "Princess Eugenie",
+      "born": "1990-03-23",
+      "died": "",
+      "photo": "/static/uploads/windsor/eugenie.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "louise",
+      "name": "Lady Louise Windsor",
+      "born": "2003-11-08",
+      "died": "",
+      "photo": "/static/uploads/windsor/louise.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+    {
+      "id": "james",
+      "name": "James, Earl of Wessex",
+      "born": "2007-12-17",
+      "died": "",
+      "photo": "/static/uploads/windsor/james.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "george_vi", "b": "queen_mother" },
+
+    { "child": "elizabeth_ii", "parent": "george_vi" },
+    { "child": "elizabeth_ii", "parent": "queen_mother" },
+
+    { "child": "margaret", "parent": "george_vi" },
+    { "child": "margaret", "parent": "queen_mother" },
+
+    { "type": "spouse", "a": "elizabeth_ii", "b": "philip" },
+
+    { "child": "charles", "parent": "elizabeth_ii" },
+    { "child": "charles", "parent": "philip" },
+
+    { "child": "anne", "parent": "elizabeth_ii" },
+    { "child": "anne", "parent": "philip" },
+
+    { "child": "andrew", "parent": "elizabeth_ii" },
+    { "child": "andrew", "parent": "philip" },
+
+    { "child": "edward", "parent": "elizabeth_ii" },
+    { "child": "edward", "parent": "philip" },
+
+    { "type": "spouse", "a": "charles", "b": "diana" },
+    { "type": "spouse", "a": "charles", "b": "camilla" },
+
+    { "child": "william", "parent": "charles" },
+    { "child": "william", "parent": "diana" },
+
+    { "child": "harry", "parent": "charles" },
+    { "child": "harry", "parent": "diana" },
+
+    { "type": "spouse", "a": "william", "b": "catherine" },
+    { "type": "spouse", "a": "harry", "b": "meghan" },
+
+    { "child": "george", "parent": "william" },
+    { "child": "george", "parent": "catherine" },
+
+    { "child": "charlotte", "parent": "william" },
+    { "child": "charlotte", "parent": "catherine" },
+
+    { "child": "louis", "parent": "william" },
+    { "child": "louis", "parent": "catherine" },
+
+    { "child": "archie", "parent": "harry" },
+    { "child": "archie", "parent": "meghan" },
+
+    { "child": "lilibet", "parent": "harry" },
+    { "child": "lilibet", "parent": "meghan" },
+
+    { "type": "spouse", "a": "anne", "b": "mark_phillips" },
+    { "type": "spouse", "a": "anne", "b": "tim_laurence" },
+
+    { "type": "spouse", "a": "andrew", "b": "sarah_ferguson" },
+
+    { "child": "beatrice", "parent": "andrew" },
+    { "child": "beatrice", "parent": "sarah_ferguson" },
+
+    { "child": "eugenie", "parent": "andrew" },
+    { "child": "eugenie", "parent": "sarah_ferguson" },
+
+    { "type": "spouse", "a": "edward", "b": "sophie" },
+
+    { "child": "louise", "parent": "edward" },
+    { "child": "louise", "parent": "sophie" },
+
+    { "child": "james", "parent": "edward" },
+    { "child": "james", "parent": "sophie" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1923_george_vi_queen_mother_marriage",
+      "type": "marriage",
+      "date": "1923-04-26",
+      "people": ["george_vi", "queen_mother"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5136, "lng": -0.0983 },
+      "description": "Married in London."
+    },
+    {
+      "id": "evt_1930_margaret_birth",
+      "type": "birth",
+      "date": "1930-08-21",
+      "people": ["margaret"],
+      "location": { "city": "Glamis", "region": "Scotland", "country": "UK", "lat": 56.6247, "lng": -3.0006 },
+      "description": "Born in Scotland."
+    },
+    {
+      "id": "evt_1947_elizabeth_philip_marriage",
+      "type": "marriage",
+      "date": "1947-11-20",
+      "people": ["elizabeth_ii", "philip"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.4995, "lng": -0.1248 },
+      "description": "Married in London."
+    },
+    {
+      "id": "evt_1952_george_vi_death",
+      "type": "death",
+      "date": "1952-02-06",
+      "people": ["george_vi"],
+      "location": { "city": "Sandringham", "region": "England", "country": "UK", "lat": 52.8290, "lng": 0.5110 },
+      "description": "Died at Sandringham."
+    },
+    {
+      "id": "evt_1981_charles_diana_marriage",
+      "type": "marriage",
+      "date": "1981-07-29",
+      "people": ["charles", "diana"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5136, "lng": -0.0983 },
+      "description": "Married at St Paul's Cathedral."
+    },
+    {
+      "id": "evt_1997_diana_death",
+      "type": "death",
+      "date": "1997-08-31",
+      "people": ["diana"],
+      "location": { "city": "Paris", "region": "Île-de-France", "country": "France", "lat": 48.8566, "lng": 2.3522 },
+      "description": "Died in Paris."
+    },
+    {
+      "id": "evt_2005_charles_camilla_marriage",
+      "type": "marriage",
+      "date": "2005-04-09",
+      "people": ["charles", "camilla"],
+      "location": { "city": "Windsor", "region": "England", "country": "UK", "lat": 51.4839, "lng": -0.6044 },
+      "description": "Married in Windsor."
+    },
+    {
+      "id": "evt_2011_william_catherine_marriage",
+      "type": "marriage",
+      "date": "2011-04-29",
+      "people": ["william", "catherine"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.4993, "lng": -0.1273 },
+      "description": "Married at Westminster Abbey."
+    },
+    {
+      "id": "evt_2018_harry_meghan_marriage",
+      "type": "marriage",
+      "date": "2018-05-19",
+      "people": ["harry", "meghan"],
+      "location": { "city": "Windsor", "region": "England", "country": "UK", "lat": 51.4839, "lng": -0.6044 },
+      "description": "Married in Windsor."
+    },
+    {
+      "id": "evt_2021_philip_death",
+      "type": "death",
+      "date": "2021-04-09",
+      "people": ["philip"],
+      "location": { "city": "Windsor", "region": "England", "country": "UK", "lat": 51.4839, "lng": -0.6044 },
+      "description": "Died in Windsor."
+    },
+    {
+      "id": "evt_2022_elizabeth_ii_death",
+      "type": "death",
+      "date": "2022-09-08",
+      "people": ["elizabeth_ii"],
+      "location": { "city": "Ballater", "region": "Scotland", "country": "UK", "lat": 57.0515, "lng": -3.0413 },
+      "description": "Died at Balmoral in Scotland."
+    },
+    {
+      "id": "evt_2022_charles_accession",
+      "type": "other",
+      "date": "2022-09-08",
+      "people": ["charles"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5014, "lng": -0.1419 },
+      "description": "Accession of King Charles III."
+    }
+  ]
+}

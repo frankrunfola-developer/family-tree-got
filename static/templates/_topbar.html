@@ -1,0 +1,108 @@
+{# -----------------------------------------------------------------------------
+File: templates/_topbar.html
+Purpose: Universal topbar (compatible with static/js/nav.js)
+JS expects:
+- button#navbtn
+- div#navpanel
+- select#demoFamilySelect (desktop)
+- select#demoFamilySelectMobile (mobile)
+----------------------------------------------------------------------------- #}
+
+{% set sid = (sample_id or "stark")|lower %}
+{% set is_auth = 'authPage' in (body_class|default('')) %}
+
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+
+    <!-- LEFT -->
+    <div class="topbar-left">
+      <a class="brandIcon" href="{{ url_for('index') }}" data-preserve-sample="1" aria-label="LineAgeMap home">
+        <img class="brandMark" src="{{ url_for('static', filename='img/scroll.png') }}" alt="LineAgeMap" />
+      </a>
+    </div>
+
+    <!-- CENTER (desktop links only; hidden on mobile via CSS) -->
+    <nav class="topbar-links" aria-label="Primary">
+      <a href="{{ url_for('tree_view') }}" data-preserve-sample="1"
+        class="{{ 'is-active' if request.path == '/tree' else '' }}">Tree</a>
+
+      <a href="{{ url_for('timeline_view') }}" data-preserve-sample="1"
+        class="{{ 'is-active' if request.path == '/timeline' else '' }}">Timeline</a>
+
+      <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
+        class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
+    </nav>
+
+    <!-- RIGHT -->
+    <div class="topbar-right">
+
+      {# Demo picker should NOT appear on auth pages (kills the mood + clutters the header) #}
+      {% if not is_auth %}
+      <!-- Desktop demo picker -->
+      <div class="demoPicker demoPicker--desktop">
+        <span class="demoPickerLabel">Demo</span>
+        <select id="demoFamilySelect" class="demoPickerSelect" aria-label="Demo family picker (desktop)">
+          <option value="stark" {{ 'selected' if sid == 'stark' else '' }}>Stark</option>
+          <option value="gupta" {{ 'selected' if sid == 'gupta' else '' }}>Gupta</option>
+          <option value="kennedy" {{ 'selected' if sid == 'kennedy' else '' }}>Kennedy</option>
+          <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
+          <option value="kardashian" {{ 'selected' if sid == 'kardashian' else '' }}>Kardashian</option>
+          <option value="jackson" {{ 'selected' if sid == 'jackson' else '' }}>Jackson</option>
+          <option value="windsor" {{ 'selected' if sid == 'windsor' else '' }}>Windsor</option>
+          <option value="ambani" {{ 'selected' if sid == 'ambani' else '' }}>Ambani</option>
+        </select>
+      </div>
+      {% endif %}
+
+      <!-- Auth / CTA -->
+      {% if current_user %}
+      <div class="authLinks">
+        <div class="userBadge" title="{{ current_user.email }}">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="email">{{ current_user.email }}</span>
+          <a class="logoutLink" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+      {% else %}
+      <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
+      {% endif %}
+
+      <!-- Hamburger (nav.js expects #navbtn)
+           Place it last so it sits on the OUTSIDE edge. -->
+      <button id="navbtn" class="navToggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span class="navToggleIcon" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Mobile dropdown panel (nav.js expects #navpanel) -->
+  <div class="mobileNav" id="navpanel" aria-label="Mobile menu">
+    <a href="{{ url_for('tree_view') }}" data-preserve-sample="1"
+      class="{{ 'is-active' if request.path == '/tree' else '' }}">Tree</a>
+
+    <a href="{{ url_for('timeline_view') }}" data-preserve-sample="1"
+      class="{{ 'is-active' if request.path == '/timeline' else '' }}">Timeline</a>
+
+    <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
+      class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
+
+    {% if not is_auth %}
+    <!-- Mobile demo picker -->
+    <div class="demoPicker demoPicker--mobile">
+      <p class="demoPickerLabel">Demo Family</p>
+      <select id="demoFamilySelectMobile" class="demoPickerSelect demoPickerSelect--compact" aria-label="Demo family picker (mobile)">
+        <option value="stark" {{ 'selected' if sid == 'stark' else '' }}>Stark</option>
+        <option value="sen" {{ 'selected' if sid == 'sen' else '' }}>Sen</option>
+        <option value="gupta" {{ 'selected' if sid == 'gupta' else '' }}>Gupta</option>
+        <option value="kennedy" {{ 'selected' if sid == 'kennedy' else '' }}>Kennedy</option>
+        <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
+        <option value="kardashian" {{ 'selected' if sid == 'kardashian' else '' }}>Kardashian</option>
+        <option value="jackson" {{ 'selected' if sid == 'jackson' else '' }}>Jackson</option>
+        <option value="windsor" {{ 'selected' if sid == 'windsor' else '' }}>Windsor</option>
+        <option value="ambani" {{ 'selected' if sid == 'ambani' else '' }}>Ambani</option>
+      </select>
+    </div>
+    {% endif %}
+  </div>
+</header>

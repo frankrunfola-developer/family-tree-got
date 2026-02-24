@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set active_page = "" %}
+
+{% block title %}LineAgeMap — Shared Family{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home-extra.css') }}" />
+{% endblock %}
+
+{% block content %}
+  <div class="appFrameShell">
+    <div class="appFrameCard">
+  <div class="landing">
+    <section class="landingHero" style="padding-top: 18px;">
+      <div class="heroLine">
+        <span class="flourish left" aria-hidden="true"></span>
+        <h1>{{ family_name }}</h1>
+        <span class="flourish right" aria-hidden="true"></span>
+      </div>
+
+      <p class="landingSub">Shared family page</p>
+
+      <div class="heroCTA">
+        <a class="cta-btn" href="{{ url_for('tree_view') }}?public={{ public_slug }}">View Tree</a>
+        <a class="ghost-btn" href="{{ url_for('timeline_view') }}?public={{ public_slug }}">View Timeline</a>
+        <a class="ghost-btn" href="{{ url_for('map_view') }}?public={{ public_slug }}">View Map</a>
+      </div>
+    </section>
+
+    <section class="landingRow">
+      <div class="landingCard previewCard">
+        <div class="cardTop">
+          <div class="pillTitle">PREVIEW</div>
+          <div class="cardTitle">A quick look</div>
+          <div class="cardSub">Open the views for the full experience.</div>
+        </div>
+        <div class="cardBody">
+          <div class="treePreviewWrap">
+            <svg id="treePreviewSvg" class="treePreviewSvg" aria-label="Tree preview"></svg>
+          </div>
+          <div class="cardCtaRow">
+            <a class="ghost-btn" href="{{ url_for('tree_view') }}?public={{ public_slug }}">Open Tree</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="landingCard previewCard">
+        <div class="cardTop">
+          <div class="pillTitle">TIMELINE</div>
+          <div class="cardTitle">Storyline</div>
+          <div class="cardSub">A flowing path through generations.</div>
+        </div>
+        <div class="cardBody">
+          <div id="timelinePreview" class="timelinePreview" aria-label="Timeline preview"></div>
+          <div class="cardCtaRow">
+            <a class="ghost-btn" href="{{ url_for('timeline_view') }}?public={{ public_slug }}">Open Timeline</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% if not current_user %}
+      <div style="max-width: 780px; margin: 0 auto;">
+        {% include "_auth_panel.html" %}
+      </div>
+    {% endif %}
+  </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    window.TREE_PREVIEW_DATA = {{ tree_preview|tojson }};
+    window.TIMELINE_PREVIEW_DATA = {{ timeline_preview|tojson }};
+  </script>
+  <script type="module" src="{{ url_for('static', filename='js/familyTree.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/landing-auth.js') }}"></script>
+{% endblock %}

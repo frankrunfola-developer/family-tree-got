@@ -1,0 +1,311 @@
+{
+  "meta": {
+    "family_name": "Kardashian–Jenner Family (Sample)",
+    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes core Kardashian + Jenner branches with select spouses/partners and children for richer Tree/Timeline/Map demos."
+  },
+
+  "people": [
+    {
+      "id": "kris",
+      "name": "Kris Jenner",
+      "born": "1955-11-05",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kris.png",
+      "location": { "city": "Calabasas", "region": "CA", "country": "USA", "lat": 34.1367, "lng": -118.6615 }
+    },
+    {
+      "id": "robert_sr",
+      "name": "Robert Kardashian Sr.",
+      "born": "1944-02-22",
+      "died": "2003-09-30",
+      "photo": "/static/uploads/kardashian/robert_sr.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "bruce",
+      "name": "Bruce Jenner",
+      "born": "1949-10-28",
+      "died": "",
+      "photo": "/static/uploads/kardashian/bruce.png",
+      "location": { "city": "Malibu", "region": "CA", "country": "USA", "lat": 34.0259, "lng": -118.7798 }
+    },
+
+    {
+      "id": "kourtney",
+      "name": "Kourtney Kardashian",
+      "born": "1979-04-18",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kourtney.png",
+      "location": { "city": "Calabasas", "region": "CA", "country": "USA", "lat": 34.1367, "lng": -118.6615 }
+    },
+    {
+      "id": "kim",
+      "name": "Kim Kardashian",
+      "born": "1980-10-21",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kim.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "khloe",
+      "name": "Khloé Kardashian",
+      "born": "1984-06-27",
+      "died": "",
+      "photo": "/static/uploads/kardashian/khloe.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "rob",
+      "name": "Rob Kardashian",
+      "born": "1987-03-17",
+      "died": "",
+      "photo": "/static/uploads/kardashian/rob.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "kendall",
+      "name": "Kendall Jenner",
+      "born": "1995-11-03",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kendall.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "kylie",
+      "name": "Kylie Jenner",
+      "born": "1997-08-10",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kylie.png",
+      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+    },
+
+    {
+      "id": "travis",
+      "name": "Travis Barker",
+      "born": "1975",
+      "died": "",
+      "photo": "/static/uploads/kardashian/travis.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "kanye",
+      "name": "Kanye West",
+      "born": "1977",
+      "died": "",
+      "photo": "/static/uploads/kardashian/kanye.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "lamar",
+      "name": "Lamar Odom",
+      "born": "1979",
+      "died": "",
+      "photo": "/static/uploads/kardashian/lamar.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "tristan",
+      "name": "Tristan Thompson",
+      "born": "1991",
+      "died": "",
+      "photo": "/static/uploads/kardashian/tristan.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "travis_scott",
+      "name": "Travis Scott",
+      "born": "1991",
+      "died": "",
+      "photo": "/static/uploads/kardashian/travis_scott.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "north",
+      "name": "North West",
+      "born": "2013",
+      "died": "",
+      "photo": "/static/uploads/kardashian/north.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "saint",
+      "name": "Saint West",
+      "born": "2015",
+      "died": "",
+      "photo": "/static/uploads/kardashian/saint.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "chicago",
+      "name": "Chicago West",
+      "born": "2018",
+      "died": "",
+      "photo": "/static/uploads/kardashian/chicago.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "psalm",
+      "name": "Psalm West",
+      "born": "2019",
+      "died": "",
+      "photo": "/static/uploads/kardashian/psalm.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "true",
+      "name": "True Thompson",
+      "born": "2018",
+      "died": "",
+      "photo": "/static/uploads/kardashian/true.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "tatum",
+      "name": "Tatum Thompson",
+      "born": "2022",
+      "died": "",
+      "photo": "/static/uploads/kardashian/tatum.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "stormi",
+      "name": "Stormi Webster",
+      "born": "2018",
+      "died": "",
+      "photo": "/static/uploads/kardashian/stormi.png",
+      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+    },
+    {
+      "id": "aire",
+      "name": "Aire Webster",
+      "born": "2022",
+      "died": "",
+      "photo": "/static/uploads/kardashian/aire.png",
+      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "kris", "b": "robert_sr" },
+    { "type": "spouse", "a": "kris", "b": "caitlyn" },
+
+    { "type": "spouse", "a": "kourtney", "b": "travis_barker" },
+    { "type": "spouse", "a": "kim", "b": "kanye" },
+    { "type": "spouse", "a": "khloe", "b": "lamar" },
+
+    { "child": "kourtney", "parent": "kris" },
+    { "child": "kourtney", "parent": "robert_sr" },
+
+    { "child": "kim", "parent": "kris" },
+    { "child": "kim", "parent": "robert_sr" },
+
+    { "child": "khloe", "parent": "kris" },
+    { "child": "khloe", "parent": "robert_sr" },
+
+    { "child": "rob", "parent": "kris" },
+    { "child": "rob", "parent": "robert_sr" },
+
+    { "child": "kendall", "parent": "kris" },
+    { "child": "kendall", "parent": "caitlyn" },
+
+    { "child": "kylie", "parent": "kris" },
+    { "child": "kylie", "parent": "caitlyn" },
+
+    { "child": "north", "parent": "kim" },
+    { "child": "north", "parent": "kanye" },
+
+    { "child": "saint", "parent": "kim" },
+    { "child": "saint", "parent": "kanye" },
+
+    { "child": "chicago", "parent": "kim" },
+    { "child": "chicago", "parent": "kanye" },
+
+    { "child": "psalm", "parent": "kim" },
+    { "child": "psalm", "parent": "kanye" },
+
+    { "child": "true", "parent": "khloe" },
+    { "child": "true", "parent": "tristan" },
+
+    { "child": "tatum", "parent": "khloe" },
+    { "child": "tatum", "parent": "tristan" },
+
+    { "child": "stormi", "parent": "kylie" },
+    { "child": "stormi", "parent": "travis_scott" },
+
+    { "child": "aire", "parent": "kylie" },
+    { "child": "aire", "parent": "travis_scott" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1978_kris_robert_marriage",
+      "type": "marriage",
+      "date": "1978-07-08",
+      "people": ["kris", "robert_sr"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Kris Jenner married Robert Kardashian Sr."
+    },
+    {
+      "id": "evt_1991_kris_robert_divorce",
+      "type": "other",
+      "date": "1991-03-01",
+      "people": ["kris", "robert_sr"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Divorce finalized (month-level date used for timeline)."
+    },
+    {
+      "id": "evt_1991_kris_caitlyn_marriage",
+      "type": "marriage",
+      "date": "1991-04-01",
+      "people": ["kris", "caitlyn"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Kris married Caitlyn Jenner (month-level date used for timeline)."
+    },
+    {
+      "id": "evt_2015_kris_caitlyn_divorce",
+      "type": "other",
+      "date": "2015-03-23",
+      "people": ["kris", "caitlyn"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Divorce became official."
+    },
+
+    {
+      "id": "evt_2014_kim_kanye_marriage",
+      "type": "marriage",
+      "date": "2014-05-24",
+      "people": ["kim", "kanye"],
+      "location": { "city": "Florence", "region": "Tuscany", "country": "Italy", "lat": 43.7696, "lng": 11.2558 },
+      "description": "Married in Florence, Italy."
+    },
+    {
+      "id": "evt_2022_kourtney_travis_marriage",
+      "type": "marriage",
+      "date": "2022-05-15",
+      "people": ["kourtney", "travis_barker"],
+      "location": { "city": "Santa Barbara", "region": "CA", "country": "USA", "lat": 34.4208, "lng": -119.6982 },
+      "description": "Courthouse wedding in Santa Barbara."
+    },
+    {
+      "id": "evt_2009_khloe_lamar_marriage",
+      "type": "marriage",
+      "date": "2009-09-27",
+      "people": ["khloe", "lamar"],
+      "location": { "city": "Beverly Hills", "region": "CA", "country": "USA", "lat": 34.0736, "lng": -118.4004 },
+      "description": "Married in Beverly Hills."
+    },
+
+    {
+      "id": "evt_2003_robert_sr_death",
+      "type": "death",
+      "date": "2003-09-30",
+      "people": ["robert_sr"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Died in Los Angeles."
+    }
+  ]
+}

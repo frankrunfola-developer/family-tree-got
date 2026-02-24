@@ -1,0 +1,465 @@
+/* Timeline.css
+   Timeline view only
+*/
+
+.tlHead{
+  margin: 6px 0 18px;
+}
+.tlHead__kicker{
+  display:inline-block;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: rgba(40,32,24,0.62);
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.45);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.tlHead__title{
+  margin: 10px 0 14px;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 800;
+  color: rgba(70,50,36,0.92);
+  letter-spacing: 0.2px;
+  font-size: clamp(22px, 3vw, 34px);
+}
+
+.tlControls{
+  display:flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tlSearch{
+  flex: 1 1 260px;
+}
+.tlSearch input{
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(40,32,24,0.16);
+  background: rgba(255,255,255,0.62);
+  padding: 12px 14px;
+  font-weight: 600;
+  color: rgba(40,32,24,0.86);
+  outline: none;
+}
+.tlSearch input:focus{
+  border-color: rgba(122,82,44,0.35);
+  box-shadow: 0 0 0 3px rgba(122,82,44,0.12);
+}
+
+.tlFilters{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tlChip{
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.52);
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.68);
+  cursor: pointer;
+}
+.tlChip.is-active{
+  background: rgba(255,255,255,0.78);
+  border-color: rgba(122,82,44,0.30);
+  color: rgba(70,50,36,0.92);
+  box-shadow: 0 10px 20px rgba(40,32,24,0.10);
+}
+
+.tlWrap{
+  margin-top: 16px;
+}
+
+.tlStatus{
+  margin: 8px 0 14px;
+  font-weight: 700;
+  color: rgba(40,32,24,0.72);
+}
+
+.tlList{
+  display: grid;
+  gap: 16px;
+}
+
+/* legacy year-group list styles (not used by snake, but keep if you ever flip back) */
+.tlYear{
+  border-radius: 20px;
+  border: 1px solid rgba(40,32,24,0.12);
+  background: rgba(255,255,255,0.38);
+  box-shadow: 0 14px 30px rgba(40,32,24,0.10);
+  padding: 14px 14px 10px;
+}
+.tlYear__head{
+  display:flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.tlYear__label{
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: rgba(40,32,24,0.70);
+}
+.tlYear__rule{
+  height: 1px;
+  flex: 1 1 auto;
+  background: rgba(40,32,24,0.14);
+}
+
+.tlItem{
+  display:flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(40,32,24,0.12);
+  background: rgba(255,255,255,0.58);
+  margin-bottom: 10px;
+}
+.tlIcon{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(40,32,24,0.12);
+  font-weight: 900;
+  color: rgba(70,50,36,0.88);
+  flex: 0 0 34px;
+}
+.tlMain{
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.tlTitle{
+  margin: 0 0 4px;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 900;
+  color: rgba(70,50,36,0.94);
+  font-size: 16px;
+}
+.tlMeta{
+  color: rgba(40,32,24,0.68);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.tlTag{
+  margin-top: 8px;
+  display:inline-block;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.45);
+  color: rgba(40,32,24,0.62);
+}
+
+/* ------------------------------
+   Serpentine Snake Timeline (1-in / 1-out)
+-------------------------------- */
+
+.tlWrap--snake{
+  margin-top: 14px;
+}
+
+.tlStatusRow{
+  display:flex;
+  flex-direction: column;
+  align-items:flex-start;
+  gap: 8px;
+}
+
+.tlSnakeControls{
+  display:flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tlLabel{
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.70);
+  min-width: 132px;
+}
+
+.tlSelect{
+  border-radius: 12px;
+  border: 1px solid rgba(40,32,24,0.18);
+  background: rgba(255,255,255,0.70);
+  padding: 8px 10px;
+  font-weight: 700;
+  color: rgba(40,32,24,0.86);
+  width: 100%;
+  height: 38px;
+}
+
+.tlSortBtn{
+  cursor: pointer;
+  text-align: center;
+}
+
+.tlStatus{
+  margin: 0;
+  font-weight: 700;
+  font-size: 12px;
+  color: rgba(40,32,24,0.62);
+}
+
+.tlSnakeRoot{
+  position: relative;
+  margin-top: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.35);
+  box-shadow: 0 16px 40px rgba(40,32,24,0.10);
+  overflow: hidden;
+  min-height: 140px;
+}
+
+.tlSnakeSvg{
+  position:absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.tlSPath{
+  fill: none;
+  stroke: rgba(70,50,36,0.72);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 6px 10px rgba(40,32,24,0.12));
+}
+
+.tlSDots circle{
+  fill: rgba(70,50,36,0.92);
+  opacity: 0.26;
+}
+
+.tlSnakeCards{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.tlSnakeCards{
+  --tl-card-w: 320px;
+  --tl-card-h: 108px;
+  --tl-gap-x: 70px;
+  --tl-gap-y: 112px;
+  --tl-pad-x: 70px;
+  --tl-pad-y: 54px;
+  --tl-cols: 3;
+}
+
+/* ✅ OPAQUE CARD (not transparent) */
+.tlSCard{
+  position: absolute;
+  width: var(--tl-card-w);
+  height: var(--tl-card-h);
+  display:flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(40,32,24,0.18);
+  background: #fbf3e6; /* <- solid paper */
+  box-shadow: 0 10px 26px rgba(40,32,24,0.12);
+}
+
+.tlSPhoto{
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 999px;
+  border: 3px solid rgba(70,50,36,0.55);
+  box-shadow: 0 8px 16px rgba(40,32,24,0.14);
+  background-color: rgba(240,230,214,0.95);
+  background-size: cover;
+  background-position: center;
+}
+
+.tlSBody{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tlSTop{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.tlSDate{
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.68);
+}
+
+.tlSType{
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(40,32,24,0.16);
+  background: rgba(255,255,255,0.85);
+  color: rgba(40,32,24,0.70);
+}
+
+.tlSName{
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 900;
+  color: rgba(70,50,36,0.94);
+  font-size: 15px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tlSMeta{
+  margin-top: 3px;
+  font-size: 11px;
+  color: rgba(40,32,24,0.70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile: keep it clean and pretty */
+@media (max-width: 720px){
+  .tlStatusRow{
+    align-items: flex-start;
+  }
+  .tlSnakeRoot{
+    border-radius: 18px;
+  }
+  .tlSCard{
+    border-radius: 16px;
+  }
+}
+
+/* ✅ Your mobile shrink tuning (single place, no duplicates) */
+@media (max-width: 640px){
+  .tlSPath{ stroke-width: 6; }
+
+  /* dots: real CSS approach */
+  .tlSDots circle{
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.82);
+  }
+
+  .tlSCard{ padding: 8px 10px; gap: 8px; }
+  .tlSPhoto{ width: 42px; height: 42px; flex-basis: 42px; border-width: 2px; }
+  .tlSName{ font-size: 14px; }
+  .tlSMeta{ font-size: 10.5px; }
+  .tlFilters{
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* slimmer, simpler filter chips on mobile */
+  .tlChip{
+    padding: 6px 9px;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    border-radius: 14px;
+    border-color: rgba(40,32,24,0.12);
+    background: rgba(255,255,255,0.40);
+  }
+  .tlChip.is-active{
+    background: rgba(255,255,255,0.72);
+    box-shadow: none;
+  }
+
+  .tlLabel{ font-size: 11px; }
+  .tlLabel{ min-width: 112px; }
+  .tlSelect{ padding: 6px 8px; border-radius: 10px; height: 34px; }
+
+}
+
+/* =========================================================
+   Mobile tightening + centering (filters, controls, status)
+   ========================================================= */
+
+.tlFilters{
+  width: 100%;
+  justify-content: center;
+}
+
+.tlStatusRow{
+  align-items: center;
+}
+
+.tlStatus{
+  text-align: center;
+  width: 100%;
+}
+
+/* Ensure Density / Cards/row / Sort always 3-up on mobile */
+@media (max-width: 520px){
+  .tlChip{
+    padding: 8px 10px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .tlSnakeControls{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .tlLabel{
+    min-width: 0;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+  }
+  .tlSelect{
+    height: 34px;
+    padding: 7px 8px;
+    font-size: 13px;
+    border-radius: 11px;
+  }
+
+  #tlStatus{
+    font-size: 11.5px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+}

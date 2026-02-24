@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set active_page = "map" %}
+
+{% block title %}LineAgeMap — Map{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="appFrameShell">
+  <div class="appFrameCard">
+    <div class="nav-family nav-family--wide">
+      {% if public_slug %}
+      <div class="pillTitle">PUBLIC FAMILY MAP</div>
+      {% elif sample_id %}
+      <div class="pillTitle">SAMPLE MAP — {{ sample_id|upper }}</div>
+      {% else %}
+      <div class="pillTitle">MY FAMILY MAP</div>
+      {% endif %}
+    </div>
+
+    <section class="mapShell" aria-label="Family Map">
+      <div id="mapRoot" class="mapRoot">
+        <div class="mapLegend">
+          <div class="mapLegendTitle">Locations</div>
+          <div class="mapLegendSub">Tap a country to zoom into regions and cities.</div>
+        </div>
+
+        <div id="mapAccordion" class="mapAccordion" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{# Map accordion JS expects {people:[...]} so we use TREE endpoints. #}
+{% if public_slug %}
+{% set MAP_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
+{% set MAP_FAMILY = "public" %}
+{% elif sample_id %}
+{% set MAP_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
+{% set MAP_FAMILY = sample_id %}
+{% elif current_user %}
+{% set MAP_API_URL = "/api/tree/me" %}
+{% set MAP_FAMILY = "me" %}
+{% else %}
+{% set MAP_API_URL = "/api/sample/stark/tree" %}
+{% set MAP_FAMILY = "stark" %}
+{% endif %}
+
+{# Background map image selection #}
+{% set sid = (sample_id or "")|lower %}
+{% if sid in ["stark", "lannister"] %}
+{% set MAP_IMG = url_for('static', filename='img/westeros-muted.png') %}
+{% else %}
+{% set MAP_IMG = url_for('static', filename='img/world-muted.png') %}
+{% endif %}
+
+<script>
+  window.MAP_API_URL = "{{ MAP_API_URL }}";
+  window.MAP_FAMILY_ID = "{{ MAP_FAMILY }}";
+  window.MAP_IMAGE_URL = "{{ MAP_IMG }}";
+</script>
+
+<script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

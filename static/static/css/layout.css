@@ -1,0 +1,12 @@
+/* layout.css
+   Shared page wrappers / stacking above texture
+*/
+
+/* page wrapper */
+main.page{
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 16px var(--page-pad) 26px;
+  position: relative;
+  z-index: 2; /* above texture */
+}

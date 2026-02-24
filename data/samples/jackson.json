@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "family_name": "Jackson Family (Sample)",
+    "note": "Sample dataset for exploring Tree/Timeline/Map UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Focuses on the Jackson siblings (Michael + Janet included) and core parents, plus select spouses and children for a richer demo."
+  },
+
+  "people": [
+    {
+      "id": "joe",
+      "name": "Joseph 'Joe' Jackson",
+      "born": "1928-07-26",
+      "died": "2018-06-27",
+      "photo": "/static/uploads/jackson/joe.png",
+      "location": { "city": "Gary", "region": "IN", "country": "USA", "lat": 41.5934, "lng": -87.3464 }
+    },
+    {
+      "id": "katherine",
+      "name": "Katherine Jackson",
+      "born": "1930-05-04",
+      "died": "",
+      "photo": "/static/uploads/jackson/katherine.png",
+      "location": { "city": "Gary", "region": "IN", "country": "USA", "lat": 41.5934, "lng": -87.3464 }
+    },
+
+    {
+      "id": "rebbie",
+      "name": "Rebbie Jackson",
+      "born": "1950-05-29",
+      "died": "",
+      "photo": "/static/uploads/jackson/rebbie.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "jackie",
+      "name": "Jackie Jackson",
+      "born": "1951-05-04",
+      "died": "",
+      "photo": "/static/uploads/jackson/jackie.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "tito",
+      "name": "Tito Jackson",
+      "born": "1953-10-15",
+      "died": "",
+      "photo": "/static/uploads/jackson/tito.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "jermaine",
+      "name": "Jermaine Jackson",
+      "born": "1954-12-11",
+      "died": "",
+      "photo": "/static/uploads/jackson/jermaine.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "latoya",
+      "name": "La Toya Jackson",
+      "born": "1956-05-29",
+      "died": "",
+      "photo": "/static/uploads/jackson/latoya.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "marlon",
+      "name": "Marlon Jackson",
+      "born": "1957-03-12",
+      "died": "",
+      "photo": "/static/uploads/jackson/marlon.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "michael",
+      "name": "Michael Jackson",
+      "born": "1958-08-29",
+      "died": "2009-06-25",
+      "photo": "/static/uploads/jackson/michael.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "randy",
+      "name": "Randy Jackson",
+      "born": "1961-10-29",
+      "died": "",
+      "photo": "/static/uploads/jackson/randy.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "janet",
+      "name": "Janet Jackson",
+      "born": "1966-05-16",
+      "died": "",
+      "photo": "/static/uploads/jackson/janet.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "lisa_marie",
+      "name": "Lisa Marie Presley",
+      "born": "1968-02-01",
+      "died": "2023-01-12",
+      "photo": "/static/uploads/jackson/lisa_marie.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "debbie_rowe",
+      "name": "Debbie Rowe",
+      "born": "1958-12-06",
+      "died": "",
+      "photo": "/static/uploads/jackson/debbie_rowe.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "rene_elizondo",
+      "name": "René Elizondo Jr.",
+      "born": "1962",
+      "died": "",
+      "photo": "/static/uploads/jackson/rene_elizondo.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "wissam_al_mana",
+      "name": "Wissam Al Mana",
+      "born": "1974",
+      "died": "",
+      "photo": "/static/uploads/jackson/wissam_al_mana.png",
+      "location": { "city": "Doha", "region": "Qatar", "country": "Qatar", "lat": 25.2854, "lng": 51.5310 }
+    },
+
+    {
+      "id": "prince",
+      "name": "Michael Joseph Jackson Jr. ('Prince')",
+      "born": "1997-02-13",
+      "died": "",
+      "photo": "/static/uploads/jackson/prince.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "paris",
+      "name": "Paris Jackson",
+      "born": "1998-04-03",
+      "died": "",
+      "photo": "/static/uploads/jackson/paris.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "blanket",
+      "name": "Prince Michael Jackson II ('Bigi')",
+      "born": "2002-02-21",
+      "died": "",
+      "photo": "/static/uploads/jackson/blanket.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "eissa",
+      "name": "Eissa Al Mana",
+      "born": "2017-01-03",
+      "died": "",
+      "photo": "/static/uploads/jackson/eissa.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "joe", "b": "katherine" },
+
+    { "type": "spouse", "a": "michael", "b": "lisa_marie" },
+    { "type": "spouse", "a": "michael", "b": "debbie_rowe" },
+
+    { "type": "spouse", "a": "janet", "b": "rene_elizondo" },
+    { "type": "spouse", "a": "janet", "b": "wissam_al_mana" },
+
+    { "child": "rebbie", "parent": "joe" },
+    { "child": "rebbie", "parent": "katherine" },
+
+    { "child": "jackie", "parent": "joe" },
+    { "child": "jackie", "parent": "katherine" },
+
+    { "child": "tito", "parent": "joe" },
+    { "child": "tito", "parent": "katherine" },
+
+    { "child": "jermaine", "parent": "joe" },
+    { "child": "jermaine", "parent": "katherine" },
+
+    { "child": "latoya", "parent": "joe" },
+    { "child": "latoya", "parent": "katherine" },
+
+    { "child": "marlon", "parent": "joe" },
+    { "child": "marlon", "parent": "katherine" },
+
+    { "child": "michael", "parent": "joe" },
+    { "child": "michael", "parent": "katherine" },
+
+    { "child": "randy", "parent": "joe" },
+    { "child": "randy", "parent": "katherine" },
+
+    { "child": "janet", "parent": "joe" },
+    { "child": "janet", "parent": "katherine" },
+
+    { "child": "prince", "parent": "michael" },
+    { "child": "prince", "parent": "debbie_rowe" },
+
+    { "child": "paris", "parent": "michael" },
+    { "child": "paris", "parent": "debbie_rowe" },
+
+    { "child": "blanket", "parent": "michael" },
+
+    { "child": "eissa", "parent": "janet" },
+    { "child": "eissa", "parent": "wissam_al_mana" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1949_joe_katherine_marriage",
+      "type": "marriage",
+      "date": "1949-11-05",
+      "people": ["joe", "katherine"],
+      "location": { "city": "Crown Point", "region": "IN", "country": "USA", "lat": 41.4169, "lng": -87.3653 },
+      "description": "Married in Indiana."
+    },
+    {
+      "id": "evt_1964_jackson5_formed",
+      "type": "other",
+      "date": "1964-01-01",
+      "people": ["jackie", "tito", "jermaine", "marlon", "michael"],
+      "location": { "city": "Gary", "region": "IN", "country": "USA", "lat": 41.5934, "lng": -87.3464 },
+      "description": "The Jackson 5 formed (year-level date used)."
+    },
+    {
+      "id": "evt_1984_victory_tour",
+      "type": "other",
+      "date": "1984-07-06",
+      "people": ["jackie", "tito", "jermaine", "marlon", "michael"],
+      "location": { "city": "Kansas City", "region": "MO", "country": "USA", "lat": 39.0997, "lng": -94.5786 },
+      "description": "Victory Tour launched (opening night city used for timeline anchor)."
+    },
+
+    {
+      "id": "evt_1994_michael_lisa_marie_marriage",
+      "type": "marriage",
+      "date": "1994-05-26",
+      "people": ["michael", "lisa_marie"],
+      "location": { "city": "Santo Domingo", "region": "Distrito Nacional", "country": "Dominican Republic", "lat": 18.4861, "lng": -69.9312 },
+      "description": "Married in the Dominican Republic."
+    },
+    {
+      "id": "evt_1996_michael_lisa_marie_divorce",
+      "type": "other",
+      "date": "1996-08-20",
+      "people": ["michael", "lisa_marie"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Divorce finalized."
+    },
+    {
+      "id": "evt_1996_michael_debbie_marriage",
+      "type": "marriage",
+      "date": "1996-11-15",
+      "people": ["michael", "debbie_rowe"],
+      "location": { "city": "Sydney", "region": "NSW", "country": "Australia", "lat": -33.8688, "lng": 151.2093 },
+      "description": "Married in Sydney."
+    },
+
+    {
+      "id": "evt_2009_michael_death",
+      "type": "death",
+      "date": "2009-06-25",
+      "people": ["michael"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Died in Los Angeles."
+    },
+    {
+      "id": "evt_2018_joe_death",
+      "type": "death",
+      "date": "2018-06-27",
+      "people": ["joe"],
+      "location": { "city": "Las Vegas", "region": "NV", "country": "USA", "lat": 36.1699, "lng": -115.1398 },
+      "description": "Died in Las Vegas."
+    },
+
+    {
+      "id": "evt_1991_janet_rene_marriage",
+      "type": "marriage",
+      "date": "1991-03-31",
+      "people": ["janet", "rene_elizondo"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Married (date used for timeline; private ceremony)."
+    },
+    {
+      "id": "evt_2000_janet_rene_divorce",
+      "type": "other",
+      "date": "2000-01-01",
+      "people": ["janet", "rene_elizondo"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Divorce finalized (year-level date used)."
+    },
+    {
+      "id": "evt_2012_janet_wissam_marriage",
+      "type": "marriage",
+      "date": "2012-01-01",
+      "people": ["janet", "wissam_al_mana"],
+      "location": { "city": "Doha", "region": "Qatar", "country": "Qatar", "lat": 25.2854, "lng": 51.5310 },
+      "description": "Married (year-level date used)."
+    },
+    {
+      "id": "evt_2017_eissa_birth",
+      "type": "birth",
+      "date": "2017-01-03",
+      "people": ["eissa"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 },
+      "description": "Born in London."
+    }
+  ]
+}

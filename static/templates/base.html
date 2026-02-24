@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}LineAgeMap{% endblock %}</title>
+
+    <!-- Main CSS bundle (your styles.css imports core/layout/topbar/etc) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lineagemap_logo.png') }}" />
+
+    {% block head %}{% endblock %}
+  </head>
+
+  <body class="{{ body_class|default('app') }}">
+    {% include "_topbar.html" %}
+
+    <main class="page">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Global Scripts -->
+    <script>
+      // footer year helper (safe even if no #year exists)
+      (function () {
+        var y = document.getElementById("year");
+        if (y) y.textContent = String(new Date().getFullYear());
+      })();
+    </script>
+
+    <!-- hamburger/menu toggles -->
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+
+    <!-- Page-specific scripts injected by templates (index.html uses this) -->
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

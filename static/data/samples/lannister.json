@@ -1,0 +1,199 @@
+{
+  "people": [
+    {
+      "id": "tywin",
+      "name": "Tywin Lannister",
+      "born": "242 AC",
+      "died": "",
+      "photo": "/static/uploads/lannister/tywin.png",
+      "location": {
+        "city": "Casterly Rock",
+        "region": "The Westerlands",
+        "country": "Westeros",
+        "lat": 50.2,
+        "lng": -8.4
+      }
+    },
+    {
+      "id": "joanna",
+      "name": "Joanna Lannister",
+      "born": "245 AC",
+      "died": "273 AC",
+      "photo": "/static/uploads/lannister/joanna.png",
+      "location": {
+        "city": "Casterly Rock",
+        "region": "The Westerlands",
+        "country": "Westeros",
+        "lat": 50.2,
+        "lng": -8.4
+      }
+    },
+    {
+      "id": "cersei",
+      "name": "Cersei Lannister",
+      "born": "266 AC",
+      "died": "",
+      "photo": "/static/uploads/lannister/cersei.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    },
+    {
+      "id": "jaime",
+      "name": "Jaime Lannister",
+      "born": "266 AC",
+      "died": "",
+      "photo": "/static/uploads/lannister/jaime.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    },
+    {
+      "id": "tyrion",
+      "name": "Tyrion Lannister",
+      "born": "273 AC",
+      "died": "",
+      "photo": "/static/uploads/lannister/tyrion.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    },
+    {
+      "id": "joffrey",
+      "name": "Joffrey Baratheon",
+      "born": "286 AC",
+      "died": "300 AC",
+      "photo": "/static/uploads/lannister/joffrey.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    },
+    {
+      "id": "myrcella",
+      "name": "Myrcella Baratheon",
+      "born": "290 AC",
+      "died": "300 AC",
+      "photo": "/static/uploads/lannister/myrcella.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    },
+    {
+      "id": "tommen",
+      "name": "Tommen Baratheon",
+      "born": "291 AC",
+      "died": "303 AC",
+      "photo": "/static/uploads/lannister/tommen.png",
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      }
+    }
+  ],
+  "relationships": [
+    { "child": "cersei", "parent": "tywin" },
+    { "child": "jaime", "parent": "tywin" },
+    { "child": "tyrion", "parent": "tywin" },
+    { "child": "cersei", "parent": "joanna" },
+    { "child": "jaime", "parent": "joanna" },
+    { "child": "tyrion", "parent": "joanna" },
+    { "child": "joffrey", "parent": "cersei" },
+    { "child": "myrcella", "parent": "cersei" },
+    { "child": "tommen", "parent": "cersei" }
+  ],
+  "events": [
+    {
+      "id": "evt_0263_tywin_joanna_marriage",
+      "type": "marriage",
+      "date": "0263-01-01",
+      "people": ["tywin", "joanna"],
+      "location": {
+        "city": "Casterly Rock",
+        "region": "The Westerlands",
+        "country": "Westeros",
+        "lat": 50.2,
+        "lng": -8.4
+      },
+      "description": "Married at Casterly Rock."
+    },
+    {
+      "id": "evt_0273_joanna_death",
+      "type": "death",
+      "date": "0273-01-01",
+      "people": ["joanna"],
+      "location": {
+        "city": "Casterly Rock",
+        "region": "The Westerlands",
+        "country": "Westeros",
+        "lat": 50.2,
+        "lng": -8.4
+      },
+      "description": "Passed away in the Westerlands."
+    },
+    {
+      "id": "evt_0300_joffrey_death",
+      "type": "death",
+      "date": "0300-01-01",
+      "people": ["joffrey"],
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      },
+      "description": "Died in King's Landing."
+    },
+    {
+      "id": "evt_0300_myrcella_death",
+      "type": "death",
+      "date": "0300-01-01",
+      "people": ["myrcella"],
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      },
+      "description": "Died in the Crownlands."
+    },
+    {
+      "id": "evt_0303_tommen_death",
+      "type": "death",
+      "date": "0303-01-01",
+      "people": ["tommen"],
+      "location": {
+        "city": "King's Landing",
+        "region": "Crownlands",
+        "country": "Westeros",
+        "lat": 47.3,
+        "lng": 2.1
+      },
+      "description": "Died in King's Landing."
+    }
+  ]
+}

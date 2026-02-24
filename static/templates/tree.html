@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% set active_page = "tree" %}
+
+{# Priority:
+1) public_slug
+2) sample_id (explicit)
+3) current_user
+4) demo_sample (session/query chosen)
+5) stark
+#}
+{% if public_slug %}
+{% set TREE_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
+{% elif sample_id %}
+{% set TREE_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
+{% elif current_user %}
+{% set TREE_API_URL = "/api/tree/me" %}
+{% elif demo_sample %}
+{% set TREE_API_URL = "/api/sample/" ~ demo_sample ~ "/tree" %}
+{% else %}
+{% set TREE_API_URL = "/api/sample/stark/tree" %}
+{% endif %}
+
+{% block title %}LineAgeMap — Tree{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tree.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="appFrameShell">
+  <div class="appFrameCard">
+
+    <section class="treeShell" aria-label="Family Tree">
+      <div
+        id="canvas"
+        class="treeCanvas"
+        data-tree-api-url="{{ TREE_API_URL }}">
+        <div class="treeTools">
+          <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
+        </div>
+
+        <svg
+          id="treeSvg"
+          role="img"
+          aria-label="Family tree diagram"></svg>
+      </div>
+    </section>
+
+    <!-- “Above the fold” preview: first 2 layers. Button expands to full tree. -->
+    <div class="treeMoreWrap" style="text-align:center; margin: 14px 0 4px;">
+      <button id="treeMoreBtn" class="cta-btn" type="button" hidden>See full tree</button>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Dagre MUST load before tree.js (tree.js reads window.dagre) -->
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+
+<script>
+    window.TREE_API_URL = "{{ TREE_API_URL }}";
+
+    // Default: render a readable preview (first 2 layers). The “See full tree” button expands it.
+    window.TREE_PREVIEW_MODE = true;
+    window.TREE_PREVIEW_MOBILE_ONLY = true;
+    window.TREE_PREVIEW_DEPTH = 2;
+    window.TREE_PREVIEW_MAX = 18;
+  </script>
+
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+{% endblock %}
