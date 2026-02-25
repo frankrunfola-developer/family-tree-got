@@ -7,17 +7,30 @@
    - Brand aligns with the same left edge as main.page (layout.css):
      main.page { max-width: var(--content-max); margin: 0 auto; padding: 16px var(--page-pad) 26px; }
    - So topbar-inner MUST use padding-left/right: var(--page-pad)
+
+   Scale goal:
+   - Brand scales proportionally (no fixed billboard sizing) using clamp().
+
+   Mobile grid goal:
+   - When center links are hidden on mobile, collapse the grid to 2 columns (brand + right)
+     so the right controls don't get shoved to the far edge by an empty 1fr column.
 */
 
 :root{
-  /* scales with viewport, but bounded */
+  /* Match main.page exactly */
+  --shell-gutter-left: var(--page-pad);
+  --shell-gutter-right: var(--page-pad);
+
+  /* Proportional scaling (bounded) */
   --brand-rail: clamp(180px, 24vw, 320px);
   --brand-height: clamp(78px, 9vw, 120px);
 
-  /* keep your positioning */
-  --brand-overhang: 18px;
-  --brand-nudge-x: -18px;
-  --brand-nudge-y: 0px;
+  /* Proportional hang */
+  --brand-overhang: clamp(10px, 1.6vw, 18px);
+
+  /* Fine-tune position */
+  --brand-nudge-x: -18px;  /* more negative = further left */
+  --brand-nudge-y: 0px;    /* negative = closer to top */
 }
 
 .topbar{
@@ -57,7 +70,7 @@
 
 .topbar-inner{
   display: grid;
-  grid-template-columns: var(--brand-rail) 1fr auto;
+  grid-template-columns: minmax(0, var(--brand-rail)) 1fr auto;
   align-items: center;
   gap: 12px;
 
@@ -66,6 +79,13 @@
 
   /* EXACT match to main.page left/right padding */
   padding: 10px var(--shell-gutter-left) 10px var(--shell-gutter-right);
+}
+
+/* Mobile: center links are hidden, so collapse to 2 columns */
+@media (max-width: 899px){
+  .topbar-inner{
+    grid-template-columns: minmax(0, var(--brand-rail)) auto;
+  }
 }
 
 /* LEFT slot stays on the far-left; allow logo to sit higher */
@@ -78,7 +98,7 @@
 }
 
 /* ------------------------------------------------------------
-   Brand: BIG scroll on the left with a real overhang
+   Brand: proportional scaling + controlled overhang
 ------------------------------------------------------------ */
 .brandIcon{
   display:block;
@@ -106,27 +126,27 @@
     drop-shadow(0 1px 0 rgba(255,255,255,.55));
 }
 
-/* Mobile: keep it big, but prevent collisions */
+/* Mobile: keep proportional, but protect right-side controls */
 @media (max-width: 520px){
   :root{
-    --brand-rail: clamp(220px, 64vw, 360px);
-    --brand-height: 132px;
-    --brand-overhang: 10px;
+    --brand-rail: clamp(150px, 48vw, 230px);
+    --brand-height: clamp(64px, 12vw, 92px);
+    --brand-overhang: clamp(8px, 2.2vw, 14px);
 
-    --brand-nudge-x: -16px;
-    --brand-nudge-y: -8px;
+    --brand-nudge-x: -14px;
+    --brand-nudge-y: 0px;
   }
 }
 
 /* Ultra small */
 @media (max-width: 360px){
   :root{
-    --brand-rail: clamp(200px, 72vw, 320px);
-    --brand-height: 120px;
-    --brand-overhang: 8px;
+    --brand-rail: clamp(140px, 52vw, 210px);
+    --brand-height: clamp(58px, 14vw, 86px);
+    --brand-overhang: clamp(6px, 2.4vw, 12px);
 
-    --brand-nudge-x: -12px;
-    --brand-nudge-y: -6px;
+    --brand-nudge-x: -10px;
+    --brand-nudge-y: 0px;
   }
 }
 
@@ -345,12 +365,12 @@
 }
 
 /* ------------------------------------------------------------
-   DESKTOP: restore center nav + keep grand scroll
+   DESKTOP: restore center nav + grand scroll stays proportional
 ------------------------------------------------------------ */
 @media (min-width: 900px){
 
   .topbar-inner{
-    grid-template-columns: var(--brand-rail) 1fr auto;
+    grid-template-columns: minmax(0, var(--brand-rail)) 1fr auto;
     gap: 14px;
     padding: 10px var(--shell-gutter-left);
     padding-right: var(--shell-gutter-right);
@@ -516,6 +536,3 @@
   .demoPickerLabel{ font-size: .8rem; }
   .demoPickerSelect{ font-size: .85rem; }
 }
-
-.brandIcon{ transform: translateX(var(--brand-nudge-x)) translateY(0px); }
-.brandMark{ transform: translateY(18px); }
