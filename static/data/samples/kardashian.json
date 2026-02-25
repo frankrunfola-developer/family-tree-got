@@ -81,11 +81,11 @@
     },
 
     {
-      "id": "travis_barker",
+      "id": "travis_b",
       "name": "Travis Barker",
       "born": "1975",
       "died": "",
-      "photo": "/static/uploads/kardashian/travis_barker.png",
+      "photo": "/static/uploads/kardashian/travis_b.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
@@ -96,14 +96,7 @@
       "photo": "/static/uploads/kardashian/kanye.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
-    {
-      "id": "lamar",
-      "name": "Lamar Odom",
-      "born": "1979",
-      "died": "",
-      "photo": "/static/uploads/kardashian/lamar.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
+
     {
       "id": "tristan",
       "name": "Tristan Thompson",
@@ -113,11 +106,11 @@
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
-      "id": "travis_scott",
+      "id": "travis_s",
       "name": "Travis Scott",
       "born": "1991",
       "died": "",
-      "photo": "/static/uploads/kardashian/travis_scott.png",
+      "photo": "/static/uploads/kardashian/travis_s.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
 
@@ -193,10 +186,9 @@
     { "type": "spouse", "a": "kris", "b": "robert_sr" },
     { "type": "spouse", "a": "kris", "b": "caitlyn" },
 
-    { "type": "spouse", "a": "kourtney", "b": "travis_barker" },
+    { "type": "spouse", "a": "kourtney", "b": "travis_b" },
     { "type": "spouse", "a": "kim", "b": "kanye" },
-    { "type": "spouse", "a": "khloe", "b": "lamar" },
-
+    
     { "child": "kourtney", "parent": "kris" },
     { "child": "kourtney", "parent": "robert_sr" },
 
@@ -234,10 +226,10 @@
     { "child": "tatum", "parent": "tristan" },
 
     { "child": "stormi", "parent": "kylie" },
-    { "child": "stormi", "parent": "travis_scott" },
+    { "child": "stormi", "parent": "travis_s" },
 
     { "child": "aire", "parent": "kylie" },
-    { "child": "aire", "parent": "travis_scott" }
+    { "child": "aire", "parent": "travis_s" }
   ],
 
   "events": [
@@ -286,17 +278,9 @@
       "id": "evt_2022_kourtney_travis_marriage",
       "type": "marriage",
       "date": "2022-05-15",
-      "people": ["kourtney", "travis_barker"],
+      "people": ["kourtney", "travis_b"],
       "location": { "city": "Santa Barbara", "region": "CA", "country": "USA", "lat": 34.4208, "lng": -119.6982 },
       "description": "Courthouse wedding in Santa Barbara."
-    },
-    {
-      "id": "evt_2009_khloe_lamar_marriage",
-      "type": "marriage",
-      "date": "2009-09-27",
-      "people": ["khloe", "lamar"],
-      "location": { "city": "Beverly Hills", "region": "CA", "country": "USA", "lat": 34.0736, "lng": -118.4004 },
-      "description": "Married in Beverly Hills."
     },
 
     {

@@ -3,7 +3,6 @@
     "family_name": "Kardashian–Jenner Family (Sample)",
     "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes core Kardashian + Jenner branches with select spouses/partners and children for richer Tree/Timeline/Map demos."
   },
-
   "people": [
     {
       "id": "kris",
@@ -55,11 +54,11 @@
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
-      "id": "rob",
-      "name": "Rob Kardashian",
+      "id": "robert_jr",
+      "name": "Robert Kardashian Jr.",
       "born": "1987-03-17",
       "died": "",
-      "photo": "/static/uploads/kardashian/rob.png",
+      "photo": "/static/uploads/kardashian/robert_jr.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
 
@@ -81,11 +80,19 @@
     },
 
     {
-      "id": "travis",
+      "id": "travis_b",
       "name": "Travis Barker",
       "born": "1975",
       "died": "",
-      "photo": "/static/uploads/kardashian/travis.png",
+      "photo": "/static/uploads/kardashian/travis_b.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "scott",
+      "name": "Scott Disick",
+      "born": "1983-05-26",
+      "died": "",
+      "photo": "/static/uploads/kardashian/scott.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
@@ -97,14 +104,6 @@
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
-      "id": "lamar",
-      "name": "Lamar Odom",
-      "born": "1979",
-      "died": "",
-      "photo": "/static/uploads/kardashian/lamar.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-    {
       "id": "tristan",
       "name": "Tristan Thompson",
       "born": "1991",
@@ -113,11 +112,53 @@
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
     {
-      "id": "travis_scott",
+      "id": "travis_s",
       "name": "Travis Scott",
       "born": "1991",
       "died": "",
-      "photo": "/static/uploads/kardashian/travis_scott.png",
+      "photo": "/static/uploads/kardashian/travis_s.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "blac_chyna",
+      "name": "Blac Chyna",
+      "born": "1988-05-11",
+      "died": "",
+      "photo": "/static/uploads/kardashian/blac_chyna.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+
+    {
+      "id": "mason",
+      "name": "Mason Disick",
+      "born": "2009-12-14",
+      "died": "",
+      "photo": "/static/uploads/kardashian/mason.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "penelope",
+      "name": "Penelope Disick",
+      "born": "2012-07-08",
+      "died": "",
+      "photo": "/static/uploads/kardashian/penelope.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "reign",
+      "name": "Reign Disick",
+      "born": "2014-12-14",
+      "died": "",
+      "photo": "/static/uploads/kardashian/reign.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+    },
+    {
+      "id": "rocky",
+      "name": "Rocky Thirteen Barker",
+      "born": "2023-11-01",
+      "died": "",
+      "photo": "/static/uploads/kardashian/rocky.png",
       "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     },
 
@@ -186,16 +227,26 @@
       "died": "",
       "photo": "/static/uploads/kardashian/aire.png",
       "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+    },
+
+    {
+      "id": "dream",
+      "name": "Dream Kardashian",
+      "born": "2016-11-10",
+      "died": "",
+      "photo": "/static/uploads/kardashian/dream.png",
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
     }
   ],
-
   "relationships": [
     { "type": "spouse", "a": "kris", "b": "robert_sr" },
-    { "type": "spouse", "a": "kris", "b": "caitlyn" },
+    { "type": "spouse", "a": "kris", "b": "bruce" },
 
-    { "type": "spouse", "a": "kourtney", "b": "travis_barker" },
+    { "type": "spouse", "a": "kourtney", "b": "scott" },
+    { "type": "spouse", "a": "kourtney", "b": "travis_b" },
     { "type": "spouse", "a": "kim", "b": "kanye" },
     { "type": "spouse", "a": "khloe", "b": "lamar" },
+    { "type": "spouse", "a": "robert_jr", "b": "blac_chyna" },
 
     { "child": "kourtney", "parent": "kris" },
     { "child": "kourtney", "parent": "robert_sr" },
@@ -206,14 +257,26 @@
     { "child": "khloe", "parent": "kris" },
     { "child": "khloe", "parent": "robert_sr" },
 
-    { "child": "rob", "parent": "kris" },
-    { "child": "rob", "parent": "robert_sr" },
+    { "child": "robert_jr", "parent": "kris" },
+    { "child": "robert_jr", "parent": "robert_sr" },
 
     { "child": "kendall", "parent": "kris" },
-    { "child": "kendall", "parent": "caitlyn" },
+    { "child": "kendall", "parent": "bruce" },
 
     { "child": "kylie", "parent": "kris" },
-    { "child": "kylie", "parent": "caitlyn" },
+    { "child": "kylie", "parent": "bruce" },
+
+    { "child": "mason", "parent": "kourtney" },
+    { "child": "mason", "parent": "scott" },
+
+    { "child": "penelope", "parent": "kourtney" },
+    { "child": "penelope", "parent": "scott" },
+
+    { "child": "reign", "parent": "kourtney" },
+    { "child": "reign", "parent": "scott" },
+
+    { "child": "rocky", "parent": "kourtney" },
+    { "child": "rocky", "parent": "travis_b" },
 
     { "child": "north", "parent": "kim" },
     { "child": "north", "parent": "kanye" },
@@ -234,12 +297,14 @@
     { "child": "tatum", "parent": "tristan" },
 
     { "child": "stormi", "parent": "kylie" },
-    { "child": "stormi", "parent": "travis_scott" },
+    { "child": "stormi", "parent": "travis_s" },
 
     { "child": "aire", "parent": "kylie" },
-    { "child": "aire", "parent": "travis_scott" }
-  ],
+    { "child": "aire", "parent": "travis_s" },
 
+    { "child": "dream", "parent": "robert_jr" },
+    { "child": "dream", "parent": "blac_chyna" }
+  ],
   "events": [
     {
       "id": "evt_1978_kris_robert_marriage",
@@ -275,6 +340,31 @@
     },
 
     {
+      "id": "evt_2009_mason_birth",
+      "type": "birth",
+      "date": "2009-12-14",
+      "people": ["mason", "kourtney", "scott"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Mason Disick was born."
+    },
+    {
+      "id": "evt_2012_penelope_birth",
+      "type": "birth",
+      "date": "2012-07-08",
+      "people": ["penelope", "kourtney", "scott"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Penelope Disick was born."
+    },
+    {
+      "id": "evt_2014_reign_birth",
+      "type": "birth",
+      "date": "2014-12-14",
+      "people": ["reign", "kourtney", "scott"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Reign Disick was born."
+    },
+
+    {
       "id": "evt_2014_kim_kanye_marriage",
       "type": "marriage",
       "date": "2014-05-24",
@@ -286,10 +376,19 @@
       "id": "evt_2022_kourtney_travis_marriage",
       "type": "marriage",
       "date": "2022-05-15",
-      "people": ["kourtney", "travis_barker"],
+      "people": ["kourtney", "travis_b"],
       "location": { "city": "Santa Barbara", "region": "CA", "country": "USA", "lat": 34.4208, "lng": -119.6982 },
       "description": "Courthouse wedding in Santa Barbara."
     },
+    {
+      "id": "evt_2023_rocky_birth",
+      "type": "birth",
+      "date": "2023-11-01",
+      "people": ["rocky", "kourtney", "travis_b"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Rocky Thirteen Barker was born."
+    },
+
     {
       "id": "evt_2009_khloe_lamar_marriage",
       "type": "marriage",
@@ -297,6 +396,23 @@
       "people": ["khloe", "lamar"],
       "location": { "city": "Beverly Hills", "region": "CA", "country": "USA", "lat": 34.0736, "lng": -118.4004 },
       "description": "Married in Beverly Hills."
+    },
+
+    {
+      "id": "evt_2016_rob_chyna_engagement",
+      "type": "other",
+      "date": "2016-04-05",
+      "people": ["robert_jr", "blac_chyna"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Rob Kardashian and Blac Chyna announced their engagement."
+    },
+    {
+      "id": "evt_2016_dream_birth",
+      "type": "birth",
+      "date": "2016-11-10",
+      "people": ["dream", "rob", "blac_chyna"],
+      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "description": "Dream Kardashian was born."
     },
 
     {

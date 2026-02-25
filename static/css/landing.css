@@ -529,3 +529,19 @@
 .landingPage .landingAuthWrap{
   margin-top: 16px;
 }
+
+
+/* Mobile: keep at least 2 cards per row (no card styling changes) */
+@media (max-width: 680px) {
+  .legacyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Tiny phones: allow 1 column only if it truly can't fit */
+@media (max-width: 360px) {
+  .legacyGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+}
