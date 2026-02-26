@@ -381,13 +381,24 @@ function uTurn(x1, y1, x2, y2, dir, cardW, edgeOut, r){
 
     if (containerW < 720) cols = clamp(cols, 1, 2);
 
-    cardsWrap.style.setProperty("--tl-card-w", px(cardW));
-    cardsWrap.style.setProperty("--tl-card-h", px(cardH));
-    cardsWrap.style.setProperty("--tl-gap-x", px(gapX));
-    cardsWrap.style.setProperty("--tl-gap-y", px(gapY));
-    cardsWrap.style.setProperty("--tl-pad-x", px(padX));
-    cardsWrap.style.setProperty("--tl-pad-y", px(padY));
-    cardsWrap.style.setProperty("--tl-cols", cols);
+    const cssVar = (name) => getComputedStyle(cardsWrap).getPropertyValue(name).trim();
+    const hasCssVar = (name) => {
+      const v = cssVar(name);
+      return v !== "" && v !== "0px" && v !== "0";
+    };
+
+    // Respect CSS-defined vars (don’t overwrite with inline styles)
+    if (!hasCssVar("--tl-card-w")) cardsWrap.style.setProperty("--tl-card-w", px(cardW));
+    if (!hasCssVar("--tl-card-h")) cardsWrap.style.setProperty("--tl-card-h", px(cardH));
+
+    if (!hasCssVar("--tl-gap-x"))  cardsWrap.style.setProperty("--tl-gap-x",  px(gapX));
+    if (!hasCssVar("--tl-gap-y"))  cardsWrap.style.setProperty("--tl-gap-y",  px(gapY));
+
+    if (!hasCssVar("--tl-pad-x"))  cardsWrap.style.setProperty("--tl-pad-x",  px(padX));
+    if (!hasCssVar("--tl-pad-y"))  cardsWrap.style.setProperty("--tl-pad-y",  px(padY));
+
+    // cols isn’t px — treat it as a plain number/string
+    if (!hasCssVar("--tl-cols"))   cardsWrap.style.setProperty("--tl-cols", String(cols));
 
     const cards = Array.from(cardsWrap.querySelectorAll(".tlSCard"));
 

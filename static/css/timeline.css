@@ -269,13 +269,13 @@
 }
 
 .tlSnakeCards{
-  --tl-card-w: 320px;
-  --tl-card-h: 108px;
+  --tl-card-w: 245px;
+  --tl-card-h: 120px;
   --tl-gap-x: 70px;
   --tl-gap-y: 112px;
   --tl-pad-x: 70px;
   --tl-pad-y: 54px;
-  --tl-cols: 3;
+  --tl-cols: 5;
 }
 
 /* ✅ OPAQUE CARD (not transparent) */
@@ -284,7 +284,7 @@
   width: var(--tl-card-w);
   height: var(--tl-card-h);
   display:flex;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
   padding: 10px 12px;
   border-radius: 16px;
@@ -294,15 +294,15 @@
 }
 
 .tlSPhoto{
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 75px;
+  padding: 20px;
   flex: 0 0 52px;
-  border-radius: 999px;
-  border: 3px solid rgba(70,50,36,0.55);
+
   box-shadow: 0 8px 16px rgba(40,32,24,0.14);
   background-color: rgba(240,230,214,0.95);
   background-size: cover;
-  background-position: center;
+ 
 }
 
 .tlSBody{
