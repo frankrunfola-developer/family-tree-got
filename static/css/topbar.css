@@ -29,7 +29,7 @@
   --brand-overhang: clamp(10px, 1.6vw, 18px);
 
   /* Fine-tune position */
-  --brand-nudge-x: -18px;  /* more negative = further left */
+  --brand-nudge-x: -45px;  /* more negative = further left */
   --brand-nudge-y: 0px;    /* negative = closer to top */
 }
 
@@ -52,7 +52,7 @@
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--nav-border);
 
-  /* keep vertical logo overhang, prevent horizontal push */
+  /*prevent horizontal push */
   overflow-y: visible;
   overflow-x: clip;
 }
@@ -105,7 +105,7 @@
 }
 
 /* ------------------------------------------------------------
-   Brand: proportional scaling + controlled overhang
+   Brand: proportional scaling 
 ------------------------------------------------------------ */
 .brandIcon{
   display:block;
@@ -126,7 +126,6 @@
   object-fit: contain;
   pointer-events: none;
 
-  transform: translateY(var(--brand-overhang));
   filter:
     drop-shadow(0 10px 16px rgba(20,12,6,.16))
     drop-shadow(0 1px 0 rgba(255,255,255,.55));
@@ -398,8 +397,6 @@
   :root{
     --brand-rail: clamp(150px, 48vw, 230px);
     --brand-height: clamp(64px, 12vw, 92px);
-    --brand-overhang: clamp(8px, 2.2vw, 14px);
-
     --brand-nudge-x: -14px;
     --brand-nudge-y: 0px;
   }

@@ -4,7 +4,7 @@
 {% block title %}LineAgeMap — Timeline{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css', v='20260227a') }}">
 {% endblock %}
 
 {% block content %}
@@ -52,5 +52,11 @@
   // Data source selection for timeline.
   window.TIMELINE_API_URL = "{{ TIMELINE_API_URL }}";
 </script>
-<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+<script>
+  // Data source selection for timeline.
+  window.TIMELINE_API_URL = "{{ TIMELINE_API_URL }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/timelineConfig.js') }}?v=20260228a"></script>
+<script src="{{ url_for('static', filename='js/timeline.js') }}?v=20260228a"></script>
 {% endblock %}

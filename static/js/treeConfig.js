@@ -21,8 +21,8 @@ export const TREE_CFG = {
   sizing: {
     CARD_W: 270,     // person card width
     CARD_H: 250,     // person card height
-    CARD_R: 16,      // card corner radius
-    PHOTO_R: 80,   // single source of truth for circle size
+    CARD_R: 1,      // card corner radius
+    PHOTO_R: 85,   // single source of truth for circle size
     PHOTO_Y: 14,   // top offset of the circle’s bounding box
 },
 
