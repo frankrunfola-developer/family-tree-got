@@ -97,8 +97,10 @@
 
   // Keep both pickers in sync with URL
   var desktopSel = document.getElementById("demoFamilySelect");
+  var navSel = document.getElementById("demoFamilySelectNav");
   var mobileSel = document.getElementById("demoFamilySelectMobile");
   if (desktopSel && sample) desktopSel.value = sample;
+  if (navSel && sample) navSel.value = sample;
   if (mobileSel && sample) mobileSel.value = sample;
 
   // If no sample param and picker exists, default to stark WITHOUT forcing redirect
@@ -106,6 +108,7 @@
   if (!sample) {
     var fallback = "";
     if (desktopSel) fallback = desktopSel.value;
+    else if (navSel) fallback = navSel.value;
     else if (mobileSel) fallback = mobileSel.value;
     sample = (fallback || "stark").toLowerCase();
     applySampleToLinks(sample);
@@ -118,5 +121,6 @@
   // ---------------------------
 
   wireDemoSelect("demoFamilySelect");
+  wireDemoSelect("demoFamilySelectNav");
   wireDemoSelect("demoFamilySelectMobile");
 })();

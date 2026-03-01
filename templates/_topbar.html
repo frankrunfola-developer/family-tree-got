@@ -31,18 +31,20 @@ JS expects:
 
       <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
         class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
-    </nav>
 
-    <!-- RIGHT -->
-    <div class="topbar-right"><div class="demoPicker demoPicker--desktop">
+      <div class="demoPicker demoPicker--nav">
         <span class="demoPickerLabel">Select Legacy</span>
-        <label class="srOnly" for="demoFamilySelect">Select Legacy</label>
-        <select id="demoFamilySelect" class="demoPickerSelect demoPickerSelect--button" aria-label="Select Legacy">
+        <label class="srOnly" for="demoFamilySelectNav">Select Legacy</label>
+        <select id="demoFamilySelectNav" class="demoPickerSelect demoPickerSelect--button" aria-label="Select Legacy">
           {% for k in demo_samples %}
           <option value="{{ k }}" {{ 'selected' if sid == k else '' }}>{{ demo_sample_labels[k] }}</option>
           {% endfor %}
         </select>
-      </div><a class="btn ghost" href="{{ url_for('explore_legacies_view') }}" data-preserve-sample="1">Explore Legacies</a>
+      </div>
+    </nav>
+
+    <!-- RIGHT -->
+    <div class="topbar-right"><a class="btn ghost" href="{{ url_for('explore_legacies_view') }}" data-preserve-sample="1">Explore Legacies</a>
 
       {% if current_user %}
       <div class="authLinks">

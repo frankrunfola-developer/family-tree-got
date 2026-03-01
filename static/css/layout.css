@@ -10,3 +10,24 @@ main.page{
   position: relative;
   z-index: 2; /* above texture */
 }
+
+
+
+/* --------------------------------
+   EMBED MODE (iframes in landing cards)
+----------------------------------- */
+.isEmbed main.page{
+  padding: 0 !important;
+}
+.isEmbed .appFrameShell{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.isEmbed .appFrameCard{
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}

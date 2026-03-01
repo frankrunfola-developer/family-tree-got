@@ -24,7 +24,7 @@
   /* Proportional scaling (bounded) */
   --brand-rail: clamp(180px, 24vw, 320px);
   /* Logo can never be taller than the topbar's inner space */
-  --brand-height: clamp(140px, 6.2vw, calc(var(--topbar-h) - 12px));
+  --brand-height: clamp(52px, 6.2vw, calc(var(--topbar-h) - 12px));
 
   /* Proportional hang */
   --brand-overhang: clamp(10px, 1.6vw, 18px);
@@ -378,6 +378,7 @@
 
 /* small screens: hide email earlier if needed */
 @media (max-width: 820px){
+  .demoPicker--nav{ display:none; }
   .userBadge .email{ display:none; }
 }
 
@@ -399,7 +400,7 @@
 @media (max-width: 520px){
   :root{
     --brand-rail: clamp(150px, 48vw, 230px);
-    --brand-height: clamp(140px, 12vw, 92px);
+    --brand-height: clamp(64px, 12vw, 92px);
     --brand-nudge-x: -14px;
     --brand-nudge-y: 0px;
   }
@@ -569,10 +570,12 @@
    - Desktop: shown in the topbar-right
    - Mobile: also shown inside the hamburger panel (redundant by design)
 */
+.demoPicker--nav{ display:flex; align-items:center; gap:8px; }
 .demoPicker--mobile{ display:block; }
 .demoPicker--desktop{ display:flex; align-items:center; gap:8px; }
 
 @media (max-width: 820px){
+  .demoPicker--nav{ display:none; }
   .demoPicker{
     padding: .30rem .50rem;
     gap: .45rem;
@@ -619,7 +622,7 @@
 @media (max-width: 420px){
   :root{
     --brand-rail: clamp(118px, 34vw, 165px);
-    --brand-height: clamp(115px, 11vw, 82px);
+    --brand-height: clamp(58px, 11vw, 82px);
     --brand-nudge-x: -10px;
   }
 
@@ -783,8 +786,22 @@
   text-align: left;
 }
 
-/* Keep the legacy picker in the topbar on desktop, and move it into the hamburger panel on smaller widths. */
-@media (max-width: 899px){
-  .demoPicker--desktop{ display:none !important; }
-  .mobileNav .demoPicker--mobile{ display:block !important; }
+
+/* -----------------------------
+   TOPBAR RIGHT FLEX (ensure legacy picker visible)
+------------------------------ */
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
+
+@media (max-width: 720px){
+  /* Keep Select Legacy visible in topbar; move Explore into the hamburger list */
+  .topbar-right .btn.ghost{ display:none; }
+  .demoPickerLabel{ display:none !important; }
+  .demoPickerSelect{ max-width: 150px; }
+}
+
+.demoPicker--desktop{ display:flex !important; }

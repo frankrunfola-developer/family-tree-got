@@ -10,9 +10,8 @@
 {% block content %}
 <div class="appFrameShell">
   <div class="appFrameCard">
-    <div class="pillTitle">TIMELINE</div>
-
-    <section class="tlShell" aria-label="Family Timeline">
+    {% if not _is_embed %}<div class="pillTitle">TIMELINE</div>{% endif %}
+<section class="tlShell" aria-label="Family Timeline">
       <div class="tlTop">
         <div class="tlTitle">Lineage Map</div>
         <div id="tlStatus" class="tlStatus">Loading timeline…</div>
@@ -52,11 +51,6 @@
   // Data source selection for timeline.
   window.TIMELINE_API_URL = "{{ TIMELINE_API_URL }}";
 </script>
-<script>
-  // Data source selection for timeline.
-  window.TIMELINE_API_URL = "{{ TIMELINE_API_URL }}";
-</script>
-
 <script src="{{ url_for('static', filename='js/timelineConfig.js') }}?v=20260228a"></script>
 <script src="{{ url_for('static', filename='js/timeline.js') }}?v=20260228a"></script>
 {% endblock %}

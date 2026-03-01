@@ -275,17 +275,17 @@
 
   /* Baseline (desktop-ish) */
   --tl-card-w: 220px;
-  --tl-card-h: 120px;
+  --tl-card-h: 84px;
 
   /* Your "preferred" gap */
-  --tl-gap-x: 30px;
-  --tl-gap-y: 78px;
+  --tl-gap-x: 12px;
+  --tl-gap-y: 34px;
 
   /* HARD minimum gap (this is what JS will enforce) */
   --tl-min-gap-x: 28px;
 
-  --tl-pad-x: 24px;
-  --tl-pad-y: 34px;
+  --tl-pad-x: 8px;
+  --tl-pad-y: 8px;
   --tl-cols: 4;
 
   /* Elbow knobs:
@@ -398,12 +398,12 @@
   .tlSnakeCards{
     --tl-cols: 4;
     --tl-card-w: 170px;
-    --tl-card-h: 104px;
-    --tl-gap-x: 30px;
+    --tl-card-h: 84px;
+    --tl-gap-x: 12px;
     --tl-min-gap-x: 28px;
-    --tl-gap-y: 78px;
-    --tl-pad-x: 24px;
-    --tl-pad-y: 34px;
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
 
     --tl-elbow-x: 24px;
     --tl-elbow-r: 0px;
@@ -424,14 +424,14 @@
   .tlSnakeCards{
     --tl-cols: 2;
     --tl-card-w: 160px;
-    --tl-card-h: 100px;
+    --tl-card-h: 84px;
 
-    --tl-gap-x: 18px;
+    --tl-gap-x: 12px;
     --tl-min-gap-x: 16px;
 
-    --tl-gap-y: 56px;
-    --tl-pad-x: 18px;
-    --tl-pad-y: 18px;
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
 
     --tl-elbow-x: 20px;
     --tl-elbow-r: 0px;
@@ -450,14 +450,14 @@
   .tlSnakeCards{
     --tl-cols: 2;
     --tl-card-w: 150px;
-    --tl-card-h: 98px;
+    --tl-card-h: 84px;
 
-    --tl-gap-x: 16px;
+    --tl-gap-x: 12px;
     --tl-min-gap-x: 14px;
 
-    --tl-gap-y: 52px;
-    --tl-pad-x: 16px;
-    --tl-pad-y: 18px;
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
 
     --tl-elbow-x: 18px;
     --tl-elbow-r: 0px;
@@ -468,45 +468,6 @@
   .tlSDots circle{ opacity: 0.18; }
 }
 
-/* Mobile: shrink timeline nodes/cards + tighten spacing */
-@media (max-width: 480px) {
-  .tlSnakeCards {
-    --tl-card-w: 208px;
-    --tl-card-h: 82px;
-    --tl-gap-x: 18px;
-    --tl-gap-y: 20px;
-    --tl-pad-x: 18px;
-    --tl-pad-y: 22px;
-    --tl-elbow-x: 36px;
-    --tl-bleed: 18px;
-
-    --tl-elbow-r: 0px;
-    --tl-stroke-w: 6;
-  }
-
-  .tlSnakeRoot{ --tl-stroke-w: 6; }
-
-  .tlSName { font-size: 14px; }
-  .tlSMeta { font-size: 12px; }
-  .tlSDate { font-size: 12px; }
-  .tlSType { font-size: 10px; letter-spacing: 0.06em; }
-}
-
-/* Extra-small phones: shrink a touch more */
-@media (max-width: 360px) {
-  .tlSnakeCards {
-    --tl-card-w: 192px;
-    --tl-card-h: 78px;
-    --tl-gap-x: 16px;
-    --tl-gap-y: 18px;
-    --tl-pad-x: 14px;
-    --tl-pad-y: 18px;
-    --tl-elbow-x: 32px;
-    --tl-bleed: 16px;
-
-    --tl-elbow-r: 0px;
-    --tl-stroke-w: 6;
-  }
 
   .tlSnakeRoot{ --tl-stroke-w: 6; }
 }
@@ -521,14 +482,69 @@
 }
 
 .isEmbed .tlSnakeRoot{
-  --tl-card-w: 180px;
-  --tl-card-h: 104px;
-  --tl-gap-x: 22px;
-  --tl-gap-y: 58px;
+  --tl-card-w: clamp(96px, 22vw, 128px);
+  --tl-card-h: 84px;
+  --tl-gap-x: 12px;
+  --tl-gap-y: 34px;
   --tl-min-gap-x: 20px;
-  --tl-pad-x: 14px;
-  --tl-pad-y: 16px;
-  --tl-cols: 3;
+  --tl-pad-x: 8px;
+  --tl-pad-y: 8px;
+  --tl-cols: auto;
 }
 
+.isEmbed .tlCard{ font-size: 11px; }
+.isEmbed .tlCard .tlCardTitle{ font-size: 12px; }
+.isEmbed .tlCard .tlCardMeta{ font-size: 10px; }
+
+
 .isEmbed .tlSnakeRoot{ overflow: hidden; }
+
+
+/* ------------------------------------------------------------
+   Mobile tightening (timeline nodes)
+------------------------------------------------------------ */
+@media (max-width: 720px){
+  .tlSnakeCards{
+    --tl-card-w: 190px;
+    --tl-card-h: 76px;
+    --tl-gap-x: 10px;
+    --tl-gap-y: 28px;
+    --tl-pad-x: 6px;
+    --tl-pad-y: 6px;
+    --tl-cols: 2;
+  }
+}
+
+@media (max-width: 460px){
+  .tlSnakeCards{
+    --tl-card-w: 164px;
+    --tl-card-h: 70px;
+    --tl-gap-x: 8px;
+    --tl-gap-y: 22px;
+    --tl-pad-x: 4px;
+    --tl-pad-y: 4px;
+    --tl-cols: 1;
+  }
+}
+
+
+/* Embed previews: force smaller nodes regardless of viewport rules */
+.isEmbed .tlSnakeCards{
+  --tl-cols: 2;
+  --tl-card-w: 124px;
+  --tl-card-h: 64px;
+  --tl-gap-x: 10px;
+  --tl-gap-y: 22px;
+  --tl-pad-x: 6px;
+  --tl-pad-y: 6px;
+  --tl-min-gap-x: 14px;
+}
+
+@media (max-width: 420px){
+  .isEmbed .tlSnakeCards{
+    --tl-cols: 1;
+    --tl-card-w: 140px;
+    --tl-card-h: 64px;
+  }
+}
+

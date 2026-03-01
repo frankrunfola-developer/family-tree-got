@@ -2,9 +2,6 @@
    Landing page ONLY (scoped to .landingPage body class)
 */
 
-.landingPage .demoPicker{ display:none !important; }
-.landingPage #navpanel .demoPicker{ display:none !important; }
-
 /* ------------------------------------------------------------------
    Landing background: faint romantic archival motifs (VERY subtle)
 ------------------------------------------------------------------- */
@@ -30,7 +27,7 @@
 
   opacity: .34;
   background:
-    url("../img/world.png"),
+    url("../img/world-muted.png"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='620' height='620' viewBox='0 0 620 620'%3E%3Cg fill='none' stroke='%237a5a3c' stroke-opacity='.42'%3E%3Ccircle cx='310' cy='310' r='210' stroke-width='2'/%3E%3Ccircle cx='310' cy='310' r='150' stroke-width='1.5'/%3E%3Cpath d='M310 70 V550 M70 310 H550' stroke-width='1.5'/%3E%3Cpath d='M310 120 L338 310 L310 500 L282 310 Z' stroke-width='1.5'/%3E%3Cpath d='M120 310 L310 282 L500 310 L310 338 Z' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat, no-repeat;
   background-size: 980px auto, 520px auto;
@@ -493,7 +490,7 @@
 ------------------------------ */
 
 .landingPage .lmSectionHead--bottom{
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .landingPage .lmMicroSub{
@@ -545,26 +542,26 @@
 ------------------------------------------------------------------- */
 
 .landingPage .lmFeatures{
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .landingPage .lmFeatureGrid{
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 .landingPage .lmFeatureCard{
   display: grid;
-  grid-template-rows: 4fr 1fr;
+  grid-template-rows: 1fr auto;
   text-decoration: none;
   color: inherit;
   border: 1px solid rgba(92,70,50,.22);
   border-radius: 16px;
   overflow: hidden;
   background: rgba(255,255,255,.45);
-  height: clamp(320px, 88vw, 420px);
+  height: clamp(300px, 74vw, 380px);
   box-shadow: 0 10px 30px rgba(40,25,15,.08);
 }
 
@@ -588,12 +585,15 @@
 }
 
 .landingPage .lmFeatureFrame{
-  width: 100%;
-  height: 100%;
+  width: calc(100% / var(--lm-preview-scale, 1));
+  height: calc(100% / var(--lm-preview-scale, 1));
   display: block;
   border: 0;
   pointer-events: none; /* allow click-through to the card link */
+  transform: scale(var(--lm-preview-scale, 1));
+  transform-origin: 0 0;
 }
+
 
 .landingPage .lmFeatureViewport{
   width: 100%;
@@ -603,45 +603,57 @@
 }
 
 /* Preview scaling: shrink the embedded page so more content fits. */
-.landingPage .lmFeatureCard{ --lm-preview-scale: .86; }
-.landingPage .lmFeatureCard--tree{ --lm-preview-scale: .86; }
-.landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .78; }
-.landingPage .lmFeatureCard--map{ --lm-preview-scale: .78; }
+.landingPage .lmFeatureCard{ --lm-preview-scale: .74; }
+.landingPage .lmFeatureCard--tree{ --lm-preview-scale: .54; }
+.landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .66; }
+.landingPage .lmFeatureCard--map{ --lm-preview-scale: .76; }
 
 @media (max-width: 520px){
-  .landingPage .lmFeatureCard{ --lm-preview-scale: .82; }
-  .landingPage .lmFeatureCard--tree{ --lm-preview-scale: .82; }
-  .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .74; }
-  .landingPage .lmFeatureCard--map{ --lm-preview-scale: .74; }
-}
-  .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .82; }
-  .landingPage .lmFeatureCard--map{ --lm-preview-scale: .82; }
+  .landingPage .lmFeatureCard{ --lm-preview-scale: .68; }
+  .landingPage .lmFeatureCard--tree{ --lm-preview-scale: .58; }
+  .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .56; }
+  .landingPage .lmFeatureCard--map{ --lm-preview-scale: .70; }
 }
 
+
 .landingPage .lmFeatureBody{
-  padding: 6px 8px;
+  padding: 2px 6px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 1px;
 }
 
+
 .landingPage .lmFeatureTitle{
-  font-weight: 850;
-  letter-spacing: .2px;
-  margin: 0;
-  font-size: .98rem;
-  line-height: 1.05;
+  position: relative;
+  padding-bottom: 10px;
 }
+
+.landingPage .lmFeatureTitle::after{
+  content:"";
+  position:absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: translateX(-50%);
+  width: min(180px, 78%);
+  height: 10px;
+  opacity: .55;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='10' viewBox='0 0 220 10'%3E%3Cg fill='none' stroke='%237a5a3c' stroke-opacity='.55' stroke-width='1'%3E%3Cpath d='M2 5 H94'/%3E%3Cpath d='M126 5 H218'/%3E%3Cpath d='M108 1 C112 5 112 5 108 9 C104 5 104 5 108 1 Z'/%3E%3Cpath d='M112 3 C114 5 114 5 112 7 C110 5 110 5 112 3 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
 
 .landingPage .lmFeatureDesc{
   margin: 0;
   opacity: .84;
   line-height: 1.12;
-  font-size: .82rem;
-  max-width: 19ch;
+  font-size: .78rem;
+  max-width: 16ch;
 }
 
 .landingPage .lmFeatureCard--map{
@@ -788,4 +800,73 @@
   inset: 0;
 }
 
-.landingPage .lmFeatureCard--map .lmFeatureMedia{ height: clamp(190px, 30vw, 320px); }
+.landingPage .lmFeatureCard--map .lmFeatureMedia{ height: clamp(300px, 74vw, 380px); }
+
+
+/* --------------------------------
+   LANDING FEATURE CARDS (tighten)
+----------------------------------- */
+.lmFeatures{
+  padding: 10px 0 0 !important;
+}
+.lmFeatureGrid{
+  gap: 14px !important;
+}
+
+.lmFeatureCard{
+  padding: 0 !important;
+  border-radius: 18px !important;
+}
+
+.lmFeatureMedia{
+  border-radius: 18px 18px 0 0 !important;
+}
+
+.lmFeatureBody{
+  padding: 10px 12px !important;
+  line-height: 1.12 !important;
+}
+
+.lmFeatureTitle{
+  font-size: 15px !important;
+  margin: 0 0 4px !important;
+}
+
+.lmFeatureDesc{
+  font-size: 12.5px !important;
+  opacity: .92;
+}
+
+/* keep body ~20% */
+.lmFeatureCard{
+  height: clamp(300px, 46vw, 420px) !important;
+  display: grid !important;
+  grid-template-rows: 4fr 1fr !important;
+}
+
+.lmFeatureViewport{
+  border-radius: 18px 18px 0 0 !important;
+}
+
+/* Preview scaling — timeline a bit smaller */
+
+@media (max-width: 520px){
+  .lmFeatureGrid{ gap: 12px !important; }
+  .lmFeatureBody{ padding: 9px 10px !important; }
+  .lmFeatureTitle{ font-size: 14px !important; }
+  .lmFeatureDesc{ font-size: 12px !important; }
+}
+
+/* Hero logo */
+.lmHeroLogoWrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 6px 0 10px;
+}
+.lmHeroLogo{
+  width: min(240px, 86vw);
+  height: auto;
+  display:block;
+  filter: drop-shadow(0 10px 22px rgba(30,20,12,.16));
+}

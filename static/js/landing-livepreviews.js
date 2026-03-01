@@ -53,8 +53,8 @@ function setGlobals(sampleId) {
   window.MAP_API_URL = api;
   window.MAP_FAMILY_ID = sampleId;
   window.MAP_IMAGE_URL = (sampleId === "stark" || sampleId === "lannister")
-    ? "/static/img/westeros.png"
-    : "/static/img/world.png";
+    ? "/static/img/westeros-muted.png"
+    : "/static/img/world-muted.png";
 }
 
 async function boot() {

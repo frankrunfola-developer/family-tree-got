@@ -601,17 +601,21 @@ export async function initTree(treeName = "stark") {
   // Optional: condensed view for a bigger, easier-to-read first render.
   const isMobile = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
   const mobileOnly = window.TREE_PREVIEW_MOBILE_ONLY !== false;
-  const previewMode = Boolean(window.TREE_PREVIEW_MODE) && (!mobileOnly || isMobile);
+  const previewMode = (!!window.TREE_PREVIEW_MODE) && (!mobileOnly || isMobile);
   const moreBtn = document.getElementById("treeMoreBtn");
+  const allowToggle = !!window.TREE_PREVIEW_DEPTH;
+
   if (previewMode) {
     data = subsetFamilyData(data, {
       depth: window.TREE_PREVIEW_DEPTH ?? 2,
       maxPeople: window.TREE_PREVIEW_MAX ?? 18,
       maxGen1: window.TREE_PREVIEW_MAX_GEN1 ?? 0,
     });
-    if (moreBtn) moreBtn.hidden = false;
-  } else {
-    if (moreBtn) moreBtn.hidden = true;
+  }
+
+  if (moreBtn) {
+    moreBtn.hidden = !allowToggle;
+    moreBtn.textContent = previewMode ? "See Full Tree" : "See Simple Tree";
   }
   const { nodes: graphNodes, links: graphLinks } = buildGeneDAG(data);
 
@@ -635,11 +639,11 @@ export async function initTree(treeName = "stark") {
   panZoomApi.reset();
   fitTreeToScreen(svg);
 
-  // One-click expand to full tree
+  // Toggle preview/full tree
   if (moreBtn && !moreBtn._wired) {
     moreBtn._wired = true;
     moreBtn.addEventListener("click", () => {
-      window.TREE_PREVIEW_MODE = false;
+      window.TREE_PREVIEW_MODE = !window.TREE_PREVIEW_MODE;
       initTree(String(treeName).toLowerCase()).catch((e) => console.error(e));
     });
   }

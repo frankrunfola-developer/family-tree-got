@@ -11,6 +11,7 @@
 {% block content %}
 <div class="appFrameShell">
   <div class="appFrameCard">
+    {% if request.args.get('embed') != '1' %}
     <div class="nav-family nav-family--wide">
       {% if public_slug %}
       <div class="pillTitle">PUBLIC FAMILY MAP</div>
@@ -20,6 +21,7 @@
       <div class="pillTitle">MY FAMILY MAP</div>
       {% endif %}
     </div>
+    {% endif %}
 
     <section class="mapShell" aria-label="Family Map">
       <div id="mapRoot" class="mapRoot">
@@ -54,9 +56,9 @@
 {# Background map image selection #}
 {% set sid = (sample_id or "")|lower %}
 {% if sid in ["stark", "lannister"] %}
-{% set MAP_IMG = url_for('static', filename='img/westeros.png') %}
+{% set MAP_IMG = url_for('static', filename='img/westeros-muted.png') %}
 {% else %}
-{% set MAP_IMG = url_for('static', filename='img/world.png') %}
+{% set MAP_IMG = url_for('static', filename='img/world-muted.png') %}
 {% endif %}
 
 <script>
