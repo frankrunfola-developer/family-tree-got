@@ -11,8 +11,9 @@
     {% block head %}{% endblock %}
   </head>
 
-  <body class="{{ body_class|default('app') }}">
-    {% include "_topbar.html" %}
+  {% set _is_embed = (request.args.get("embed") == "1") %}
+  <body class="{{ (body_class|default('app')) ~ (' isEmbed' if _is_embed else '') }}">
+    {% if not _is_embed %}{% include "_topbar.html" %}{% endif %}
 
     <main class="page">
       {% block content %}{% endblock %}

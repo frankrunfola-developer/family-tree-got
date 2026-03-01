@@ -564,12 +564,34 @@
   background-repeat: no-repeat;
 }
 
-/* Demo picker visibility rules */
-.demoPicker--mobile{ display:none; }
+/* Demo picker visibility rules
+   Frank's requirement: visible 100% of the time.
+   - Desktop: shown in the topbar-right
+   - Mobile: also shown inside the hamburger panel (redundant by design)
+*/
+.demoPicker--mobile{ display:block; }
 .demoPicker--desktop{ display:flex; align-items:center; gap:8px; }
 
 @media (max-width: 820px){
-  .demoPicker--desktop{ display:none; }
+  .demoPicker{
+    padding: .30rem .50rem;
+    gap: .45rem;
+  }
+  .demoPickerLabel{
+    display:none;
+  }
+  .demoPickerSelect{
+    max-width: 150px;
+    padding: .32rem 1.8rem .32rem .65rem;
+    font-size: .88rem;
+  }
+  .demoPickerSelect--compact{
+    height: 34px;
+    border-radius: 999px;
+    padding: 0 10px;
+    font-weight: 700;
+  }
+}
   .demoPicker--mobile{ display:block; }
 
   .demoPickerSelect--compact{
@@ -685,4 +707,84 @@
   background: rgba(255,255,255,0.42) !important;
   border: 1px solid rgba(70, 50, 36, 0.18) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.70) !important;
+}
+
+/* ------------------------------------------------------------------
+   Demo family toggle (button + dropdown)
+------------------------------------------------------------------- */
+
+.demoPicker--toggle{
+  position: relative;
+}
+
+.familyToggle{
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(78,57,40,.22);
+  background: rgba(255,255,255,.32);
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.familyToggle:hover{
+  background: rgba(255,255,255,.45);
+}
+
+.familyPanel{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 220px;
+  border-radius: 16px;
+  border: 1px solid rgba(78,57,40,.22);
+  background: rgba(250,245,236,.96);
+  box-shadow: 0 18px 40px rgba(40,25,15,.16);
+  padding: 10px;
+  display: none;
+  z-index: 80;
+}
+
+.familyPanel.open{
+  display: block;
+}
+
+.familyPanelInner{
+  display: grid;
+  gap: 8px;
+}
+
+.familyPanelLabel{
+  font-size: .85rem;
+  opacity: .85;
+  font-weight: 800;
+}
+
+.familyPanel--mobile{
+  position: static;
+  width: 100%;
+  margin-top: 8px;
+  display: none;
+}
+
+.familyPanel--mobile.open{
+  display: block;
+}
+
+.familyToggleMobile{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(78,57,40,.20);
+  background: rgba(255,255,255,.28);
+  color: var(--ink);
+  font-weight: 900;
+  letter-spacing: .2px;
+  text-align: left;
+}
+
+/* Keep the legacy picker in the topbar on desktop, and move it into the hamburger panel on smaller widths. */
+@media (max-width: 899px){
+  .demoPicker--desktop{ display:none !important; }
+  .mobileNav .demoPicker--mobile{ display:block !important; }
 }

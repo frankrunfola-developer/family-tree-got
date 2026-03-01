@@ -382,9 +382,7 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
   nodesG.setAttribute("class", "tree-nodes");
   viewport.appendChild(nodesG);
 
-  const { CARD_W, CARD_H, CARD_R, PHOTO_R, PHOTO_Y } = TREE_CFG.sizing;
-  const PHOTO_SIZE = PHOTO_R * 2;
-
+  const { CARD_W, CARD_H, CARD_R, PHOTO_H } = TREE_CFG.sizing;
 
   for (const n of nodes) {
     if (n.kind === "union") {
@@ -420,43 +418,52 @@ export function renderFamilyTree(svg, { nodes, links, width, height }) {
     const clipId = `clip_${String(n.id).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
     const clip = el("clipPath");
     clip.setAttribute("id", clipId);
-    const clipCircle = el("circle");
-    clipCircle.setAttribute("cx", String(CARD_W / 2));
-    clipCircle.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
 
-    clipCircle.setAttribute("r", String(PHOTO_R));
-    clip.appendChild(clipCircle);
+    const PHOTO_H = Number(TREE_CFG.sizing.PHOTO_H ?? Math.round(CARD_H * 0.75));
+    const PHOTO_RR = Math.max(10, Math.round(CARD_R * 0.75));
+
+    const clipRect = el("rect");
+    clipRect.setAttribute("x", "0");
+    clipRect.setAttribute("y", "0");
+    clipRect.setAttribute("width", String(CARD_W));
+    clipRect.setAttribute("height", String(PHOTO_H));
+    clipRect.setAttribute("rx", String(PHOTO_RR));
+    clipRect.setAttribute("ry", String(PHOTO_RR));
+    clip.appendChild(clipRect);
     defs.appendChild(clip);
 
     if (n.photoUrl) {
       const img = el("image");
       img.setAttribute("href", n.photoUrl);
-      img.setAttribute("x", String(CARD_W / 2 - PHOTO_SIZE / 2));
-      img.setAttribute("y", String(PHOTO_Y));
-      img.setAttribute("width", String(PHOTO_SIZE));
-      img.setAttribute("height", String(PHOTO_SIZE));
+      img.setAttribute("x", "0");
+      img.setAttribute("y", "0");
+      img.setAttribute("width", String(CARD_W));
+      img.setAttribute("height", String(PHOTO_H));
       img.setAttribute("preserveAspectRatio", "xMidYMid slice");
       img.setAttribute("clip-path", `url(#${clipId})`);
       g.appendChild(img);
     } else {
-      const ph = el("circle");
-      ph.setAttribute("cx", String(CARD_W / 2));
-      ph.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
-      ph.setAttribute("r", String(PHOTO_R));
+      const ph = el("rect");
+      ph.setAttribute("x", "0");
+      ph.setAttribute("y", "0");
+      ph.setAttribute("width", String(CARD_W));
+      ph.setAttribute("height", String(PHOTO_H));
+      ph.setAttribute("rx", String(PHOTO_RR));
+      ph.setAttribute("ry", String(PHOTO_RR));
       ph.setAttribute("fill", "var(--tree-photo-ph)");
       g.appendChild(ph);
     }
 
-    const ring = el("circle");
-    ring.setAttribute("cx", String(CARD_W / 2));
-    ring.setAttribute("cy", String(PHOTO_Y + PHOTO_SIZE / 2));
-    ring.setAttribute("r", String(PHOTO_R));
-    ring.setAttribute("fill", "none");
-    ring.setAttribute("stroke", "var(--tree-photo-ring)");
-    ring.setAttribute("stroke-width", "2");
-    g.appendChild(ring);
+    const sep = el("line");
+    sep.setAttribute("x1", "10");
+    sep.setAttribute("x2", String(CARD_W - 10));
+    sep.setAttribute("y1", String(PHOTO_H));
+    sep.setAttribute("y2", String(PHOTO_H));
+    sep.setAttribute("stroke", "rgba(78,57,40,0.18)");
+    sep.setAttribute("stroke-width", "1");
+    g.appendChild(sep);
 
-    const name = el("text");
+        const name = el("text");
     name.setAttribute("x", String(CARD_W / 2));
     name.setAttribute("y", String(TREE_CFG.text.NAME_Y));
     name.setAttribute("text-anchor", "middle");

@@ -51,6 +51,32 @@ MAP_ENABLED = True
 # Allow-list for /api/sample/<sample_id>/tree and demo pages
 ALLOWED_SAMPLES = {"kennedy", "windsor","kardashian", "jackson", "ambani", "stark", "lannister","sen", "gupta"}
 
+
+# Stable ordering + labels for demo sample picker (topbar)
+DEMO_SAMPLE_ORDER = [
+    "stark",
+    "lannister",
+    "kennedy",
+    "kardashian",
+    "jackson",
+    "windsor",
+    "ambani",
+    "gupta",
+    "sen",
+]
+
+DEMO_SAMPLE_LABELS = {
+    "stark": "Stark",
+    "lannister": "Lannister",
+    "kennedy": "Kennedy",
+    "kardashian": "Kardashian",
+    "jackson": "Jackson",
+    "windsor": "Windsor",
+    "ambani": "Ambani",
+    "gupta": "Gupta",
+    "sen": "Sen",
+}
+
 app = Flask(
     __name__,
     template_folder=str(APP_DIR / "templates"),
@@ -381,10 +407,16 @@ def inject_sample_id() -> dict:
     - If a page explicitly passes sample_id, that wins.
     - Otherwise it falls back to sanitized request arg or DEFAULT_SAMPLE_ID.
     """
+    sid = sanitize_sample_id(request.args.get("sample"))
+
+    ordered = [s for s in DEMO_SAMPLE_ORDER if s in ALLOWED_SAMPLES]
+    extra = sorted([s for s in ALLOWED_SAMPLES if s not in ordered])
+    demo_samples = ordered + extra
+
+    labels = {k: DEMO_SAMPLE_LABELS.get(k, k.title()) for k in demo_samples}
+
     # If a view already passed sample_id, Jinja will use that value anyway.
-    return {"sample_id": sanitize_sample_id(request.args.get("sample"))}
-
-
+    return {"sample_id": sid, "demo_samples": demo_samples, "demo_sample_labels": labels}
 # -----------------------------
 # STARTER DATASET FOR NEW USERS
 # -----------------------------

@@ -510,3 +510,25 @@
 
   .tlSnakeRoot{ --tl-stroke-w: 6; }
 }
+/* ------------------------------
+   Embed mode (landing previews)
+-------------------------------- */
+.isEmbed .pillTitle{ display:none !important; }
+.isEmbed .tlTop{ display:none !important; }
+
+.isEmbed .tlShell{
+  padding-top: 0;
+}
+
+.isEmbed .tlSnakeRoot{
+  --tl-card-w: 180px;
+  --tl-card-h: 104px;
+  --tl-gap-x: 22px;
+  --tl-gap-y: 58px;
+  --tl-min-gap-x: 20px;
+  --tl-pad-x: 14px;
+  --tl-pad-y: 16px;
+  --tl-cols: 3;
+}
+
+.isEmbed .tlSnakeRoot{ overflow: hidden; }

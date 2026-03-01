@@ -53,41 +53,27 @@
    TOOLS
 ----------------------------- */
 
-/* Tools container: use ONE positioning system (this), not mixed absolute buttons */
-.treeTools{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 7;
+.treeToolbar{
   display: flex;
-  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
+  margin: 0 0 10px;
 }
 
-/* button */
-.treeTools .fit-btn{
-  position: static;
-  z-index: auto;
-
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,0.72);
-
-  padding: 9px 12px;        /* slightly better touch target */
-  border-radius: 12px;
-  font-size: 13px;
-  line-height: 1;
-  cursor: pointer;
-
-  box-shadow: 0 10px 18px rgba(40,32,24,0.10);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-
+.treeToolbar .treeToolbarBtn{
   user-select: none;
   touch-action: manipulation;
 }
 
-.treeTools .fit-btn:active{
-  transform: translateY(1px);
+@media (max-width: 520px){
+  .treeToolbar{
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .treeToolbar .treeToolbarBtn{
+    flex: 1;
+  }
 }
 
 /* If you still have a single legacy .fit-btn in templates somewhere,

@@ -207,7 +207,7 @@ lineagemap/
    │  └─ map-accordion.js
    └─ img/
       ├─ favicon.ico
-      ├─ world-muted.png
+      ├─ world.png
       └─ placeholder-avatar.png
 ```
 

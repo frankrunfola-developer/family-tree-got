@@ -31,15 +31,18 @@
   <div class="appFrameCard">
 
     <section class="treeShell" aria-label="Family Tree">
+      {% if request.args.get('embed') != '1' %}
+      <div class="treeToolbar" role="group" aria-label="Tree controls">
+        <button id="treeMoreBtn" class="cta-btn treeToolbarBtn" type="button" hidden>See full tree</button>
+        <button id="fitTreeBtn" class="fit-btn treeToolbarBtn" type="button">Fit to screen</button>
+      </div>
+      {% endif %}
+
       <div
         id="canvas"
         class="treeCanvas"
         data-tree-api-url="{{ TREE_API_URL }}">
-        <div class="treeTools">
-          <button id="fitTreeBtn" class="fit-btn" type="button">Fit to screen</button>
-        </div>
-
-        <svg
+<svg
           id="treeSvg"
           role="img"
           aria-label="Family tree diagram"></svg>
@@ -47,11 +50,7 @@
     </section>
 
     <!-- “Above the fold” preview: first 2 layers. Button expands to full tree. -->
-    <div class="treeMoreWrap" style="text-align:center; margin: 14px 0 4px;">
-      <button id="treeMoreBtn" class="cta-btn" type="button" hidden>See full tree</button>
-    </div>
-
-  </div>
+</div>
 </div>
 {% endblock %}
 
@@ -64,9 +63,10 @@
 
     // Default: render a readable preview (first 2 layers). The “See full tree” button expands it.
     window.TREE_PREVIEW_MODE = true;
-    window.TREE_PREVIEW_MOBILE_ONLY = true;
+    window.TREE_PREVIEW_MOBILE_ONLY = false;
     window.TREE_PREVIEW_DEPTH = 2;
     window.TREE_PREVIEW_MAX = 18;
+    window.TREE_PREVIEW_MAX_GEN1 = 3;
   </script>
 
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>

@@ -1,6 +1,13 @@
 (function () {
   "use strict";
 
+  function titleCase(s){
+    s = String(s || "").trim();
+    if (!s) return s;
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+
   // ---------------------------
   // Mobile hamburger menu
   // ---------------------------
@@ -103,6 +110,12 @@
     sample = (fallback || "stark").toLowerCase();
     applySampleToLinks(sample);
   }
+
+
+
+  // ---------------------------
+  // Demo family toggle UI (button -> dropdown panel)
+  // ---------------------------
 
   wireDemoSelect("demoFamilySelect");
   wireDemoSelect("demoFamilySelectMobile");

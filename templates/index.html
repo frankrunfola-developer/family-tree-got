@@ -3,6 +3,16 @@
 
 {% block title %}LineAgeMap{% endblock %}
 
+{% block scripts %}
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tree.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="appFrameShell">
   <div class="appFrameCard">
@@ -20,43 +30,39 @@
         <p class="lmSubcopy">Explore your family’s journey across centuries and continents with interactive historical maps.</p>
 
         <a class="lmCta" href="{{ url_for('register') }}">Get Started</a>
-      
-      <!-- Feature cards -->
-      <section class="lmFeatures" aria-label="Explore features">
-        <div class="lmCardGrid">
-          <a class="lmFeatureCard" href="{{ url_for('tree_view') }}">
-            <div class="lmCardMedia" aria-hidden="true">
-              <img src="{{ url_for('static', filename='img/landing/feature-tree.svg') }}" alt="" loading="lazy">
-            </div>
-            <div class="lmCardBody">
-              <div class="lmCardTitle">Family Tree</div>
-              <div class="lmCardText">See generations at a glance.</div>
+      </header>
+<!-- Feature previews -->
+      <section class="lmFeatures" aria-label="LineAgeMap features">
+        <div class="lmFeatureGrid">
+          <a class="lmFeatureCard lmFeatureCard--tree" href="{{ url_for('tree_view') }}" aria-label="Family Tree">
+            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport"><iframe class="lmFeatureFrame" src="{{ url_for("tree_view") }}?sample={{ sample_id }}&embed=1" title="Tree preview" loading="lazy"></iframe></div></div>
+
+            <div class="lmFeatureBody">
+              <div class="lmFeatureTitle">Family Tree</div>
+              <div class="lmFeatureDesc">Card-based family tree.</div>
             </div>
           </a>
 
-          <a class="lmFeatureCard" href="{{ url_for('timeline_view') }}">
-            <div class="lmCardMedia" aria-hidden="true">
-              <img src="{{ url_for('static', filename='img/landing/feature-timeline.svg') }}" alt="" loading="lazy">
-            </div>
-            <div class="lmCardBody">
-              <div class="lmCardTitle">Timeline</div>
-              <div class="lmCardText">Follow lives through the years.</div>
+          <a class="lmFeatureCard lmFeatureCard--timeline" href="{{ url_for('timeline_view') }}" aria-label="Timeline">
+            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport"><iframe class="lmFeatureFrame" src="{{ url_for("timeline_view") }}?sample={{ sample_id }}&embed=1" title="Timeline preview" loading="lazy"></iframe></div></div>
+
+            <div class="lmFeatureBody">
+              <div class="lmFeatureTitle">Timeline</div>
+              <div class="lmFeatureDesc">Events across generations.</div>
             </div>
           </a>
 
-          <a class="lmFeatureCard lmFeatureCard--map" href="{{ url_for('map_view') }}">
-            <div class="lmCardMedia lmCardMedia--map" aria-hidden="true">
-              <img src="{{ url_for('static', filename='img/landing/feature-map.svg') }}" alt="" loading="lazy">
-            </div>
-            <div class="lmCardBody">
-              <div class="lmCardTitle">Map</div>
-              <div class="lmCardText">Track movements across the world.</div>
+          <a class="lmFeatureCard lmFeatureCard--map" href="{{ url_for('map_view') }}" aria-label="Map">
+            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport"><iframe class="lmFeatureFrame" src="{{ url_for("map_view") }}?sample={{ sample_id }}&embed=1" title="Map preview" loading="lazy"></iframe></div></div>
+
+            <div class="lmFeatureBody">
+              <div class="lmFeatureTitle">Map</div>
+              <div class="lmFeatureDesc">Places over time.</div>
             </div>
           </a>
         </div>
       </section>
 
-</header>
 
       <!-- Legacies CTA -->
       <div class="lmSectionHead" aria-hidden="true">

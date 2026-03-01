@@ -19,23 +19,23 @@ export const TREE_CFG = {
 
   // Node/card sizing (all dimensions in SVG px)
   sizing: {
-    CARD_W: 270,     // person card width
+    CARD_W: 160,     // person card width
     CARD_H: 250,     // person card height
-    CARD_R: 1,      // card corner radius
-    PHOTO_R: 85,   // single source of truth for circle size
+    CARD_R: 10,      // card corner radius
+    PHOTO_R: 20,   // single source of truth for circle size
     PHOTO_Y: 14,   // top offset of the circle’s bounding box
 },
 
   // Card text baseline positions (relative to card top-left)
   text: {
-    NAME_Y: 200,
-    META_Y: 230
+    NAME_Y: 202,
+    META_Y: 235
   },
 
   // Text styling (SVG text)
   fonts: {
-    NAME_PX: 28,   // name font size
-    META_PX: 27,   // date/meta font size
+    NAME_PX: 22,   // name font size
+    META_PX: 18,   // date/meta font size
     WEIGHT_NAME: 600,
     WEIGHT_META: 500,
   },
@@ -52,9 +52,9 @@ export const TREE_CFG = {
 
   // Spacing policy (mostly used when building the graph)
   spacing: {
-    SPOUSE_GAP: 40,
-    SIBLING_GAP: 60,
-    CLUSTER_GAP: 62,
+    SPOUSE_GAP: 3,
+    SIBLING_GAP: 10,
+    CLUSTER_GAP: 1,
     COUPLE_KEEP_OUT_PAD: 12,
     ROW_EPS: 10,
   },

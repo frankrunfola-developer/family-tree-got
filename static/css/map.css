@@ -454,3 +454,8 @@
 
   opacity: 0.55;
 }
+/* ------------------------------
+   Embed mode (landing previews)
+-------------------------------- */
+.isEmbed .nav-family{ display:none !important; }
+.isEmbed .mapLegend{ display:none !important; }

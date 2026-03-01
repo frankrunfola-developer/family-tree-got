@@ -540,89 +540,252 @@
 .landingPage .lmShot--tree{ background-image: url("../img/landing/tease-tree.png"); }
 .landingPage .lmShot--timeline{ background-image: url("../img/landing/tease-timeline.png"); }
 
-
-/* -----------------------------
+/* ------------------------------------------------------------------
    Feature cards (Tree / Timeline / Map)
------------------------------- */
+------------------------------------------------------------------- */
 
 .landingPage .lmFeatures{
-  margin: 18px auto 6px;
+  margin-top: 18px;
 }
 
-.landingPage .lmCardGrid{
+.landingPage .lmFeatureGrid{
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  align-items: stretch;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  gap: 16px;
 }
 
 .landingPage .lmFeatureCard{
+  display: grid;
+  grid-template-rows: 4fr 1fr;
   text-decoration: none;
   color: inherit;
-  border-radius: 14px;
+  border: 1px solid rgba(92,70,50,.22);
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(122,90,60,.22);
-  background: rgba(255,255,255,.55);
-  box-shadow: 0 10px 26px rgba(20,12,6,.10);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-  min-width: 0; /* allow shrinking on very small screens */
+  background: rgba(255,255,255,.45);
+  height: clamp(320px, 88vw, 420px);
+  box-shadow: 0 10px 30px rgba(40,25,15,.08);
 }
 
 .landingPage .lmFeatureCard:hover{
   transform: translateY(-1px);
-  box-shadow: 0 14px 34px rgba(20,12,6,.14);
-  border-color: rgba(122,90,60,.34);
+  box-shadow: 0 14px 36px rgba(40,25,15,.12);
 }
 
-.landingPage .lmCardMedia{
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  display: grid;
-  place-items: center;
-  padding: 10px;
-  background:
-    radial-gradient(600px 260px at 50% 20%, rgba(255,255,255,.65), rgba(0,0,0,0)),
-    rgba(245,230,206,.35);
-  border-bottom: 1px solid rgba(122,90,60,.16);
-}
-
-.landingPage .lmCardMedia--map{
-  aspect-ratio: 21 / 9;
-}
-
-.landingPage .lmCardMedia img{
+.landingPage .lmFeatureMedia{
   width: 100%;
   height: 100%;
-  object-fit: contain; /* keep SVGs clean inside the card */
+  background: rgba(245,239,230,.55);
+  position: relative;
 }
 
-.landingPage .lmCardBody{
-  padding: 12px 14px 13px;
+.landingPage .lmFeatureImg{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.landingPage .lmCardTitle{
-  font-family: var(--serif);
-  font-weight: 900;
-  letter-spacing: .03em;
-  color: rgba(55,35,20,.92);
-  font-size: 16px;
+.landingPage .lmFeatureFrame{
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  pointer-events: none; /* allow click-through to the card link */
 }
 
-.landingPage .lmCardText{
-  margin-top: 4px;
-  font-size: 13px;
-  line-height: 1.35;
-  color: rgba(55,35,20,.68);
+.landingPage .lmFeatureViewport{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Preview scaling: shrink the embedded page so more content fits. */
+.landingPage .lmFeatureCard{ --lm-preview-scale: .86; }
+.landingPage .lmFeatureCard--tree{ --lm-preview-scale: .86; }
+.landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .78; }
+.landingPage .lmFeatureCard--map{ --lm-preview-scale: .78; }
+
+@media (max-width: 520px){
+  .landingPage .lmFeatureCard{ --lm-preview-scale: .82; }
+  .landingPage .lmFeatureCard--tree{ --lm-preview-scale: .82; }
+  .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .74; }
+  .landingPage .lmFeatureCard--map{ --lm-preview-scale: .74; }
+}
+  .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .82; }
+  .landingPage .lmFeatureCard--map{ --lm-preview-scale: .82; }
+}
+
+.landingPage .lmFeatureBody{
+  padding: 6px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.landingPage .lmFeatureTitle{
+  font-weight: 850;
+  letter-spacing: .2px;
+  margin: 0;
+  font-size: .98rem;
+  line-height: 1.05;
+}
+
+.landingPage .lmFeatureDesc{
+  margin: 0;
+  opacity: .84;
+  line-height: 1.12;
+  font-size: .82rem;
+  max-width: 19ch;
 }
 
 .landingPage .lmFeatureCard--map{
-  grid-column: 1 / -1; /* span entire second row on desktop + mobile */
+  grid-column: 1 / -1;
 }
 
-/* Keep two columns even on small screens (<=375px), but tighten spacing */
-@media (max-width: 375px){
-  .landingPage .lmCardGrid{ gap: 10px; }
-  .landingPage .lmCardBody{ padding: 10px 12px 11px; }
-  .landingPage .lmCardTitle{ font-size: 15px; }
-  .landingPage .lmCardText{ font-size: 12px; }
+/* Keep the top row as 2 cards through small mobile sizes (down to 331px).
+   Below that, stack to avoid unreadable shrink. */
+@media (max-width: 330px){
+  .landingPage .lmFeatureGrid{
+    grid-template-columns: 1fr;
+  }
+  .landingPage .lmFeatureCard--map{
+    grid-column: auto;
+  }
 }
+
+/* ------------------------------------------------------------------
+   Live previews inside landing feature cards
+------------------------------------------------------------------- */
+
+.landingPage .lmLiveFrame{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.landingPage .lmLiveStage{
+  --lmScale: .33;
+  --lmShiftX: 0;
+  --lmShiftY: 0;
+  width: 900px;
+  height: 560px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(calc(-50% + (var(--lmShiftX) * 1px)), calc(-50% + (var(--lmShiftY) * 1px))) scale(var(--lmScale));
+  transform-origin: 50% 50%;
+}
+
+/* Tree */
+.landingPage .lmTreeCanvas{ width: 900px; height: 560px; }
+.landingPage .lmTreeSvg{ width: 900px; height: 560px; display:block; }
+
+/* Timeline */
+.landingPage .lmTlRoot{ width: 900px; height: 560px; position:relative; overflow:hidden; }
+.landingPage .lmTlStatus{ position:absolute; top:10px; left:12px; font-size:14px; opacity:.7; z-index:2; }
+.landingPage .lmTlSvg{ width:900px; height:560px; display:block; }
+.landingPage .lmTlCards{ position:absolute; inset:0; }
+
+/* Map */
+.landingPage .lmMapRoot{ width:900px; height:560px; position:relative; }
+.landingPage .lmMapAccordion{ position:absolute; inset:0; }
+
+/* ------------------------------------------------------------------
+   Live previews: run the real Tree / Timeline / Map renderers inside cards
+------------------------------------------------------------------- */
+
+.landingPage .lmLiveFrame{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.landingPage .lmLiveStage{
+  --lmScale: .28;
+  width: 900px;
+  height: 560px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(calc(-50% + var(--lmShiftX, 0px)), calc(-50% + var(--lmShiftY, 0px))) scale(var(--lmScale));
+  transform-origin: center center;
+}
+
+/* Tree preview: keep it clean (no page chrome) */
+.landingPage #fitTreeBtn,
+.landingPage #treeMoreBtn,
+.landingPage .treeMoreWrap{
+  display: none !important;
+}
+
+.landingPage .lmTreeCanvas{
+  width: 900px;
+  height: 560px;
+  position: relative;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.landingPage .lmTreeSvg{
+  width: 900px;
+  height: 560px;
+  display: block;
+}
+
+/* Timeline preview: hide top chrome and keep container tight */
+.landingPage .tlTop,
+.landingPage .pillTitle{
+  display: none !important;
+}
+
+.landingPage .lmTlRoot{
+  width: 900px;
+  height: 560px;
+  position: relative;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.landingPage .lmTlStatus{
+  display: none !important;
+}
+
+.landingPage .lmTlSvg{
+  width: 900px;
+  height: 560px;
+  display: block;
+}
+
+.landingPage .lmTlCards{
+  position: absolute;
+  inset: 0;
+}
+
+/* Map preview: hide legend and clamp */
+.landingPage .mapLegend,
+.landingPage .nav-family{
+  display: none !important;
+}
+
+.landingPage .lmMapRoot{
+  width: 900px;
+  height: 560px;
+  position: relative;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.landingPage .lmMapAccordion{
+  position: absolute;
+  inset: 0;
+}
+
+.landingPage .lmFeatureCard--map .lmFeatureMedia{ height: clamp(190px, 30vw, 320px); }

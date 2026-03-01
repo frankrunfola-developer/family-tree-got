@@ -468,15 +468,17 @@ async function loadTreeData(treeName = "gupta") {
 }
 
 function subsetFamilyData(data, opts = {}) {
-  // Build a small, readable "above the fold" slice: roots -> depth N.
+  const strategy = String(opts.strategy ?? window.TREE_PREVIEW_STRATEGY ?? "roots").toLowerCase();
   const depth = Number(opts.depth ?? 2);
   const maxPeople = Number(opts.maxPeople ?? 18);
+  const maxGen1 = Number(opts.maxGen1 ?? window.TREE_PREVIEW_MAX_GEN1 ?? 0);
 
   const people = Array.isArray(data.people) ? data.people : [];
   const rels = Array.isArray(data.relationships) ? data.relationships : [];
 
   const peopleById = new Map(people.map((p) => [String(p.id), p]));
   const childrenByParent = new Map();
+  const parentsByChild = new Map();
   const isChild = new Set();
 
   for (const r of rels) {
@@ -484,11 +486,58 @@ function subsetFamilyData(data, opts = {}) {
     if (!pair) continue;
     const parent = String(pair.parent);
     const child = String(pair.child);
+
     if (!childrenByParent.has(parent)) childrenByParent.set(parent, []);
     childrenByParent.get(parent).push(child);
+
+    if (!parentsByChild.has(child)) parentsByChild.set(child, []);
+    parentsByChild.get(child).push(parent);
+
     isChild.add(child);
   }
 
+  // Strategy: focus on a single "bottom" child + their parents + one grandparent level
+  if (strategy === "focus_bottom") {
+    const leafIds = people
+      .map((p) => String(p.id))
+      .filter((id) => !childrenByParent.has(id) || (childrenByParent.get(id) || []).length === 0);
+
+    const candidates = leafIds.filter((id) => (parentsByChild.get(id) || []).length > 0);
+    const childId = (candidates[0] ?? leafIds[0] ?? (people[0] ? String(people[0].id) : null));
+    const keep = new Set();
+
+    if (childId) keep.add(childId);
+
+    const parents = childId ? (parentsByChild.get(childId) || []) : [];
+    for (const p of parents.slice(0, 2)) keep.add(String(p));
+
+    // Grandparents: pick the first parent that actually has parents
+    let gpFrom = null;
+    for (const p of parents) {
+      const pp = parentsByChild.get(String(p)) || [];
+      if (pp.length) { gpFrom = String(p); break; }
+    }
+    if (gpFrom) {
+      const gps = parentsByChild.get(gpFrom) || [];
+      for (const gp of gps.slice(0, 2)) keep.add(String(gp));
+    }
+
+    // Hard cap
+    const keepArr = Array.from(keep).slice(0, Math.max(1, maxPeople));
+    const keepSet = new Set(keepArr);
+
+    return {
+      ...data,
+      people: people.filter((p) => keepSet.has(String(p.id))),
+      relationships: rels.filter((r) => {
+        const pair = getRelPair(r);
+        if (!pair) return false;
+        return keepSet.has(String(pair.parent)) && keepSet.has(String(pair.child));
+      }),
+    };
+  }
+
+  // Default strategy: roots -> depth N (BFS)
   const roots = people
     .map((p) => String(p.id))
     .filter((id) => !isChild.has(id));
@@ -503,24 +552,21 @@ function subsetFamilyData(data, opts = {}) {
     if (keep.has(cur.id)) continue;
     if (!peopleById.has(cur.id)) continue;
     keep.add(cur.id);
-    if (cur.d >= depth) continue;
-    const kids = childrenByParent.get(cur.id) || [];
-    for (const k of kids) {
-      if (keep.size >= maxPeople) break;
-      q.push({ id: String(k), d: cur.d + 1 });
-    }
-  }
 
-  const keepRels = rels.filter((r) => {
-    const pair = getRelPair(r);
-    if (!pair) return false;
-    return keep.has(String(pair.parent)) && keep.has(String(pair.child));
-  });
+    if (cur.d >= depth) continue;
+    let kids = childrenByParent.get(cur.id) || [];
+    if (maxGen1 > 0 && cur.d === 0) kids = kids.slice(0, maxGen1);
+    for (const k of kids) q.push({ id: String(k), d: cur.d + 1 });
+  }
 
   return {
     ...data,
     people: people.filter((p) => keep.has(String(p.id))),
-    relationships: keepRels,
+    relationships: rels.filter((r) => {
+      const pair = getRelPair(r);
+      if (!pair) return false;
+      return keep.has(String(pair.parent)) && keep.has(String(pair.child));
+    }),
   };
 }
 
@@ -561,6 +607,7 @@ export async function initTree(treeName = "stark") {
     data = subsetFamilyData(data, {
       depth: window.TREE_PREVIEW_DEPTH ?? 2,
       maxPeople: window.TREE_PREVIEW_MAX ?? 18,
+      maxGen1: window.TREE_PREVIEW_MAX_GEN1 ?? 0,
     });
     if (moreBtn) moreBtn.hidden = false;
   } else {
@@ -598,9 +645,15 @@ export async function initTree(treeName = "stark") {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const svg = document.querySelector("#treeSvg");
-  if (!svg) return;
-  const fam = (window.TREE_FAMILY_ID || "stark");
-  initTree(String(fam).toLowerCase()).catch((e) => console.error(e));
-});
+function __lmBoot() {
+    const svg = document.querySelector("#treeSvg");
+if (!svg) return;
+    const fam = (window.TREE_FAMILY_ID || "stark");
+initTree(String(fam).toLowerCase()).catch((e) => console.error(e));
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", __lmBoot);
+  } else {
+    __lmBoot();
+  }

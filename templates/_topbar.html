@@ -1,6 +1,7 @@
 {# -----------------------------------------------------------------------------
 File: templates/_topbar.html
 Purpose: Universal topbar (compatible with static/js/nav.js)
+
 JS expects:
 - button#navbtn
 - div#navpanel
@@ -9,7 +10,6 @@ JS expects:
 ----------------------------------------------------------------------------- #}
 
 {% set sid = (sample_id or "stark")|lower %}
-{% set is_auth = 'authPage' in (body_class|default('')) %}
 
 <header class="topbar" role="banner">
   <div class="topbar-inner">
@@ -31,34 +31,19 @@ JS expects:
 
       <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
         class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
-
-      <a href="{{ url_for('explore_legacies_view') }}"
-        class="{{ 'is-active' if request.path == '/explore_legacies_view' else '' }}">Explore Legacies</a>
     </nav>
 
     <!-- RIGHT -->
-    <div class="topbar-right">
-
-      {# Demo picker should NOT appear on auth pages (kills the mood + clutters the header) #}
-      {% if not is_auth %}
-      <!-- Desktop demo picker -->
-      <div class="demoPicker demoPicker--desktop">
-        <span class="demoPickerLabel">Demo</span>
-        <select id="demoFamilySelect" class="demoPickerSelect" aria-label="Demo family picker (desktop)">
-          <option value="stark" {{ 'selected' if sid == 'stark' else '' }}>Stark</option>
-          <option value="gupta" {{ 'selected' if sid == 'gupta' else '' }}>Gupta</option>
-          <option value="kennedy" {{ 'selected' if sid == 'kennedy' else '' }}>Kennedy</option>
-          <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
-          <option value="kardashian" {{ 'selected' if sid == 'kardashian' else '' }}>Kardashian</option>
-          <option value="jackson" {{ 'selected' if sid == 'jackson' else '' }}>Jackson</option>
-          <option value="windsor" {{ 'selected' if sid == 'windsor' else '' }}>Windsor</option>
-          <option value="ambani" {{ 'selected' if sid == 'ambani' else '' }}>Ambani</option>
-          <option value="sen" {{ 'selected' if sid == 'sen' else '' }}>Sen</option>
+    <div class="topbar-right"><div class="demoPicker demoPicker--desktop">
+        <span class="demoPickerLabel">Select Legacy</span>
+        <label class="srOnly" for="demoFamilySelect">Select Legacy</label>
+        <select id="demoFamilySelect" class="demoPickerSelect demoPickerSelect--button" aria-label="Select Legacy">
+          {% for k in demo_samples %}
+          <option value="{{ k }}" {{ 'selected' if sid == k else '' }}>{{ demo_sample_labels[k] }}</option>
+          {% endfor %}
         </select>
-      </div>
-      {% endif %}
+      </div><a class="btn ghost" href="{{ url_for('explore_legacies_view') }}" data-preserve-sample="1">Explore Legacies</a>
 
-      <!-- Auth / CTA -->
       {% if current_user %}
       <div class="authLinks">
         <div class="userBadge" title="{{ current_user.email }}">
@@ -71,8 +56,7 @@ JS expects:
       <a class="btn primary" href="{{ url_for('register') }}">Get Started</a>
       {% endif %}
 
-      <!-- Hamburger (nav.js expects #navbtn)
-           Place it last so it sits on the OUTSIDE edge. -->
+      <!-- Hamburger (nav.js expects #navbtn) -->
       <button id="navbtn" class="navToggle" type="button" aria-label="Menu" aria-expanded="false">
         <span class="navToggleIcon" aria-hidden="true"></span>
       </button>
@@ -92,24 +76,13 @@ JS expects:
       class="{{ 'is-active' if request.path == '/explore_legacies_view' else '' }}">Explore Legacies</a>
 
     <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
-      class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
-
-    {% if not is_auth %}
-    <!-- Mobile demo picker -->
-    <div class="demoPicker demoPicker--mobile">
-      <p class="demoPickerLabel">Demo Family</p>
-      <select id="demoFamilySelectMobile" class="demoPickerSelect demoPickerSelect--compact" aria-label="Demo family picker (mobile)">
-        <option value="kennedy" {{ 'selected' if sid == 'kennedy' else '' }}>Kennedy</option>
-        <option value="windsor" {{ 'selected' if sid == 'windsor' else '' }}>Windsor</option>
-        <option value="kardashian" {{ 'selected' if sid == 'kardashian' else '' }}>Kardashian</option>
-        <option value="jackson" {{ 'selected' if sid == 'jackson' else '' }}>Jackson</option>
-        <option value="ambani" {{ 'selected' if sid == 'ambani' else '' }}>Ambani</option>
-        <option value="stark" {{ 'selected' if sid == 'stark' else '' }}>Stark</option>
-        <option value="lannister" {{ 'selected' if sid == 'lannister' else '' }}>Lannister</option>
-        <option value="sen" {{ 'selected' if sid == 'sen' else '' }}>Sen</option>
-        <option value="gupta" {{ 'selected' if sid == 'gupta' else '' }}>Gupta</option>
+      class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a><div class="demoPicker demoPicker--mobile">
+      <span class="demoPickerLabel">Select Legacy</span>
+      <label class="srOnly" for="demoFamilySelectMobile">Select Legacy</label>
+      <select id="demoFamilySelectMobile" class="demoPickerSelect demoPickerSelect--button demoPickerSelect--compact" aria-label="Select Legacy">
+        {% for k in demo_samples %}
+        <option value="{{ k }}" {{ 'selected' if sid == k else '' }}>{{ demo_sample_labels[k] }}</option>
+        {% endfor %}
       </select>
-    </div>
-    {% endif %}
-  </div>
+    </div></div>
 </header>
