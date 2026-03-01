@@ -20,7 +20,43 @@
         <p class="lmSubcopy">Explore your family’s journey across centuries and continents with interactive historical maps.</p>
 
         <a class="lmCta" href="{{ url_for('register') }}">Get Started</a>
-      </header>
+      
+      <!-- Feature cards -->
+      <section class="lmFeatures" aria-label="Explore features">
+        <div class="lmCardGrid">
+          <a class="lmFeatureCard" href="{{ url_for('tree_view') }}">
+            <div class="lmCardMedia" aria-hidden="true">
+              <img src="{{ url_for('static', filename='img/landing/feature-tree.svg') }}" alt="" loading="lazy">
+            </div>
+            <div class="lmCardBody">
+              <div class="lmCardTitle">Family Tree</div>
+              <div class="lmCardText">See generations at a glance.</div>
+            </div>
+          </a>
+
+          <a class="lmFeatureCard" href="{{ url_for('timeline_view') }}">
+            <div class="lmCardMedia" aria-hidden="true">
+              <img src="{{ url_for('static', filename='img/landing/feature-timeline.svg') }}" alt="" loading="lazy">
+            </div>
+            <div class="lmCardBody">
+              <div class="lmCardTitle">Timeline</div>
+              <div class="lmCardText">Follow lives through the years.</div>
+            </div>
+          </a>
+
+          <a class="lmFeatureCard lmFeatureCard--map" href="{{ url_for('map_view') }}">
+            <div class="lmCardMedia lmCardMedia--map" aria-hidden="true">
+              <img src="{{ url_for('static', filename='img/landing/feature-map.svg') }}" alt="" loading="lazy">
+            </div>
+            <div class="lmCardBody">
+              <div class="lmCardTitle">Map</div>
+              <div class="lmCardText">Track movements across the world.</div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+</header>
 
       <!-- Legacies CTA -->
       <div class="lmSectionHead" aria-hidden="true">

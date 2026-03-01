@@ -539,3 +539,90 @@
 .landingPage .lmShot--map{ background-image: url("../img/landing/tease-map.png"); }
 .landingPage .lmShot--tree{ background-image: url("../img/landing/tease-tree.png"); }
 .landingPage .lmShot--timeline{ background-image: url("../img/landing/tease-timeline.png"); }
+
+
+/* -----------------------------
+   Feature cards (Tree / Timeline / Map)
+------------------------------ */
+
+.landingPage .lmFeatures{
+  margin: 18px auto 6px;
+}
+
+.landingPage .lmCardGrid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.landingPage .lmFeatureCard{
+  text-decoration: none;
+  color: inherit;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(122,90,60,.22);
+  background: rgba(255,255,255,.55);
+  box-shadow: 0 10px 26px rgba(20,12,6,.10);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  min-width: 0; /* allow shrinking on very small screens */
+}
+
+.landingPage .lmFeatureCard:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(20,12,6,.14);
+  border-color: rgba(122,90,60,.34);
+}
+
+.landingPage .lmCardMedia{
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  background:
+    radial-gradient(600px 260px at 50% 20%, rgba(255,255,255,.65), rgba(0,0,0,0)),
+    rgba(245,230,206,.35);
+  border-bottom: 1px solid rgba(122,90,60,.16);
+}
+
+.landingPage .lmCardMedia--map{
+  aspect-ratio: 21 / 9;
+}
+
+.landingPage .lmCardMedia img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* keep SVGs clean inside the card */
+}
+
+.landingPage .lmCardBody{
+  padding: 12px 14px 13px;
+}
+
+.landingPage .lmCardTitle{
+  font-family: var(--serif);
+  font-weight: 900;
+  letter-spacing: .03em;
+  color: rgba(55,35,20,.92);
+  font-size: 16px;
+}
+
+.landingPage .lmCardText{
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(55,35,20,.68);
+}
+
+.landingPage .lmFeatureCard--map{
+  grid-column: 1 / -1; /* span entire second row on desktop + mobile */
+}
+
+/* Keep two columns even on small screens (<=375px), but tighten spacing */
+@media (max-width: 375px){
+  .landingPage .lmCardGrid{ gap: 10px; }
+  .landingPage .lmCardBody{ padding: 10px 12px 11px; }
+  .landingPage .lmCardTitle{ font-size: 15px; }
+  .landingPage .lmCardText{ font-size: 12px; }
+}
