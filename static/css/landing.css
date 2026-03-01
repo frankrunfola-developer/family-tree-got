@@ -30,7 +30,7 @@
 
   opacity: .34;
   background:
-    url("../img/world-muted.png"),
+    url("../img/world.png"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='620' height='620' viewBox='0 0 620 620'%3E%3Cg fill='none' stroke='%237a5a3c' stroke-opacity='.42'%3E%3Ccircle cx='310' cy='310' r='210' stroke-width='2'/%3E%3Ccircle cx='310' cy='310' r='150' stroke-width='1.5'/%3E%3Cpath d='M310 70 V550 M70 310 H550' stroke-width='1.5'/%3E%3Cpath d='M310 120 L338 310 L310 500 L282 310 Z' stroke-width='1.5'/%3E%3Cpath d='M120 310 L310 282 L500 310 L310 338 Z' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: no-repeat, no-repeat;
   background-size: 980px auto, 520px auto;

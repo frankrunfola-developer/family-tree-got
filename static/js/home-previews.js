@@ -264,7 +264,7 @@
       .map-preview .map-panel{ position: relative; height: 200px; border-radius: 12px; border: 1px solid rgba(90,60,40,.18);
         background:
           linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.12)),
-          url('/static/img/world-muted.png');
+          url('/static/img/world.png');
         background-size: cover;
         background-position: center;
         box-shadow: inset 0 10px 20px rgba(0,0,0,.08);

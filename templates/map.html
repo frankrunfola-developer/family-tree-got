@@ -54,9 +54,9 @@
 {# Background map image selection #}
 {% set sid = (sample_id or "")|lower %}
 {% if sid in ["stark", "lannister"] %}
-{% set MAP_IMG = url_for('static', filename='img/westeros-muted.png') %}
+{% set MAP_IMG = url_for('static', filename='img/westeros.png') %}
 {% else %}
-{% set MAP_IMG = url_for('static', filename='img/world-muted.png') %}
+{% set MAP_IMG = url_for('static', filename='img/world.png') %}
 {% endif %}
 
 <script>

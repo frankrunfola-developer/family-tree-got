@@ -399,7 +399,7 @@
 @media (max-width: 520px){
   :root{
     --brand-rail: clamp(150px, 48vw, 230px);
-    --brand-height: clamp(64px, 12vw, 92px);
+    --brand-height: clamp(140px, 12vw, 92px);
     --brand-nudge-x: -14px;
     --brand-nudge-y: 0px;
   }

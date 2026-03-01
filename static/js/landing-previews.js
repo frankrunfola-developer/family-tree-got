@@ -126,8 +126,8 @@
     // If you have different filenames, change these two paths:
     const isWesteros = ["stark", "lannister", "got"].includes(sampleId);
     return isWesteros
-      ? "/static/img/westeros-muted.png"
-      : "/static/img/world-muted.png";
+      ? "/static/img/westeros.png"
+      : "/static/img/world.png";
   }
 
   function renderMap(tree) {
