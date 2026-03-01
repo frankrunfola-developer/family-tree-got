@@ -52,9 +52,9 @@ export const TREE_CFG = {
 
   // Spacing policy (mostly used when building the graph)
   spacing: {
-    SPOUSE_GAP: 3,
-    SIBLING_GAP: 10,
-    CLUSTER_GAP: 1,
+    SPOUSE_GAP: 10,
+    SIBLING_GAP: 35,
+    CLUSTER_GAP: 20,
     COUPLE_KEEP_OUT_PAD: 12,
     ROW_EPS: 10,
   },
