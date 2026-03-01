@@ -604,13 +604,13 @@
 
 /* Preview scaling: shrink the embedded page so more content fits. */
 .landingPage .lmFeatureCard{ --lm-preview-scale: .74; }
-.landingPage .lmFeatureCard--tree{ --lm-preview-scale: .54; }
+.landingPage .lmFeatureCard--tree{ --lm-preview-scale: .42; }
 .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .66; }
 .landingPage .lmFeatureCard--map{ --lm-preview-scale: .76; }
 
 @media (max-width: 520px){
   .landingPage .lmFeatureCard{ --lm-preview-scale: .68; }
-  .landingPage .lmFeatureCard--tree{ --lm-preview-scale: .58; }
+  .landingPage .lmFeatureCard--tree{ --lm-preview-scale: .46; }
   .landingPage .lmFeatureCard--timeline{ --lm-preview-scale: .56; }
   .landingPage .lmFeatureCard--map{ --lm-preview-scale: .70; }
 }

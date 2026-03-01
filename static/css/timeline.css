@@ -531,8 +531,8 @@
 /* Embed previews: force smaller nodes regardless of viewport rules */
 .isEmbed .tlSnakeCards{
   --tl-cols: 2;
-  --tl-card-w: 124px;
-  --tl-card-h: 64px;
+  --tl-card-w: 156px;
+  --tl-card-h: 72px;
   --tl-gap-x: 10px;
   --tl-gap-y: 22px;
   --tl-pad-x: 6px;
