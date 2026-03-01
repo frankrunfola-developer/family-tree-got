@@ -24,7 +24,7 @@
   /* Proportional scaling (bounded) */
   --brand-rail: clamp(180px, 24vw, 320px);
   /* Logo can never be taller than the topbar's inner space */
-  --brand-height: clamp(52px, 6.2vw, calc(var(--topbar-h) - 12px));
+  --brand-height: clamp(140px, 6.2vw, calc(var(--topbar-h) - 12px));
 
   /* Proportional hang */
   --brand-overhang: clamp(10px, 1.6vw, 18px);
@@ -619,7 +619,7 @@
 @media (max-width: 420px){
   :root{
     --brand-rail: clamp(118px, 34vw, 165px);
-    --brand-height: clamp(58px, 11vw, 82px);
+    --brand-height: clamp(115px, 11vw, 82px);
     --brand-nudge-x: -10px;
   }
 
