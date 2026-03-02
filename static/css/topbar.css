@@ -24,7 +24,7 @@
   /* Proportional scaling (bounded) */
   --brand-rail: clamp(180px, 24vw, 320px);
   /* Logo can never be taller than the topbar's inner space */
-  --brand-height: clamp(52px, 6.2vw, calc(var(--topbar-h) - 12px));
+  --brand-height: clamp(83px, 6.2vw, calc(var(--topbar-h) ));
 
   /* Proportional hang */
   --brand-overhang: clamp(10px, 1.6vw, 18px);
@@ -400,7 +400,7 @@
 @media (max-width: 520px){
   :root{
     --brand-rail: clamp(150px, 48vw, 230px);
-    --brand-height: clamp(64px, 12vw, 92px);
+    --brand-height: clamp(74px, 12vw, 92px);
     --brand-nudge-x: -14px;
     --brand-nudge-y: 0px;
   }
@@ -518,7 +518,6 @@
 
 .mobileNav .demoPickerSelect{
   width: auto;
-  max-width: 58%;
 }
 
 /* Pretty dropdown pill to match parchment/institution vibe */
@@ -573,6 +572,22 @@
 .demoPicker--nav{ display:flex; align-items:center; gap:8px; }
 .demoPicker--mobile{ display:block; }
 .demoPicker--desktop{ display:flex; align-items:center; gap:8px; }
+
+/* Desktop nav: make the picker feel like a normal menu item (no extra "Select Legacy" pill) */
+.demoPicker--navSimple{
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+.demoPicker--navSimple .demoPickerSelect{
+  border: 0;
+  background: transparent;
+  padding: .25rem 1.4rem .25rem .25rem;
+  font-family: var(--serif);
+  font-weight: 800;
+  letter-spacing: .02em;
+}
 
 @media (max-width: 820px){
   .demoPicker--nav{ display:none; }

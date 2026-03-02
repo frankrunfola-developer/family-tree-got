@@ -1,64 +1,84 @@
 // static/js/tree.js
 // Dagre for Y-levels + deterministic recursive width layout for X.
-// Guarantees:
-// - NO node swapping (spouses keep a stable left-to-right order)
-// - Even sibling spacing
-// - If siblings need more width, their ENTIRE descendant subtrees recursively widen outward
-// - Single child is centered under parents
-// - If a spouse has no parents (not produced by a union), keep them on the OUTER side of the screen
-//   so siblings stay tighter. Never swap a sibling with a spouse.
 
 import { renderFamilyTree, fitTreeToScreen } from "./familyTree.js";
 import { TREE_CFG } from "./treeConfig.js";
 
 function getRelPair(r) {
-  const parent =
-    r.parentId ?? r.parent ?? r.sourceId ?? r.source ?? r.from ?? r.src;
-  const child =
-    r.childId ?? r.child ?? r.targetId ?? r.target ?? r.to ?? r.dst;
+  if (r?.type === "spouse") return null;
+  const parent = r.parentId ?? r.parent ?? r.sourceId ?? r.source ?? r.from ?? r.src;
+  const child = r.childId ?? r.child ?? r.targetId ?? r.target ?? r.to ?? r.dst;
   if (!parent || !child) return null;
   return { parent: String(parent), child: String(child) };
 }
+
 
 function buildGeneDAG(data) {
   const people = Array.isArray(data.people) ? data.people : [];
   const relationships = Array.isArray(data.relationships) ? data.relationships : [];
 
   const personById = new Map(people.map((p) => [String(p.id), p]));
+  const peopleSet = new Set([...personById.keys()]);
+
+  const keyForParents = (ids) => ids.map(String).sort().join("|");
+  const normPair = (a, b) => keyForParents([a, b]);
+
+  // child -> Set(parents)
   const parentsByChild = new Map();
 
+  // unionKey -> { parents: string[], children:Set<string> }
+  const unions = new Map();
+
+  const ensureUnion = (parentsArr) => {
+    const parents = parentsArr.map(String).filter((id) => peopleSet.has(id));
+    if (!parents.length) return null;
+
+    const key = keyForParents(parents);
+    if (!unions.has(key)) unions.set(key, { parents: parents.slice().sort(), children: new Set() });
+    return key;
+  };
+
+  // 1) Spouse unions (even if no kids)
+  for (const r of relationships) {
+    if (r?.type !== "spouse") continue;
+    const a = String(r.a ?? "");
+    const b = String(r.b ?? "");
+    if (!a || !b) continue;
+    if (!peopleSet.has(a) || !peopleSet.has(b)) continue;
+    ensureUnion([a, b]);
+  }
+
+  // 2) Parent links
   for (const r of relationships) {
     const pair = getRelPair(r);
     if (!pair) continue;
-    if (!parentsByChild.has(pair.child)) parentsByChild.set(pair.child, new Set());
-    parentsByChild.get(pair.child).add(pair.parent);
+
+    const parent = String(pair.parent);
+    const child = String(pair.child);
+    if (!peopleSet.has(parent) || !peopleSet.has(child)) continue;
+
+    if (!parentsByChild.has(child)) parentsByChild.set(child, new Set());
+    parentsByChild.get(child).add(parent);
   }
 
-  const unionIdByKey = new Map();
-  const unions = [];
-  const edges = [];
-
-  const unionKey = (parents) => [...parents].sort().join("|");
-
+  // 3) Attach children to unions
   for (const [childId, parentSet] of parentsByChild.entries()) {
-    const parents = [...parentSet].filter((pid) => personById.has(pid));
+    const parents = [...parentSet].map(String).filter((id) => peopleSet.has(id));
     if (!parents.length) continue;
 
-    const key = unionKey(parents);
-    let unionId = unionIdByKey.get(key);
-
-    if (!unionId) {
-      unionId = `u:${key}`;
-      unionIdByKey.set(key, unionId);
-      unions.push({ id: unionId, kind: "union", parents });
-      for (const pid of parents) edges.push({ sourceId: pid, targetId: unionId });
+    if (parents.length === 2) {
+      const uKey = ensureUnion(parents);
+      if (uKey) unions.get(uKey).children.add(String(childId));
+      continue;
     }
 
-    edges.push({ sourceId: unionId, targetId: childId });
+    // Single-parent or multi-parent child (still render it deterministically)
+    const uKey = ensureUnion(parents);
+    if (uKey) unions.get(uKey).children.add(String(childId));
   }
 
+  // 4) Build nodes
   const nodes = [];
-
   for (const p of people) {
     const id = String(p.id);
     nodes.push({
@@ -70,23 +90,35 @@ function buildGeneDAG(data) {
     });
   }
 
-  for (const u of unions) nodes.push({ id: u.id, kind: "union", label: "" });
-
-  // Ensure any referenced ids exist as nodes
-  const seen = new Set(nodes.map((n) => n.id));
-  for (const e of edges) {
-    if (!seen.has(e.sourceId)) {
-      nodes.push({ id: e.sourceId, kind: "person", label: e.sourceId });
-      seen.add(e.sourceId);
-    }
-    if (!seen.has(e.targetId)) {
-      nodes.push({ id: e.targetId, kind: "person", label: e.targetId });
-      seen.add(e.targetId);
-    }
+  // union nodes use a stable id format: u:<parent1|parent2|...>
+  for (const [uKey] of unions.entries()) {
+    nodes.push({ id: `u:${uKey}`, kind: "union", label: "" });
   }
 
-  return { nodes, links: edges };
+  // 5) Build edges (deduped)
+  const edgeSet = new Set();
+  const links = [];
+
+  const addEdge = (s, t) => {
+    const k = `${s}->${t}`;
+    if (edgeSet.has(k)) return;
+    edgeSet.add(k);
+    links.push({ sourceId: s, targetId: t });
+  };
+
+  for (const [uKey, u] of unions.entries()) {
+    const uId = `u:${uKey}`;
+
+    // parents -> union
+    for (const pid of u.parents) addEdge(String(pid), uId);
+
+    // union -> kids
+    for (const cid of u.children) addEdge(uId, String(cid));
+  }
+
+  return { nodes, links };
 }
+
 
 function dagreLayout(graphNodes, graphLinks, opts = {}) {
   const dagre = window.dagre;
@@ -114,11 +146,9 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
 
   const placed = graphNodes.map((n) => {
     const dn = g.node(n.id);
-    // dagre gives CENTER coordinates. We keep node.x/node.y as CENTER everywhere.
     return { ...n, x: dn?.x ?? 0, y: dn?.y ?? 0 };
   });
 
-  // Normalize
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const n of placed) {
     minX = Math.min(minX, n.x);
@@ -131,8 +161,6 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
   for (const n of placed) {
     n.x = n.x - minX + pad;
     n.y = n.y - minY + pad;
-
-    // freeze original X for stable spouse ordering
     n._baseX = n.x;
     n._baseY = n.y;
   }
@@ -146,12 +174,13 @@ function dagreLayout(graphNodes, graphLinks, opts = {}) {
 
 function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
   const CARD_W = TREE_CFG.sizing.CARD_W;
-  const { SPOUSE_GAP, SIBLING_GAP, CLUSTER_GAP } = TREE_CFG.spacing;
+  const CARD_OUTER_W = CARD_W + 24;
+  const { SPOUSE_GAP, SIBLING_GAP, CLUSTER_GAP, ROW_EPS } = TREE_CFG.spacing;
+  const MIN_GAP = 14;
 
   const byId = new Map(laidNodes.map((n) => [String(n.id), n]));
   const isUnion = (id) => byId.get(String(id))?.kind === "union";
 
-  // unionId -> { parents:Set, children:Set }
   const unions = new Map();
   for (const l of laidLinks) {
     const s = String(l.sourceId);
@@ -166,7 +195,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     }
   }
 
-  // personId -> unionIds where this person is a parent
   const unionsByParent = new Map();
   for (const [uId, pc] of unions.entries()) {
     for (const pid of pc.parents) {
@@ -175,7 +203,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     }
   }
 
-  // child-> union that produced them (for roots detection)
   const producedByUnion = new Map();
   for (const [uId, pc] of unions.entries()) {
     for (const cid of pc.children) producedByUnion.set(String(cid), String(uId));
@@ -188,7 +215,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
       .sort((a, b) => (a._baseX ?? a.x) - (b._baseX ?? b.x))
       .map((n) => String(n.id));
 
-  // ---- Width computation (bottom-up) ----
   const personWidthMemo = new Map();
   const unionWidthMemo = new Map();
 
@@ -196,14 +222,14 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     personId = String(personId);
     if (personWidthMemo.has(personId)) return personWidthMemo.get(personId);
 
-    if (visiting.has(personId)) return CARD_W;
+    if (visiting.has(personId)) return CARD_OUTER_W;
     visiting.add(personId);
 
     const childUnions = unionsByParent.get(personId) ?? [];
     if (!childUnions.length) {
-      personWidthMemo.set(personId, CARD_W);
+      personWidthMemo.set(personId, CARD_OUTER_W);
       visiting.delete(personId);
-      return CARD_W;
+      return CARD_OUTER_W;
     }
 
     const widths = childUnions.map((uId) => unionSubtreeWidth(uId, visiting));
@@ -221,26 +247,25 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
 
     const pc = unions.get(unionId);
     if (!pc) {
-      unionWidthMemo.set(unionId, CARD_W);
-      return CARD_W;
+      unionWidthMemo.set(unionId, CARD_OUTER_W);
+      return CARD_OUTER_W;
     }
 
     const parentIds = sortByBaseX([...pc.parents]);
     const childIds = sortByBaseX([...pc.children]);
 
     const spouseBlockW =
-      parentIds.length * CARD_W + Math.max(0, parentIds.length - 1) * SPOUSE_GAP;
+      parentIds.length * CARD_OUTER_W + Math.max(0, parentIds.length - 1) * SPOUSE_GAP;
 
     const childWidths = childIds.map((cid) => personSubtreeWidth(cid, visiting));
     const childrenBlockW =
       childWidths.reduce((a, b) => a + b, 0) + Math.max(0, childWidths.length - 1) * SIBLING_GAP;
 
-    const w = Math.max(spouseBlockW, childrenBlockW, CARD_W);
+    const w = Math.max(spouseBlockW, childrenBlockW, CARD_OUTER_W);
     unionWidthMemo.set(unionId, w);
     return w;
   }
 
-  // ---- Find root unions (TOP of tree) ----
   const rootUnions = [];
   for (const [uId, pc] of unions.entries()) {
     const parentIds = [...pc.parents].map(String);
@@ -257,23 +282,15 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
   });
 
   const assignedPerson = new Set();
-
-  // Global anchor used to define "outer part of the screen"
   const ANCHOR_X = (bounds?.width ?? TREE_CFG.view.minWidth) / 2;
 
   function orderParentsOuterOutsiders(parentIds, unionCenterX) {
     const ordered = sortByBaseX(parentIds);
-
-    // Outsider = spouse that does NOT have a parent union (no parents in tree)
     const outsiders = ordered.filter((pid) => !producedByUnion.has(String(pid)));
     if (!outsiders.length) return ordered;
 
     const insiders = ordered.filter((pid) => producedByUnion.has(String(pid)));
-
-    // "Outer side" depends on which half of the screen the union lives on
     const outerIsLeft = unionCenterX < ANCHOR_X;
-
-    // Put outsiders on the outer end
     return outerIsLeft ? [...outsiders, ...insiders] : [...insiders, ...outsiders];
   }
 
@@ -282,15 +299,81 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     const n = parents.length;
     if (!n) return;
 
-    const step = CARD_W + SPOUSE_GAP;
-    const totalW = (n - 1) * step;
-    const startX = centerX - totalW / 2;
+    const fixed = [];
+    const free = [];
 
-    for (let i = 0; i < n; i++) {
-      const pid = parents[i];
+    for (const pid of parents) {
+      const p = byId.get(String(pid));
+      if (!p) continue;
+      if (assignedPerson.has(String(pid)) && typeof p.x === "number") fixed.push(String(pid));
+      else free.push(String(pid));
+    }
+
+    // If nothing is fixed, do the normal symmetric placement
+    if (!fixed.length) {
+      const step = CARD_OUTER_W + SPOUSE_GAP;
+      const totalW = (n - 1) * step;
+      const startX = centerX - totalW / 2;
+
+      for (let i = 0; i < n; i++) {
+        const pid = String(parents[i]);
+        const p = byId.get(pid);
+        if (!p) continue;
+        p.x = startX + i * step;
+        assignedPerson.add(pid);
+      }
+      return;
+    }
+
+    // If at least one parent is fixed, anchor around the fixed parent(s)
+    // Use the average fixed X as the couple center.
+    const fixedXs = fixed
+      .map((pid) => byId.get(pid)?.x)
+      .filter((x) => typeof x === "number");
+
+    const anchorX =
+      fixedXs.length ? (fixedXs.reduce((a, b) => a + b, 0) / fixedXs.length) : centerX;
+
+    // Build target slots around anchor
+    const step = CARD_OUTER_W + SPOUSE_GAP;
+    const totalW = (n - 1) * step;
+    const startX = anchorX - totalW / 2;
+
+    // First assign fixed parents to the nearest available slots (without moving them)
+    const slots = [];
+    for (let i = 0; i < n; i++) slots.push(startX + i * step);
+
+    const usedSlot = new Array(n).fill(false);
+
+    const takeNearestSlot = (x) => {
+      let bestI = -1;
+      let bestD = Infinity;
+      for (let i = 0; i < n; i++) {
+        if (usedSlot[i]) continue;
+        const d = Math.abs(slots[i] - x);
+        if (d < bestD) { bestD = d; bestI = i; }
+      }
+      if (bestI >= 0) usedSlot[bestI] = true;
+      return bestI;
+    };
+
+    for (const pid of fixed) {
       const p = byId.get(pid);
       if (!p) continue;
-      p.x = startX + i * step; // CENTER X
+      takeNearestSlot(p.x);
+      assignedPerson.add(pid);
+    }
+
+    // Then place the remaining (free) parents into unused slots
+    for (const pid of free) {
+      const p = byId.get(pid);
+      if (!p) continue;
+
+      let i = usedSlot.findIndex((v) => !v);
+      if (i < 0) i = 0;
+
+      usedSlot[i] = true;
+      p.x = slots[i];
       assignedPerson.add(pid);
     }
   }
@@ -330,14 +413,24 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
 
   function layoutUnion(unionId, centerX) {
     unionId = String(unionId);
-    const u = byId.get(unionId);
-    if (u) u.x = centerX;
 
     const pc = unions.get(unionId);
     if (!pc) return;
 
     const parents = [...pc.parents].map(String);
     const kids = [...pc.children].map(String);
+
+    // If any parent is already assigned, anchor union center to that parent(s)
+    const fixedParents = parents
+      .map((pid) => byId.get(pid))
+      .filter((p) => p && assignedPerson.has(String(p.id)) && typeof p.x === "number");
+
+    if (fixedParents.length) {
+      centerX = fixedParents.reduce((a, p) => a + p.x, 0) / fixedParents.length;
+    }
+
+    const u = byId.get(unionId);
+    if (u) u.x = centerX;
 
     setSpousesAroundCenter(parents, centerX);
     setChildrenEven(kids, centerX);
@@ -351,7 +444,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     }
   }
 
-  // Place root unions across the page, anchored to center
   const rootWs = rootUnions.map((uId) => unionSubtreeWidth(uId));
   const rootTotalW =
     rootWs.reduce((a, b) => a + b, 0) + Math.max(0, rootWs.length - 1) * CLUSTER_GAP;
@@ -365,9 +457,83 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     layoutUnion(uId, mid);
 
     cursor += w + CLUSTER_GAP;
+
+
+  function recenterUnionsToParents() {
+    for (const [uId, pc] of unions.entries()) {
+      const u = byId.get(String(uId));
+      if (!u) continue;
+      const px = [...pc.parents]
+        .map((pid) => byId.get(String(pid))?.x)
+        .filter((x) => typeof x === "number");
+      if (!px.length) continue;
+      u.x = px.reduce((a, b) => a + b, 0) / px.length;
+    }
   }
 
-  // Any person not assigned (isolated) keep at baseX
+  function enforceCoupleAdjacency() {
+    const step = CARD_OUTER_W + SPOUSE_GAP;
+    for (const [uId, pc] of unions.entries()) {
+      const parents = [...pc.parents].map(String).filter((pid) => byId.get(pid)?.kind !== "union");
+      if (parents.length !== 2) continue;
+
+      const p1 = byId.get(parents[0]);
+      const p2 = byId.get(parents[1]);
+      const u = byId.get(String(uId));
+      if (!p1 || !p2 || !u) continue;
+
+      const cx = typeof u.x === "number" ? u.x : (p1.x + p2.x) / 2;
+      const leftX = cx - step / 2;
+      const rightX = cx + step / 2;
+
+      // Keep original left/right ordering stable by baseX
+      const p1Base = (p1._baseX ?? p1.x);
+      const p2Base = (p2._baseX ?? p2.x);
+      const leftIsP1 = p1Base <= p2Base;
+
+      if (leftIsP1) {
+        p1.x = leftX;
+        p2.x = rightX;
+      } else {
+        p2.x = leftX;
+        p1.x = rightX;
+      }
+      assignedPerson.add(String(p1.id));
+      assignedPerson.add(String(p2.id));
+      u.x = (p1.x + p2.x) / 2;
+    }
+  }
+
+  function enforceNoOverlapByRow() {
+    const rowBuckets = new Map();
+    for (const n of laidNodes) {
+      if (n.kind === "union") continue;
+      const y = typeof n.y === "number" ? n.y : 0;
+      const key = Math.round(y / ROW_EPS);
+      if (!rowBuckets.has(key)) rowBuckets.set(key, []);
+      rowBuckets.get(key).push(n);
+    }
+
+    for (const nodes of rowBuckets.values()) {
+      nodes.sort((a, b) => a.x - b.x);
+      let cursor = -Infinity;
+      for (const n of nodes) {
+        const half = CARD_OUTER_W / 2;
+        const minX = cursor + half + MIN_GAP;
+        if (n.x - half < minX) n.x = minX + half;
+        cursor = n.x + half;
+      }
+    }
+  }
+
+  // Post-pass: keep couples adjacent and prevent horizontal overlaps.
+  recenterUnionsToParents();
+  enforceCoupleAdjacency();
+  enforceNoOverlapByRow();
+  recenterUnionsToParents();
+
+  }
+
   for (const n of laidNodes) {
     if (n.kind === "union") continue;
     const id = String(n.id);
@@ -376,7 +542,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
     }
   }
 
-  // Re-normalize X after layout so the whole thing is tight in viewBox
   let minX = Infinity, maxX = -Infinity;
   for (const n of laidNodes) {
     if (typeof n.x !== "number") continue;
@@ -392,10 +557,6 @@ function recursiveWidthLayout(laidNodes, laidLinks, bounds) {
   return { nodes: laidNodes, width: newWidth };
 }
 
-/**
- * Pan/zoom modifies the <g> viewport transform.
- * Fit-to-screen must reset this transform, otherwise viewBox changes won't appear to "recenter".
- */
 function enablePanZoom(svg, viewport) {
   let scale = 1, tx = 0, ty = 0;
   const apply = () => viewport.setAttribute("transform", `translate(${tx}, ${ty}) scale(${scale})`);
@@ -407,7 +568,6 @@ function enablePanZoom(svg, viewport) {
     apply();
   };
 
-  // Zoom under mouse
   svg.addEventListener(
     "wheel",
     (e) => {
@@ -431,7 +591,6 @@ function enablePanZoom(svg, viewport) {
     { passive: false }
   );
 
-  // Pan (drag)
   let dragging = false, lastX = 0, lastY = 0;
 
   svg.addEventListener("pointerdown", (e) => {
@@ -467,12 +626,7 @@ async function loadTreeData(treeName = "gupta") {
   return await res.json();
 }
 
-function subsetFamilyData(data, opts = {}) {
-  const strategy = String(opts.strategy ?? window.TREE_PREVIEW_STRATEGY ?? "roots").toLowerCase();
-  const depth = Number(opts.depth ?? 2);
-  const maxPeople = Number(opts.maxPeople ?? 18);
-  const maxGen1 = Number(opts.maxGen1 ?? window.TREE_PREVIEW_MAX_GEN1 ?? 0);
-
+function descendantsOnlyData(data, opts = {}) {
   const people = Array.isArray(data.people) ? data.people : [];
   const rels = Array.isArray(data.relationships) ? data.relationships : [];
 
@@ -486,78 +640,83 @@ function subsetFamilyData(data, opts = {}) {
     if (!pair) continue;
     const parent = String(pair.parent);
     const child = String(pair.child);
+    if (!peopleById.has(parent) || !peopleById.has(child)) continue;
 
     if (!childrenByParent.has(parent)) childrenByParent.set(parent, []);
     childrenByParent.get(parent).push(child);
 
-    if (!parentsByChild.has(child)) parentsByChild.set(child, []);
-    parentsByChild.get(child).push(parent);
+    if (!parentsByChild.has(child)) parentsByChild.set(child, new Set());
+    parentsByChild.get(child).add(parent);
 
     isChild.add(child);
   }
 
-  // Strategy: focus on a single "bottom" child + their parents + one grandparent level
-  if (strategy === "focus_bottom") {
-    const leafIds = people
-      .map((p) => String(p.id))
-      .filter((id) => !childrenByParent.has(id) || (childrenByParent.get(id) || []).length === 0);
-
-    const candidates = leafIds.filter((id) => (parentsByChild.get(id) || []).length > 0);
-    const childId = (candidates[0] ?? leafIds[0] ?? (people[0] ? String(people[0].id) : null));
-    const keep = new Set();
-
-    if (childId) keep.add(childId);
-
-    const parents = childId ? (parentsByChild.get(childId) || []) : [];
-    for (const p of parents.slice(0, 2)) keep.add(String(p));
-
-    // Grandparents: pick the first parent that actually has parents
-    let gpFrom = null;
-    for (const p of parents) {
-      const pp = parentsByChild.get(String(p)) || [];
-      if (pp.length) { gpFrom = String(p); break; }
-    }
-    if (gpFrom) {
-      const gps = parentsByChild.get(gpFrom) || [];
-      for (const gp of gps.slice(0, 2)) keep.add(String(gp));
-    }
-
-    // Hard cap
-    const keepArr = Array.from(keep).slice(0, Math.max(1, maxPeople));
-    const keepSet = new Set(keepArr);
-
-    return {
-      ...data,
-      people: people.filter((p) => keepSet.has(String(p.id))),
-      relationships: rels.filter((r) => {
-        const pair = getRelPair(r);
-        if (!pair) return false;
-        return keepSet.has(String(pair.parent)) && keepSet.has(String(pair.child));
-      }),
-    };
+  const candidates = [];
+  for (const [childId, parentSet] of parentsByChild.entries()) {
+    const parents = [...parentSet];
+    if (!parents.length) continue;
+    const allTop = parents.every((pid) => !isChild.has(String(pid)));
+    if (!allTop) continue;
+    candidates.push({ parents });
   }
 
-  // Default strategy: roots -> depth N (BFS)
-  const roots = people
-    .map((p) => String(p.id))
-    .filter((id) => !isChild.has(id));
-
-  const start = roots.length ? roots : people.slice(0, 2).map((p) => String(p.id));
-  const keep = new Set();
-  const q = start.map((id) => ({ id, d: 0 }));
-
-  while (q.length && keep.size < maxPeople) {
-    const cur = q.shift();
-    if (!cur) break;
-    if (keep.has(cur.id)) continue;
-    if (!peopleById.has(cur.id)) continue;
-    keep.add(cur.id);
-
-    if (cur.d >= depth) continue;
-    let kids = childrenByParent.get(cur.id) || [];
-    if (maxGen1 > 0 && cur.d === 0) kids = kids.slice(0, maxGen1);
-    for (const k of kids) q.push({ id: String(k), d: cur.d + 1 });
+  const uniqKey = (parents) => parents.slice().sort().join("|");
+  const uniq = new Map();
+  for (const c of candidates) {
+    const key = uniqKey(c.parents);
+    if (!uniq.has(key)) uniq.set(key, c.parents);
   }
+
+  const maxKidsPerParent = (() => {
+    const v = opts.maxKidsPerParent;
+    if (typeof v === "number" && isFinite(v) && v > 0) return Math.floor(v);
+    return null;
+  })();
+
+  function collectDescendants(rootParents) {
+    const keep = new Set(rootParents.map(String));
+    const q = rootParents.map(String);
+
+    while (q.length) {
+      const cur = q.shift();
+      let kids = childrenByParent.get(String(cur)) || [];
+
+      if (maxKidsPerParent != null) kids = kids.slice(0, maxKidsPerParent);
+
+      for (const kid of kids) {
+        const k = String(kid);
+        if (keep.has(k)) continue;
+        keep.add(k);
+        q.push(k);
+      }
+    }
+    return keep;
+  }
+
+  let bestParents = null;
+  let bestSize = -1;
+  for (const parents of uniq.values()) {
+    const keep = collectDescendants(parents);
+    if (keep.size > bestSize) {
+      bestSize = keep.size;
+      bestParents = parents;
+    }
+  }
+
+  if (!bestParents) {
+    const roots = people.map((p) => String(p.id)).filter((id) => !isChild.has(id));
+    let bestRoot = null;
+    for (const r of roots) {
+      const keep = collectDescendants([r]);
+      if (keep.size > bestSize) {
+        bestSize = keep.size;
+        bestRoot = r;
+      }
+    }
+    bestParents = bestRoot ? [bestRoot] : roots.slice(0, 1);
+  }
+
+  const keep = collectDescendants(bestParents || []);
 
   return {
     ...data,
@@ -581,7 +740,6 @@ function wireFitUI(svg, panZoomApi) {
 
   btn.addEventListener("click", doFit);
 
-  // Keep it viewable on resize/orientation changes
   let t = null;
   window.addEventListener("resize", () => {
     clearTimeout(t);
@@ -593,30 +751,21 @@ export async function initTree(treeName = "stark") {
   const svg = document.querySelector("#treeSvg");
   if (!svg) throw new Error("Missing #treeSvg element");
 
-  // Clear any previous render
   svg.innerHTML = "";
 
   let data = await loadTreeData(treeName);
 
-  // Optional: condensed view for a bigger, easier-to-read first render.
-  const isMobile = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
-  const mobileOnly = window.TREE_PREVIEW_MOBILE_ONLY !== false;
-  const previewMode = (!!window.TREE_PREVIEW_MODE) && (!mobileOnly || isMobile);
+  const fullTree = window.TREE_FULL_TREE === true;
   const moreBtn = document.getElementById("treeMoreBtn");
-  const allowToggle = !!window.TREE_PREVIEW_DEPTH;
+  if (moreBtn) moreBtn.textContent = fullTree ? "Show Simple Tree" : "Show Full Tree";
 
-  if (previewMode) {
-    data = subsetFamilyData(data, {
-      depth: window.TREE_PREVIEW_DEPTH ?? 2,
-      maxPeople: window.TREE_PREVIEW_MAX ?? 18,
-      maxGen1: window.TREE_PREVIEW_MAX_GEN1 ?? 0,
-    });
+  const descendantsOnly = (window.TREE_DESCENDANTS_ONLY !== false) && !fullTree;
+  if (descendantsOnly) {
+    const cfgMax = TREE_CFG.preview?.SIMPLE_MAX_KIDS_PER_PARENT ?? 2;
+    const maxKids = Number(window.TREE_SIMPLE_MAX_KIDS ?? cfgMax);
+    data = descendantsOnlyData(data, { maxKidsPerParent: maxKids });
   }
 
-  if (moreBtn) {
-    moreBtn.hidden = !allowToggle;
-    moreBtn.textContent = previewMode ? "See Full Tree" : "See Simple Tree";
-  }
   const { nodes: graphNodes, links: graphLinks } = buildGeneDAG(data);
 
   const laid = dagreLayout(graphNodes, graphLinks, TREE_CFG.dagre);
@@ -635,29 +784,28 @@ export async function initTree(treeName = "stark") {
   const panZoomApi = enablePanZoom(svg, result.viewport);
   wireFitUI(svg, panZoomApi);
 
-  // Start centered/tight
   panZoomApi.reset();
   fitTreeToScreen(svg);
 
-  // Toggle preview/full tree
-  if (moreBtn && !moreBtn._wired) {
-    moreBtn._wired = true;
-    moreBtn.addEventListener("click", () => {
-      window.TREE_PREVIEW_MODE = !window.TREE_PREVIEW_MODE;
+  const moreBtn2 = document.getElementById("treeMoreBtn");
+  if (moreBtn2 && !moreBtn2._wired) {
+    moreBtn2._wired = true;
+    moreBtn2.addEventListener("click", () => {
+      window.TREE_FULL_TREE = !(window.TREE_FULL_TREE === true);
       initTree(String(treeName).toLowerCase()).catch((e) => console.error(e));
     });
   }
 }
 
 function __lmBoot() {
-    const svg = document.querySelector("#treeSvg");
-if (!svg) return;
-    const fam = (window.TREE_FAMILY_ID || "stark");
-initTree(String(fam).toLowerCase()).catch((e) => console.error(e));
-  }
+  const svg = document.querySelector("#treeSvg");
+  if (!svg) return;
+  const fam = (window.TREE_FAMILY_ID || "stark");
+  initTree(String(fam).toLowerCase()).catch((e) => console.error(e));
+}
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", __lmBoot);
-  } else {
-    __lmBoot();
-  }
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", __lmBoot);
+} else {
+  __lmBoot();
+}

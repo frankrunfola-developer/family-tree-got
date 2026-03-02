@@ -1,69 +1,62 @@
 // static/js/treeConfig.js
-// ----------------------------------------------------------------------------
-// Tree rendering + layout knobs (single source of truth).
-// Imported by both `tree.js` and `familyTree.js`.
-//
-// If you want to change how the tree *looks* without touching layout/render code,
-// change values in this file first.
-// ----------------------------------------------------------------------------
+// Central config for tree layout + rendering.
 
 export const TREE_CFG = {
   // Dagre layout (graph -> x/y positions)
   dagre: {
-    rankdir: "TB",  // Extra padding around the dagre graph
-    ranksep: 45, // Vertical distance between generations (rows)
-    nodesep: 100,// Horizontal distance between nodes (columns)
-    marginx: 10,   // Extra padding around the dagre graph
+    rankdir: "TB",
+    ranksep: 18,
+    nodesep: 60,
+    marginx: 10,
     marginy: 10,
   },
 
-  // Node/card sizing (all dimensions in SVG px)
-  sizing: {
-    CARD_W: 160,     // person card width
-    CARD_H: 250,     // person card height
-    CARD_R: 10,      // card corner radius
-    PHOTO_R: 20,   // single source of truth for circle size
-    PHOTO_Y: 14,   // top offset of the circle’s bounding box
+  // Node/card sizing (SVG px)
+sizing: {
+  CARD_W: 170,
+  CARD_H: 200,
+  CARD_R: 7,
+  PHOTO_H: 135,         // or omit and compute it
+  BOTTOM_PANEL_H: 65,   // MUST exist if you reference it
 },
-
-  // Card text baseline positions (relative to card top-left)
+  // Card text positions (relative to card top-left)
   text: {
-    NAME_Y: 202,
-    META_Y: 235
+    NAME_Y: 230,
+    META_Y: 190,
   },
 
-  // Text styling (SVG text)
+  // Text styling
   fonts: {
-    NAME_PX: 22,   // name font size
-    META_PX: 18,   // date/meta font size
-    WEIGHT_NAME: 600,
+    NAME_PX: 22,
+    META_PX: 18,
+    WEIGHT_NAME: 700,
     WEIGHT_META: 500,
   },
 
-
-  // Link routing knobs (elbows + stems)
+  // Link routing knobs
   links: {
-    // ONE knob for ALL vertical stems (the "drop" length used to build elbows):
-    // - parent drops down to the couple join line
-    // - trunk from the couple join line down to the union point
-    // - union-to-child elbow vertical stem (from union point to the elbow)
-    STEM: 80,   // If your connectors look too "tall" or too "flat", change *only* this value.
+    STEM: 34,
   },
 
-  // Spacing policy (mostly used when building the graph)
+    // Spacing policy
   spacing: {
-    SPOUSE_GAP: 10,
-    SIBLING_GAP: 35,
-    CLUSTER_GAP: 20,
+    SPOUSE_GAP: 1,     // was 30
+    SIBLING_GAP: 30,    // was 10
+    CLUSTER_GAP: 20,    // was 80
     COUPLE_KEEP_OUT_PAD: 12,
     ROW_EPS: 10,
   },
+  // Default/simple-mode pruning rules
+  preview: {
+    // Default tree render (simple mode): limit how many children we keep per parent.
+    SIMPLE_MAX_KIDS_PER_PARENT: 1,
+  },
 
-  // ViewBox framing / padding for the SVG viewport
-  view: {
-    minWidth: 1050,
+  // ViewBox framing / padding
+ view: {
+    minWidth: 550,
     minHeight: 620,
-    pad: 18,
+    pad: 10,
     extra: 54,
   },
 };

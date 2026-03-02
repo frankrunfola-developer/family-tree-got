@@ -33,7 +33,7 @@
     <section class="treeShell" aria-label="Family Tree">
       {% if request.args.get('embed') != '1' %}
       <div class="treeToolbar" role="group" aria-label="Tree controls">
-        <button id="treeMoreBtn" class="cta-btn treeToolbarBtn" type="button" hidden>See full tree</button>
+        <button id="treeMoreBtn" class="cta-btn treeToolbarBtn" type="button">Show Full Tree</button>
         <button id="fitTreeBtn" class="fit-btn treeToolbarBtn" type="button">Fit to screen</button>
       </div>
       {% endif %}
@@ -42,7 +42,7 @@
         id="canvas"
         class="treeCanvas"
         data-tree-api-url="{{ TREE_API_URL }}">
-<svg
+        <svg
           id="treeSvg"
           role="img"
           aria-label="Family tree diagram"></svg>
@@ -50,7 +50,7 @@
     </section>
 
     <!-- “Above the fold” preview: first 2 layers. Button expands to full tree. -->
-</div>
+  </div>
 </div>
 {% endblock %}
 
@@ -62,6 +62,8 @@
     window.TREE_API_URL = "{{ TREE_API_URL }}";
 
     // Default: render a readable preview (first 2 layers). The “See full tree” button expands it.
+    window.TREE_DESCENDANTS_ONLY = true;
+    window.TREE_FULL_TREE = false;
     window.TREE_PREVIEW_MODE = true;
     window.TREE_PREVIEW_MOBILE_ONLY = false;
     window.TREE_PREVIEW_DEPTH = 2;

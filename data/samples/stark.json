@@ -7,13 +7,13 @@
       "died": "",
       "photo": "/static/uploads/stark/sansa.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Newcastle upon Tyne",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 69.0,
+        "yPct": 55.0,
+        "lat": 54.9783,
+        "lng": -1.6178
       }
     },
     {
@@ -23,13 +23,13 @@
       "died": "298 AC",
       "photo": "/static/uploads/stark/eddard.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "York",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 68.0,
+        "yPct": 60.0,
+        "lat": 53.959,
+        "lng": -1.0815
       }
     },
     {
@@ -39,13 +39,13 @@
       "died": "300 AC",
       "photo": "/static/uploads/stark/catelyn.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Dublin",
+        "region": "Leinster",
+        "country": "Ireland",
+        "xPct": 30.0,
+        "yPct": 65.0,
+        "lat": 53.3498,
+        "lng": -6.2603
       }
     },
     {
@@ -55,13 +55,13 @@
       "died": "300 AC",
       "photo": "/static/uploads/stark/robb.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Manchester",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 62.0,
+        "yPct": 62.0,
+        "lat": 53.4808,
+        "lng": -2.2426
       }
     },
     {
@@ -71,13 +71,13 @@
       "died": "300 AC",
       "photo": "/static/uploads/stark/arya.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Galway",
+        "region": "Connacht",
+        "country": "Ireland",
+        "xPct": 22.0,
+        "yPct": 70.0,
+        "lat": 53.2707,
+        "lng": -9.0568
       }
     },
     {
@@ -87,13 +87,13 @@
       "died": "",
       "photo": "/static/uploads/stark/bran.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Aberdeen",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 67.0,
+        "yPct": 28.0,
+        "lat": 57.1497,
+        "lng": -2.0943
       }
     },
     {
@@ -103,19 +103,149 @@
       "died": "",
       "photo": "/static/uploads/stark/rickon.png",
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "Cork",
+        "region": "Munster",
+        "country": "Ireland",
+        "xPct": 25.0,
+        "yPct": 80.0,
+        "lat": 51.8985,
+        "lng": -8.4756
+      }
+    },
+
+    {
+      "id": "rickard",
+      "name": "Rickard Stark",
+      "born": "220 AC",
+      "died": "282 AC",
+      "photo": "/static/uploads/stark/rickard.png",
+      "location": {
+        "city": "Edinburgh",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 62.0,
+        "yPct": 40.0,
+        "lat": 55.9533,
+        "lng": -3.1883
+      }
+    },
+    {
+      "id": "lyarra",
+      "name": "Lyarra Stark",
+      "born": "225 AC",
+      "died": "282 AC",
+      "photo": "/static/uploads/stark/lyarra.png",
+      "location": {
+        "city": "Inverness",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 58.0,
+        "yPct": 25.0,
+        "lat": 57.4778,
+        "lng": -4.2247
+      }
+    },
+    {
+      "id": "benjen",
+      "name": "Benjen Stark",
+      "born": "267 AC",
+      "died": "",
+      "photo": "/static/uploads/stark/benjen.png",
+      "location": {
+        "city": "Glasgow",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 58.0,
+        "yPct": 45.0,
+        "lat": 55.8642,
+        "lng": -4.2518
+      }
+    },
+    {
+      "id": "brandon",
+      "name": "Brandon Stark",
+      "born": "262 AC",
+      "died": "282 AC",
+      "photo": "/static/uploads/stark/brandon.png",
+      "location": {
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 70.0,
+        "yPct": 75.0,
+        "lat": 51.5074,
+        "lng": -0.1278
+      }
+    },
+    {
+      "id": "lyanna",
+      "name": "Lyanna Stark",
+      "born": "266 AC",
+      "died": "283 AC",
+      "photo": "/static/uploads/stark/lyanna.png",
+      "location": {
+        "city": "Belfast",
+        "region": "Northern Ireland",
+        "country": "United Kingdom",
+        "xPct": 35.0,
+        "yPct": 55.0,
+        "lat": 54.5973,
+        "lng": -5.9301
+      }
+    },
+    {
+      "id": "jon",
+      "name": "Jon Snow",
+      "born": "283 AC",
+      "died": "",
+      "photo": "/static/uploads/stark/jon.png",
+      "location": {
+        "city": "Liverpool",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 58.0,
+        "yPct": 64.0,
+        "lat": 53.4084,
+        "lng": -2.9916
+      }
+    },
+    {
+      "id": "rhaegar",
+      "name": "Rhaegar Targaryen",
+      "born": "259 AC",
+      "died": "283 AC",
+      "photo": "/static/uploads/targaryen/rhaegar.png",
+      "location": {
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 70.0,
+        "yPct": 75.0,
+        "lat": 51.5074,
+        "lng": -0.1278
       }
     }
+
   ],
   "relationships": [
     { "type": "spouse", "a": "tyrion", "b": "sansa" },
     { "type": "spouse", "a": "catelyn", "b": "eddard" },
+    { "type": "spouse", "a": "lyarra", "b": "rickard" },
+
+    { "child": "eddard", "parent": "rickard" },
+    { "child": "eddard", "parent": "lyarra" },
+
+    { "child": "brandon", "parent": "rickard" },
+    { "child": "brandon", "parent": "lyarra" },
+
+    { "child": "lyanna", "parent": "rickard" },
+    { "child": "lyanna", "parent": "lyarra" },
+
+    { "child": "benjen", "parent": "rickard" },
+    { "child": "benjen", "parent": "lyarra" },
+
+    { "child": "jon", "parent": "lyanna" },
+    { "child": "jon", "parent": "rhaegar" },
 
     { "child": "sansa", "parent": "catelyn" },
     { "child": "sansa", "parent": "eddard" },
@@ -134,20 +264,116 @@
   ],
   "events": [
     {
+      "id": "evt_0245_rickard_lyarra_marriage",
+      "type": "marriage",
+      "date": "0245-01-01",
+      "people": ["rickard", "lyarra"],
+      "location": {
+        "city": "Edinburgh",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 62.0,
+        "yPct": 40.0,
+        "lat": 55.9533,
+        "lng": -3.1883
+      },
+      "description": "Married and became Lord and Lady of Winterfell."
+    },
+    {
       "id": "evt_0270_catelyn_eddard_marriage",
       "type": "marriage",
       "date": "0270-01-01",
       "people": ["catelyn", "eddard"],
       "location": {
-        "city": "Winterfell",
-        "region": "The North",
-        "country": "Westeros",
-        "xPct": 48.5,
-        "yPct": 33.5,
-        "lat": 56.1,
-        "lng": -3.2
+        "city": "York",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 68.0,
+        "yPct": 60.0,
+        "lat": 53.959,
+        "lng": -1.0815
       },
       "description": "Married and became Lord and Lady of Winterfell."
+    },
+    {
+      "id": "evt_0282_lyanna_rhaegar_union",
+      "type": "marriage",
+      "date": "0282-01-01",
+      "people": ["lyanna", "rhaegar"],
+      "location": {
+        "city": "Belfast",
+        "region": "Northern Ireland",
+        "country": "United Kingdom",
+        "xPct": 35.0,
+        "yPct": 55.0,
+        "lat": 54.5973,
+        "lng": -5.9301
+      },
+      "description": "Secret marriage between Lyanna Stark and Rhaegar Targaryen."
+    },
+    {
+      "id": "evt_0282_rickard_death",
+      "type": "death",
+      "date": "0282-01-01",
+      "people": ["rickard"],
+      "location": {
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 70.0,
+        "yPct": 75.0,
+        "lat": 51.5074,
+        "lng": -0.1278
+      },
+      "description": "Died."
+    },
+    {
+      "id": "evt_0282_brandon_death",
+      "type": "death",
+      "date": "0282-01-01",
+      "people": ["brandon"],
+      "location": {
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 70.0,
+        "yPct": 75.0,
+        "lat": 51.5074,
+        "lng": -0.1278
+      },
+      "description": "Died."
+    },
+    {
+      "id": "evt_0282_lyarra_death",
+      "type": "death",
+      "date": "0282-01-01",
+      "people": ["lyarra"],
+      "location": {
+        "city": "Inverness",
+        "region": "Scotland",
+        "country": "United Kingdom",
+        "xPct": 58.0,
+        "yPct": 25.0,
+        "lat": 57.4778,
+        "lng": -4.2247
+      },
+      "description": "Died."
+    },
+    {
+      "id": "evt_0283_lyanna_death",
+      "type": "death",
+      "date": "0283-01-01",
+      "people": ["lyanna"],
+      "location": {
+        "city": "Belfast",
+        "region": "Northern Ireland",
+        "country": "United Kingdom",
+        "xPct": 35.0,
+        "yPct": 55.0,
+        "lat": 54.5973,
+        "lng": -5.9301
+      },
+      "description": "Died."
     },
     {
       "id": "evt_0298_eddard_death",
@@ -155,15 +381,15 @@
       "date": "0298-01-01",
       "people": ["eddard"],
       "location": {
-        "city": "King's Landing",
-        "region": "Crownlands",
-        "country": "Westeros",
-        "xPct": 63.0,
-        "yPct": 63.5,
-        "lat": 47.3,
-        "lng": 2.1
+        "city": "London",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 70.0,
+        "yPct": 75.0,
+        "lat": 51.5074,
+        "lng": -0.1278
       },
-      "description": "Died in King's Landing."
+      "description": "Died."
     },
     {
       "id": "evt_0300_catelyn_death",
@@ -171,15 +397,15 @@
       "date": "0300-01-01",
       "people": ["catelyn"],
       "location": {
-        "city": "The Riverlands",
-        "region": "Riverlands",
-        "country": "Westeros",
-        "xPct": 44.5,
-        "yPct": 45.0,
-        "lat": 53.2,
-        "lng": -1.0
+        "city": "Dublin",
+        "region": "Leinster",
+        "country": "Ireland",
+        "xPct": 30.0,
+        "yPct": 65.0,
+        "lat": 53.3498,
+        "lng": -6.2603
       },
-      "description": "Died in the Riverlands."
+      "description": "Died."
     },
     {
       "id": "evt_0300_rob_death",
@@ -187,15 +413,15 @@
       "date": "0300-01-01",
       "people": ["rob"],
       "location": {
-        "city": "The Riverlands",
-        "region": "Riverlands",
-        "country": "Westeros",
-        "xPct": 44.5,
-        "yPct": 45.0,
-        "lat": 53.2,
-        "lng": -1.0
+        "city": "Manchester",
+        "region": "England",
+        "country": "United Kingdom",
+        "xPct": 62.0,
+        "yPct": 62.0,
+        "lat": 53.4808,
+        "lng": -2.2426
       },
-      "description": "Died in the Riverlands."
+      "description": "Died."
     },
     {
       "id": "evt_0300_arya_death",
@@ -203,15 +429,15 @@
       "date": "0300-01-01",
       "people": ["arya"],
       "location": {
-        "city": "The Riverlands",
-        "region": "Riverlands",
-        "country": "Westeros",
-        "xPct": 44.5,
-        "yPct": 45.0,
-        "lat": 53.2,
-        "lng": -1.0
+        "city": "Galway",
+        "region": "Connacht",
+        "country": "Ireland",
+        "xPct": 22.0,
+        "yPct": 70.0,
+        "lat": 53.2707,
+        "lng": -9.0568
       },
-      "description": "Died in the Riverlands."
+      "description": "Died."
     }
   ]
 }

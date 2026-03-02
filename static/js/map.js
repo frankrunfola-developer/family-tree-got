@@ -17,13 +17,21 @@ const MapLib = (() => {
 const elMap = document.getElementById("lmMap");
 const elStage = elMap?.closest(".mapStage");
 
+if (elStage && window.ResizeObserver) {
+  const ro = new ResizeObserver(() => {
+    try { window.__lmMapInstance?.resize?.(); } catch {}
+  });
+  ro.observe(elStage);
+}
+
+
 if (!MapLib || !elMap) {
   console.warn("Map engine not available.");
 } else {
   boot().catch(err => console.error(err));
 }
 
-async function boot(){
+async function boot() {
   const data = await fetchPeople();
   const features = toFeatures(data.people || []);
   const gl = MapLib.gl;
@@ -54,34 +62,19 @@ async function boot(){
       clusterMaxZoom: 10
     });
 
+    // Invisible hit layer for clustered features (Option B: HTML cluster pins)
     map.addLayer({
-      id: "clusters",
+      id: "cluster-hit",
       type: "circle",
       source: "people",
       filter: ["has", "point_count"],
       paint: {
-        "circle-radius": ["step", ["get", "point_count"], 18, 10, 22, 30, 28, 60, 34],
-        "circle-color": "rgba(185, 150, 95, 0.62)",
-        "circle-stroke-color": "rgba(255,255,255,0.85)",
-        "circle-stroke-width": 2
+        "circle-radius": 18,
+        "circle-opacity": 0
       }
     });
 
-    map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "people",
-      filter: ["has", "point_count"],
-      layout: {
-        "text-field": ["get", "point_count_abbreviated"],
-        "text-size": 13,
-        "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"]
-      },
-      paint: {
-        "text-color": "rgba(40,32,24,0.92)"
-      }
-    });
-
+    // Invisible hit layer for individual people
     map.addLayer({
       id: "unclustered-hit",
       type: "circle",
@@ -97,31 +90,126 @@ async function boot(){
       fitToPeople(map, features);
     }
 
-    const markers = new Map();
+    const markers = new Map(); // key -> gl.Marker
     const pop = new gl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "320px" });
 
-    function syncMarkers(){
+    function buildClusterMarker(gl, feature, popup, map) {
+      const props = feature.properties || {};
+      const count = Number(props.point_count || 0);
+
+      const el = document.createElement("button");
+      el.className = "lmClusterPin";
+      el.type = "button";
+      el.setAttribute("aria-label", `Cluster of ${count} people`);
+
+      const img = document.createElement("img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.src = props.photo || "";
+      el.appendChild(img);
+
+      const badge = document.createElement("span");
+      badge.className = "lmClusterBadge";
+      badge.textContent = `+${Math.max(0, count - 1)}`;
+      el.appendChild(badge);
+
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+
+        const clusterId = props.cluster_id;
+        const center = feature.geometry.coordinates;
+
+        const src = map.getSource("people");
+        if (!src || !src.getClusterLeaves) return;
+
+        src.getClusterLeaves(clusterId, 32, 0, (err, leaves) => {
+          if (err) return;
+
+          const z = map.getZoom();
+          if (z < 5) {
+            src.getClusterExpansionZoom(clusterId, (err2, zoom) => {
+              if (err2) return;
+              map.easeTo({ center, zoom: Math.min(zoom + 0.6, 9.5), duration: 520 });
+            });
+            return;
+          }
+
+          spider.show(center, leaves || [], popup);
+        });
+      });
+
+      return new gl.Marker({ element: el, anchor: "center" }).setLngLat(feature.geometry.coordinates);
+    }
+
+    function syncMarkers() {
       spider.clear();
 
-      const rendered = map.queryRenderedFeatures({ layers: ["unclustered-hit"] }) || [];
-      const seen = new Set();
+      const seenPeople = new Set();
+      const seenClusters = new Set();
 
-      for (const f of rendered){
+      // People currently visible (unclustered)
+      const renderedPeople = map.queryRenderedFeatures({ layers: ["unclustered-hit"] }) || [];
+      for (const f of renderedPeople) {
         const id = f.properties?.pid;
         if (!id) continue;
-        seen.add(id);
 
-        if (!markers.has(id)){
+        const key = `p:${id}`;
+        seenPeople.add(key);
+
+        if (!markers.has(key)) {
           const m = buildFaceMarker(gl, f, pop, map);
           m.addTo(map);
-          markers.set(id, m);
+          markers.set(key, m);
         }
       }
 
-      for (const [id, m] of markers.entries()){
-        if (!seen.has(id)){
-          m.remove();
-          markers.delete(id);
+      // Cluster features come from the source, not from rendered layers
+      const srcClusters = map.querySourceFeatures("people") || [];
+      for (const f of srcClusters) {
+        const props = f.properties || {};
+        if (!props.cluster) continue;
+
+        const clusterId = props.cluster_id;
+        if (clusterId == null) continue;
+
+        const key = `c:${clusterId}`;
+        seenClusters.add(key);
+
+        if (!markers.has(key)) {
+          const src = map.getSource("people");
+          if (!src || !src.getClusterLeaves) continue;
+
+          // Use one representative leaf photo for the cluster pin
+          src.getClusterLeaves(clusterId, 1, 0, (err, leaves) => {
+            if (err) return;
+            const leaf = (leaves && leaves[0]) ? leaves[0] : null;
+            const leafProps = leaf?.properties || {};
+            f.properties.photo =
+              leafProps.photo ||
+              leafProps.photoUrl ||
+              leafProps.photo_url ||
+              "";
+
+            const m = buildClusterMarker(gl, f, pop, map);
+            m.addTo(map);
+            markers.set(key, m);
+          });
+        }
+      }
+
+      // Remove stale markers
+      for (const [key, m] of markers.entries()) {
+        if (key.startsWith("p:")) {
+          if (!seenPeople.has(key)) {
+            m.remove();
+            markers.delete(key);
+          }
+        } else if (key.startsWith("c:")) {
+          if (!seenClusters.has(key)) {
+            m.remove();
+            markers.delete(key);
+          }
         }
       }
     }
@@ -130,7 +218,8 @@ async function boot(){
     map.on("zoomend", syncMarkers);
     map.on("idle", syncMarkers);
 
-    map.on("click", "clusters", (e) => {
+    // Clicking a cluster (via invisible hit layer) expands or spiderfies
+    map.on("click", "cluster-hit", (e) => {
       const f = e.features && e.features[0];
       if (!f) return;
 
@@ -156,8 +245,9 @@ async function boot(){
       });
     });
 
+    // Clicking elsewhere clears spiderfy (but ignore clicks on cluster/people hit layers)
     map.on("click", (e) => {
-      const hits = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
+      const hits = map.queryRenderedFeatures(e.point, { layers: ["cluster-hit", "unclustered-hit"] });
       if (hits && hits.length) return;
       spider.clear();
     });
@@ -166,16 +256,16 @@ async function boot(){
   });
 }
 
-async function fetchPeople(){
+async function fetchPeople() {
   const url = window.MAP_API_URL;
   const res = await fetch(url, { credentials: "same-origin" });
   if (!res.ok) throw new Error(`Map data fetch failed (${res.status})`);
   return await res.json();
 }
 
-function toFeatures(people){
+function toFeatures(people) {
   const out = [];
-  for (const p of people){
+  for (const p of people) {
     const loc = p.location || {};
     const lat = toNum(loc.lat);
     const lng = toNum(loc.lng);
@@ -199,13 +289,13 @@ function toFeatures(people){
   return out;
 }
 
-function toNum(v){
+function toNum(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : NaN;
 }
 
-function getStyle(lib){
-  if (lib.engine === "mapbox"){
+function getStyle(lib) {
+  if (lib.engine === "mapbox") {
     return "mapbox://styles/mapbox/standard";
   }
 
@@ -225,13 +315,13 @@ function getStyle(lib){
   };
 }
 
-function fitToPeople(map, features){
+function fitToPeople(map, features) {
   const b = new (MapLib.gl.LngLatBounds)(features[0].geometry.coordinates, features[0].geometry.coordinates);
   for (const f of features) b.extend(f.geometry.coordinates);
   map.fitBounds(b, { padding: 60, duration: 600, maxZoom: 6.8 });
 }
 
-function buildFaceMarker(gl, feature, popup, map){
+function buildFaceMarker(gl, feature, popup, map) {
   const props = feature.properties || {};
   const el = document.createElement("button");
   el.className = "lmFacePin";
@@ -255,8 +345,7 @@ function buildFaceMarker(gl, feature, popup, map){
   return new gl.Marker({ element: el, anchor: "center" }).setLngLat(coords);
 }
 
-
-function renderPopup(p){
+function renderPopup(p) {
   const name = esc(p.name || "");
   const born = esc(p.born || "");
   const died = esc(p.died || "");
@@ -276,7 +365,7 @@ function renderPopup(p){
   `;
 }
 
-function esc(s){
+function esc(s) {
   return String(s)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -285,15 +374,15 @@ function esc(s){
     .replaceAll("'", "&#39;");
 }
 
-function makeSpiderfy(map){
+function makeSpiderfy(map) {
   const container = map.getCanvasContainer();
   const nodes = [];
 
-  function clear(){
+  function clear() {
     while (nodes.length) nodes.pop().remove();
   }
 
-  function show(centerLngLat, leaves, popup){
+  function show(centerLngLat, leaves, popup) {
     clear();
 
     const center = map.project(centerLngLat);
@@ -309,7 +398,7 @@ function makeSpiderfy(map){
     container.appendChild(dot);
     nodes.push(dot);
 
-    for (let i=0; i<n; i++){
+    for (let i = 0; i < n; i++) {
       const leaf = leaves[i];
       const props = leaf.properties || {};
       const ang = (Math.PI * 2 * i) / n;
@@ -322,7 +411,7 @@ function makeSpiderfy(map){
 
       const dx = p.x - center.x;
       const dy = p.y - center.y;
-      const len = Math.sqrt(dx*dx + dy*dy);
+      const len = Math.sqrt(dx * dx + dy * dy);
       const rot = Math.atan2(dy, dx);
 
       line.style.left = `${center.x}px`;
@@ -360,3 +449,12 @@ function makeSpiderfy(map){
 
   return { clear, show };
 }
+
+// Auto-boot when map page loads
+window.addEventListener("DOMContentLoaded", () => {
+  try {
+    const isMapPage = document.getElementById("lmMap");
+    if (!isMapPage) return;
+    boot().catch((e) => console.error(e));
+  } catch (e) { console.error(e); }
+});

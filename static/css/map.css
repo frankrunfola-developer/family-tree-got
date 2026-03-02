@@ -1,103 +1,22 @@
-/* map.css
-   Interactive Family Map (Mapbox GL)
-   - Full vector zoom + portrait-friendly stage
-   - Face markers with clustering + clean popups
-*/
+/* static/css/map.css */
 
-:root{
-  --mapRadius: 22px;
-  --mapHudBg: rgba(255,255,255,.78);
-  --mapHudBorder: rgba(120,90,55,.22);
-  --mapInk: #2f2a24;
-}
+.mapShell{ width:100%; }
+.mapStage{ position:relative; width:100%; height: min(72vh, 720px); min-height: 420px; border-radius: 18px; overflow:hidden; }
+#lmMap.lmMapCanvas{ position:absolute; inset:0; width:100%; height:100%; }
 
-.mapShell{
-  padding: clamp(10px, 2vw, 18px);
-}
+/* static/css/map.css */
 
-.mapStage{
-  position: relative;
-  border-radius: var(--mapRadius);
-  overflow: hidden;
-  background: radial-gradient(900px 520px at 50% 0%, rgba(255,255,255,.60), rgba(0,0,0,0));
-  box-shadow: 0 16px 50px rgba(0,0,0,.12);
-  border: 1px solid rgba(120,90,55,.16);
-}
-
-.lmMapCanvas{
-  width: 100%;
-  height: clamp(560px, 76vh, 980px);
-}
-
-@media (max-width: 720px){
-  .lmMapCanvas{
-    height: clamp(640px, 84vh, 980px);
-  }
-}
-
-.mapHud{
-  position: absolute;
-  z-index: 10;
-  top: 14px;
-  left: 14px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: var(--mapHudBg);
-  border: 1px solid var(--mapHudBorder);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 28px rgba(0,0,0,.10);
-}
-
-.mapHudTitle{
-  font-weight: 800;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  font-size: 12px;
-  color: var(--mapInk);
-}
-
-.mapHudSub{
-  margin-top: 2px;
-  font-size: 12px;
-  opacity: .78;
-  color: var(--mapInk);
-}
-
-.mapAttribution{
-  position: absolute;
-  z-index: 10;
-  bottom: 12px;
-  left: 14px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.62);
-  border: 1px solid rgba(120,90,55,.16);
-  backdrop-filter: blur(10px);
-  font-size: 12px;
-  color: rgba(47,42,36,.72);
-}
-
-.mapAttributionDot{
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(160,120,70,.65);
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-/* Face markers (HTML) */
+/* Face pin (existing class in your project) */
 .lmFacePin{
-  width: clamp(36px, 3.2vw, 54px);
-  height: clamp(36px, 3.2vw, 54px);
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  border: 3px solid rgba(255,255,255,.92);
-  box-shadow: 0 10px 22px rgba(0,0,0,.18);
-  background: rgba(245,240,232,.92);
+  border: 3px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  padding: 0;
   overflow: hidden;
   cursor: pointer;
-  transform: translateZ(0);
 }
 
 .lmFacePin img{
@@ -107,78 +26,60 @@
   display: block;
 }
 
-.lmFacePin:hover{
-  box-shadow: 0 16px 32px rgba(0,0,0,.22);
-}
-
-/* Spiderfy leader lines */
-.lmSpiderLine{
-  position: absolute;
-  width: 1px;
-  background: rgba(80,60,40,.55);
-  transform-origin: top left;
-  pointer-events: none;
-  z-index: 8;
-}
-
-.lmSpiderDot{
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(90,70,45,.55);
-  border: 2px solid rgba(255,255,255,.85);
-  box-shadow: 0 8px 16px rgba(0,0,0,.12);
-  pointer-events: none;
-  z-index: 8;
-}
-
-/* Popup polish */
-.mapboxgl-popup-content{
-  border-radius: 16px !important;
-  border: 1px solid rgba(120,90,55,.18) !important;
-  box-shadow: 0 18px 55px rgba(0,0,0,.18) !important;
-  padding: 12px 12px 10px !important;
-}
-
-.lmPopRow{
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.lmPopAvatar{
-  width: 44px;
-  height: 44px;
+/* Option B cluster pin (face + badge) */
+.lmClusterPin{
+  width: 46px;
+  height: 46px;
   border-radius: 999px;
+  border: 3px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  padding: 0;
   overflow: hidden;
-  border: 2px solid rgba(255,255,255,.92);
-  box-shadow: 0 10px 18px rgba(0,0,0,.12);
-  flex: 0 0 auto;
+  position: relative;
+  cursor: pointer;
 }
 
-.lmPopAvatar img{
+.lmClusterPin img{
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.lmPopName{
-  font-weight: 800;
-  color: var(--mapInk);
+.lmClusterBadge{
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(40,30,20,0.88);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 22px;
+  border: 2px solid rgba(255,255,255,0.9);
+  pointer-events: none;
 }
 
-.lmPopMeta{
-  margin-top: 2px;
-  font-size: 12px;
-  opacity: .78;
-  color: var(--mapInk);
+/* Spiderfy primitives */
+.lmSpiderDot{
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(40,30,20,0.85);
+  z-index: 8;
+  pointer-events: none;
 }
 
-.lmPopLoc{
-  margin-top: 6px;
-  font-size: 12px;
-  opacity: .74;
-  color: var(--mapInk);
+.lmSpiderLine{
+  position: absolute;
+  width: 2px;
+  transform-origin: 0 0;
+  background: rgba(40,30,20,0.35);
+  z-index: 7;
+  pointer-events: none;
 }

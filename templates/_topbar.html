@@ -32,8 +32,7 @@ JS expects:
       <a href="{{ url_for('map_view') }}" data-preserve-sample="1"
         class="{{ 'is-active' if request.path == '/map' else '' }}">Map</a>
 
-      <div class="demoPicker demoPicker--nav">
-        <span class="demoPickerLabel">Select Legacy</span>
+      <div class="demoPicker demoPicker--nav demoPicker--navSimple">
         <label class="srOnly" for="demoFamilySelectNav">Select Legacy</label>
         <select id="demoFamilySelectNav" class="demoPickerSelect demoPickerSelect--button" aria-label="Select Legacy">
           {% for k in demo_samples %}
