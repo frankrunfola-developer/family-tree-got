@@ -32,8 +32,12 @@
       <section class="lmFeatures" aria-label="LineAgeMap features">
         <div class="lmFeatureGrid">
           <a class="lmFeatureCard lmFeatureCard--tree" href="{{ url_for('tree_view') }}" aria-label="Family Tree">
-            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport"><iframe class="lmFeatureFrame" src="{{ url_for("tree_view")
-                  }}?sample={{ sample_id }}&embed=1" title="Tree preview" loading="lazy"></iframe></div></div>
+            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport">
+                <iframe class="lmFeatureFrame" src="{{ url_for("tree_view")
+                  }}?sample={{ sample_id }}&embed=1" title="Tree preview" loading="lazy">
+                </iframe>
+              </div>
+            </div>
 
             <div class="lmFeatureBody">
               <div class="lmFeatureTitle">Family Tree</div>
@@ -41,8 +45,13 @@
           </a>
 
           <a class="lmFeatureCard lmFeatureCard--timeline" href="{{ url_for('timeline_view') }}" aria-label="Timeline">
-            <div class="lmFeatureMedia" aria-hidden="true"><div class="lmFeatureViewport"><iframe class="lmFeatureFrame"
-                  src="{{ url_for("timeline_view") }}?sample={{ sample_id }}&embed=1" title="Timeline preview" loading="lazy"></iframe></div></div>
+            <div class="lmFeatureMedia" aria-hidden="true">
+              <div class="lmFeatureViewport">
+                <iframe class="lmFeatureFrame"
+                  src="{{ url_for("timeline_view") }}?sample={{ sample_id }}&embed=1" title="Timeline preview" loading="lazy">
+                </iframe>
+              </div>
+            </div>
 
             <div class="lmFeatureBody">
               <div class="lmFeatureTitle">Timeline</div>

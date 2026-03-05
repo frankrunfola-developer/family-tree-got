@@ -10,16 +10,17 @@
 #}
 {% if public_slug %}
 {% set TREE_API_URL = "/api/public/" ~ public_slug ~ "/tree" %}
+{% elif request.args.get("sample") %}
+{% set TREE_API_URL = "/api/sample/" ~ request.args.get("sample")|lower ~ "/tree" %}
 {% elif sample_id %}
-{% set TREE_API_URL = "/api/sample/" ~ sample_id ~ "/tree" %}
+{% set TREE_API_URL = "/api/sample/" ~ sample_id|lower ~ "/tree" %}
 {% elif current_user %}
 {% set TREE_API_URL = "/api/tree/me" %}
 {% elif demo_sample %}
-{% set TREE_API_URL = "/api/sample/" ~ demo_sample ~ "/tree" %}
+{% set TREE_API_URL = "/api/sample/" ~ demo_sample|lower ~ "/tree" %}
 {% else %}
 {% set TREE_API_URL = "/api/sample/stark/tree" %}
 {% endif %}
-
 {% block title %}LineAgeMap — Tree{% endblock %}
 
 {% block head %}
@@ -59,17 +60,18 @@
 <script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
 
 <script>
-    window.TREE_API_URL = "{{ TREE_API_URL }}";
+  window.TREE_API_URL = "{{ TREE_API_URL }}";
+  window.TREE_FAMILY_ID = "{{ request.args.get('sample','stark') }}";
 
-    // Default: render a readable preview (first 2 layers). The “See full tree” button expands it.
-    window.TREE_DESCENDANTS_ONLY = true;
-    window.TREE_FULL_TREE = false;
-    window.TREE_PREVIEW_MODE = true;
-    window.TREE_PREVIEW_MOBILE_ONLY = false;
-    window.TREE_PREVIEW_DEPTH = 2;
-    window.TREE_PREVIEW_MAX = 18;
-    window.TREE_PREVIEW_MAX_GEN1 = 3;
-  </script>
+  window.TREE_DESCENDANTS_ONLY = true;
+  window.TREE_FULL_TREE = false;
+  window.TREE_PREVIEW_MODE = true;
+  window.TREE_PREVIEW_MOBILE_ONLY = false;
+  window.TREE_PREVIEW_DEPTH = 2;
+  window.TREE_PREVIEW_MAX = 18;
+  window.TREE_PREVIEW_MAX_GEN1 = 3;
+</script>
 
-<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v={{ time.time() }}"></script>
+
 {% endblock %}

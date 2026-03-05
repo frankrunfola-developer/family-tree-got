@@ -14,7 +14,7 @@ LineAgeMap — app.py (cleaned + hardened)
     { "people": [...], "relationships": [...] }
   including relationship key normalization to parentId/childId.
 """
-
+import time
 import json
 import os
 import shutil
@@ -82,11 +82,17 @@ app = Flask(
     template_folder=str(APP_DIR / "templates"),
     static_folder=str(APP_DIR / "static"),
 )
+# app.py
+import time
 
+@app.context_processor
+def inject_time():
+    return {"time": time}
 
 app.config['MAPBOX_TOKEN'] = os.getenv('MAPBOX_TOKEN', '')
 app.secret_key = SECRET
-
+print("RUNNING APP FROM:", __file__)
+print("STATIC FOLDER:", app.static_folder)
 
 # -----------------------------
 # SMALL HELPERS (type-safe)
@@ -597,10 +603,17 @@ def logout():
 # -----------------------------
 @app.get("/api/tree/<name>")
 def api_tree(name: str):
+    name = (name or "").strip().lower()
+
     path = family_path(name)
-    if not path.exists():
-        return jsonify({"error": "not found", "expected_file": str(path)}), 404
-    return jsonify(load_family_file(path))
+    if path.exists():
+        return jsonify(load_family_file(path))
+
+    # ✅ fallback for demo/sample names (stark, gupta, etc.)
+    if name in ALLOWED_SAMPLES:
+        return jsonify(load_sample_tree(name))
+
+    return jsonify({"error": "not found", "expected_file": str(path)}), 404
 
 
 @app.get("/api/tree/me")

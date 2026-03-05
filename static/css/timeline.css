@@ -467,10 +467,6 @@
   .tlSnakeRoot{ --tl-stroke-w: 6; }
   .tlSDots circle{ opacity: 0.18; }
 }
-
-
-  .tlSnakeRoot{ --tl-stroke-w: 6; }
-}
 /* ------------------------------
    Embed mode (landing previews)
 -------------------------------- */
