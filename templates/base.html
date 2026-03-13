@@ -7,31 +7,38 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&display=swap"
       rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/core.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
 
     {% block head %}{% endblock %}
   </head>
 
-  {% set _is_embed = (request.args.get("embed") == "1") %}
-  <body class="{{ (body_class|default('app')) ~ (' isEmbed' if _is_embed else '') }}">
-    {% if not _is_embed %}{% include "_topbar.html" %}{% endif %}
+  {% set _is_embed = (request.args.get('embed') == '1') %}
+  <body class="{{ body_class|default('app') }} {{ 'isEmbed' if _is_embed else '' }}">
+    {% if not _is_embed %}
+    {% include "_topbar.html" %}
+    {% endif %}
 
     <main class="page">
       {% block content %}{% endblock %}
     </main>
 
     <script>
-      (function () {
-        var y = document.getElementById("year");
-        if (y) y.textContent = String(new Date().getFullYear());
-      })();
-    </script>
+    (function () {
+      var y = document.getElementById("year");
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+  </script>
 
-    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/nav.js') }}"></script>
     {% block scripts %}{% endblock %}
   </body>
 </html>
