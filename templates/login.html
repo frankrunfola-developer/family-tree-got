@@ -1,45 +1,31 @@
-{% extends "base.html" %}
-{% set active_page = "login" %}
-{% set body_class = "landingPage authPage" %}
-
-{% block title %}LineAgeMap — Login{% endblock %}
-
-{% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}" />
-{% endblock %}
-
+{% extends 'base.html' %}
+{% block title %}Login | LineAgeMap{% endblock %}
 {% block content %}
-  <section class="authWrap" aria-label="Login">
-    <div class="authCard">
-
-      <div class="authTabs" role="tablist" aria-label="Authentication">
-        <a class="authTab " role="tab" aria-selected="false" href="{{ url_for('register') }}">Sign Up</a>
-        <a class="authTab is-active" role="tab" aria-selected="true" href="{{ url_for('login') }}">Log In</a>
-      </div>
-
-      <div class="authHeader">
-        <div class="authKicker">Private Archive Access</div>
-        <div class="authTitle">Enter Your Family Archive</div>
-        <div class="authOrnament" aria-hidden="true"></div>
-        <div class="authSub">Continue your family record and explore your lineage.</div>
-      </div>
-
-      {% if error %}
-        <div class="authNotice error">{{ error }}</div>
-      {% endif %}
-
-      <form method="post" action="{{ url_for('login_post') }}" class="authForm">
-        <label class="authLabel" for="email">Email</label>
-        <input class="authInput" id="email" type="email" name="email" required autocomplete="email" />
-
-        <label class="authLabel" for="password">Password</label>
-        <input class="authInput" id="password" type="password" name="password" required autocomplete="current-password" />
-
-        <div class="authActions">
-          <a class="btn ghost" href="{{ url_for('register') }}">Create account</a>
-          <button class="btn primary" type="submit">Log In</button>
-        </div>
-      </form>
+<section class="login-shell">
+  <div class="login-card raised-card parchment-card">
+    <div class="login-copy">
+      <p class="eyebrow">Welcome back</p>
+      <h1>Sign in to build your family tree</h1>
+      <p class="subtitle">Use the demo account to test the profile panel, node builder, JSON output flow, and dynamic tree rendering.</p>
     </div>
-  </section>
+
+    <form method="post" class="auth-form">
+      <label>
+        <span>Username</span>
+        <input name="username" value="frank" required>
+      </label>
+      <label>
+        <span>Password</span>
+        <input name="password" type="password" value="demo123" required>
+      </label>
+      <button class="btn-primary wide" type="submit">Login</button>
+    </form>
+
+    <div class="login-demo parchment-inset">
+      <strong>Demo credentials</strong>
+      <div>Username: frank</div>
+      <div>Password: demo123</div>
+    </div>
+  </div>
+</section>
 {% endblock %}

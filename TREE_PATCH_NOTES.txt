@@ -1,0 +1,5 @@
+Tree-only patch:
+- slight vertical gap preserved across desktop and mobile
+- reduced mobile gap
+- added a small desktop gap
+- connector rows adjusted to match the new spacing
