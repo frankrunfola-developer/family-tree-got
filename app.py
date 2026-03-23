@@ -129,7 +129,6 @@ def build_tree_layout(data: dict) -> dict:
 
     spouse_of: dict[str, str] = {}
     child_to_parents: dict[str, set[str]] = defaultdict(set)
-    parent_to_children: dict[str, list[str]] = defaultdict(list)
 
     for rel in relationships:
         if rel.get('type') == 'spouse':
@@ -143,8 +142,6 @@ def build_tree_layout(data: dict) -> dict:
             parent = rel['parent']
             if child in people_by_id and parent in people_by_id:
                 child_to_parents[child].add(parent)
-                if child not in parent_to_children[parent]:
-                    parent_to_children[parent].append(child)
 
     people_order = {pid: idx for idx, pid in enumerate(people_by_id.keys())}
 
@@ -160,9 +157,7 @@ def build_tree_layout(data: dict) -> dict:
     family_defs: dict[str, dict] = {}
 
     def family_id_for(parents: list[str]) -> str:
-        if not parents:
-            return ''
-        return 'fam__' + '__'.join(sorted(parents))
+        return 'fam__' + '__'.join(sorted(parents)) if parents else ''
 
     def ensure_family(parents: list[str]) -> dict:
         parent_ids = sorted(dict.fromkeys([pid for pid in parents if pid in people_by_id]), key=person_sort_key)
@@ -176,7 +171,6 @@ def build_tree_layout(data: dict) -> dict:
             }
         return family_defs[fid]
 
-    # Create family units for spouse pairs first so couples always stay together.
     seen_spouse_pairs = set()
     for a, b in spouse_of.items():
         pair = tuple(sorted((a, b), key=person_sort_key))
@@ -185,15 +179,12 @@ def build_tree_layout(data: dict) -> dict:
         seen_spouse_pairs.add(pair)
         ensure_family(list(pair))
 
-    # Group children by exact parent set, then attach to the matching family unit.
     for child_id, parent_ids in child_to_parents.items():
         if not parent_ids:
             continue
-        parent_ids = sorted(parent_ids, key=person_sort_key)
-        family = ensure_family(parent_ids)
+        family = ensure_family(sorted(parent_ids, key=person_sort_key))
         family['child_ids'].append(child_id)
 
-    # Single people with no spouse and no grouped family still need a visible unit.
     people_in_parent_units = {pid for fam in family_defs.values() for pid in fam['parent_ids']}
     for person_id in people_by_id:
         if person_id not in people_in_parent_units and person_id not in spouse_of:
@@ -215,50 +206,45 @@ def build_tree_layout(data: dict) -> dict:
     for pid in people_by_id:
         fam_ids = family_ids_by_parent.get(pid, [])
         if fam_ids:
-            fam_ids = sorted(fam_ids, key=family_priority, reverse=True)
-            home_family_for_person[pid] = fam_ids[0]
+            home_family_for_person[pid] = sorted(fam_ids, key=family_priority, reverse=True)[0]
 
-    # Build child family relationships using each child's home family.
     for fam in family_defs.values():
-        fam['child_units'] = []
-        fam['leaf_children'] = []
+        fam['child_parts'] = []
 
     attached_family_ids = set()
     for fam in family_defs.values():
+        child_parts = []
         for child_id in fam['child_ids']:
             child_home = home_family_for_person.get(child_id)
             if child_home and child_home != fam['id'] and child_home in family_defs:
-                family_defs[fam['id']]['child_units'].append(child_home)
+                child_parts.append({'kind': 'family', 'child_id': child_id, 'family_id': child_home})
                 attached_family_ids.add(child_home)
             else:
-                family_defs[fam['id']]['leaf_children'].append(child_id)
+                child_parts.append({'kind': 'leaf', 'child_id': child_id})
+        unique_parts = []
+        seen_family_links = set()
+        for part in child_parts:
+            if part['kind'] == 'family':
+                key = (part['child_id'], part['family_id'])
+                if key in seen_family_links:
+                    continue
+                seen_family_links.add(key)
+            unique_parts.append(part)
+        fam['child_parts'] = sorted(unique_parts, key=lambda p: person_sort_key(p['child_id']))
 
-    for fam in family_defs.values():
-        seen = set()
-        ordered_units = []
-        for unit_id in fam['child_units']:
-            if unit_id not in seen:
-                seen.add(unit_id)
-                ordered_units.append(unit_id)
-        fam['child_units'] = sorted(ordered_units, key=lambda fid: family_defs[fid]['sort_key'])
-        fam['leaf_children'] = sorted(dict.fromkeys(fam['leaf_children']), key=person_sort_key)
-
-    root_family_ids = [
-        fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])
-        if fam['id'] not in attached_family_ids
-    ]
+    root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key']) if fam['id'] not in attached_family_ids]
     if not root_family_ids:
         root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])]
 
-    CARD_W = 90
-    PHOTO_H = 84
-    NAME_H = 34
-    CARD_H = PHOTO_H + NAME_H + 12
+    CARD_W = 96
+    PHOTO_H = 116
+    NAME_H = 48
+    CARD_H = PHOTO_H + NAME_H + 14
     PARENT_GAP = 10
-    SIBLING_GAP = 16
-    FAMILY_GAP = 34
-    LEVEL_GAP = max(24, CARD_H // 4)
-    SIDE_PAD = 28
+    SIBLING_GAP = 18
+    FAMILY_GAP = 40
+    LEVEL_GAP = 52
+    SIDE_PAD = 30
     TOP_PAD = 20
 
     size_cache: dict[str, float] = {}
@@ -274,13 +260,12 @@ def build_tree_layout(data: dict) -> dict:
         fam = family_defs[fid]
         parent_width = family_row_width(len(fam['parent_ids']))
         child_parts = []
-        for child_family_id in fam['child_units']:
-            child_parts.append(subtree_width(child_family_id))
-        for _ in fam['leaf_children']:
-            child_parts.append(CARD_W)
-        children_width = 0.0
-        if child_parts:
-            children_width = sum(child_parts) + SIBLING_GAP * (len(child_parts) - 1)
+        for part in fam['child_parts']:
+            if part['kind'] == 'family':
+                child_parts.append(subtree_width(part['family_id']))
+            else:
+                child_parts.append(CARD_W)
+        children_width = sum(child_parts) + SIBLING_GAP * max(0, len(child_parts) - 1) if child_parts else 0.0
         total = max(parent_width, children_width, CARD_W)
         size_cache[fid] = total
         return total
@@ -310,42 +295,44 @@ def build_tree_layout(data: dict) -> dict:
         max_x = max(max_x, center_x + CARD_W / 2)
         max_y = max(max_y, top_y + CARD_H)
 
-    def layout_family(fid: str, center_x: float, top_y: float) -> None:
+    def layout_family(fid: str, center_x: float, top_y: float):
         nonlocal max_x, max_y
         fam = family_defs[fid]
         parent_count = max(1, len(fam['parent_ids']))
         parent_row_width = family_row_width(parent_count)
         parent_left = center_x - parent_row_width / 2
-        parent_centers = []
+        parent_centers: dict[str, float] = {}
+        ordered_parent_centers: list[float] = []
         for idx, pid in enumerate(fam['parent_ids']):
             px = parent_left + idx * (CARD_W + PARENT_GAP) + CARD_W / 2
-            parent_centers.append(px)
+            parent_centers[pid] = px
+            ordered_parent_centers.append(px)
             add_person(pid, px, top_y)
 
-        if len(parent_centers) >= 2:
+        if len(ordered_parent_centers) >= 2:
+            spouse_y = top_y + PHOTO_H / 2
             connectors.append({
-                'x1': round(parent_centers[0], 1),
-                'y1': round(top_y + PHOTO_H / 2, 1),
-                'x2': round(parent_centers[-1], 1),
-                'y2': round(top_y + PHOTO_H / 2, 1),
+                'x1': round(ordered_parent_centers[0], 1),
+                'y1': round(spouse_y, 1),
+                'x2': round(ordered_parent_centers[-1], 1),
+                'y2': round(spouse_y, 1),
             })
 
         child_parts = []
-        for child_family_id in fam['child_units']:
-            child_parts.append(('family', child_family_id, subtree_width(child_family_id)))
-        for child_id in fam['leaf_children']:
-            child_parts.append(('leaf', child_id, CARD_W))
+        for part in fam['child_parts']:
+            if part['kind'] == 'family':
+                child_parts.append((part, subtree_width(part['family_id'])))
+            else:
+                child_parts.append((part, CARD_W))
 
+        family_top_anchor = sum(ordered_parent_centers) / len(ordered_parent_centers) if ordered_parent_centers else center_x
         if not child_parts:
             max_y = max(max_y, top_y + CARD_H)
-            return
+            return {'top_anchor_x': family_top_anchor, 'parent_centers': parent_centers}
 
         child_y = top_y + CARD_H + LEVEL_GAP
-        total_children_width = sum(width for _, _, width in child_parts) + SIBLING_GAP * (len(child_parts) - 1)
-        child_cursor = center_x - total_children_width / 2
-        child_centers = []
-        child_bus_y = top_y + CARD_H + max(10, LEVEL_GAP * 0.45)
-        parent_anchor_x = sum(parent_centers) / len(parent_centers) if parent_centers else center_x
+        child_bus_y = top_y + CARD_H + max(12, LEVEL_GAP * 0.42)
+        parent_anchor_x = family_top_anchor
 
         connectors.append({
             'x1': round(parent_anchor_x, 1),
@@ -354,30 +341,38 @@ def build_tree_layout(data: dict) -> dict:
             'y2': round(child_bus_y, 1),
         })
 
-        for kind, ref, width in child_parts:
-            child_center_x = child_cursor + width / 2
-            child_centers.append(child_center_x)
-            if kind == 'family':
-                layout_family(ref, child_center_x, child_y)
+        total_children_width = sum(width for _, width in child_parts) + SIBLING_GAP * max(0, len(child_parts) - 1)
+        child_cursor = center_x - total_children_width / 2
+        child_anchor_xs = []
+
+        for part, width in child_parts:
+            block_center_x = child_cursor + width / 2
+            if part['kind'] == 'family':
+                child_layout = layout_family(part['family_id'], block_center_x, child_y)
+                anchor_x = child_layout['parent_centers'].get(part['child_id'], child_layout['top_anchor_x'])
             else:
-                add_person(ref, child_center_x, child_y)
+                add_person(part['child_id'], block_center_x, child_y)
+                anchor_x = block_center_x
+
+            child_anchor_xs.append(anchor_x)
             connectors.append({
-                'x1': round(child_center_x, 1),
+                'x1': round(anchor_x, 1),
                 'y1': round(child_bus_y, 1),
-                'x2': round(child_center_x, 1),
+                'x2': round(anchor_x, 1),
                 'y2': round(child_y, 1),
             })
             child_cursor += width + SIBLING_GAP
 
-        if child_centers:
+        if child_anchor_xs:
             connectors.append({
-                'x1': round(min(child_centers), 1),
+                'x1': round(min(child_anchor_xs), 1),
                 'y1': round(child_bus_y, 1),
-                'x2': round(max(child_centers), 1),
+                'x2': round(max(child_anchor_xs), 1),
                 'y2': round(child_bus_y, 1),
             })
 
         max_y = max(max_y, child_y + CARD_H)
+        return {'top_anchor_x': family_top_anchor, 'parent_centers': parent_centers}
 
     forest_width = sum(subtree_width(fid) for fid in root_family_ids) + FAMILY_GAP * max(0, len(root_family_ids) - 1)
     canvas_width = max(720, int(forest_width + SIDE_PAD * 2))
