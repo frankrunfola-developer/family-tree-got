@@ -250,14 +250,14 @@ def build_tree_layout(data: dict) -> dict:
     if not root_family_ids:
         root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])]
 
-    CARD_W = 96
-    PHOTO_H = 82
+    CARD_W = 90
+    PHOTO_H = 84
     NAME_H = 34
     CARD_H = PHOTO_H + NAME_H + 12
-    PARENT_GAP = 14
-    SIBLING_GAP = 18
-    FAMILY_GAP = 40
-    LEVEL_GAP = max(28, CARD_H // 4)
+    PARENT_GAP = 10
+    SIBLING_GAP = 16
+    FAMILY_GAP = 34
+    LEVEL_GAP = max(24, CARD_H // 4)
     SIDE_PAD = 28
     TOP_PAD = 20
 

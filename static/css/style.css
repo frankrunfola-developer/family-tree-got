@@ -4182,3 +4182,108 @@ select {
     height: 56px;
   }
 }
+
+
+/* === March 2026 refinement overrides v9 === */
+.topbar-inner {
+  grid-template-columns: 56px minmax(0, 1fr) 56px !important;
+}
+
+.brand-mark {
+  width: 56px;
+  height: 56px;
+  justify-self: start;
+}
+
+.brand-mark-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.brand-mark-icon img {
+  width: 106%;
+  height: 106%;
+  object-fit: contain;
+  transform: translateX(-2%);
+}
+
+.brand-mark-title {
+  width: 100%;
+  justify-self: center;
+  text-align: center;
+}
+
+.parchment-card,
+.hero-card,
+.summary-card,
+.map-card,
+.journey-card,
+.tree-page-card,
+.topbar,
+.flash-card,
+.mobile-nav a,
+.stat-box,
+.journey-item,
+.nameplate,
+.nameplate.compact,
+.portrait-frame,
+.portrait-frame.compact {
+  background-blend-mode: multiply, normal, normal, normal;
+}
+
+.story-grid > .tree-card {
+  --tree-card-w: clamp(88px, 12.8vw, 98px);
+  --tree-photo-h: clamp(86px, 12.2vw, 96px);
+  --tree-nameplate-h: 34px;
+  --tree-featured-width: clamp(94px, 13.8vw, 106px);
+  --tree-featured-photo-h: clamp(90px, 13vw, 102px);
+}
+
+.story-grid > .tree-card .portrait-frame img {
+  height: var(--tree-photo-h);
+  object-position: center 18%;
+}
+
+.story-grid > .tree-card .person-card.featured .portrait-frame img {
+  height: var(--tree-featured-photo-h);
+}
+
+.story-grid > .tree-card .person-card.featured {
+  width: var(--tree-featured-width) !important;
+}
+
+.tree-page-card {
+  --tree-card-w: 90px;
+  --tree-photo-h: 84px;
+  --tree-nameplate-h: 34px;
+}
+
+.person-card-dynamic {
+  width: var(--tree-card-w) !important;
+  min-width: var(--tree-card-w) !important;
+  max-width: var(--tree-card-w) !important;
+}
+
+.portrait-frame.compact img {
+  height: var(--tree-photo-h) !important;
+  object-position: center 18%;
+}
+
+.nameplate.compact {
+  min-height: var(--tree-nameplate-h);
+}
+
+@media (max-width: 640px) {
+  .story-grid > .tree-card {
+    --tree-card-w: clamp(82px, 17vw, 90px);
+    --tree-photo-h: clamp(78px, 16vw, 88px);
+    --tree-featured-width: clamp(88px, 18vw, 96px);
+    --tree-featured-photo-h: clamp(82px, 16.5vw, 92px);
+  }
+
+  .brand-mark-icon img {
+    width: 102%;
+    height: 102%;
+    transform: translateX(-1%);
+  }
+}
