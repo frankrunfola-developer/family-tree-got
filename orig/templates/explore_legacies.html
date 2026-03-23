@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% set body_class = 'landingPage' %}
+
+{% block title %}Explore Legacies | LineAgeMap{% endblock %}
+
+{% block content %}
+<div class="appFrameShell">
+    <div class="appFrameCard">
+        <div class="landing">
+
+            <!-- Page header -->
+            <header class="lmHero lmHero--compact">
+                <div class="lmBrand" aria-label="LineAgeMap">
+                    <span class="lmBrandOrn" aria-hidden="true"></span>
+                    <span class="lmBrandText">Explore Legacies</span>
+                    <span class="lmBrandOrn" aria-hidden="true"></span>
+                </div>
+
+                <h1 class="lmTitle lmTitle--romantic">Explore Famous Legacies</h1>
+                <p class="lmSubcopy">Jump into a sample tree or timeline to see what LineAgeMap can do.</p>
+
+                <div class="lmHeroActions">
+                    <a class="lmCta" href="{{ url_for('register') }}">Get Started</a>
+                    <a class="lmCta lmCta--ghost" href="{{ url_for('index') }}">Back Home</a>
+                </div>
+            </header>
+
+            <!-- Legacy cards -->
+            <section class="legacyGrid" aria-label="Demo families">
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/windsor.png') }}"
+                                alt="The British Royal Family"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Windsors</h2>
+                        <p class="legacyTag">A Royal Legacy</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=windsor">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=windsor">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/kennedy.png') }}"
+                                alt="The Kennedy Family"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Kennedys</h2>
+                        <p class="legacyTag">An American Dynasty</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=kennedy">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=kennedy">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/kardashian.png') }}"
+                                alt="The Kardashians"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Kardashians</h2>
+                        <p class="legacyTag">Modern Icons</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=kardashian">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=kardashian">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/ambani.png') }}"
+                                alt="The Ambani Family"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Ambanis</h2>
+                        <p class="legacyTag">Indian Titans</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=ambani">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=ambani">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/jackson.png') }}"
+                                alt="The Jackson Family"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Jacksons</h2>
+                        <p class="legacyTag">Music Legends</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=jackson">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=jackson">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="legacyItem">
+                    <article class="legacyCard">
+                        <div class="legacyPhoto">
+                            <img
+                                src="{{ url_for('static', filename='img/legacies/stark.png') }}"
+                                alt="Game of Thrones"
+                                width="400"
+                                height="500"
+                                loading="lazy"
+                                decoding="async" />
+                        </div>
+                        <h2 class="legacyName">The Starks</h2>
+                        <p class="legacyTag">Epic Saga</p>
+                        <div class="legacyBtns">
+                            <a class="legacyBtn" href="{{ url_for('tree_view') }}?sample=stark">Explore Tree</a>
+                            <a class="legacyBtn" href="{{ url_for('timeline_view') }}?sample=stark">View Timeline</a>
+                        </div>
+                    </article>
+                </div>
+
+            </section>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

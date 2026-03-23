@@ -1,76 +1,29 @@
-<header class="topbar">
-  <a href="/" class="topbar__brand" aria-label="LineAgeMap home">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="LineAgeMap logo">
-  </a>
 
-  <nav class="topbar__nav" aria-label="Primary">
-    <a href="/tree">Tree</a>
-    <a href="/timeline">Timeline</a>
-    <a href="/map">Map</a>
+<header class="topbar raised-card parchment-card">
+  <div class="topbar-inner">
+    <a href="{{ url_for('index') }}" class="brand-mark" aria-label="LineAgeMap home">
+      <span class="brand-mark-icon"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="LineAgeMap logo"></span>
+    </a>
 
-    <div class="topbar__dropdown">
-      <button
-        class="topbar__dropdownToggle"
-        type="button"
-        aria-expanded="false"
-        aria-label="Open families menu">
-        Families
-      </button>
+    <div class="brand-mark-title">LineAgeMap</div>
 
-      <div class="topbar__dropdownMenu" aria-label="Families submenu">
-        <a href="/tree?sample=stark">Starks</a>
-        <a href="/tree?sample=lannister">Lannisters</a>
-        <a href="/tree?sample=kennedy">Kennedys</a>
-        <a href="/tree?sample=kardashian">Kardashians</a>
-        <a href="/tree?sample=gupta">Guptas</a>
-        <a href="/tree?sample=sen">Sens</a>
-        <a href="/tree?sample=targaryen">Targaryens</a>
-      </div>
-    </div>
-
-    <a href="/explore-legacies">Explore Legacies</a>
-    <a href="/get-started">Get Started</a>
-  </nav>
-
-  <button
-    id="navButton"
-    class="topbar__toggle"
-    type="button"
-    aria-label="Open menu"
-    aria-expanded="false"
-    aria-controls="navPanel">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <div id="navPanel" class="topbar__menu" aria-label="Mobile menu">
-    <a href="/tree">Tree</a>
-    <a href="/timeline">Timeline</a>
-    <a href="/map">Map</a>
-
-    <div class="topbar__mobileDropdown">
-      <button
-        id="familiesMobileToggle"
-        class="topbar__mobileDropdownToggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="familiesMobileMenu">
-        Families
-      </button>
-
-      <div id="familiesMobileMenu" class="topbar__mobileDropdownMenu">
-        <a href="/tree?sample=stark">Starks</a>
-        <a href="/tree?sample=lannister">Lannisters</a>
-        <a href="/tree?sample=kennedy">Kennedys</a>
-        <a href="/tree?sample=kardashian">Kardashians</a>
-        <a href="/tree?sample=gupta">Guptas</a>
-        <a href="/tree?sample=sen">Sens</a>
-        <a href="/tree?sample=targaryen">Targaryens</a>
-      </div>
-    </div>
-
-    <a href="/explore-legacies">Explore Legacies</a>
-    <a href="/get-started">Get Started</a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
+
+  <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="{{ url_for('index') }}">✦ Story</a>
+    <a href="{{ url_for('tree') }}">🌿 Tree</a>
+    <a href="#journey">🗺 Journey</a>
+    <a href="#records">📜 Records</a>
+    {% if logged_in_user %}
+    <a href="{{ url_for('dashboard') }}">👤 Workspace</a>
+    <a href="{{ url_for('logout') }}">↩ Logout</a>
+    {% else %}
+    <a href="{{ url_for('login') }}">🔐 Login</a>
+    {% endif %}
+  </nav>
 </header>

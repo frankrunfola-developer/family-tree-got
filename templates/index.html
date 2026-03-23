@@ -1,73 +1,26 @@
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ data.brand }}</title>
-
+    {% include '_analytics.html' %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   </head>
   <body>
     <main class="page-shell">
-      <header class="topbar raised-card parchment-card">
-        <div class="topbar-inner">
-          <a href="{{ url_for('index') }}" class="brand-mark" aria-label="{{ data.brand }} home">
-            <span class="brand-mark-icon"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="" aria-hidden="true"></span>
-            <span class="brand-mark-text">{{ data.brand }}</span>
-          </a>
-
-          <nav class="desktop-nav" aria-label="Primary navigation">
-            <a href="#story">Story</a>
-            <a href="{{ url_for('tree') }}">Tree</a>
-            <a href="#journey">Journey</a>
-            <a href="#records">Records</a>
-            {% if user %}
-            <a href="{{ url_for('dashboard') }}">Workspace</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% endif %}
-          </nav>
-
-          {% if user and user_family %}
-          <div class="nav-user-chip raised-card parchment-card" aria-label="Signed in user">
-            <img src="{{ user_family.profile_photo }}" alt="{{ user_family.profile_name }} profile photo">
-            <div class="nav-user-meta">
-              <span class="nav-user-label">Logged in</span>
-              <span class="nav-user-name-row"><strong>{{ user_family.profile_name }}</strong><span class="nav-user-chevron" aria-hidden="true">▾</span></span>
-            </div>
-          </div>
-          {% endif %}
-
-          <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-
-        <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
-          <a href="#story">✦ Story</a>
-          <a href="{{ url_for('tree') }}">🌿 Tree</a>
-          <a href="#journey">🗺 Journey</a>
-          <a href="#records">📜 Records</a>
-          {% if user %}
-          <a href="{{ url_for('dashboard') }}">👤 Workspace</a>
-          <a href="{{ url_for('logout') }}">↩ Logout</a>
-          {% else %}
-          <a href="{{ url_for('login') }}">🔐 Login</a>
-          {% endif %}
-        </nav>
-      </header>
+      {% include '_topbar.html' %}
 
       <section class="hero-card raised-card parchment-card">
         <div class="hero-inner">
           <div class="hero-copy">
-            <h1><span class="hero-title-top">Build Your Family Time</span><span class="hero-title-bottom">Capsule</span></h1>
+            <h1>
+              <span class="hero-title-top">Build Your Family Time Capsule</span>
+            </h1>
             <p class="subtitle">{{ data.hero.subtitle }}</p>
             <div class="hero-mini-icons" aria-hidden="true">
               <span>Family archive</span>
@@ -159,7 +112,8 @@
             <span class="journey-icon" aria-hidden="true"></span>
             <h3>{{ card.title }}</h3>
             <p>{{ card.subtitle }}</p>
-            {% if loop.index == 1 %}<a class="btn-primary small tree-link-btn" href="{{ url_for('tree') }}">{{ card.button }}</a>{% else %}<button class="btn-primary small">{{ card.button }}</button>{% endif %}
+            {% if loop.index == 1 %}<a class="btn-primary small tree-link-btn" href="{{ url_for('tree') }}">{{ card.button }}</a>{% else %}<button
+              class="btn-primary small">{{ card.button }}</button>{% endif %}
           </article>
           {% endfor %}
         </div>
@@ -169,14 +123,12 @@
     <script>
       const toggle = document.querySelector('.nav-toggle');
       const mobileNav = document.querySelector('.mobile-nav');
-
       if (toggle && mobileNav) {
         toggle.addEventListener('click', () => {
           const isOpen = mobileNav.classList.toggle('is-open');
           toggle.classList.toggle('is-open', isOpen);
           toggle.setAttribute('aria-expanded', String(isOpen));
         });
-
         mobileNav.querySelectorAll('a').forEach((link) => {
           link.addEventListener('click', () => {
             mobileNav.classList.remove('is-open');
@@ -184,7 +136,6 @@
             toggle.setAttribute('aria-expanded', 'false');
           });
         });
-
         document.addEventListener('click', (event) => {
           if (!mobileNav.contains(event.target) && !toggle.contains(event.target)) {
             mobileNav.classList.remove('is-open');

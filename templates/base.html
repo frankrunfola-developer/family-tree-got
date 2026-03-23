@@ -1,9 +1,11 @@
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}LineAgeMap{% endblock %}</title>
+    {% include '_analytics.html' %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
@@ -11,47 +13,7 @@
   </head>
   <body>
     <main class="site-shell">
-      <header class="topbar raised-card parchment-card">
-        <div class="topbar-inner">
-          <a href="{{ url_for('index') }}" class="brand-mark" aria-label="LineAgeMap home">
-            <span class="brand-mark-text">LineAgeMap</span>
-          </a>
-          <nav class="desktop-nav" aria-label="Primary navigation">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('tree') }}">Tree</a>
-            {% if logged_in_user %}
-            <a href="{{ url_for('dashboard') }}">Workspace</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% endif %}
-          </nav>
-          {% if logged_in_user %}
-          <div class="nav-user-chip raised-card parchment-card" aria-label="Signed in user">
-            <img src="{{ logged_in_user.photo or '/static/img/you.jpg' }}" alt="{{ logged_in_user.name }} profile photo">
-            <div class="nav-user-meta">
-              <span class="nav-user-label">Logged in</span>
-              <span class="nav-user-name-row"><strong>{{ logged_in_user.name }}</strong><span class="nav-user-chevron" aria-hidden="true">▾</span></span>
-            </div>
-          </div>
-          {% endif %}
-          <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-        <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
-          <a href="{{ url_for('index') }}">Home</a>
-          <a href="{{ url_for('tree') }}">Tree</a>
-          {% if logged_in_user %}
-          <a href="{{ url_for('dashboard') }}">Workspace</a>
-          <a href="{{ url_for('logout') }}">Logout</a>
-          {% else %}
-          <a href="{{ url_for('login') }}">Login</a>
-          {% endif %}
-        </nav>
-      </header>
+      {% include '_topbar.html' %}
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -65,17 +27,15 @@
 
       {% block content %}{% endblock %}
     </main>
-        <script>
+    <script>
       const toggle = document.querySelector('.nav-toggle');
       const mobileNav = document.querySelector('.mobile-nav');
-
       if (toggle && mobileNav) {
         toggle.addEventListener('click', () => {
           const isOpen = mobileNav.classList.toggle('is-open');
           toggle.classList.toggle('is-open', isOpen);
           toggle.setAttribute('aria-expanded', String(isOpen));
         });
-
         mobileNav.querySelectorAll('a').forEach((link) => {
           link.addEventListener('click', () => {
             mobileNav.classList.remove('is-open');
@@ -83,7 +43,6 @@
             toggle.setAttribute('aria-expanded', 'false');
           });
         });
-
         document.addEventListener('click', (event) => {
           if (!mobileNav.contains(event.target) && !toggle.contains(event.target)) {
             mobileNav.classList.remove('is-open');

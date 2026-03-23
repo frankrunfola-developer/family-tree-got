@@ -1,0 +1,45 @@
+/* layout.css
+   Shared page wrappers / stacking above texture
+*/
+
+/* page wrapper */
+main.page{
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 16px var(--page-pad) 26px;
+  position: relative;
+  z-index: 2; /* above texture */
+}
+
+body {
+    background:
+        linear-gradient(
+            rgba(255,255,255,0.55),
+            rgba(255,255,255,0.55)
+        ),
+        url("/static/img/parchment-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* --------------------------------
+   EMBED MODE (iframes in landing cards)
+----------------------------------- */
+.isEmbed main.page{
+  padding: 0 !important;
+}
+.isEmbed .appFrameShell{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.isEmbed .appFrameCard{
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}

@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "family_name": "Sen Family (Sample)",
+    "note": "Mocked from the provided Sen tree image. Uses spouse + parent/child relationships (Gupta-style). Dates are year-level where only years were shown."
+  },
+  "people": [
+    {
+      "id": "rebati_mohan_sen",
+      "name": "Rebati Mohan Sen",
+      "born": "1873",
+      "died": "1960",
+      "photo": "/static/uploads/placeholder-avatar.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "shukhomoyee_sen",
+      "name": "Shukhomoyee Sen",
+      "born": "1886",
+      "died": "1979",
+      "photo": "/static/uploads/placeholder-avatar.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "ranajit_kumar_sen",
+      "name": "Ranajit Kumar Sen",
+      "born": "1919",
+      "died": "1983",
+      "photo": "/static/uploads/sen/ranajit.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "manashi_sen",
+      "name": "Manashi Sen",
+      "born": "1929",
+      "died": "2015",
+      "photo": "/static/uploads/sen/manashi.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "sumedha_sen",
+      "name": "Sumedha Sen",
+      "born": "1947",
+      "died": "",
+      "photo": "/static/uploads/sen/sumedha.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "sutapa_chaudhuri",
+      "name": "Sutapa Chaudhuri",
+      "born": "1957",
+      "died": "",
+      "photo": "/static/uploads/sen/sutapa.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "monodip_chaudhuri",
+      "name": "Monodip Chaudhuri",
+      "born": "1950",
+      "died": "",
+      "photo": "/static/uploads/sen/monodip.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "sharmistha_gupta",
+      "name": "Sharmistha Gupta",
+      "born": "1962",
+      "died": "",
+      "photo": "/static/uploads/gupta/sharmistha.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "indranil_gupta",
+      "name": "Indranil Gupta",
+      "born": "1956",
+      "died": "",
+      "photo": "/static/uploads/gupta/indranil.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "ayesha_chaudhary",
+      "name": "Ayesha Chaudhary",
+      "born": "1970",
+      "died": "",
+      "photo": "/static/uploads/sen/ayesha.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "vikram_chaudhary",
+      "name": "Vikram Chaudhary",
+      "born": "1967",
+      "died": "",
+      "photo": "/static/uploads/sen/vikram.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "reshma_sen",
+      "name": "Reshma Sen",
+      "born": "1975",
+      "died": "",
+      "photo": "/static/uploads/sen/reshma.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "manini_sen",
+      "name": "Manini Sen",
+      "born": "1980",
+      "died": "",
+      "photo": "/static/uploads/sen/manini.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "aniruddha_sen",
+      "name": "Aniruddha Sen",
+      "born": "1979",
+      "died": "",
+      "photo": "/static/uploads/sen/aniruddha.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "mohini_chaudhuri",
+      "name": "Mohini Chaudhuri",
+      "born": "1986",
+      "died": "",
+      "photo": "/static/uploads/sen/mohini.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "ananya_sen",
+      "name": "Ananya Sen",
+      "born": "2012",
+      "died": "",
+      "photo": "/static/uploads/sen/ananya.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "rohini_runfola",
+      "name": "Rohini Runfola",
+      "born": "1988",
+      "died": "",
+      "photo": "/static/uploads/gupta/rohini.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "frank_runfola",
+      "name": "Frank Runfola",
+      "born": "1987",
+      "died": "",
+      "photo": "/static/uploads/gupta/frank.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "caleb_runfola",
+      "name": "Caleb Runfola",
+      "born": "2016",
+      "died": "",
+      "photo": "/static/uploads/gupta/caleb.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "adalina_runfola",
+      "name": "Adalina Runfola",
+      "born": "2018",
+      "died": "",
+      "photo": "/static/uploads/gupta/adalina.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "mallika_chaudhary",
+      "name": "Mallika Chaudhary",
+      "born": "1995",
+      "died": "",
+      "photo": "/static/uploads/sen/mallika.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "meghna_chaudhary",
+      "name": "Meghna Chaudhary",
+      "born": "1996",
+      "died": "",
+      "photo": "/static/uploads/sen/meghna.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "rebati_mohan_sen", "b": "shukhomoyee_sen" },
+
+    { "child": "ranajit_kumar_sen", "parent": "rebati_mohan_sen" },
+    { "child": "ranajit_kumar_sen", "parent": "shukhomoyee_sen" },
+
+    { "type": "spouse", "a": "ranajit_kumar_sen", "b": "manashi_sen" },
+
+    { "child": "sumedha_sen", "parent": "ranajit_kumar_sen" },
+    { "child": "sumedha_sen", "parent": "manashi_sen" },
+
+    { "child": "sutapa_chaudhuri", "parent": "ranajit_kumar_sen" },
+    { "child": "sutapa_chaudhuri", "parent": "manashi_sen" },
+
+    { "child": "sharmistha_gupta", "parent": "ranajit_kumar_sen" },
+    { "child": "sharmistha_gupta", "parent": "manashi_sen" },
+
+    { "child": "ayesha_chaudhary", "parent": "sumedha_sen" },
+    { "child": "reshma_sen", "parent": "sumedha_sen" },
+
+    { "type": "spouse", "a": "ayesha_chaudhary", "b": "vikram_chaudhary" },
+
+    { "child": "mallika_chaudhary", "parent": "ayesha_chaudhary" },
+    { "child": "mallika_chaudhary", "parent": "vikram_chaudhary" },
+
+    { "child": "meghna_chaudhary", "parent": "ayesha_chaudhary" },
+    { "child": "meghna_chaudhary", "parent": "vikram_chaudhary" },
+
+    { "type": "spouse", "a": "sutapa_chaudhuri", "b": "monodip_chaudhuri" },
+
+    { "child": "manini_sen", "parent": "sutapa_chaudhuri" },
+    { "child": "manini_sen", "parent": "monodip_chaudhuri" },
+
+    { "child": "mohini_chaudhuri", "parent": "sutapa_chaudhuri" },
+    { "child": "mohini_chaudhuri", "parent": "monodip_chaudhuri" },
+
+    { "type": "spouse", "a": "manini_sen", "b": "aniruddha_sen" },
+
+    { "child": "ananya_sen", "parent": "manini_sen" },
+    { "child": "ananya_sen", "parent": "aniruddha_sen" },
+
+    { "type": "spouse", "a": "sharmistha_gupta", "b": "indranil_gupta" },
+
+    { "child": "rohini_runfola", "parent": "sharmistha_gupta" },
+    { "child": "rohini_runfola", "parent": "indranil_gupta" },
+
+    { "type": "spouse", "a": "rohini_runfola", "b": "frank_runfola" },
+
+    { "child": "caleb_runfola", "parent": "rohini_runfola" },
+    { "child": "caleb_runfola", "parent": "frank_runfola" },
+
+    { "child": "adalina_runfola", "parent": "rohini_runfola" },
+    { "child": "adalina_runfola", "parent": "frank_runfola" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1960_rebati_death",
+      "type": "death",
+      "date": "1960-01-01",
+      "people": ["rebati_mohan_sen"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Rebati Mohan Sen died (year-level date used)."
+    },
+    {
+      "id": "evt_1979_shukhomoyee_death",
+      "type": "death",
+      "date": "1979-01-01",
+      "people": ["shukhomoyee_sen"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Shukhomoyee Sen died (year-level date used)."
+    },
+    {
+      "id": "evt_1983_ranajit_death",
+      "type": "death",
+      "date": "1983-01-01",
+      "people": ["ranajit_kumar_sen"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Ranajit Kumar Sen died (year-level date used)."
+    },
+    {
+      "id": "evt_2015_manashi_death",
+      "type": "death",
+      "date": "2015-01-01",
+      "people": ["manashi_sen"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Manashi Sen died (year-level date used)."
+    },
+    {
+      "id": "evt_2012_ananya_birth",
+      "type": "birth",
+      "date": "2012-01-01",
+      "people": ["ananya_sen"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Ananya Sen born (year-level date used)."
+    },
+    {
+      "id": "evt_2016_caleb_birth",
+      "type": "birth",
+      "date": "2016-01-01",
+      "people": ["caleb_runfola"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Caleb Runfola born (year-level date used)."
+    },
+    {
+      "id": "evt_2018_adalina_birth",
+      "type": "birth",
+      "date": "2018-01-01",
+      "people": ["adalina_runfola"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Adalina Runfola born (year-level date used)."
+    }
+  ]
+}

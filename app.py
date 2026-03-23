@@ -1,9 +1,9 @@
+
 from __future__ import annotations
 
 import json
-import math
 import re
-from collections import defaultdict, deque
+from collections import defaultdict
 from pathlib import Path
 from uuid import uuid4
 
@@ -124,165 +124,272 @@ def family_stats(data: dict) -> dict:
 
 
 def build_tree_layout(data: dict) -> dict:
-    people = {person['id']: person for person in data.get('people', [])}
+    people_by_id = {person['id']: person for person in data.get('people', [])}
     relationships = data.get('relationships', [])
-    spouse_map: dict[str, str] = {}
+
+    spouse_of: dict[str, str] = {}
+    child_to_parents: dict[str, set[str]] = defaultdict(set)
     parent_to_children: dict[str, list[str]] = defaultdict(list)
-    child_to_parents: dict[str, list[str]] = defaultdict(list)
 
     for rel in relationships:
         if rel.get('type') == 'spouse':
             a = rel.get('a')
             b = rel.get('b')
-            if a in people and b in people:
-                spouse_map[a] = b
-                spouse_map[b] = a
+            if a in people_by_id and b in people_by_id:
+                spouse_of[a] = b
+                spouse_of[b] = a
         elif rel.get('child') and rel.get('parent'):
             child = rel['child']
             parent = rel['parent']
-            if child in people and parent in people:
-                parent_to_children[parent].append(child)
-                child_to_parents[child].append(parent)
+            if child in people_by_id and parent in people_by_id:
+                child_to_parents[child].add(parent)
+                if child not in parent_to_children[parent]:
+                    parent_to_children[parent].append(child)
 
-    generation_cache: dict[str, int] = {}
+    people_order = {pid: idx for idx, pid in enumerate(people_by_id.keys())}
 
-    def generation(person_id: str) -> int:
-        if person_id in generation_cache:
-            return generation_cache[person_id]
-        parents = child_to_parents.get(person_id, [])
+    def person_sort_key(person_id: str):
+        person = people_by_id[person_id]
+        born = str(person.get('born', '')).strip()
+        try:
+            born_key = int(born) if born else 999999
+        except ValueError:
+            born_key = 999999
+        return (born_key, person.get('name', ''), people_order.get(person_id, 0))
+
+    family_defs: dict[str, dict] = {}
+
+    def family_id_for(parents: list[str]) -> str:
         if not parents:
-            generation_cache[person_id] = 0
-            return 0
-        generation_cache[person_id] = max(generation(parent_id) for parent_id in parents) + 1
-        return generation_cache[person_id]
+            return ''
+        return 'fam__' + '__'.join(sorted(parents))
 
-    for person_id in people:
-        generation(person_id)
+    def ensure_family(parents: list[str]) -> dict:
+        parent_ids = sorted(dict.fromkeys([pid for pid in parents if pid in people_by_id]), key=person_sort_key)
+        fid = family_id_for(parent_ids)
+        if fid not in family_defs:
+            family_defs[fid] = {
+                'id': fid,
+                'parent_ids': parent_ids,
+                'child_ids': [],
+                'sort_key': min((person_sort_key(pid) for pid in parent_ids), default=(999999, '', 0)),
+            }
+        return family_defs[fid]
 
-    units_by_gen: dict[int, list[list[str]]] = defaultdict(list)
-    seen: set[str] = set()
-
-    def unit_sort_key(unit: list[str]):
-        roots = [min(generation_cache.get(pid, 0), 99) for pid in unit]
-        min_gen = min(roots) if roots else 0
-        parent_ids = []
-        for pid in unit:
-            parent_ids.extend(child_to_parents.get(pid, []))
-        parent_names = [people[p]['name'] for p in parent_ids if p in people]
-        primary_name = people[unit[0]]['name']
-        return (min_gen, min(parent_names) if parent_names else primary_name, primary_name)
-
-    for person_id in sorted(people, key=lambda pid: (generation_cache[pid], people[pid]['name'])):
-        if person_id in seen:
+    # Create family units for spouse pairs first so couples always stay together.
+    seen_spouse_pairs = set()
+    for a, b in spouse_of.items():
+        pair = tuple(sorted((a, b), key=person_sort_key))
+        if pair in seen_spouse_pairs:
             continue
-        spouse_id = spouse_map.get(person_id)
-        person_gen = generation_cache[person_id]
-        if spouse_id and spouse_id not in seen:
-            unit = [person_id, spouse_id]
-            unit.sort(key=lambda pid: people[pid]['name'])
-            seen.update(unit)
-            units_by_gen[person_gen].append(unit)
-        else:
-            seen.add(person_id)
-            units_by_gen[person_gen].append([person_id])
+        seen_spouse_pairs.add(pair)
+        ensure_family(list(pair))
 
-    for gen, units in units_by_gen.items():
-        units.sort(key=unit_sort_key)
+    # Group children by exact parent set, then attach to the matching family unit.
+    for child_id, parent_ids in child_to_parents.items():
+        if not parent_ids:
+            continue
+        parent_ids = sorted(parent_ids, key=person_sort_key)
+        family = ensure_family(parent_ids)
+        family['child_ids'].append(child_id)
 
-    unit_index_by_person: dict[str, tuple[int, int]] = {}
-    for gen, units in units_by_gen.items():
-        for idx, unit in enumerate(units):
-            for pid in unit:
-                unit_index_by_person[pid] = (gen, idx)
+    # Single people with no spouse and no grouped family still need a visible unit.
+    people_in_parent_units = {pid for fam in family_defs.values() for pid in fam['parent_ids']}
+    for person_id in people_by_id:
+        if person_id not in people_in_parent_units and person_id not in spouse_of:
+            ensure_family([person_id])
+
+    for fam in family_defs.values():
+        fam['child_ids'] = sorted(dict.fromkeys(fam['child_ids']), key=person_sort_key)
+
+    family_ids_by_parent: dict[str, list[str]] = defaultdict(list)
+    for fam in family_defs.values():
+        for pid in fam['parent_ids']:
+            family_ids_by_parent[pid].append(fam['id'])
+
+    def family_priority(fid: str) -> tuple[int, int, tuple]:
+        fam = family_defs[fid]
+        return (len(fam['child_ids']), len(fam['parent_ids']), tuple(person_sort_key(pid) for pid in fam['parent_ids']))
+
+    home_family_for_person: dict[str, str] = {}
+    for pid in people_by_id:
+        fam_ids = family_ids_by_parent.get(pid, [])
+        if fam_ids:
+            fam_ids = sorted(fam_ids, key=family_priority, reverse=True)
+            home_family_for_person[pid] = fam_ids[0]
+
+    # Build child family relationships using each child's home family.
+    for fam in family_defs.values():
+        fam['child_units'] = []
+        fam['leaf_children'] = []
+
+    attached_family_ids = set()
+    for fam in family_defs.values():
+        for child_id in fam['child_ids']:
+            child_home = home_family_for_person.get(child_id)
+            if child_home and child_home != fam['id'] and child_home in family_defs:
+                family_defs[fam['id']]['child_units'].append(child_home)
+                attached_family_ids.add(child_home)
+            else:
+                family_defs[fam['id']]['leaf_children'].append(child_id)
+
+    for fam in family_defs.values():
+        seen = set()
+        ordered_units = []
+        for unit_id in fam['child_units']:
+            if unit_id not in seen:
+                seen.add(unit_id)
+                ordered_units.append(unit_id)
+        fam['child_units'] = sorted(ordered_units, key=lambda fid: family_defs[fid]['sort_key'])
+        fam['leaf_children'] = sorted(dict.fromkeys(fam['leaf_children']), key=person_sort_key)
+
+    root_family_ids = [
+        fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])
+        if fam['id'] not in attached_family_ids
+    ]
+    if not root_family_ids:
+        root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])]
+
+    CARD_W = 96
+    PHOTO_H = 82
+    NAME_H = 34
+    CARD_H = PHOTO_H + NAME_H + 12
+    PARENT_GAP = 14
+    SIBLING_GAP = 18
+    FAMILY_GAP = 40
+    LEVEL_GAP = max(28, CARD_H // 4)
+    SIDE_PAD = 28
+    TOP_PAD = 20
+
+    size_cache: dict[str, float] = {}
+
+    def family_row_width(count: int) -> float:
+        if count <= 0:
+            return CARD_W
+        return count * CARD_W + max(0, count - 1) * PARENT_GAP
+
+    def subtree_width(fid: str) -> float:
+        if fid in size_cache:
+            return size_cache[fid]
+        fam = family_defs[fid]
+        parent_width = family_row_width(len(fam['parent_ids']))
+        child_parts = []
+        for child_family_id in fam['child_units']:
+            child_parts.append(subtree_width(child_family_id))
+        for _ in fam['leaf_children']:
+            child_parts.append(CARD_W)
+        children_width = 0.0
+        if child_parts:
+            children_width = sum(child_parts) + SIBLING_GAP * (len(child_parts) - 1)
+        total = max(parent_width, children_width, CARD_W)
+        size_cache[fid] = total
+        return total
 
     layout_people = []
     connectors = []
+    placed_people = set()
+    max_x = 0.0
+    max_y = 0.0
 
-    unit_width = 192
-    pair_gap = 12
-    generation_gap = 206
-    card_width = 82
-    pair_card_width = 82
-    card_height = 128
-    row_padding_x = 48
-    row_padding_y = 28
-
-    max_units = max((len(units) for units in units_by_gen.values()), default=1)
-    canvas_width = max(720, row_padding_x * 2 + max_units * unit_width)
-    canvas_height = row_padding_y * 2 + (max(units_by_gen.keys(), default=0) + 1) * generation_gap + 140
-
-    unit_centers: dict[tuple[int, int], float] = {}
-
-    for gen in sorted(units_by_gen):
-        units = units_by_gen[gen]
-        row_width = len(units) * unit_width
-        row_start_x = max(row_padding_x, (canvas_width - row_width) / 2)
-        y = row_padding_y + gen * generation_gap
-
-        for idx, unit in enumerate(units):
-            unit_start_x = row_start_x + idx * unit_width
-            if len(unit) == 2:
-                first_x = unit_start_x + 10
-                second_x = first_x + pair_card_width + pair_gap
-                positions = [(unit[0], first_x), (unit[1], second_x)]
-                couple_center = (first_x + pair_card_width / 2 + second_x + pair_card_width / 2) / 2
-                connectors.append({
-                    'type': 'spouse',
-                    'x1': first_x + pair_card_width,
-                    'y1': y + 58,
-                    'x2': second_x,
-                    'y2': y + 58,
-                })
-                unit_centers[(gen, idx)] = couple_center
-            else:
-                single_x = unit_start_x + (unit_width - card_width) / 2
-                positions = [(unit[0], single_x)]
-                unit_centers[(gen, idx)] = single_x + card_width / 2
-
-            for pid, x in positions:
-                person = people[pid]
-                layout_people.append({
-                    'id': pid,
-                    'name': person['name'],
-                    'years': f"{person.get('born', '')}-{person.get('died', '')}".strip('-'),
-                    'photo': person.get('photo', '/static/img/you.jpg'),
-                    'x': round(x, 1),
-                    'y': round(y, 1),
-                    'generation': gen,
-                })
-
-    sibling_connectors: dict[tuple[int, int], list[float]] = defaultdict(list)
-
-    for child_id, parents in child_to_parents.items():
-        parent_units = {unit_index_by_person[parent_id] for parent_id in parents if parent_id in unit_index_by_person}
-        if not parent_units:
-            continue
-        parent_unit = sorted(parent_units)[0]
-        child_unit = unit_index_by_person.get(child_id)
-        if not child_unit:
-            continue
-
-        parent_center_x = unit_centers[parent_unit]
-        child_center_x = unit_centers[child_unit]
-        parent_y = row_padding_y + parent_unit[0] * generation_gap + 160
-        child_y = row_padding_y + child_unit[0] * generation_gap
-        bus_y = (parent_y + child_y) / 2
-
-        sibling_connectors[parent_unit].append(child_center_x)
-        connectors.append({'type': 'parent-drop', 'x1': parent_center_x, 'y1': parent_y, 'x2': parent_center_x, 'y2': bus_y})
-        connectors.append({'type': 'child-drop', 'x1': child_center_x, 'y1': bus_y, 'x2': child_center_x, 'y2': child_y})
-
-    for parent_unit, child_centers in sibling_connectors.items():
-        if not child_centers:
-            continue
-        bus_y = (row_padding_y + parent_unit[0] * generation_gap + 160 + row_padding_y + (parent_unit[0] + 1) * generation_gap) / 2
-        connectors.append({
-            'type': 'sibling-bus',
-            'x1': min(child_centers),
-            'y1': bus_y,
-            'x2': max(child_centers),
-            'y2': bus_y,
+    def add_person(person_id: str, center_x: float, top_y: float) -> None:
+        nonlocal max_x, max_y
+        if person_id in placed_people:
+            return
+        placed_people.add(person_id)
+        person = people_by_id[person_id]
+        years = f"{person.get('born', '')}-{person.get('died', '')}".strip('-')
+        layout_people.append({
+            'id': person_id,
+            'name': person.get('name', 'Unknown'),
+            'years': years,
+            'photo': person.get('photo', '/static/img/placeholder-avatar.png'),
+            'x': round(center_x - CARD_W / 2, 1),
+            'y': round(top_y, 1),
+            'generation': 0,
         })
+        max_x = max(max_x, center_x + CARD_W / 2)
+        max_y = max(max_y, top_y + CARD_H)
+
+    def layout_family(fid: str, center_x: float, top_y: float) -> None:
+        nonlocal max_x, max_y
+        fam = family_defs[fid]
+        parent_count = max(1, len(fam['parent_ids']))
+        parent_row_width = family_row_width(parent_count)
+        parent_left = center_x - parent_row_width / 2
+        parent_centers = []
+        for idx, pid in enumerate(fam['parent_ids']):
+            px = parent_left + idx * (CARD_W + PARENT_GAP) + CARD_W / 2
+            parent_centers.append(px)
+            add_person(pid, px, top_y)
+
+        if len(parent_centers) >= 2:
+            connectors.append({
+                'x1': round(parent_centers[0], 1),
+                'y1': round(top_y + PHOTO_H / 2, 1),
+                'x2': round(parent_centers[-1], 1),
+                'y2': round(top_y + PHOTO_H / 2, 1),
+            })
+
+        child_parts = []
+        for child_family_id in fam['child_units']:
+            child_parts.append(('family', child_family_id, subtree_width(child_family_id)))
+        for child_id in fam['leaf_children']:
+            child_parts.append(('leaf', child_id, CARD_W))
+
+        if not child_parts:
+            max_y = max(max_y, top_y + CARD_H)
+            return
+
+        child_y = top_y + CARD_H + LEVEL_GAP
+        total_children_width = sum(width for _, _, width in child_parts) + SIBLING_GAP * (len(child_parts) - 1)
+        child_cursor = center_x - total_children_width / 2
+        child_centers = []
+        child_bus_y = top_y + CARD_H + max(10, LEVEL_GAP * 0.45)
+        parent_anchor_x = sum(parent_centers) / len(parent_centers) if parent_centers else center_x
+
+        connectors.append({
+            'x1': round(parent_anchor_x, 1),
+            'y1': round(top_y + CARD_H, 1),
+            'x2': round(parent_anchor_x, 1),
+            'y2': round(child_bus_y, 1),
+        })
+
+        for kind, ref, width in child_parts:
+            child_center_x = child_cursor + width / 2
+            child_centers.append(child_center_x)
+            if kind == 'family':
+                layout_family(ref, child_center_x, child_y)
+            else:
+                add_person(ref, child_center_x, child_y)
+            connectors.append({
+                'x1': round(child_center_x, 1),
+                'y1': round(child_bus_y, 1),
+                'x2': round(child_center_x, 1),
+                'y2': round(child_y, 1),
+            })
+            child_cursor += width + SIBLING_GAP
+
+        if child_centers:
+            connectors.append({
+                'x1': round(min(child_centers), 1),
+                'y1': round(child_bus_y, 1),
+                'x2': round(max(child_centers), 1),
+                'y2': round(child_bus_y, 1),
+            })
+
+        max_y = max(max_y, child_y + CARD_H)
+
+    forest_width = sum(subtree_width(fid) for fid in root_family_ids) + FAMILY_GAP * max(0, len(root_family_ids) - 1)
+    canvas_width = max(720, int(forest_width + SIDE_PAD * 2))
+    cursor_x = (canvas_width - forest_width) / 2
+
+    for family_id in root_family_ids:
+        width = subtree_width(family_id)
+        center_x = cursor_x + width / 2
+        layout_family(family_id, center_x, TOP_PAD)
+        cursor_x += width + FAMILY_GAP
+
+    canvas_height = int(max_y + TOP_PAD + 18)
 
     return {
         'family_name': data.get('meta', {}).get('family_name', 'Family Tree'),
@@ -290,7 +397,7 @@ def build_tree_layout(data: dict) -> dict:
         'profile_photo': data.get('meta', {}).get('profile_photo', '/static/img/you.jpg'),
         'canvas_width': int(canvas_width),
         'canvas_height': int(canvas_height),
-        'people': layout_people,
+        'people': sorted(layout_people, key=lambda p: (p['y'], p['x'], p['name'])),
         'connectors': connectors,
         'stats': family_stats(data),
     }

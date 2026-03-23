@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="ucWrap">
+    <div class="ucCard">
+        <div class="ucBadge">Under Construction</div>
+        <h1 class="ucTitle">{{ title or "This page is being built" }}</h1>
+        <p class="ucCopy">
+            {{ message or "The map experience is in progress. Check back soon — it’s going to be worth it." }}
+        </p>
+
+        <div class="ucActions">
+            <a class="ucBtn" href="/tree">Explore Tree</a>
+            <a class="ucBtn" href="/timeline">View Timeline</a>
+        </div>
+
+        <div class="ucNote">
+            ETA: soon. Quality first. 🙂
+        </div>
+    </div>
+</div>
+{% endblock %}
