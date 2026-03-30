@@ -46,3 +46,29 @@
   gap: 10px;
   margin-top: 10px;
 }
+
+
+@media (max-width: 450px) {
+  :root {
+    --tree-card-w: 84px;
+    --tree-photo-h: 84px;
+  }
+
+  .family-unit {
+    margin: 0 8px;
+  }
+
+  .spouse-row {
+    gap: 4px;
+  }
+
+  .tree-card {
+    padding: 5px;
+    border-radius: 9px;
+  }
+
+  .children-row {
+    gap: 8px;
+    margin-top: 8px;
+  }
+}

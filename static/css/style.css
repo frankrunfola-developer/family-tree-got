@@ -5351,3 +5351,174 @@ section.parchment-card::after {
   .story-grid > .tree-card .person-name { font-size: 0.76rem !important; }
   .story-grid > .tree-card .person-years { font-size: 0.58rem !important; }
 }
+
+
+
+/* ==== v19 corrected parchment + tree fixes ==== */
+.hero-card.parchment-card,
+.summary-card.parchment-card,
+.map-card.parchment-card,
+.tree-card.parchment-card,
+.journey-card.parchment-card,
+.tree-page-card.parchment-card,
+.workspace-main.parchment-card,
+.form-card.parchment-card,
+.login-card.parchment-card,
+.flash-card.parchment-card,
+article.parchment-card,
+section.parchment-card {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 251, 244, 0.20), rgba(168, 126, 82, 0.05)),
+    url("../img/section-parchment.png") center center / cover no-repeat !important;
+  border: 1px solid rgba(126, 91, 52, 0.22) !important;
+  border-radius: 22px !important;
+  overflow: visible !important;
+  box-shadow:
+    0 12px 28px rgba(83, 54, 26, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 0 0 1px rgba(160, 120, 76, 0.08) !important;
+  isolation: isolate;
+}
+
+.hero-card.parchment-card::before,
+.summary-card.parchment-card::before,
+.map-card.parchment-card::before,
+.tree-card.parchment-card::before,
+.journey-card.parchment-card::before,
+.tree-page-card.parchment-card::before,
+.workspace-main.parchment-card::before,
+.form-card.parchment-card::before,
+.login-card.parchment-card::before,
+.flash-card.parchment-card::before,
+article.parchment-card::before,
+section.parchment-card::before {
+  content: "" !important;
+  position: absolute;
+  inset: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(138, 101, 61, 0.14);
+  pointer-events: none;
+  display: block !important;
+}
+
+.hero-card.parchment-card::after,
+.summary-card.parchment-card::after,
+.map-card.parchment-card::after,
+.tree-card.parchment-card::after,
+.journey-card.parchment-card::after,
+.tree-page-card.parchment-card::after,
+.workspace-main.parchment-card::after,
+.form-card.parchment-card::after,
+.login-card.parchment-card::after,
+.flash-card.parchment-card::after,
+article.parchment-card::after,
+section.parchment-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+.hero-card.parchment-card > *,
+.summary-card.parchment-card > *,
+.map-card.parchment-card > *,
+.tree-card.parchment-card > *,
+.journey-card.parchment-card > *,
+.tree-page-card.parchment-card > *,
+.workspace-main.parchment-card > *,
+.form-card.parchment-card > *,
+.login-card.parchment-card > *,
+.flash-card.parchment-card > *,
+article.parchment-card > *,
+section.parchment-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.topbar.parchment-card {
+  overflow: visible !important;
+}
+
+/* Bottom landing cards: parchment section is the container, inner cards are lighter */
+.journey-card {
+  padding: 18px 18px 20px !important;
+}
+
+.journey-grid {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.journey-item {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 14px 14px !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.16), rgba(144,102,57,0.04)),
+    url("../img/parchment-sheet.png") center / cover no-repeat,
+    linear-gradient(180deg, rgba(248,237,216,0.70), rgba(229,210,179,0.34)) !important;
+  border: 1px solid rgba(171, 132, 88, 0.18) !important;
+  box-shadow:
+    0 5px 12px rgba(103, 64, 30, 0.08),
+    0 1px 0 rgba(255,255,255,0.42) inset !important;
+}
+
+.journey-item::before,
+.journey-item::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Tree: another size reduction at 450px */
+@media (max-width: 450px) {
+  .story-grid > .tree-card,
+  .tree-page-card .tree-frame,
+  .tree-page-card {
+    --tree-left-x: 4%;
+    --tree-card-w: 84px;
+    --tree-photo-h: 94px;
+    --tree-featured-photo-h: 108px;
+    --tree-nameplate-h: 40px;
+    --tree-gap-y: 22px;
+    --tree-row-1-top: 16px;
+    --tree-row-step: calc(var(--tree-photo-h) + var(--tree-nameplate-h) + var(--tree-gap-y));
+    --tree-row-2-top: calc(var(--tree-row-1-top) + var(--tree-row-step));
+    --tree-row-3-top: calc(var(--tree-row-2-top) + var(--tree-row-step));
+    --tree-featured-top: calc(var(--tree-row-3-top) + var(--tree-photo-h) + var(--tree-nameplate-h) + 46px);
+    --tree-featured-width: 112px;
+    --tree-right-x: calc(100% - 4% - var(--tree-card-w));
+    --tree-featured-x: calc(50% - (var(--tree-featured-width) / 2));
+    --tree-connector-left: calc(var(--tree-left-x) + var(--tree-card-w));
+    --tree-connector-width: calc(var(--tree-right-x) - var(--tree-connector-left));
+    --tree-line-row-offset: 58px;
+  }
+
+  .story-grid > .tree-card,
+  .tree-page-card .tree-card,
+  .tree-page-card .person-card,
+  .tree-card {
+    padding: 8px;
+  }
+
+  .story-grid > .tree-card .tree-canvas,
+  .tree-page-card .tree-canvas {
+    min-height: calc(var(--tree-featured-top) + var(--tree-featured-photo-h) + var(--tree-nameplate-h) + 46px);
+    padding-bottom: 20px;
+  }
+
+  .story-grid > .tree-card .person-name,
+  .tree-page-card .person-name {
+    font-size: 0.78rem !important;
+  }
+
+  .story-grid > .tree-card .person-years,
+  .tree-page-card .person-years {
+    font-size: 0.58rem !important;
+  }
+
+  .story-grid > .tree-card .portrait-frame,
+  .tree-page-card .portrait-frame {
+    padding: 5px !important;
+  }
+}
