@@ -1,0 +1,342 @@
+{
+  "people": [
+    {
+      "id": "paresh",
+      "name": "Paresh Chandra Gupta",
+      "born": "1888",
+      "died": "1970",
+      "photo": "/static/uploads/gupta/paresh.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "nilima",
+      "name": "Nilima Gupta",
+      "born": "1904",
+      "died": "1999",
+      "photo": "/static/uploads/gupta/nilima.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "prosun",
+      "name": "Prosun Gupta",
+      "born": "1928",
+      "died": "2015",
+      "photo": "/static/uploads/gupta/prosun.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "dipali",
+      "name": "Dipali Gupta",
+      "born": "1936",
+      "died": "2019",
+      "photo": "/static/uploads/gupta/dipali.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "indranil",
+      "name": "Indranil Gupta",
+      "born": "1956",
+      "photo": "/static/uploads/gupta/indranil.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
+    },
+    {
+      "id": "sharmistha",
+      "name": "Sharmistha Gupta",
+      "born": "1962",
+      "photo": "/static/uploads/gupta/sharmistha.png",
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 }
+    },
+
+    {
+      "id": "rumjhum",
+      "name": "Rumjhum Chatterjee",
+      "born": "1960",
+      "photo": "/static/uploads/gupta/rumjhum.png",
+      "location": { "city": "Bengaluru", "region": "Karnataka", "country": "India", "lat": 12.9716, "lng": 77.5946 }
+    },
+    {
+      "id": "vinayak",
+      "name": "Vinayak Chatterjee",
+      "born": "1958",
+      "photo": "/static/uploads/gupta/vinayak.png",
+      "location": { "city": "Dubai", "region": "Dubai", "country": "UAE", "lat": 25.2048, "lng": 55.2708 }
+    },
+
+    {
+      "id": "indrajit",
+      "name": "Indrajit Gupta",
+      "born": "1967",
+      "photo": "/static/uploads/gupta/indrajit.png",
+      "location": { "city": "San Francisco", "region": "CA", "country": "USA", "lat": 37.7749, "lng": -122.4194 }
+    },
+    {
+      "id": "nanda",
+      "name": "Nanda Majumdar",
+      "born": "1969",
+      "photo": "/static/uploads/gupta/nanda.png",
+      "location": { "city": "Seattle", "region": "WA", "country": "USA", "lat": 47.6062, "lng": -122.3321 }
+    },
+
+    {
+      "id": "rohini",
+      "name": "Rohini Runfola",
+      "born": "1988",
+      "photo": "/static/uploads/gupta/rohini.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
+    },
+    {
+      "id": "frank",
+      "name": "Frank Runfola",
+      "born": "1987",
+      "photo": "/static/uploads/gupta/frank.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
+    },
+
+    {
+      "id": "caleb",
+      "name": "Caleb Runfola",
+      "born": "2016",
+      "photo": "/static/uploads/gupta/caleb.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
+    },
+    {
+      "id": "adalina",
+      "name": "Adalina Runfola",
+      "born": "2018",
+      "photo": "/static/uploads/gupta/adalina.png",
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 }
+    },
+
+    {
+      "id": "nayantara",
+      "name": "Nayantara Kochhar",
+      "born": "1986",
+      "photo": "/static/uploads/gupta/nayantara.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "shailesh",
+      "name": "Shailesh Kochhar",
+      "born": "1984",
+      "photo": "/static/uploads/gupta/shailesh.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+    {
+      "id": "maahir",
+      "name": "Maahir Kochhar",
+      "born": "2022",
+      "photo": "/static/uploads/gupta/maahir.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    },
+
+    {
+      "id": "atreyee",
+      "name": "Atreyee Gupta",
+      "born": "2001",
+      "photo": "/static/uploads/gupta/atreyee.png",
+      "location": { "city": "Toronto", "region": "ON", "country": "Canada", "lat": 43.6532, "lng": -79.3832 }
+    },
+    {
+      "id": "auroni",
+      "name": "Auroni Gupta",
+      "born": "2005",
+      "photo": "/static/uploads/gupta/auroni.png",
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 }
+    }
+  ],
+
+  "relationships": [
+    { "type": "spouse", "a": "paresh", "b": "nilima" },
+    { "type": "spouse", "a": "prosun", "b": "dipali" },
+    { "type": "spouse", "a": "indranil", "b": "sharmistha" },
+    { "type": "spouse", "a": "rumjhum", "b": "vinayak" },
+    { "type": "spouse", "a": "indrajit", "b": "nanda" },
+    { "type": "spouse", "a": "rohini", "b": "frank" },
+    { "type": "spouse", "a": "nayantara", "b": "shailesh" },
+
+    { "child": "prosun", "parent": "paresh" },
+    { "child": "prosun", "parent": "nilima" },
+
+    { "child": "indranil", "parent": "prosun" },
+    { "child": "indranil", "parent": "dipali" },
+
+    { "child": "rumjhum", "parent": "prosun" },
+    { "child": "rumjhum", "parent": "dipali" },
+
+    { "child": "indrajit", "parent": "prosun" },
+    { "child": "indrajit", "parent": "dipali" },
+
+    { "child": "rohini", "parent": "indranil" },
+    { "child": "rohini", "parent": "sharmistha" },
+
+    { "child": "nayantara", "parent": "rumjhum" },
+    { "child": "nayantara", "parent": "vinayak" },
+
+    { "child": "atreyee", "parent": "indrajit" },
+    { "child": "atreyee", "parent": "nanda" },
+
+    { "child": "auroni", "parent": "indrajit" },
+    { "child": "auroni", "parent": "nanda" },
+
+    { "child": "caleb", "parent": "rohini" },
+    { "child": "caleb", "parent": "frank" },
+
+    { "child": "adalina", "parent": "rohini" },
+    { "child": "adalina", "parent": "frank" },
+
+    { "child": "maahir", "parent": "nayantara" },
+    { "child": "maahir", "parent": "shailesh" }
+  ],
+
+  "events": [
+    {
+      "id": "evt_1919_paresh_nilima_marriage",
+      "type": "marriage",
+      "date": "1919-02-14",
+      "people": ["paresh", "nilima"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+    {
+      "id": "evt_1955_prosun_dipali_marriage",
+      "type": "marriage",
+      "date": "1955-11-20",
+      "people": ["prosun", "dipali"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+    {
+      "id": "evt_1984_rumjhum_vinayak_marriage",
+      "type": "marriage",
+      "date": "1984-12-02",
+      "people": ["rumjhum", "vinayak"],
+      "location": { "city": "Bengaluru", "region": "Karnataka", "country": "India", "lat": 12.9716, "lng": 77.5946 },
+      "description": "Married in Bengaluru."
+    },
+    {
+      "id": "evt_1985_indranil_sharmistha_marriage",
+      "type": "marriage",
+      "date": "1985-08-18",
+      "people": ["indranil", "sharmistha"],
+      "location": { "city": "London", "region": "England", "country": "UK", "lat": 51.5072, "lng": -0.1276 },
+      "description": "Married in London."
+    },
+    {
+      "id": "evt_1988_indrajit_nanda_marriage",
+      "type": "marriage",
+      "date": "1988-09-10",
+      "people": ["indrajit", "nanda"],
+      "location": { "city": "Seattle", "region": "WA", "country": "USA", "lat": 47.6062, "lng": -122.3321 },
+      "description": "Married in Seattle."
+    },
+    {
+      "id": "evt_2012_rohini_frank_marriage",
+      "type": "marriage",
+      "date": "2012-10-06",
+      "people": ["rohini", "frank"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Married in New York City."
+    },
+    {
+      "id": "evt_2015_nayantara_shailesh_marriage",
+      "type": "marriage",
+      "date": "2015-01-24",
+      "people": ["nayantara", "shailesh"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Married in Kolkata."
+    },
+
+    {
+      "id": "evt_1982_indranil_move_delhi",
+      "type": "move",
+      "date": "1982-06-01",
+      "people": ["indranil"],
+      "location": { "city": "New Delhi", "region": "Delhi", "country": "India", "lat": 28.6139, "lng": 77.209 },
+      "description": "Relocation for work."
+    },
+    {
+      "id": "evt_1987_indranil_move_nyc",
+      "type": "move",
+      "date": "1987-03-01",
+      "people": ["indranil"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "International relocation."
+    },
+    {
+      "id": "evt_1994_indrajit_move_sf",
+      "type": "move",
+      "date": "1994-05-01",
+      "people": ["indrajit"],
+      "location": { "city": "San Francisco", "region": "CA", "country": "USA", "lat": 37.7749, "lng": -122.4194 },
+      "description": "West coast relocation."
+    },
+    {
+      "id": "evt_2006_sharmistha_move_manchester",
+      "type": "move",
+      "date": "2006-09-01",
+      "people": ["sharmistha"],
+      "location": { "city": "Manchester", "region": "England", "country": "UK", "lat": 53.4808, "lng": -2.2426 },
+      "description": "Move within England."
+    },
+    {
+      "id": "evt_2002_atreyee_move_toronto",
+      "type": "move",
+      "date": "2002-08-01",
+      "people": ["atreyee"],
+      "location": { "city": "Toronto", "region": "ON", "country": "Canada", "lat": 43.6532, "lng": -79.3832 },
+      "description": "Move to Toronto."
+    },
+
+    {
+      "id": "evt_1970_paresh_death_kolkata",
+      "type": "death",
+      "date": "1970-01-01",
+      "people": ["paresh"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_1999_nilima_death_kolkata",
+      "type": "death",
+      "date": "1999-01-01",
+      "people": ["nilima"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_2015_prosun_death_kolkata",
+      "type": "death",
+      "date": "2015-01-01",
+      "people": ["prosun"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+    {
+      "id": "evt_2019_dipali_death_kolkata",
+      "type": "death",
+      "date": "2019-01-01",
+      "people": ["dipali"],
+      "location": { "city": "Kolkata", "region": "West Bengal", "country": "India", "lat": 22.5726, "lng": 88.3639 },
+      "description": "Passed away in Kolkata."
+    },
+
+    {
+      "id": "evt_2016_caleb_birth_nyc",
+      "type": "birth",
+      "date": "2016-04-01",
+      "people": ["caleb"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Born in NYC."
+    },
+    {
+      "id": "evt_2018_adalina_birth_nyc",
+      "type": "birth",
+      "date": "2018-09-01",
+      "people": ["adalina"],
+      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.006 },
+      "description": "Born in NYC."
+    }
+  ]
+}

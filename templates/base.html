@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}LineAgeMap{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-fixes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-fixes.css') }}">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+    <main class="page-shell">
+      {% include '_topbar.html' %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-stack">{% for message in messages %}<div class="flash-card raised-card parchment-card">{{ message }}</div>{% endfor %}</div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+    <script>
+      (() => {
+        const toggle = document.querySelector('.nav-toggle');
+        const mobileNav = document.querySelector('.mobile-nav');
+        if (!toggle || !mobileNav) return;
+        toggle.addEventListener('click', () => {
+          const isOpen = mobileNav.classList.toggle('is-open');
+          toggle.classList.toggle('is-open', isOpen);
+          toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+        mobileNav.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            mobileNav.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      })();
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

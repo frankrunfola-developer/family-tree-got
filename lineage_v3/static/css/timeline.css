@@ -1,0 +1,593 @@
+/* Timeline.css
+   Timeline view only
+*/
+
+/* ------------------------------
+   Header / Filters (kept)
+-------------------------------- */
+
+.tlHead{
+  margin: 6px 0 18px;
+}
+.tlHead__kicker{
+  display:inline-block;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: rgba(40,32,24,0.62);
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.45);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.tlHead__title{
+  margin: 10px 0 14px;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 800;
+  color: rgba(70,50,36,0.92);
+  letter-spacing: 0.2px;
+  font-size: clamp(22px, 3vw, 34px);
+}
+
+.tlControls{
+  display:flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tlSearch{
+  flex: 1 1 260px;
+}
+.tlSearch input{
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(40,32,24,0.16);
+  background: rgba(255,255,255,0.62);
+  padding: 12px 14px;
+  font-weight: 600;
+  color: rgba(40,32,24,0.86);
+  outline: none;
+}
+.tlSearch input:focus{
+  border-color: rgba(122,82,44,0.35);
+  box-shadow: 0 0 0 3px rgba(122,82,44,0.12);
+}
+
+.tlFilters{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+
+.tlChip{
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.52);
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.68);
+  cursor: pointer;
+}
+.tlChip.is-active{
+  background: rgba(255,255,255,0.78);
+  border-color: rgba(122,82,44,0.30);
+  color: rgba(70,50,36,0.92);
+  box-shadow: 0 10px 20px rgba(40,32,24,0.10);
+}
+
+.tlWrap{
+  margin-top: 16px;
+}
+
+.tlStatus{
+  margin: 8px 0 14px;
+  font-weight: 700;
+  color: rgba(40,32,24,0.72);
+  text-align: center;
+  width: 100%;
+}
+
+.tlList{
+  display: grid;
+  gap: 16px;
+}
+
+/* legacy year-group list styles (not used by snake, but keep if you ever flip back) */
+.tlYear{
+  border-radius: 20px;
+  border: 1px solid rgba(40,32,24,0.12);
+  background: rgba(255,255,255,0.38);
+  box-shadow: 0 14px 30px rgba(40,32,24,0.10);
+  padding: 14px 14px 10px;
+}
+.tlYear__head{
+  display:flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.tlYear__label{
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: rgba(40,32,24,0.70);
+}
+.tlYear__rule{
+  height: 1px;
+  flex: 1 1 auto;
+  background: rgba(40,32,24,0.14);
+}
+
+.tlItem{
+  display:flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(40,32,24,0.12);
+  background: rgba(255,255,255,0.58);
+  margin-bottom: 10px;
+}
+.tlIcon{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(40,32,24,0.12);
+  font-weight: 900;
+  color: rgba(70,50,36,0.88);
+  flex: 0 0 34px;
+}
+.tlMain{
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.tlTitle{
+  margin: 0 0 4px;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 900;
+  color: rgba(70,50,36,0.94);
+  font-size: 16px;
+}
+.tlMeta{
+  color: rgba(40,32,24,0.68);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.tlTag{
+  margin-top: 8px;
+  display:inline-block;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.45);
+  color: rgba(40,32,24,0.62);
+}
+
+/* ------------------------------
+   Serpentine Snake Timeline
+-------------------------------- */
+
+.tlWrap--snake{
+  margin-top: 14px;
+}
+
+.tlStatusRow{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  gap: 8px;
+}
+
+.tlSnakeControls{
+  display:flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tlLabel{
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.70);
+  min-width: 132px;
+}
+
+.tlSelect{
+  border-radius: 12px;
+  border: 1px solid rgba(40,32,24,0.18);
+  background: rgba(255,255,255,0.70);
+  padding: 8px 10px;
+  font-weight: 700;
+  color: rgba(40,32,24,0.86);
+  width: 100%;
+  height: 38px;
+}
+
+.tlSortBtn{
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Snake container */
+.tlSnakeRoot{
+  position: relative;
+  margin-top: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(40,32,24,0.14);
+  background: rgba(255,255,255,0.35);
+  box-shadow: 0 16px 40px rgba(40,32,24,0.10);
+  overflow: hidden;
+  min-height: 140px;
+
+  /* Path geometry vars (inherited by SVG path rules below) */
+  --tl-stroke-w: 9;
+}
+
+.tlSnakeSvg{
+  position:absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.tlSPath{
+  fill: none;
+  stroke: rgba(70,50,36,0.72);
+  stroke-width: var(--tl-stroke-w, 9);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 6px 10px rgba(40,32,24,0.12));
+}
+
+.tlSDots circle{
+  fill: rgba(70,50,36,0.92);
+  opacity: 0.26;
+}
+
+.tlSnakeCards{
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  /* Baseline (desktop-ish) */
+  --tl-card-w: 220px;
+  --tl-card-h: 84px;
+
+  /* Your "preferred" gap */
+  --tl-gap-x: 12px;
+  --tl-gap-y: 34px;
+
+  /* HARD minimum gap (this is what JS will enforce) */
+  --tl-min-gap-x: 28px;
+
+  --tl-pad-x: 8px;
+  --tl-pad-y: 8px;
+  --tl-cols: 4;
+
+  /* Elbow knobs:
+     --tl-elbow-x still supported as your “push-out preference”
+     --tl-elbow-r: 0 means JS auto-computes based on gap/lanes */
+  --tl-elbow-x: 24px;
+  --tl-elbow-r: 0px;
+
+  /* Optional (JS uses this for geometry math) */
+  --tl-stroke-w: 9;
+}
+
+/* Card */
+.tlSCard{
+  position: absolute;
+  width: var(--tl-card-w);
+  height: var(--tl-card-h);
+  display:flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(40,32,24,0.18);
+  background: #fbf3e6;
+  box-shadow: 0 10px 26px rgba(40,32,24,0.12);
+}
+
+.tlSPhoto{
+  width: 60px;
+  height: 75px;
+  flex: 0 0 60px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(40,32,24,0.14);
+  background-color: rgba(240,230,214,0.95);
+  background-size: cover;
+  background-position: center;
+}
+
+.tlSBody{ flex: 1 1 auto; min-width: 0; }
+
+.tlSTop{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.tlSDate,
+.tlSType{
+  white-space: nowrap;
+}
+
+.tlSType{
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tlSDate{
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(40,32,24,0.68);
+}
+
+.tlSType{
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(40,32,24,0.16);
+  background: rgba(255,255,255,0.85);
+  color: rgba(40,32,24,0.70);
+}
+
+.tlSName{
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 900;
+  color: rgba(70,50,36,0.94);
+  font-size: 15px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tlSMeta{
+  margin-top: 3px;
+  font-size: 11px;
+  color: rgba(40,32,24,0.70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 1700px){
+  .tlSnakeCards{
+    --tl-cols: 7;
+  }
+}
+
+/* Desktop */
+@media (min-width: 900px){
+  .tlSnakeCards{
+    --tl-cols: 4;
+    --tl-card-w: 170px;
+    --tl-card-h: 84px;
+    --tl-gap-x: 12px;
+    --tl-min-gap-x: 28px;
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
+
+    --tl-elbow-x: 24px;
+    --tl-elbow-r: 0px;
+    --tl-stroke-w: 9;
+  }
+
+  .tlSPhoto{ width: 52px; height: 64px; flex-basis: 52px; }
+  .tlSCard{ padding: 10px 10px; }
+  .tlSName{ font-size: 14px; }
+  .tlSMeta{ font-size: 11px; }
+}
+
+/* Small screens */
+@media (max-width: 720px){
+  .tlSnakeRoot{ border-radius: 18px; }
+  .tlSCard{ border-radius: 16px; }
+
+  .tlSnakeCards{
+    --tl-cols: 2;
+    --tl-card-w: 160px;
+    --tl-card-h: 84px;
+
+    --tl-gap-x: 12px;
+    --tl-min-gap-x: 16px;
+
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
+
+    --tl-elbow-x: 20px;
+    --tl-elbow-r: 0px;
+    --tl-stroke-w: 8;
+  }
+
+  .tlSCard{ padding: 9px 9px; gap: 7px; }
+  .tlSPhoto{ width: 44px; height: 44px; flex-basis: 44px; border-radius: 10px; }
+  .tlSDate{ font-size: 9px; letter-spacing: 0.06em; }
+  .tlSType{ font-size: 9px; padding: 4px 7px; letter-spacing: 0.10em; max-width: 58px; }
+  .tlSName{ font-size: 13px; }
+  .tlSMeta{ font-size: 10px; }
+}
+
+@media (max-width: 520px){
+  .tlSnakeCards{
+    --tl-cols: 2;
+    --tl-card-w: 150px;
+    --tl-card-h: 84px;
+
+    --tl-gap-x: 12px;
+    --tl-min-gap-x: 14px;
+
+    --tl-gap-y: 34px;
+    --tl-pad-x: 8px;
+    --tl-pad-y: 8px;
+
+    --tl-elbow-x: 18px;
+    --tl-elbow-r: 0px;
+    --tl-stroke-w: 6;
+  }
+
+  .tlSnakeRoot{ --tl-stroke-w: 6; }
+  .tlSDots circle{ opacity: 0.18; }
+}
+/* ------------------------------
+   Embed mode (landing previews)
+-------------------------------- */
+.isEmbed .pillTitle{ display:none !important; }
+.isEmbed .tlTop{ display:none !important; }
+
+.isEmbed .tlShell{
+  padding-top: 0;
+}
+
+.isEmbed .tlSnakeRoot{
+  --tl-card-w: clamp(96px, 22vw, 128px);
+  --tl-card-h: 84px;
+  --tl-gap-x: 12px;
+  --tl-gap-y: 34px;
+  --tl-min-gap-x: 20px;
+  --tl-pad-x: 8px;
+  --tl-pad-y: 8px;
+  --tl-cols: auto;
+}
+
+.isEmbed .tlCard{ font-size: 11px; }
+.isEmbed .tlCard .tlCardTitle{ font-size: 12px; }
+.isEmbed .tlCard .tlCardMeta{ font-size: 10px; }
+
+
+.isEmbed .tlSnakeRoot{ overflow: hidden; }
+
+
+/* ------------------------------------------------------------
+   Mobile tightening (timeline nodes)
+------------------------------------------------------------ */
+@media (max-width: 720px){
+  .tlSnakeCards{
+    --tl-card-w: 190px;
+    --tl-card-h: 76px;
+    --tl-gap-x: 10px;
+    --tl-gap-y: 28px;
+    --tl-pad-x: 6px;
+    --tl-pad-y: 6px;
+    --tl-cols: 2;
+  }
+}
+
+@media (max-width: 460px){
+  .tlSnakeCards{
+    --tl-card-w: 164px;
+    --tl-card-h: 70px;
+    --tl-gap-x: 8px;
+    --tl-gap-y: 22px;
+    --tl-pad-x: 4px;
+    --tl-pad-y: 4px;
+    --tl-cols: 1;
+  }
+}
+
+
+/* Embed previews: force smaller nodes regardless of viewport rules */
+.isEmbed .tlSnakeCards{
+  --tl-cols: 2;
+  --tl-card-w: 156px;
+  --tl-card-h: 72px;
+  --tl-gap-x: 10px;
+  --tl-gap-y: 22px;
+  --tl-pad-x: 6px;
+  --tl-pad-y: 6px;
+  --tl-min-gap-x: 14px;
+}
+
+@media (max-width: 420px){
+  .isEmbed .tlSnakeCards{
+    --tl-cols: 1;
+    --tl-card-w: 140px;
+    --tl-card-h: 64px;
+  }
+}
+
+
+
+/* Embedded timeline preview on landing page */
+.timelineEmbed.appFrameShell,
+.timelineEmbed.appFrameCard,
+.appFrameShell.timelineEmbed,
+.appFrameCard.timelineEmbed,
+.timelineEmbed .tlShell,
+.timelineEmbed .tlTop {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+.timelineEmbed.appFrameShell,
+.appFrameShell.timelineEmbed {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.timelineEmbed.appFrameCard,
+.appFrameCard.timelineEmbed {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+  background: transparent !important;
+}
+
+.timelineEmbed .pillTitle,
+.timelineEmbed .tlTop,
+.timelineEmbed .tlTitle,
+.timelineEmbed .tlStatus {
+  display: none !important;
+}
+
+.timelineEmbed .tlShell {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.timelineEmbed .tlSnakeRoot,
+.timelineEmbed .tlSnakeCards,
+.timelineEmbed .tlSnakeSvg {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}

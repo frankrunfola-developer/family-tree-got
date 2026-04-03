@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Tree | LineAgeMap{% endblock %}
+{% block body_class %}landing-page tree-page{% endblock %}
 {% block content %}
 <section class="tree-page-card raised-card parchment-card">
-  <div class="section-head wide-gap">
+  <div class="section-head wide-gap tree-page-head">
     <div>
       <p class="eyebrow">Your living archive</p>
       <h1>{{ tree_data.family_name }}</h1>
       <p class="subtitle">A structured record of your family story, preserved and connected across generations.</p>
     </div>
+  </div>
+
+  <div class="tree-page-actions hero-auth-actions">
+    <a class="btn-primary" href="{{ url_for('tree') }}">Start Building Your Archive</a>
     {% if logged_in_user %}
-    <a class="btn-primary" href="{{ url_for('dashboard') }}">Back to archive</a>
+    <a class="btn-secondary" href="{{ url_for('dashboard') }}">Login To Continue Building</a>
     {% else %}
-    <a class="btn-primary" href="{{ url_for('login') }}">Login to build your archive</a>
+    <a class="btn-secondary" href="{{ url_for('login') }}">Login To Continue Building</a>
     {% endif %}
   </div>
 
@@ -28,12 +33,19 @@
     const syncTreeScale = () => {
       document.querySelectorAll('.tree-scale-stage').forEach((stage) => {
         const frame = stage.closest('.tree-frame');
-        const canvasWidth = Number(stage.style.getPropertyValue('--canvas-width')) || stage.offsetWidth || 1;
-        const canvasHeight = Number(stage.style.getPropertyValue('--canvas-height')) || 1;
+        const canvas = stage.querySelector('.tree-canvas');
+        const canvasWidth = Number(stage.style.getPropertyValue('--canvas-width')) || Number(stage.dataset.canvasWidth) || canvas?.offsetWidth || 1;
+        const canvasHeight = Number(stage.style.getPropertyValue('--canvas-height')) || Number(stage.dataset.canvasHeight) || canvas?.offsetHeight || 1;
         const available = Math.max((frame?.clientWidth || canvasWidth) - 12, 220);
         const scale = Math.min(1, available / canvasWidth);
         stage.style.setProperty('--tree-scale', scale.toFixed(4));
+        if (canvas) {
+          canvas.style.transform = `translateX(-50%) scale(${scale})`;
+        }
         stage.style.height = `${Math.ceil(canvasHeight * scale)}px`;
+        if (frame) {
+          frame.style.minHeight = `${Math.ceil(canvasHeight * scale) + 20}px`;
+        }
       });
     };
 
