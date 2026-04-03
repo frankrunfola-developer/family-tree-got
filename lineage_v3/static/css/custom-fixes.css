@@ -239,3 +239,161 @@
     max-width: 62% !important;
   }
 }
+
+
+/* ==== v17 final polish ==== */
+.landing-page .brand-mark-title {
+  font-size: clamp(2rem, 3vw, 2.7rem) !important;
+}
+.landing-page .nav-toggle {
+  width: 58px !important;
+  height: 58px !important;
+}
+.landing-page .nav-toggle span {
+  width: 24px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+}
+
+.landing-page .summary-header-block h2 {
+  font-size: clamp(1.42rem, 2.2vw, 2.25rem) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.landing-page .summary-stats-grid {
+  gap: 14px !important;
+}
+.landing-page .summary-stat-card {
+  min-height: clamp(150px, 15vw, 205px) !important;
+  height: clamp(150px, 15vw, 205px) !important;
+  aspect-ratio: auto !important;
+  gap: clamp(8px, 0.8vw, 12px) !important;
+  padding: clamp(12px, 1vw, 16px) !important;
+  justify-content: flex-start !important;
+}
+.landing-page .summary-stat-card::before {
+  inset: 8px !important;
+}
+.landing-page .summary-stat-card .ledger-icon {
+  width: clamp(58px, 4.2vw, 80px) !important;
+  height: clamp(58px, 4.2vw, 80px) !important;
+  margin-top: 0 !important;
+}
+.landing-page .summary-stat-card .ledger-value {
+  font-size: clamp(2rem, 2.5vw, 3rem) !important;
+  line-height: 0.95 !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+.landing-page .summary-stat-copy {
+  margin-top: 0 !important;
+  width: 100% !important;
+}
+.landing-page .summary-stat-copy .ledger-label {
+  font-size: clamp(0.9rem, 1.2vw, 1.18rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0.08em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.landing-page .summary-stat-copy .ledger-detail {
+  display: none !important;
+}
+
+.landing-page .map-sequence-banner {
+  grid-template-columns: auto 1fr !important;
+}
+.landing-page .map-sequence-value {
+  font-size: clamp(1.02rem, 1.25vw, 1.28rem) !important;
+  font-weight: 800 !important;
+  color: #7b461f !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.landing-page .map-sequence-kicker {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 640px) {
+  .landing-page .summary-header-block h2 {
+    font-size: clamp(1.18rem, 5.2vw, 1.56rem) !important;
+  }
+  .landing-page .summary-stat-card {
+    min-height: 146px !important;
+    height: 146px !important;
+    padding: 10px !important;
+  }
+  .landing-page .summary-stat-card .ledger-icon {
+    width: 54px !important;
+    height: 54px !important;
+  }
+  .landing-page .summary-stat-card .ledger-value {
+    font-size: 1.95rem !important;
+  }
+  .landing-page .summary-stat-copy .ledger-label {
+    font-size: 0.82rem !important;
+    letter-spacing: 0.06em !important;
+  }
+  .landing-page .person-chip {
+    font-size: 0.5rem !important;
+    padding: 0.34rem 0.52rem !important;
+  }
+  .landing-page .map-legend {
+    font-size: 0.58rem !important;
+    gap: 5px !important;
+  }
+  .landing-page .map-sequence-value {
+    font-size: 0.92rem !important;
+  }
+  .landing-page .brand-mark-title {
+    font-size: 1.85rem !important;
+  }
+  .landing-page .nav-toggle {
+    width: 54px !important;
+    height: 54px !important;
+  }
+  .landing-page .nav-toggle span {
+    width: 22px !important;
+  }
+}
+
+body.tree-page .brand-mark-title {
+  font-size: clamp(2rem, 3vw, 2.7rem) !important;
+}
+body.tree-page .nav-toggle {
+  width: 58px !important;
+  height: 58px !important;
+}
+body.tree-page .nav-toggle span {
+  width: 24px !important;
+  height: 3px !important;
+}
+body.tree-page .tree-frame.full-frame {
+  overflow: hidden !important;
+}
+body.tree-page .tree-scale-stage {
+  width: 100% !important;
+  min-width: 100% !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+body.tree-page .tree-canvas {
+  position: absolute !important;
+  left: 50% !important;
+  top: 0 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  transform: translateX(-50%) scale(var(--tree-scale, 1)) !important;
+  transform-origin: top center !important;
+}
+body.tree-page .tree-svg,
+body.tree-page .tree-connector {
+  stroke: #9e6737 !important;
+  stroke-width: 3.25px !important;
+}
+body.tree-page .tree-frame .person-card {
+  width: 96px !important;
+}

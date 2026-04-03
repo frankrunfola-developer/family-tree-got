@@ -448,3 +448,795 @@ body.tree-page .tree-page-card .nameplate.compact {
     font-size: 0.86rem !important;
   }
 }
+
+
+/* ==== v13 final polish overrides ==== */
+.nav-toggle {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 8px !important;
+  gap: 2px !important;
+}
+.nav-toggle span {
+  width: 12px !important;
+  height: 2px !important;
+}
+
+.hero-card .subtitle {
+  max-width: 37rem !important;
+  font-size: clamp(0.78rem, 1.45vw, 0.9rem) !important;
+}
+.hero-mini-icons {
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+.hero-mini-icons span {
+  font-size: clamp(0.64rem, 1.28vw, 0.78rem) !important;
+  padding: 5px 8px !important;
+}
+.search-row.cta-only,
+.hero-auth-actions {
+  max-width: 260px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.search-row.cta-only .btn-primary,
+.hero-auth-actions .btn-secondary,
+.tree-page-actions .btn-primary,
+.tree-page-actions .btn-secondary {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.person-chip {
+  font-size: 0.88rem !important;
+}
+.map-sequence-banner {
+  display: grid !important;
+  grid-template-columns: auto 1fr !important;
+  align-items: center !important;
+  column-gap: 14px !important;
+}
+.map-sequence-value {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 0.95rem !important;
+}
+.map-speed-btn {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+}
+
+.summary-stats-grid {
+  gap: 18px !important;
+}
+.summary-stat-card {
+  min-height: 184px !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 18px 18px 16px !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 16px 28px rgba(100, 67, 38, 0.12),
+    0 4px 10px rgba(137, 94, 53, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.86),
+    inset 0 -1px 0 rgba(173,132,88,0.10) !important;
+}
+.summary-stat-card::before {
+  inset: 9px !important;
+  border-radius: 19px !important;
+  border-color: rgba(189, 153, 110, 0.22) !important;
+}
+.summary-stat-card::after {
+  width: 82px !important;
+  height: 82px !important;
+  right: 14px !important;
+  top: 16px !important;
+  bottom: auto !important;
+  opacity: 0.42 !important;
+  filter: drop-shadow(0 4px 8px rgba(124, 84, 49, 0.08));
+}
+.summary-stat-top {
+  display: grid !important;
+  grid-template-columns: 1fr 86px !important;
+  align-items: start !important;
+  gap: 6px !important;
+}
+.summary-stat-top .ledger-value {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: start !important;
+  text-align: center !important;
+  font-size: clamp(3rem, 5.3vw, 3.8rem) !important;
+  min-height: 58px !important;
+  padding-top: 4px !important;
+}
+.summary-stat-top .ledger-icon {
+  display: none !important;
+}
+.summary-stat-copy {
+  margin-top: 14px !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  gap: 5px !important;
+}
+.summary-stat-copy .ledger-label,
+.summary-stat-copy .ledger-detail {
+  white-space: normal !important;
+  text-wrap: balance !important;
+  text-align: center !important;
+  line-height: 1.04 !important;
+}
+.summary-stat-copy .ledger-label {
+  font-size: 0.96rem !important;
+  letter-spacing: 0.18em !important;
+}
+.summary-stat-copy .ledger-detail {
+  font-size: 0.78rem !important;
+  letter-spacing: 0.08em !important;
+  opacity: 0.9 !important;
+}
+.summary-stat-card.ledger-members::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%23c49063'/%3E%3Cstop offset='1' stop-color='%23835332'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='34' cy='31' r='10'/%3E%3Cpath d='M18 61c0-9 7.4-16.2 16.5-16.2S51 52 51 61'/%3E%3Ccircle cx='61' cy='29' r='8' opacity='.92'/%3E%3Cpath d='M51 60c2-6.5 7.8-11.2 14.6-11.2 4.7 0 8.9 2 11.8 5.3' opacity='.92'/%3E%3Cpath d='M24 19c4.8-4.6 9.6-7.1 14.5-7.4 5.1-.3 9.8 1.6 14.5 5.7' opacity='.45'/%3E%3Cpath d='M29 70h40' opacity='.34'/%3E%3Cpath d='M70 60l8 7-8 7' opacity='.5'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.summary-stat-card.ledger-generations::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%23c49063'/%3E%3Cstop offset='1' stop-color='%23835332'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='12' y='16' width='20' height='14' rx='3'/%3E%3Crect x='64' y='16' width='20' height='14' rx='3'/%3E%3Crect x='38' y='62' width='20' height='14' rx='3'/%3E%3Cpath d='M22 30v14h52V30'/%3E%3Cpath d='M48 44v18'/%3E%3Ccircle cx='48' cy='44' r='3' fill='%23835332' stroke='none'/%3E%3Cpath d='M12 48h14M70 48h14' opacity='.46'/%3E%3Cpath d='M48 6v8' opacity='.4'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.summary-stat-card.ledger-branches::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%23c49063'/%3E%3Cstop offset='1' stop-color='%23835332'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M47 78V20'/%3E%3Cpath d='M47 36c0-12 10-19.6 24.5-20-1.5 10-10.2 17.7-24.5 20Z'/%3E%3Cpath d='M47 51c0-8.8-8.8-15.3-22-15.6 1.4 8.6 8.8 14.8 22 15.6Z'/%3E%3Cpath d='M47 64c0-6.7 6.4-11.2 15.8-11.5-1.1 6.3-6.5 10.8-15.8 11.5Z' opacity='.82'/%3E%3Cpath d='M47 28c0-7.4-6.7-12.3-16.5-12.6 1 7 6.7 11.9 16.5 12.6Z' opacity='.48'/%3E%3Ccircle cx='47' cy='20' r='3' fill='%23835332' stroke='none'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+body.tree-page .topbar,
+body.tree-page .topbar.parchment-card {
+  background: linear-gradient(180deg, rgba(247,241,230,0.98), rgba(236,226,208,0.98)) !important;
+}
+body.tree-page .tree-page-card {
+  padding-top: 22px !important;
+}
+body.tree-page .tree-page-head h1 {
+  font-size: clamp(2rem, 2.8vw, 2.45rem) !important;
+}
+body.tree-page .tree-page-card .subtitle {
+  max-width: 38rem !important;
+}
+body.tree-page .tree-page-actions {
+  max-width: 280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+body.tree-page .tree-frame.full-frame {
+  overflow: auto !important;
+  padding: 20px 14px 26px !important;
+  min-height: 0 !important;
+}
+body.tree-page .tree-scale-stage {
+  width: max-content !important;
+  min-width: 100% !important;
+  height: auto !important;
+}
+body.tree-page .tree-canvas {
+  left: 0 !important;
+  transform: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+body.tree-page .tree-page-card .tree-svg,
+body.tree-page .tree-page-card .tree-connector {
+  stroke: #a1693b !important;
+  stroke-width: 3px !important;
+}
+body.tree-page .tree-page-card .portrait-frame,
+body.tree-page .tree-page-card .portrait-frame.compact {
+  background: linear-gradient(180deg, #fcfaf5, #efe3cf) !important;
+  border: 1px solid rgba(171,130,87,0.32) !important;
+}
+body.tree-page .tree-page-card .nameplate,
+body.tree-page .tree-page-card .nameplate.compact {
+  background: linear-gradient(180deg, rgba(255,252,248,0.96), rgba(239,226,204,0.96)) !important;
+  border-color: rgba(171,130,87,0.32) !important;
+}
+
+@media (max-width: 640px) {
+  .summary-stat-card {
+    min-height: 168px !important;
+  }
+  .summary-stat-card::after {
+    width: 72px !important;
+    height: 72px !important;
+    right: 12px !important;
+    top: 14px !important;
+  }
+  .summary-stat-top {
+    grid-template-columns: 1fr 72px !important;
+  }
+  .summary-stat-top .ledger-value {
+    font-size: 2.8rem !important;
+  }
+  .person-chip {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* ==== v14 summary polish + more historical map ==== */
+.summary-stat-card {
+  min-height: 192px !important;
+  padding: 16px 18px 14px !important;
+}
+.summary-stat-card::after {
+  width: 88px !important;
+  height: 88px !important;
+  right: 12px !important;
+  top: 12px !important;
+  opacity: 0.58 !important;
+}
+.summary-stat-top {
+  grid-template-columns: 88px 88px !important;
+  justify-content: space-between !important;
+  align-items: start !important;
+}
+.summary-stat-top .ledger-value {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding-top: 2px !important;
+  padding-left: 8px !important;
+  font-size: clamp(2.8rem, 4.3vw, 3.45rem) !important;
+  line-height: 0.92 !important;
+  min-height: 52px !important;
+}
+.summary-stat-copy {
+  margin-top: 6px !important;
+  gap: 4px !important;
+}
+.summary-stat-copy .ledger-label,
+.summary-stat-copy .ledger-detail {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  max-width: 100% !important;
+}
+.summary-stat-copy .ledger-label {
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  color: #8a5730 !important;
+}
+.summary-stat-copy .ledger-detail {
+  font-size: 0.72rem !important;
+  letter-spacing: 0.06em !important;
+  color: rgba(138, 87, 48, 0.72) !important;
+}
+
+.landing-page .live-map-frame {
+  background:
+    linear-gradient(180deg, rgba(255,252,246,0.56), rgba(231,214,184,0.88)),
+    radial-gradient(circle at 22% 16%, rgba(174,133,77,0.12), transparent 30%),
+    url("../img/paper-texture-light.jpg") center / cover no-repeat !important;
+}
+.landing-page .lm-map canvas,
+.landing-page .leaflet-tile {
+  filter: sepia(0.34) saturate(0.72) hue-rotate(-18deg) brightness(1.02) contrast(0.93) !important;
+}
+.landing-page .map-sequence-banner {
+  background: linear-gradient(180deg, rgba(255,250,241,0.9), rgba(234,216,184,0.92)) !important;
+}
+
+@media (max-width: 640px) {
+  .summary-stat-card {
+    min-height: 176px !important;
+    padding: 14px 15px 12px !important;
+  }
+  .summary-stat-card::after {
+    width: 76px !important;
+    height: 76px !important;
+    right: 10px !important;
+    top: 10px !important;
+    opacity: 0.54 !important;
+  }
+  .summary-stat-top {
+    grid-template-columns: 72px 76px !important;
+  }
+  .summary-stat-top .ledger-value {
+    font-size: 2.5rem !important;
+    padding-left: 6px !important;
+  }
+  .summary-stat-copy .ledger-label {
+    font-size: 0.8rem !important;
+    letter-spacing: 0.1em !important;
+  }
+  .summary-stat-copy .ledger-detail {
+    font-size: 0.66rem !important;
+    letter-spacing: 0.05em !important;
+  }
+}
+
+/* ==== v15 responsive summary + map mobile + tree page recovery ==== */
+.summary-header-block h2 {
+  white-space: nowrap !important;
+  font-size: clamp(1.95rem, 4.8vw, 3.25rem) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.summary-stats-grid {
+  gap: 16px !important;
+}
+
+.summary-stat-card {
+  min-height: 178px !important;
+  padding: 14px 14px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+}
+
+.summary-stat-card::after {
+  right: 14px !important;
+  top: 12px !important;
+  width: 72px !important;
+  height: 72px !important;
+  opacity: 0.9 !important;
+}
+
+.summary-stat-top {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+}
+
+.summary-stat-top .ledger-icon {
+  width: 72px !important;
+  height: 72px !important;
+  border: 0 !important;
+  background: transparent !important;
+  order: 1 !important;
+}
+
+.summary-stat-top .ledger-value {
+  order: 2 !important;
+  width: 100% !important;
+  min-height: auto !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 0 !important;
+  font-size: clamp(2.4rem, 5vw, 3.15rem) !important;
+  line-height: 0.95 !important;
+}
+
+.summary-stat-copy {
+  width: 100% !important;
+  margin-top: 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.summary-stat-copy .ledger-label,
+.summary-stat-copy .ledger-detail {
+  display: block !important;
+  width: 100% !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  line-height: 1.04 !important;
+}
+
+.summary-stat-copy .ledger-label {
+  font-size: clamp(1rem, 2vw, 1.14rem) !important;
+  letter-spacing: 0.11em !important;
+  font-weight: 700 !important;
+  color: #885830 !important;
+}
+
+.summary-stat-copy .ledger-detail {
+  font-size: clamp(0.72rem, 1.2vw, 0.82rem) !important;
+  letter-spacing: 0.07em !important;
+  color: rgba(136, 88, 48, 0.72) !important;
+}
+
+.summary-stat-card.ledger-members::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d9c1a2' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M28 39c0-7 5-12 12-12s12 5 12 12-5 12-12 12-12-5-12-12Z'/%3E%3Cpath d='M49 36c1-8 7-14 15-14 9 0 16 7 16 16 0 8-6 15-14 16'/%3E%3Cpath d='M17 70c1-11 10-18 23-18s22 7 23 18'/%3E%3Cpath d='M53 71c2-9 9-14 18-14 8 0 15 4 19 11'/%3E%3Ccircle cx='73' cy='25' r='4.5' fill='%23ead8bf' stroke='none'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+.summary-stat-card.ledger-generations::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d9c1a2' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='14' y='18' width='20' height='16' rx='4'/%3E%3Crect x='61' y='18' width='20' height='16' rx='4'/%3E%3Crect x='38' y='62' width='20' height='16' rx='4'/%3E%3Cpath d='M24 34v14h47V34'/%3E%3Cpath d='M48 48v14'/%3E%3Ccircle cx='48' cy='48' r='4' fill='%23ead8bf' stroke='none'/%3E%3Ccircle cx='24' cy='48' r='3.5' fill='%23ead8bf' stroke='none'/%3E%3Ccircle cx='71' cy='48' r='3.5' fill='%23ead8bf' stroke='none'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+.summary-stat-card.ledger-branches::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d9c1a2' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M47 76V27'/%3E%3Cpath d='M47 47c-8 0-16-7-19-15 10-2 21 2 25 11'/%3E%3Cpath d='M47 58c9 0 17-6 21-16-11-2-21 3-25 11'/%3E%3Cpath d='M46 72c-7 0-13-5-16-12 8-2 16 1 20 7'/%3E%3Cpath d='M52 28c7 0 13-5 16-13-8-2-16 1-20 7'/%3E%3Ccircle cx='47' cy='80' r='4.5' fill='%23ead8bf' stroke='none'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+.map-legend {
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+}
+
+.legend-item {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 640px) {
+  .summary-header-block h2 {
+    font-size: clamp(1.72rem, 7vw, 2.12rem) !important;
+  }
+
+  .summary-stat-card {
+    min-height: 168px !important;
+    padding: 12px 12px 11px !important;
+  }
+
+  .summary-stat-card::after {
+    width: 64px !important;
+    height: 64px !important;
+    right: 10px !important;
+    top: 10px !important;
+  }
+
+  .summary-stat-top .ledger-icon {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  .summary-stat-top .ledger-value {
+    font-size: clamp(2.1rem, 9vw, 2.7rem) !important;
+  }
+
+  .summary-stat-copy .ledger-label {
+    font-size: 0.88rem !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .summary-stat-copy .ledger-detail {
+    font-size: 0.66rem !important;
+  }
+
+  .person-chip {
+    font-size: 0.68rem !important;
+    padding: 0.48rem 0.82rem !important;
+  }
+
+  .map-legend {
+    font-size: 0.74rem !important;
+    gap: 8px !important;
+  }
+
+  .legend-item::before {
+    margin-right: 0.34rem !important;
+    transform: scale(0.88) !important;
+  }
+}
+
+body.tree-page .tree-frame.full-frame {
+  overflow: auto !important;
+  padding: 18px 12px 22px !important;
+}
+
+body.tree-page .tree-scale-stage {
+  display: block !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  height: calc(var(--canvas-height) * 1px) !important;
+  margin: 0 auto !important;
+}
+
+body.tree-page .tree-canvas {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  width: calc(var(--canvas-width) * 1px) !important;
+  height: calc(var(--canvas-height) * 1px) !important;
+  transform: none !important;
+  margin: 0 auto !important;
+}
+
+body.tree-page .tree-svg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body.tree-page .tree-page-actions .btn-primary,
+body.tree-page .tree-page-actions .btn-secondary {
+  width: min(320px, 100%) !important;
+}
+
+
+/* ==== v16 targeted summary / tree / map refinements ==== */
+.summary-header-block h2 {
+  font-size: clamp(1.58rem, 4.05vw, 2.72rem) !important;
+  white-space: nowrap !important;
+}
+
+.summary-stat-card {
+  min-height: 172px !important;
+  aspect-ratio: 1 / 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 14px 16px 16px !important;
+}
+.summary-stat-card::before {
+  inset: 10px !important;
+}
+.summary-stat-card::after {
+  display: none !important;
+}
+.summary-stat-top {
+  display: none !important;
+}
+.summary-stat-card .ledger-icon {
+  display: block !important;
+  width: 76px !important;
+  height: 76px !important;
+  margin: 2px auto 0 !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  opacity: 0.95 !important;
+}
+.summary-stat-card .ledger-value {
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: clamp(2.2rem, 4.2vw, 3rem) !important;
+  line-height: 0.9 !important;
+  color: #7e4a23 !important;
+}
+.summary-stat-copy {
+  width: 100% !important;
+  margin-top: 0 !important;
+  gap: 4px !important;
+  align-items: center !important;
+}
+.summary-stat-copy .ledger-label,
+.summary-stat-copy .ledger-detail {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: initial !important;
+  width: 100% !important;
+}
+.summary-stat-copy .ledger-label {
+  font-size: clamp(0.9rem, 1.5vw, 1.02rem) !important;
+  font-weight: 700 !important;
+  color: #8b5730 !important;
+  letter-spacing: 0.12em !important;
+}
+.summary-stat-copy .ledger-detail {
+  font-size: clamp(0.68rem, 1.1vw, 0.78rem) !important;
+  color: rgba(130, 86, 52, 0.76) !important;
+  letter-spacing: 0.08em !important;
+}
+.ledger-members .ledger-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23d6ab7a'/%3E%3Cstop offset='1' stop-color='%23804d27'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 65c0-9.4 8.2-16.8 18.2-16.8 9.8 0 17.8 7.4 17.8 16.8'/%3E%3Ccircle cx='39' cy='30' r='10.6'/%3E%3Cpath d='M48 60c1.9-7.2 8.2-12.5 15.9-12.5 4.9 0 9.5 2.2 12.4 5.9' opacity='.88'/%3E%3Ccircle cx='64.5' cy='32.2' r='7.8' opacity='.88'/%3E%3Cpath d='M26 18c4.2-4.4 8.7-6.7 13.5-6.8 4.9-.1 9.4 2 13.4 6.2' opacity='.36'/%3E%3Cpath d='M19 73h48' opacity='.25'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.ledger-generations .ledger-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23d6ab7a'/%3E%3Cstop offset='1' stop-color='%23804d27'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='16' y='18' width='18' height='14' rx='3'/%3E%3Crect x='62' y='18' width='18' height='14' rx='3'/%3E%3Crect x='39' y='61' width='18' height='14' rx='3'/%3E%3Cpath d='M25 32v14h46V32'/%3E%3Cpath d='M48 46v15'/%3E%3Ccircle cx='48' cy='46' r='3.2' fill='%23804d27' stroke='none'/%3E%3Cpath d='M10 49h10M76 49h10' opacity='.34'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.ledger-branches .ledger-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23d6ab7a'/%3E%3Cstop offset='1' stop-color='%23804d27'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M47 78V21'/%3E%3Cpath d='M47 35c0-11.8 10.2-19.2 25.2-19.4-1.6 10.4-10.4 18-25.2 19.4Z'/%3E%3Cpath d='M47 51c0-8.9-8.7-15.1-21.5-15.4 1.4 8.5 8.8 14.5 21.5 15.4Z'/%3E%3Cpath d='M47 65c0-6.7 6.6-11.2 15.8-11.4-1.1 6.3-6.6 10.7-15.8 11.4Z' opacity='.8'/%3E%3Ccircle cx='47' cy='21' r='3.2' fill='%23804d27' stroke='none'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+.nav-toggle span {
+  width: 18px !important;
+  height: 2.8px !important;
+}
+
+.map-sequence-value {
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+}
+.map-endpoint-dot {
+  width: 18px !important;
+  height: 18px !important;
+  border-width: 2px !important;
+}
+
+body.tree-page .tree-frame.full-frame {
+  overflow: auto !important;
+}
+body.tree-page .tree-canvas {
+  min-width: max-content !important;
+}
+
+@media (max-width: 640px) {
+  .summary-header-block h2 {
+    font-size: clamp(1.42rem, 6vw, 1.92rem) !important;
+  }
+  .summary-stat-card {
+    min-height: 160px !important;
+    padding: 12px 14px 14px !important;
+    gap: 8px !important;
+  }
+  .summary-stat-card .ledger-icon {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  .summary-stat-card .ledger-value {
+    font-size: clamp(1.95rem, 7vw, 2.4rem) !important;
+  }
+  .summary-stat-copy .ledger-label {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.1em !important;
+  }
+  .summary-stat-copy .ledger-detail {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.05em !important;
+  }
+  .person-chip {
+    font-size: 0.54rem !important;
+    padding: 0.36rem 0.58rem !important;
+  }
+  .map-legend {
+    font-size: 0.62rem !important;
+    gap: 6px !important;
+  }
+}
+
+
+/* ==== v17 final polish ==== */
+.landing-page .brand-mark-title {
+  font-size: clamp(2rem, 3vw, 2.7rem) !important;
+}
+.landing-page .nav-toggle {
+  width: 58px !important;
+  height: 58px !important;
+}
+.landing-page .nav-toggle span {
+  width: 24px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+}
+
+.landing-page .summary-header-block h2 {
+  font-size: clamp(1.42rem, 2.2vw, 2.25rem) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.landing-page .summary-stats-grid {
+  gap: 14px !important;
+}
+.landing-page .summary-stat-card {
+  min-height: clamp(150px, 15vw, 205px) !important;
+  height: clamp(150px, 15vw, 205px) !important;
+  aspect-ratio: auto !important;
+  gap: clamp(8px, 0.8vw, 12px) !important;
+  padding: clamp(12px, 1vw, 16px) !important;
+  justify-content: flex-start !important;
+}
+.landing-page .summary-stat-card::before {
+  inset: 8px !important;
+}
+.landing-page .summary-stat-card .ledger-icon {
+  width: clamp(58px, 4.2vw, 80px) !important;
+  height: clamp(58px, 4.2vw, 80px) !important;
+  margin-top: 0 !important;
+}
+.landing-page .summary-stat-card .ledger-value {
+  font-size: clamp(2rem, 2.5vw, 3rem) !important;
+  line-height: 0.95 !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+.landing-page .summary-stat-copy {
+  margin-top: 0 !important;
+  width: 100% !important;
+}
+.landing-page .summary-stat-copy .ledger-label {
+  font-size: clamp(0.9rem, 1.2vw, 1.18rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0.08em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.landing-page .summary-stat-copy .ledger-detail {
+  display: none !important;
+}
+
+.landing-page .map-sequence-banner {
+  grid-template-columns: auto 1fr !important;
+}
+.landing-page .map-sequence-value {
+  font-size: clamp(1.02rem, 1.25vw, 1.28rem) !important;
+  font-weight: 800 !important;
+  color: #7b461f !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.landing-page .map-sequence-kicker {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 640px) {
+  .landing-page .summary-header-block h2 {
+    font-size: clamp(1.18rem, 5.2vw, 1.56rem) !important;
+  }
+  .landing-page .summary-stat-card {
+    min-height: 146px !important;
+    height: 146px !important;
+    padding: 10px !important;
+  }
+  .landing-page .summary-stat-card .ledger-icon {
+    width: 54px !important;
+    height: 54px !important;
+  }
+  .landing-page .summary-stat-card .ledger-value {
+    font-size: 1.95rem !important;
+  }
+  .landing-page .summary-stat-copy .ledger-label {
+    font-size: 0.82rem !important;
+    letter-spacing: 0.06em !important;
+  }
+  .landing-page .person-chip {
+    font-size: 0.5rem !important;
+    padding: 0.34rem 0.52rem !important;
+  }
+  .landing-page .map-legend {
+    font-size: 0.58rem !important;
+    gap: 5px !important;
+  }
+  .landing-page .map-sequence-value {
+    font-size: 0.92rem !important;
+  }
+  .landing-page .brand-mark-title {
+    font-size: 1.85rem !important;
+  }
+  .landing-page .nav-toggle {
+    width: 54px !important;
+    height: 54px !important;
+  }
+  .landing-page .nav-toggle span {
+    width: 22px !important;
+  }
+}
+
+body.tree-page .brand-mark-title {
+  font-size: clamp(2rem, 3vw, 2.7rem) !important;
+}
+body.tree-page .nav-toggle {
+  width: 58px !important;
+  height: 58px !important;
+}
+body.tree-page .nav-toggle span {
+  width: 24px !important;
+  height: 3px !important;
+}
+body.tree-page .tree-frame.full-frame {
+  overflow: hidden !important;
+}
+body.tree-page .tree-scale-stage {
+  width: 100% !important;
+  min-width: 100% !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+body.tree-page .tree-canvas {
+  position: absolute !important;
+  left: 50% !important;
+  top: 0 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  transform: translateX(-50%) scale(var(--tree-scale, 1)) !important;
+  transform-origin: top center !important;
+}
+body.tree-page .tree-svg,
+body.tree-page .tree-connector {
+  stroke: #9e6737 !important;
+  stroke-width: 3.25px !important;
+}
+body.tree-page .tree-frame .person-card {
+  width: 96px !important;
+}

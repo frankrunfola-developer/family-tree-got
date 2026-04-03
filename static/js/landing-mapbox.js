@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let loopCurrentPersonId = null;
   let endpointDots = [];
   const speedToggle = document.getElementById('mapSpeedToggle');
-  let playbackSpeed = 'medium';
+  let playbackSpeed = 'slow';
   const speedProfiles = {
     slow: { routeDuration: 1900, transitionDuration: 250 },
     medium: { routeDuration: 1300, transitionDuration: 180 },
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const travelerMarker = new mapboxgl.Marker({ element: travelerEl, anchor: 'center' }).setLngLat(places[0].coords).addTo(map);
     travelerEl.style.display = 'none';
 
-    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 62, maxZoom: 3.9, duration: 0 });
+    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 74, maxZoom: 3.55, duration: 0 });
 
     let activeRouteId = null;
     let activeRouteArrowId = null;
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
-            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 70, maxZoom: 4.25, duration: animateTraveler ? 350 : 700 });
+            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 80, maxZoom: 3.95, duration: animateTraveler ? 350 : 700 });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
             map.flyTo({ center: person.coords, zoom: 5, duration: animateTraveler ? 350 : 700 });
           }
@@ -325,9 +325,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const travelerMarker = L.marker([places[0].coords[1], places[0].coords[0]], { icon: travelerIcon, opacity: 0 }).addTo(map);
 
     if (allLatLngs.length) {
-      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [24, 24] });
+      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [36, 36] });
     } else {
-      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [24, 24] });
+      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [36, 36] });
     }
 
     let activeLine = null;
@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
             const latlngs = person.path.map(([lng, lat]) => [lat, lng]);
-            map.fitBounds(L.latLngBounds(latlngs), { padding: [24, 24] });
+            map.fitBounds(L.latLngBounds(latlngs), { padding: [36, 36] });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
             map.flyTo([person.coords[1], person.coords[0]], 5, { duration: animateTraveler ? 0.35 : 0.75 });
           }

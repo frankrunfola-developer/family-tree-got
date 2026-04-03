@@ -24,28 +24,27 @@
 
 {% block scripts %}
 <script>
-  (() => {
-    const syncTreeScale = () => {
-      document.querySelectorAll('.tree-scale-stage').forEach((stage) => {
-        const frame = stage.closest('.tree-frame');
-        const canvas = stage.querySelector('.tree-canvas');
-        const canvasWidth = Number(stage.style.getPropertyValue('--canvas-width')) || Number(stage.dataset.canvasWidth) || canvas?.offsetWidth || 1;
-        const canvasHeight = Number(stage.style.getPropertyValue('--canvas-height')) || Number(stage.dataset.canvasHeight) || canvas?.offsetHeight || 1;
-        const available = Math.max((frame?.clientWidth || canvasWidth) - 12, 220);
-        const scale = Math.min(1, available / canvasWidth);
-        stage.style.setProperty('--tree-scale', scale.toFixed(4));
-        if (canvas) {
-          canvas.style.transform = `translateX(-50%) scale(${scale})`;
-        }
-        stage.style.height = `${Math.ceil(canvasHeight * scale)}px`;
-        if (frame) {
-          frame.style.minHeight = `${Math.ceil(canvasHeight * scale) + 20}px`;
-        }
-      });
-    };
+(() => {
+  const frame = document.querySelector('.tree-frame.full-frame');
+  const stage = document.querySelector('.tree-scale-stage');
+  const canvas = document.querySelector('.tree-canvas');
+  if (!frame || !stage || !canvas) return;
 
-    window.addEventListener('load', syncTreeScale);
-    window.addEventListener('resize', syncTreeScale);
-  })();
+  const fitTree = () => {
+    const cw = Number(stage.dataset.canvasWidth || getComputedStyle(stage).getPropertyValue('--canvas-width') || 0) || canvas.offsetWidth || 1;
+    const ch = Number(stage.dataset.canvasHeight || getComputedStyle(stage).getPropertyValue('--canvas-height') || 0) || canvas.offsetHeight || 1;
+    const available = Math.max(280, frame.clientWidth - 8);
+    const scale = Math.min(1, available / cw);
+    stage.style.setProperty('--tree-scale', String(scale));
+    stage.style.height = `${Math.round(ch * scale)}px`;
+    frame.scrollLeft = 0;
+  };
+
+  window.addEventListener('resize', fitTree);
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(fitTree).catch(fitTree);
+  }
+  fitTree();
+})();
 </script>
 {% endblock %}

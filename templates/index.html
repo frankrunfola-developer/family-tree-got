@@ -56,13 +56,10 @@
           <div class="summary-stats-grid">
             {% for stat in data.family.stats[:3] %}
             <article class="summary-stat-card ledger-{{ stat.id }}">
-              <div class="summary-stat-top">
-                <span class="ledger-icon" aria-hidden="true"></span>
-                <div class="ledger-value">{{ stat.value }}</div>
-              </div>
+              <span class="ledger-icon" aria-hidden="true"></span>
+              <div class="ledger-value">{{ stat.value }}</div>
               <div class="summary-stat-copy">
                 <div class="ledger-label">{{ stat.label }}</div>
-                {% if stat.detail %}<div class="ledger-detail">{{ stat.detail }}</div>{% endif %}
               </div>
             </article>
             {% endfor %}
@@ -107,8 +104,8 @@
           </div>
           <div class="map-controls">
             <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
-              <button class="map-speed-btn" type="button" data-speed="slow">Slow</button>
-              <button class="map-speed-btn is-active" type="button" data-speed="medium">Medium</button>
+              <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
+              <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
               <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
             </div>
             <button class="btn-secondary map-play-btn" id="mapPlayBtn" type="button">Play migration</button>

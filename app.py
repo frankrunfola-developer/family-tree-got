@@ -248,7 +248,7 @@ def build_tree_layout(data: dict) -> dict:
     PARENT_GAP = 10
     SIBLING_GAP = 18
     FAMILY_GAP = 40
-    LEVEL_GAP = 44
+    LEVEL_GAP = 48
     SIDE_PAD = 30
     TOP_PAD = 20
 
@@ -314,8 +314,8 @@ def build_tree_layout(data: dict) -> dict:
             ordered_parent_centers.append(px)
             add_person(pid, px, top_y)
 
+        spouse_y = top_y + PHOTO_H / 2
         if len(ordered_parent_centers) >= 2:
-            spouse_y = top_y + PHOTO_H / 2
             connectors.append({
                 'x1': round(ordered_parent_centers[0], 1),
                 'y1': round(spouse_y, 1),
@@ -331,9 +331,10 @@ def build_tree_layout(data: dict) -> dict:
                 child_parts.append((part, CARD_W))
 
         family_top_anchor = sum(ordered_parent_centers) / len(ordered_parent_centers) if ordered_parent_centers else center_x
+        family_anchor_y = spouse_y if ordered_parent_centers else top_y
         if not child_parts:
             max_y = max(max_y, top_y + CARD_H)
-            return {'top_anchor_x': family_top_anchor, 'parent_centers': parent_centers}
+            return {'top_anchor_x': family_top_anchor, 'anchor_y': family_anchor_y, 'parent_centers': parent_centers}
 
         child_y = top_y + CARD_H + LEVEL_GAP
         child_bus_y = top_y + CARD_H + max(12, LEVEL_GAP * 0.42)
@@ -354,17 +355,19 @@ def build_tree_layout(data: dict) -> dict:
             block_center_x = child_cursor + width / 2
             if part['kind'] == 'family':
                 child_layout = layout_family(part['family_id'], block_center_x, child_y)
-                anchor_x = child_layout['parent_centers'].get(part['child_id'], child_layout['top_anchor_x'])
+                anchor_x = child_layout['top_anchor_x']
+                anchor_y = child_layout['anchor_y']
             else:
                 add_person(part['child_id'], block_center_x, child_y)
                 anchor_x = block_center_x
+                anchor_y = child_y
 
             child_anchor_xs.append(anchor_x)
             connectors.append({
                 'x1': round(anchor_x, 1),
                 'y1': round(child_bus_y, 1),
                 'x2': round(anchor_x, 1),
-                'y2': round(child_y, 1),
+                'y2': round(anchor_y, 1),
             })
             child_cursor += width + SIBLING_GAP
 
@@ -377,7 +380,7 @@ def build_tree_layout(data: dict) -> dict:
             })
 
         max_y = max(max_y, child_y + CARD_H)
-        return {'top_anchor_x': family_top_anchor, 'parent_centers': parent_centers}
+        return {'top_anchor_x': family_top_anchor, 'anchor_y': family_anchor_y, 'parent_centers': parent_centers}
 
     forest_width = sum(subtree_width(fid) for fid in root_family_ids) + FAMILY_GAP * max(0, len(root_family_ids) - 1)
     canvas_width = max(720, int(forest_width + SIDE_PAD * 2))
