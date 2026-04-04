@@ -1240,3 +1240,297 @@ body.tree-page .tree-connector {
 body.tree-page .tree-frame .person-card {
   width: 96px !important;
 }
+
+/* v20 landing page capsule panel + width controls */
+.landing-page .page-shell {
+  width: min(100%, 1200px) !important;
+  max-width: 1200px !important;
+  margin-inline: auto !important;
+}
+
+.landing-page .topbar,
+.landing-page .hero-card,
+.landing-page .story-grid,
+.landing-page .map-card-live {
+  max-width: 100%;
+}
+
+.landing-page .hero-card {
+  margin-bottom: 14px !important;
+}
+
+.landing-page .hero-card h1,
+.landing-page .hero-title-top {
+  font-size: clamp(2rem, 4.4vw, 3.8rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.02em !important;
+}
+
+@media (min-width: 700px) {
+  .landing-page .hero-card h1,
+  .landing-page .hero-title-top {
+    font-size: clamp(2.4rem, 4vw, 3.95rem) !important;
+  }
+}
+
+.landing-page .story-grid {
+  align-items: start !important;
+}
+
+.landing-page .ancestor-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.landing-page .ancestor-hero-card,
+.landing-page .overview-section,
+.landing-page .journey-section {
+  border-radius: 28px;
+  border: 1px solid rgba(187, 147, 100, 0.28);
+  background:
+    radial-gradient(circle at top center, rgba(255,255,255,0.55), transparent 38%),
+    linear-gradient(180deg, rgba(255,249,241,0.92), rgba(241,226,203,0.98)),
+    url("../img/paper-texture-light.jpg") center/cover no-repeat;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.78), 0 10px 20px rgba(89, 60, 34, 0.08);
+  padding: 18px;
+}
+
+.landing-page .ancestor-hero-card {
+  text-align: center;
+  padding-top: 16px;
+}
+
+.landing-page .capsule-family-name {
+  max-width: none !important;
+  margin: 0 auto 8px !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  line-height: 1.03 !important;
+}
+
+.landing-page .ancestor-divider,
+.landing-page .section-title-wrap::after {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(161,115,70,0.45), transparent);
+  margin: 10px auto 12px;
+}
+
+.landing-page .ancestor-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.landing-page .ancestor-portrait-shell {
+  width: 126px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(180deg, rgba(113,64,37,0.96), rgba(197,142,98,0.96));
+  box-shadow: 0 10px 20px rgba(75,43,27,0.18), inset 0 1px 0 rgba(255,255,255,0.45);
+  display: grid;
+  place-items: center;
+}
+
+.landing-page .ancestor-portrait-shell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(253, 240, 222, 0.9);
+}
+
+.landing-page .ancestor-profile h3 {
+  margin: 6px 0 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  line-height: 1.02;
+}
+
+.landing-page .ancestor-role {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+}
+
+.landing-page .ancestor-trace-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(184, 145, 98, 0.28);
+  background: rgba(241, 224, 202, 0.78);
+  font-size: 1rem;
+  margin-top: 6px;
+}
+
+.landing-page .trace-icon {
+  color: #8b5a36;
+  font-size: 1rem;
+}
+
+.landing-page .section-title-wrap h3 {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  font-style: italic;
+}
+
+.landing-page .section-title-wrap::after {
+  content: "";
+  display: block;
+}
+
+.landing-page .ancestry-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.landing-page .overview-stat-card {
+  text-align: center;
+  border-radius: 18px;
+  padding: 14px 10px 12px;
+  border: 1px solid rgba(185, 147, 101, 0.24);
+  background: rgba(255, 247, 238, 0.76);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+}
+
+.landing-page .overview-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 44px 44px;
+  opacity: 0.95;
+}
+
+.landing-page .overview-members .overview-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 48c1-7 6-12 13-12s12 5 13 12'/%3E%3Ccircle cx='25' cy='25' r='7'/%3E%3Cpath d='M35 46c1-6 5-10 10-10 6 0 10 4 11 10'/%3E%3Ccircle cx='44' cy='23' r='6'/%3E%3Cpath d='M8 46c1-5 4-8 9-8 4 0 7 2 9 6'/%3E%3Ccircle cx='15' cy='26' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.landing-page .overview-generations .overview-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='8' width='14' height='12' rx='2'/%3E%3Crect x='42' y='8' width='14' height='12' rx='2'/%3E%3Crect x='25' y='26' width='14' height='12' rx='2'/%3E%3Crect x='25' y='44' width='14' height='12' rx='2'/%3E%3Cpath d='M15 20v7h17'/%3E%3Cpath d='M49 20v7H32'/%3E%3Cpath d='M32 38v6'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.landing-page .overview-branches .overview-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 52V22'/%3E%3Cpath d='M32 30c-8 0-14-5-17-13 9-1 16 2 17 13Z'/%3E%3Cpath d='M32 38c8 0 14-5 17-13-9-1-16 2-17 13Z'/%3E%3Cpath d='M32 18c0-8 5-14 13-17 1 9-2 16-13 17Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.landing-page .overview-years .overview-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 12h28'/%3E%3Cpath d='M18 52h28'/%3E%3Cpath d='M22 12c0 10 10 10 10 20s-10 10-10 20'/%3E%3Cpath d='M42 12c0 10-10 10-10 20s10 10 10 20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.landing-page .overview-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.landing-page .overview-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
+  line-height: 1.08;
+}
+
+.landing-page .journey-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-page .journey-stop-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(185, 147, 101, 0.22);
+  background: rgba(255,248,241,0.82);
+}
+
+.landing-page .journey-flag {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.landing-page .journey-place {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.04;
+}
+
+.landing-page .journey-year {
+  font-size: 0.9rem;
+  color: rgba(109, 73, 44, 0.88);
+  margin-top: 2px;
+}
+
+.landing-page .ancestor-summary-card .tree-link-btn {
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .landing-page .story-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .landing-page .ancestor-summary-card {
+    order: 1;
+  }
+
+  .landing-page .story-grid > .tree-card {
+    order: 2;
+  }
+}
+
+@media (max-width: 700px) {
+  .landing-page .page-shell {
+    width: min(100%, 1200px) !important;
+    padding-inline: 10px !important;
+  }
+
+  .landing-page .hero-card h1,
+  .landing-page .hero-title-top {
+    font-size: clamp(1.95rem, 8vw, 3rem) !important;
+  }
+
+  .landing-page .capsule-family-name {
+    font-size: clamp(1.7rem, 7vw, 2.35rem) !important;
+  }
+
+  .landing-page .ancestry-overview-grid,
+  .landing-page .journey-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 460px) {
+  .landing-page .ancestor-portrait-shell {
+    width: 102px;
+  }
+
+  .landing-page .overview-icon {
+    width: 46px;
+    height: 46px;
+    background-size: 38px 38px;
+  }
+
+  .landing-page .overview-value {
+    font-size: 1.7rem;
+  }
+
+  .landing-page .overview-label,
+  .landing-page .journey-place {
+    font-size: 0.92rem;
+  }
+
+  .landing-page .journey-stop-card {
+    padding: 9px 10px;
+  }
+}
