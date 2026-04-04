@@ -42,64 +42,54 @@
       </section>
 
       <section class="story-grid" id="story">
-        <article class="summary-card ancestor-summary-card raised-card parchment-card">
-          {% set ancestor = data.tree.people[0] %}
-          <div class="ancestor-hero-card">
-            <p class="summary-eyebrow">Family Time Capsule</p>
+        <article class="summary-card raised-card parchment-card capsule-summary-card">
+          <div class="capsule-family-card">
+            <p class="summary-eyebrow capsule-eyebrow">Family Time Capsule</p>
             <h2 class="capsule-family-name">{{ data.family.name }}</h2>
-            <div class="ancestor-divider" aria-hidden="true"></div>
-            <div class="ancestor-profile">
-              <div class="ancestor-portrait-shell">
-                <img src="{{ url_for('static', filename='img/' ~ ancestor.image) }}" alt="{{ ancestor.name }} portrait">
+
+            {% set ancestor = data.tree.people[0] %}
+            {% set earliest_trace = ancestor.years.split('-')[0] %}
+            <div class="capsule-portrait-block">
+              <div class="capsule-portrait-shell">
+                <span class="capsule-leaf capsule-leaf-left" aria-hidden="true"></span>
+                <div class="capsule-portrait-oval">
+                  <img src="{{ url_for('static', filename='img/' ~ ancestor.image) }}" alt="{{ ancestor.name }} portrait">
+                </div>
+                <span class="capsule-leaf capsule-leaf-right" aria-hidden="true"></span>
               </div>
-              <h3>{{ ancestor.name }}</h3>
-              <p class="ancestor-role">Original Ancestor</p>
-              <div class="ancestor-trace-pill">
-                <span class="trace-icon" aria-hidden="true">✦</span>
-                <span>Earliest traces: <strong>{{ ancestor.years.split('-')[0] }}</strong></span>
-              </div>
+              <div class="capsule-ancestor-name">{{ ancestor.name }}</div>
+              <div class="capsule-ancestor-role">Original Ancestor</div>
+              <div class="capsule-earliest-pill">✦&nbsp; Earliest traces: {{ earliest_trace }}</div>
             </div>
           </div>
 
-          <section class="overview-section">
-            <div class="section-title-wrap">
-              <h3>Your Ancestry Overview</h3>
-            </div>
-            <div class="ancestry-overview-grid">
-              {% for stat in data.family.stats[:3] %}
-              <article class="overview-stat-card overview-{{ stat.id }}">
-                <div class="overview-icon" aria-hidden="true"></div>
-                <div class="overview-value">{{ stat.value }}</div>
-                <div class="overview-label">{{ stat.label }}</div>
+          <div class="capsule-overview-card">
+            <h3 class="capsule-overview-title">Your Ancestry Overview</h3>
+            <div class="capsule-overview-grid">
+              <article class="capsule-metric-card metric-tree">
+                <div class="capsule-metric-art" aria-hidden="true"></div>
+                <div class="capsule-metric-value">{{ data.family.stats[0].value }}</div>
+                <div class="capsule-metric-label">{{ data.family.stats[0].label }}</div>
               </article>
-              {% endfor %}
-              <article class="overview-stat-card overview-years">
-                <div class="overview-icon" aria-hidden="true"></div>
-                <div class="overview-value">250+</div>
-                <div class="overview-label">Years of History</div>
+              <article class="capsule-metric-card metric-hourglass">
+                <div class="capsule-metric-art" aria-hidden="true"></div>
+                <div class="capsule-metric-value">{{ data.family.stats[1].value }}</div>
+                <div class="capsule-metric-label">{{ data.family.stats[1].label }}</div>
+              </article>
+              <article class="capsule-metric-card metric-globe">
+                <div class="capsule-metric-art" aria-hidden="true"></div>
+                <div class="capsule-metric-value">{{ data.family.stats[2].value }}</div>
+                <div class="capsule-metric-label">Branches</div>
+              </article>
+              <article class="capsule-metric-card metric-scroll">
+                <div class="capsule-metric-art" aria-hidden="true"></div>
+                <div class="capsule-metric-value">170+</div>
+                <div class="capsule-metric-label">Years of History</div>
               </article>
             </div>
-          </section>
+          </div>
 
-          <section class="journey-section">
-            <div class="section-title-wrap">
-              <h3>Migration Journey</h3>
-            </div>
-            <div class="journey-grid">
-              {% set years = ['1652', '1704', '1778', '1831', '1887', 'Present'] %}
-              {% for location in data.family.locations %}
-              <article class="journey-stop-card">
-                <div class="journey-flag" aria-hidden="true">{% if loop.index0 == 0 %}🇮🇹{% elif loop.index0 == 1 %}🇺🇸{% elif loop.index0 == 2 %}🇺🇸{% elif loop.index0 == 3 %}🇺🇸{% else %}📍{% endif %}</div>
-                <div class="journey-stop-copy">
-                  <div class="journey-place">{{ location }}</div>
-                  <div class="journey-year">{{ years[loop.index0] }}</div>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </section>
-
-          <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">Explore Your Lineage →</a>
+          <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ data.family.tree_cta }}</a>
         </article>
 
         <article class="tree-card raised-card parchment-card" id="tree">

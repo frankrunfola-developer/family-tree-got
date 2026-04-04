@@ -1241,296 +1241,281 @@ body.tree-page .tree-frame .person-card {
   width: 96px !important;
 }
 
-/* v20 landing page capsule panel + width controls */
+
+/* ==== v21 capsule summary + width + heading tuning ==== */
 .landing-page .page-shell {
   width: min(100%, 1200px) !important;
   max-width: 1200px !important;
   margin-inline: auto !important;
 }
 
-.landing-page .topbar,
-.landing-page .hero-card,
-.landing-page .story-grid,
-.landing-page .map-card-live {
-  max-width: 100%;
-}
-
-.landing-page .hero-card {
-  margin-bottom: 14px !important;
+.landing-page .topbar {
+  max-width: 1200px;
+  margin-inline: auto;
 }
 
 .landing-page .hero-card h1,
 .landing-page .hero-title-top {
-  font-size: clamp(2rem, 4.4vw, 3.8rem) !important;
-  line-height: 1.02 !important;
+  font-size: clamp(1.9rem, 4.2vw, 3.5rem) !important;
+  line-height: 1.03 !important;
   letter-spacing: -0.02em !important;
 }
-
 @media (min-width: 700px) {
   .landing-page .hero-card h1,
   .landing-page .hero-title-top {
-    font-size: clamp(2.4rem, 4vw, 3.95rem) !important;
+    white-space: nowrap;
+    font-size: clamp(2.1rem, 4vw, 3.9rem) !important;
   }
 }
 
-.landing-page .story-grid {
-  align-items: start !important;
+@media (min-width: 700px) {
+  .landing-page .story-grid {
+    grid-template-columns: 330px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    align-items: start;
+  }
 }
 
-.landing-page .ancestor-summary-card {
-  display: flex;
+.capsule-summary-card {
+  display: flex !important;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
-.landing-page .ancestor-hero-card,
-.landing-page .overview-section,
-.landing-page .journey-section {
-  border-radius: 28px;
-  border: 1px solid rgba(187, 147, 100, 0.28);
+.capsule-family-card,
+.capsule-overview-card {
+  position: relative;
+  padding: 14px 14px 16px;
+  border-radius: 24px;
   background:
-    radial-gradient(circle at top center, rgba(255,255,255,0.55), transparent 38%),
-    linear-gradient(180deg, rgba(255,249,241,0.92), rgba(241,226,203,0.98)),
-    url("../img/paper-texture-light.jpg") center/cover no-repeat;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.78), 0 10px 20px rgba(89, 60, 34, 0.08);
-  padding: 18px;
+    radial-gradient(circle at top left, rgba(255,255,255,0.55), transparent 38%),
+    linear-gradient(180deg, rgba(255,251,245,0.97), rgba(242,227,205,0.98));
+  border: 1px solid rgba(186, 144, 96, 0.28);
+  box-shadow:
+    0 14px 28px rgba(93, 61, 35, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+  overflow: hidden;
+}
+.capsule-family-card::before,
+.capsule-overview-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(184, 141, 94, 0.18);
+  pointer-events: none;
+}
+.capsule-family-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(194,137,94,0.08), transparent 22%),
+    linear-gradient(180deg, transparent 76%, rgba(154, 113, 74, 0.04));
+  pointer-events: none;
 }
 
-.landing-page .ancestor-hero-card {
-  text-align: center;
-  padding-top: 16px;
+.capsule-eyebrow {
+  margin-bottom: 8px !important;
+  color: rgba(132, 92, 60, 0.66) !important;
 }
-
-.landing-page .capsule-family-name {
+.capsule-family-name {
+  margin: 0 0 12px !important;
+  font-size: clamp(1.75rem, 3.6vw, 2.35rem) !important;
+  line-height: 0.98 !important;
   max-width: none !important;
-  margin: 0 auto 8px !important;
-  font-size: clamp(2rem, 4vw, 3rem) !important;
-  line-height: 1.03 !important;
 }
 
-.landing-page .ancestor-divider,
-.landing-page .section-title-wrap::after {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(161,115,70,0.45), transparent);
-  margin: 10px auto 12px;
+.capsule-portrait-block {
+  text-align: center;
 }
-
-.landing-page .ancestor-profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+.capsule-portrait-shell {
+  position: relative;
+  width: 144px;
+  margin: 0 auto 10px;
+  padding-bottom: 6px;
 }
-
-.landing-page .ancestor-portrait-shell {
-  width: 126px;
-  aspect-ratio: 1;
-  border-radius: 50%;
+.capsule-portrait-oval {
+  width: 100px;
+  height: 128px;
+  margin: 0 auto;
+  border-radius: 999px;
   padding: 5px;
-  background: linear-gradient(180deg, rgba(113,64,37,0.96), rgba(197,142,98,0.96));
-  box-shadow: 0 10px 20px rgba(75,43,27,0.18), inset 0 1px 0 rgba(255,255,255,0.45);
-  display: grid;
-  place-items: center;
+  background: linear-gradient(180deg, #af7b53, #6f4328);
+  box-shadow: 0 14px 24px rgba(73, 43, 22, 0.16), inset 0 1px 0 rgba(255,255,255,0.5);
+  position: relative;
 }
-
-.landing-page .ancestor-portrait-shell img {
+.capsule-portrait-oval::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  border: 2px solid rgba(247, 224, 193, 0.72);
+  pointer-events: none;
+}
+.capsule-portrait-oval img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid rgba(253, 240, 222, 0.9);
+  border-radius: inherit;
+  display: block;
+  filter: sepia(0.35) contrast(1.04);
 }
-
-.landing-page .ancestor-profile h3 {
-  margin: 6px 0 0;
-  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
-  line-height: 1.02;
+.capsule-leaf {
+  position: absolute;
+  bottom: 8px;
+  width: 28px;
+  height: 18px;
 }
+.capsule-leaf::before,
+.capsule-leaf::after {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 8px;
+  border: 2px solid #9d6b44;
+  border-top: 0;
+  border-left: 0;
+  border-radius: 0 0 14px 14px;
+}
+.capsule-leaf-left { left: 6px; transform: scaleX(-1); }
+.capsule-leaf-right { right: 6px; }
+.capsule-leaf::before { left: 2px; top: 2px; transform: rotate(18deg); }
+.capsule-leaf::after { left: 12px; top: 8px; transform: rotate(-10deg); }
 
-.landing-page .ancestor-role {
-  margin: 0;
+.capsule-ancestor-name {
   font-family: var(--font-display);
-  font-size: 1.06rem;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.05;
 }
-
-.landing-page .ancestor-trace-pill {
+.capsule-ancestor-role {
+  margin-top: 4px;
+  font-size: 0.92rem;
+  color: rgba(107, 71, 45, 0.9);
+}
+.capsule-earliest-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
+  margin-top: 12px;
+  padding: 9px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(184, 145, 98, 0.28);
-  background: rgba(241, 224, 202, 0.78);
-  font-size: 1rem;
-  margin-top: 6px;
+  border: 1px solid rgba(189, 149, 102, 0.3);
+  background: linear-gradient(180deg, rgba(251,237,215,0.9), rgba(235,212,178,0.74));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.66);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink-soft);
 }
 
-.landing-page .trace-icon {
-  color: #8b5a36;
-  font-size: 1rem;
-}
-
-.landing-page .section-title-wrap h3 {
-  margin: 0;
-  text-align: center;
-  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+.capsule-overview-title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
   font-style: italic;
+  line-height: 1.05;
 }
 
-.landing-page .section-title-wrap::after {
-  content: "";
-  display: block;
-}
-
-.landing-page .ancestry-overview-grid {
+.capsule-overview-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.landing-page .overview-stat-card {
-  text-align: center;
-  border-radius: 18px;
-  padding: 14px 10px 12px;
-  border: 1px solid rgba(185, 147, 101, 0.24);
-  background: rgba(255, 247, 238, 0.76);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
-}
-
-.landing-page .overview-icon {
-  width: 54px;
-  height: 54px;
-  margin: 0 auto 10px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 44px 44px;
-  opacity: 0.95;
-}
-
-.landing-page .overview-members .overview-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 48c1-7 6-12 13-12s12 5 13 12'/%3E%3Ccircle cx='25' cy='25' r='7'/%3E%3Cpath d='M35 46c1-6 5-10 10-10 6 0 10 4 11 10'/%3E%3Ccircle cx='44' cy='23' r='6'/%3E%3Cpath d='M8 46c1-5 4-8 9-8 4 0 7 2 9 6'/%3E%3Ccircle cx='15' cy='26' r='5'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.landing-page .overview-generations .overview-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='8' width='14' height='12' rx='2'/%3E%3Crect x='42' y='8' width='14' height='12' rx='2'/%3E%3Crect x='25' y='26' width='14' height='12' rx='2'/%3E%3Crect x='25' y='44' width='14' height='12' rx='2'/%3E%3Cpath d='M15 20v7h17'/%3E%3Cpath d='M49 20v7H32'/%3E%3Cpath d='M32 38v6'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.landing-page .overview-branches .overview-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 52V22'/%3E%3Cpath d='M32 30c-8 0-14-5-17-13 9-1 16 2 17 13Z'/%3E%3Cpath d='M32 38c8 0 14-5 17-13-9-1-16 2-17 13Z'/%3E%3Cpath d='M32 18c0-8 5-14 13-17 1 9-2 16-13 17Z'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.landing-page .overview-years .overview-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%2376442b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 12h28'/%3E%3Cpath d='M18 52h28'/%3E%3Cpath d='M22 12c0 10 10 10 10 20s-10 10-10 20'/%3E%3Cpath d='M42 12c0 10-10 10-10 20s10 10 10 20'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-.landing-page .overview-value {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 2.7rem);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.landing-page .overview-label {
-  font-family: var(--font-display);
-  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
-  line-height: 1.08;
-}
-
-.landing-page .journey-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
-
-.landing-page .journey-stop-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+.capsule-metric-card {
+  min-width: 0;
+  min-height: 112px;
+  padding: 10px 8px 10px;
   border-radius: 16px;
-  border: 1px solid rgba(185, 147, 101, 0.22);
-  background: rgba(255,248,241,0.82);
+  text-align: center;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.78), transparent 36%),
+    linear-gradient(180deg, rgba(252,246,238,0.96), rgba(238,223,200,0.95));
+  border: 1px solid rgba(184, 145, 100, 0.28);
+  box-shadow: 0 8px 14px rgba(93,61,35,0.07), inset 0 1px 0 rgba(255,255,255,0.82);
 }
-
-.landing-page .journey-flag {
-  font-size: 1.5rem;
-  line-height: 1;
+.capsule-metric-art {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 3px 2px rgba(94, 61, 35, 0.1));
 }
+.metric-tree .capsule-metric-art { background-image: url("../img/ui/tree-icon.png"); }
+.metric-hourglass .capsule-metric-art { background-image: url("../img/ui/hourglass-icon.png"); }
+.metric-globe .capsule-metric-art { background-image: url("../img/ui/globe-icon.png"); }
+.metric-scroll .capsule-metric-art { background-image: url("../img/ui/parchment-icon.png"); }
 
-.landing-page .journey-place {
+.capsule-metric-value {
   font-family: var(--font-display);
-  font-size: 1rem;
-  line-height: 1.04;
+  font-size: clamp(1.55rem, 2.2vw, 2.1rem);
+  line-height: 0.95;
+  font-weight: 700;
+}
+.capsule-metric-label {
+  margin-top: 5px;
+  font-size: 0.92rem;
+  line-height: 1.05;
+  color: rgba(92, 58, 33, 0.92);
 }
 
-.landing-page .journey-year {
-  font-size: 0.9rem;
-  color: rgba(109, 73, 44, 0.88);
-  margin-top: 2px;
+.capsule-summary-card .tree-link-btn {
+  margin-top: 0 !important;
 }
 
-.landing-page .ancestor-summary-card .tree-link-btn {
-  margin-top: 2px;
-}
-
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .landing-page .story-grid {
     grid-template-columns: 1fr !important;
   }
-
-  .landing-page .ancestor-summary-card {
-    order: 1;
+  .capsule-overview-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
   }
-
-  .landing-page .story-grid > .tree-card {
-    order: 2;
+  .capsule-metric-card {
+    min-height: 104px;
+    padding: 8px 6px 10px;
+  }
+  .capsule-metric-art {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 6px;
+  }
+  .capsule-metric-value {
+    font-size: 1.35rem;
+  }
+  .capsule-metric-label {
+    font-size: 0.78rem;
   }
 }
-
-@media (max-width: 700px) {
-  .landing-page .page-shell {
-    width: min(100%, 1200px) !important;
-    padding-inline: 10px !important;
-  }
-
+@media (max-width: 559px) {
   .landing-page .hero-card h1,
   .landing-page .hero-title-top {
-    font-size: clamp(1.95rem, 8vw, 3rem) !important;
+    white-space: normal;
+    font-size: clamp(1.8rem, 7vw, 2.5rem) !important;
   }
-
-  .landing-page .capsule-family-name {
-    font-size: clamp(1.7rem, 7vw, 2.35rem) !important;
+  .capsule-family-name {
+    font-size: clamp(1.55rem, 8vw, 2rem) !important;
   }
-
-  .landing-page .ancestry-overview-grid,
-  .landing-page .journey-grid {
-    grid-template-columns: 1fr 1fr;
+  .capsule-overview-grid {
+    gap: 6px;
   }
-}
-
-@media (max-width: 460px) {
-  .landing-page .ancestor-portrait-shell {
-    width: 102px;
+  .capsule-metric-card {
+    min-height: 96px;
+    border-radius: 14px;
+    padding: 7px 4px 8px;
   }
-
-  .landing-page .overview-icon {
-    width: 46px;
-    height: 46px;
-    background-size: 38px 38px;
+  .capsule-metric-art {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 4px;
   }
-
-  .landing-page .overview-value {
-    font-size: 1.7rem;
+  .capsule-metric-value {
+    font-size: 1.18rem;
   }
-
-  .landing-page .overview-label,
-  .landing-page .journey-place {
-    font-size: 0.92rem;
-  }
-
-  .landing-page .journey-stop-card {
-    padding: 9px 10px;
+  .capsule-metric-label {
+    font-size: 0.68rem;
   }
 }
