@@ -1,0 +1,832 @@
+{
+  "meta": {
+    "family_name": "Johnson Family",
+    "note": "Sample family demonstrating direct parent-child lineage.",
+    "family_id": "johnson"
+  },
+  "people": [
+    {
+      "id": "giovanni",
+      "name": "Giovanni Johnson",
+      "born": "1854",
+      "died": "1932",
+      "photo": "/static/uploads/johnson/giovanni.jpg",
+      "location": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Potenza",
+          "region": "Basilicata",
+          "country": "Italy",
+          "lat": 40.64,
+          "lng": 15.806,
+          "label": "Potenza, Basilicata, Italy"
+        },
+        {
+          "city": "Naples",
+          "region": "Campania",
+          "country": "Italy",
+          "lat": 40.8518,
+          "lng": 14.2681,
+          "label": "Naples, Campania, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "migrations": [
+        {
+          "city": "Ruvo del Monte",
+          "region": "Potenza, Basilicata",
+          "country": "Italy",
+          "lat": 40.653,
+          "lng": 15.541,
+          "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+        },
+        {
+          "city": "Potenza",
+          "region": "Basilicata",
+          "country": "Italy",
+          "lat": 40.64,
+          "lng": 15.806,
+          "label": "Potenza, Basilicata, Italy"
+        },
+        {
+          "city": "Naples",
+          "region": "Campania",
+          "country": "Italy",
+          "lat": 40.8518,
+          "lng": 14.2681,
+          "label": "Naples, Campania, Italy"
+        }
+      ]
+    },
+    {
+      "id": "maria",
+      "name": "Maria Johnson",
+      "born": "1855",
+      "died": "1936",
+      "photo": "/static/uploads/johnson/maria.jpg",
+      "location": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Naples",
+          "region": "Campania",
+          "country": "Italy",
+          "lat": 40.8518,
+          "lng": 14.2681,
+          "label": "Naples, Campania, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "migrations": [
+        {
+          "city": "Ruvo del Monte",
+          "region": "Potenza, Basilicata",
+          "country": "Italy",
+          "lat": 40.653,
+          "lng": 15.541,
+          "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+        },
+        {
+          "city": "Naples",
+          "region": "Campania",
+          "country": "Italy",
+          "lat": 40.8518,
+          "lng": 14.2681,
+          "label": "Naples, Campania, Italy"
+        }
+      ]
+    },
+    {
+      "id": "antonio",
+      "name": "Antonio Johnson",
+      "born": "1884",
+      "died": "1958",
+      "photo": "/static/uploads/johnson/antonio.jpg",
+      "location": {
+        "city": "Potenza",
+        "region": "Basilicata",
+        "country": "Italy",
+        "lat": 40.64,
+        "lng": 15.806,
+        "label": "Potenza, Basilicata, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "migrations": [
+        {
+          "city": "Potenza",
+          "region": "Basilicata",
+          "country": "Italy",
+          "lat": 40.64,
+          "lng": 15.806,
+          "label": "Potenza, Basilicata, Italy"
+        },
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        }
+      ]
+    },
+    {
+      "id": "lucia",
+      "name": "Lucia Johnson",
+      "born": "1877",
+      "died": "1961",
+      "photo": "/static/uploads/johnson/lucia.jpg",
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        },
+        {
+          "city": "Ruvo del Monte",
+          "region": "Potenza, Basilicata",
+          "country": "Italy",
+          "lat": 40.653,
+          "lng": 15.541,
+          "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "migrations": [
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        },
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        },
+        {
+          "city": "Ruvo del Monte",
+          "region": "Potenza, Basilicata",
+          "country": "Italy",
+          "lat": 40.653,
+          "lng": 15.541,
+          "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+        }
+      ]
+    },
+    {
+      "id": "henry",
+      "name": "Henry Johnson",
+      "born": "1924",
+      "died": "1975",
+      "photo": "/static/uploads/johnson/henry.jpg",
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        }
+      ],
+      "current_location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "migrations": [
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        },
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        }
+      ]
+    },
+    {
+      "id": "rosa",
+      "name": "Rosa Johnson",
+      "born": "1926",
+      "died": "2003",
+      "photo": "/static/uploads/johnson/rosa.jpg",
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        }
+      ],
+      "current_location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "migrations": [
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        },
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        }
+      ]
+    },
+    {
+      "id": "frank",
+      "name": "You",
+      "born": "Present",
+      "died": "",
+      "photo": "/static/img/placeholder-avatar.png",
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        },
+        {
+          "city": "Chicago",
+          "region": "Illinois",
+          "country": "USA",
+          "lat": 41.8781,
+          "lng": -87.6298,
+          "label": "Chicago, Illinois, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Chicago",
+        "region": "Illinois",
+        "country": "USA",
+        "lat": 41.8781,
+        "lng": -87.6298,
+        "label": "Chicago, Illinois, USA"
+      },
+      "migrations": [
+        {
+          "city": "Buffalo",
+          "region": "New York",
+          "country": "USA",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "label": "Buffalo, New York, USA"
+        },
+        {
+          "city": "Origin",
+          "region": "Europe",
+          "country": "Origin",
+          "lat": 48.8566,
+          "lng": 2.3522,
+          "label": "Origin, Europe, Origin"
+        },
+        {
+          "city": "Chicago",
+          "region": "Illinois",
+          "country": "USA",
+          "lat": 41.8781,
+          "lng": -87.6298,
+          "label": "Chicago, Illinois, USA"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "type": "spouse",
+      "a": "giovanni",
+      "b": "maria"
+    },
+    {
+      "type": "spouse",
+      "a": "antonio",
+      "b": "lucia"
+    },
+    {
+      "type": "spouse",
+      "a": "henry",
+      "b": "rosa"
+    },
+    {
+      "child": "antonio",
+      "parent": "giovanni"
+    },
+    {
+      "child": "antonio",
+      "parent": "maria"
+    },
+    {
+      "child": "henry",
+      "parent": "antonio"
+    },
+    {
+      "child": "henry",
+      "parent": "lucia"
+    },
+    {
+      "child": "frank",
+      "parent": "henry"
+    },
+    {
+      "child": "frank",
+      "parent": "rosa"
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_giovanni_birth",
+      "type": "birth",
+      "date": "1854-01-01",
+      "people": [
+        "giovanni"
+      ],
+      "location": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541
+      }
+    },
+    {
+      "id": "evt_giovanni_migration_1",
+      "type": "migration",
+      "date": "1870-01-01",
+      "people": [
+        "giovanni"
+      ],
+      "from": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "to": {
+        "city": "Potenza",
+        "region": "Basilicata",
+        "country": "Italy",
+        "lat": 40.64,
+        "lng": 15.806,
+        "label": "Potenza, Basilicata, Italy"
+      },
+      "location": {
+        "city": "Potenza",
+        "region": "Basilicata",
+        "country": "Italy",
+        "lat": 40.64,
+        "lng": 15.806,
+        "label": "Potenza, Basilicata, Italy"
+      },
+      "description": "Giovanni Johnson moved from Ruvo del Monte, Potenza, Basilicata, Italy to Potenza, Basilicata, Italy."
+    },
+    {
+      "id": "evt_maria_migration_1",
+      "type": "migration",
+      "date": "1871-01-01",
+      "people": [
+        "maria"
+      ],
+      "from": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "to": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "location": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "description": "Maria Johnson moved from Ruvo del Monte, Potenza, Basilicata, Italy to Naples, Campania, Italy."
+    },
+    {
+      "id": "evt_giovanni_migration_2",
+      "type": "migration",
+      "date": "1879-01-01",
+      "people": [
+        "giovanni"
+      ],
+      "from": {
+        "city": "Potenza",
+        "region": "Basilicata",
+        "country": "Italy",
+        "lat": 40.64,
+        "lng": 15.806,
+        "label": "Potenza, Basilicata, Italy"
+      },
+      "to": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "location": {
+        "city": "Naples",
+        "region": "Campania",
+        "country": "Italy",
+        "lat": 40.8518,
+        "lng": 14.2681,
+        "label": "Naples, Campania, Italy"
+      },
+      "description": "Giovanni Johnson moved from Potenza, Basilicata, Italy to Naples, Campania, Italy."
+    },
+    {
+      "id": "evt_lucia_migration_1",
+      "type": "migration",
+      "date": "1893-01-01",
+      "people": [
+        "lucia"
+      ],
+      "from": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "to": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "description": "Lucia Johnson moved from Buffalo, New York, USA to Origin, Europe, Origin."
+    },
+    {
+      "id": "evt_antonio_migration_1",
+      "type": "migration",
+      "date": "1900-01-01",
+      "people": [
+        "antonio"
+      ],
+      "from": {
+        "city": "Potenza",
+        "region": "Basilicata",
+        "country": "Italy",
+        "lat": 40.64,
+        "lng": 15.806,
+        "label": "Potenza, Basilicata, Italy"
+      },
+      "to": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "description": "Antonio Johnson moved from Potenza, Basilicata, Italy to Buffalo, New York, USA."
+    },
+    {
+      "id": "evt_lucia_migration_2",
+      "type": "migration",
+      "date": "1902-01-01",
+      "people": [
+        "lucia"
+      ],
+      "from": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "to": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "location": {
+        "city": "Ruvo del Monte",
+        "region": "Potenza, Basilicata",
+        "country": "Italy",
+        "lat": 40.653,
+        "lng": 15.541,
+        "label": "Ruvo del Monte, Potenza, Basilicata, Italy"
+      },
+      "description": "Lucia Johnson moved from Origin, Europe, Origin to Ruvo del Monte, Potenza, Basilicata, Italy."
+    },
+    {
+      "id": "evt_frank_migration_1",
+      "type": "migration",
+      "date": "1922-01-01",
+      "people": [
+        "frank"
+      ],
+      "from": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "to": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "description": "You moved from Buffalo, New York, USA to Origin, Europe, Origin."
+    },
+    {
+      "id": "evt_henry_birth",
+      "type": "birth",
+      "date": "1924-01-01",
+      "people": [
+        "henry"
+      ],
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784
+      }
+    },
+    {
+      "id": "evt_frank_migration_2",
+      "type": "migration",
+      "date": "1931-01-01",
+      "people": [
+        "frank"
+      ],
+      "from": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "to": {
+        "city": "Chicago",
+        "region": "Illinois",
+        "country": "USA",
+        "lat": 41.8781,
+        "lng": -87.6298,
+        "label": "Chicago, Illinois, USA"
+      },
+      "location": {
+        "city": "Chicago",
+        "region": "Illinois",
+        "country": "USA",
+        "lat": 41.8781,
+        "lng": -87.6298,
+        "label": "Chicago, Illinois, USA"
+      },
+      "description": "You moved from Origin, Europe, Origin to Chicago, Illinois, USA."
+    },
+    {
+      "id": "evt_henry_migration_1",
+      "type": "migration",
+      "date": "1940-01-01",
+      "people": [
+        "henry"
+      ],
+      "from": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "to": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "description": "Henry Johnson moved from Buffalo, New York, USA to Origin, Europe, Origin."
+    },
+    {
+      "id": "evt_rosa_migration_1",
+      "type": "migration",
+      "date": "1942-01-01",
+      "people": [
+        "rosa"
+      ],
+      "from": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784,
+        "label": "Buffalo, New York, USA"
+      },
+      "to": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "location": {
+        "city": "Origin",
+        "region": "Europe",
+        "country": "Origin",
+        "lat": 48.8566,
+        "lng": 2.3522,
+        "label": "Origin, Europe, Origin"
+      },
+      "description": "Rosa Johnson moved from Buffalo, New York, USA to Origin, Europe, Origin."
+    },
+    {
+      "id": "evt_frank_present",
+      "type": "residence",
+      "date": "2025-01-01",
+      "people": [
+        "frank"
+      ],
+      "location": {
+        "city": "Buffalo",
+        "region": "New York",
+        "country": "USA",
+        "lat": 42.8864,
+        "lng": -78.8784
+      }
+    }
+  ]
+}

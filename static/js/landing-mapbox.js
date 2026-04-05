@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let payload;
   try {
-    const res = await fetch('/static/data/landing-locations.json', { cache: 'no-store' });
+    const apiUrl = window.MAP_API_URL || '/api/family/current/people';
+    const res = await fetch(apiUrl, { cache: 'no-store', credentials: 'same-origin' });
     if (!res.ok) throw new Error('Location data could not be loaded.');
     payload = await res.json();
   } catch (err) {

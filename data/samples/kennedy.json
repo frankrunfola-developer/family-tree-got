@@ -1,7 +1,8 @@
 {
   "meta": {
     "family_name": "Kennedy Family (Sample)",
-    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events)."
+    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events).",
+    "family_id": "kennedy"
   },
   "people": [
     {
@@ -10,7 +11,66 @@
       "born": "1888",
       "died": "1969",
       "photo": "/static/uploads/kennedy/joseph_sr.png",
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        },
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ],
+      "current_location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ]
     },
     {
       "id": "rose",
@@ -18,7 +78,50 @@
       "born": "1890",
       "died": "1995",
       "photo": "/static/uploads/kennedy/rose.png",
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        },
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ]
     },
     {
       "id": "jfk",
@@ -26,7 +129,66 @@
       "born": "1917",
       "died": "1963",
       "photo": "/static/uploads/kennedy/jfk.png",
-      "location": { "city": "Brookline", "region": "MA", "country": "USA", "lat": 42.3318, "lng": -71.1212 }
+      "location": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Brookline",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3318,
+          "lng": -71.1212,
+          "label": "Brookline, MA, USA"
+        },
+        {
+          "city": "Newport",
+          "region": "RI",
+          "country": "USA",
+          "lat": 41.4901,
+          "lng": -71.3128,
+          "label": "Newport, RI, USA"
+        },
+        {
+          "city": "Dallas",
+          "region": "TX",
+          "country": "USA",
+          "lat": 32.7767,
+          "lng": -96.797,
+          "label": "Dallas, TX, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Dallas",
+        "region": "TX",
+        "country": "USA",
+        "lat": 32.7767,
+        "lng": -96.797,
+        "label": "Dallas, TX, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Newport",
+          "region": "RI",
+          "country": "USA",
+          "lat": 41.4901,
+          "lng": -71.3128,
+          "label": "Newport, RI, USA"
+        },
+        {
+          "city": "Dallas",
+          "region": "TX",
+          "country": "USA",
+          "lat": 32.7767,
+          "lng": -96.797,
+          "label": "Dallas, TX, USA"
+        }
+      ]
     },
     {
       "id": "rfk_sr",
@@ -34,7 +196,66 @@
       "born": "1925",
       "died": "1968",
       "photo": "/static/uploads/kennedy/rfk_sr.png",
-      "location": { "city": "Brookline", "region": "MA", "country": "USA", "lat": 42.3318, "lng": -71.1212 }
+      "location": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Brookline",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3318,
+          "lng": -71.1212,
+          "label": "Brookline, MA, USA"
+        },
+        {
+          "city": "Greenwich",
+          "region": "CT",
+          "country": "USA",
+          "lat": 41.0262,
+          "lng": -73.6282,
+          "label": "Greenwich, CT, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Greenwich",
+          "region": "CT",
+          "country": "USA",
+          "lat": 41.0262,
+          "lng": -73.6282,
+          "label": "Greenwich, CT, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ]
     },
     {
       "id": "ted",
@@ -42,7 +263,50 @@
       "born": "1932",
       "died": "2009",
       "photo": "/static/uploads/kennedy/ted.png",
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        },
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6359,
+          "lng": -70.2923,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ]
     },
     {
       "id": "jackie",
@@ -50,7 +314,50 @@
       "born": "1929",
       "died": "1994",
       "photo": "/static/uploads/kennedy/jackie.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        },
+        {
+          "city": "Newport",
+          "region": "RI",
+          "country": "USA",
+          "lat": 41.4901,
+          "lng": -71.3128,
+          "label": "Newport, RI, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Newport",
+          "region": "RI",
+          "country": "USA",
+          "lat": 41.4901,
+          "lng": -71.3128,
+          "label": "Newport, RI, USA"
+        }
+      ]
     },
     {
       "id": "ethel",
@@ -58,7 +365,66 @@
       "born": "1928",
       "died": "2024",
       "photo": "/static/uploads/kennedy/ethel.png",
-      "location": { "city": "McLean", "region": "VA", "country": "USA", "lat": 38.9339, "lng": -77.1773 }
+      "location": {
+        "city": "McLean",
+        "region": "VA",
+        "country": "USA",
+        "lat": 38.9339,
+        "lng": -77.1773,
+        "label": "McLean, VA, USA"
+      },
+      "migrations": [
+        {
+          "city": "McLean",
+          "region": "VA",
+          "country": "USA",
+          "lat": 38.9339,
+          "lng": -77.1773,
+          "label": "McLean, VA, USA"
+        },
+        {
+          "city": "Greenwich",
+          "region": "CT",
+          "country": "USA",
+          "lat": 41.0262,
+          "lng": -73.6282,
+          "label": "Greenwich, CT, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ],
+      "current_location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Greenwich",
+          "region": "CT",
+          "country": "USA",
+          "lat": 41.0262,
+          "lng": -73.6282,
+          "label": "Greenwich, CT, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ]
     },
     {
       "id": "joan",
@@ -66,7 +432,50 @@
       "born": "1936",
       "died": "",
       "photo": "/static/uploads/kennedy/joan.png",
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 }
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ],
+      "current_location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ]
     },
     {
       "id": "caroline",
@@ -74,7 +483,50 @@
       "born": "1957",
       "died": "",
       "photo": "/static/uploads/kennedy/caroline.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ]
     },
     {
       "id": "john_jr",
@@ -82,7 +534,66 @@
       "born": "1960",
       "died": "1999",
       "photo": "/static/uploads/kennedy/john_jr.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        },
+        {
+          "city": "Martha's Vineyard",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.38,
+          "lng": -70.6455,
+          "label": "Martha's Vineyard, MA, USA"
+        },
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Martha's Vineyard",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.38,
+          "lng": -70.6455,
+          "label": "Martha's Vineyard, MA, USA"
+        },
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        }
+      ]
     },
     {
       "id": "kerry",
@@ -90,7 +601,50 @@
       "born": "1959",
       "died": "",
       "photo": "/static/uploads/kennedy/kerry.png",
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 }
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        },
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Boston",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "label": "Boston, MA, USA"
+        }
+      ]
     },
     {
       "id": "maria",
@@ -98,15 +652,117 @@
       "born": "1955",
       "died": "",
       "photo": "/static/uploads/kennedy/maria.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6334,
+          "lng": -70.3045,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6334,
+        "lng": -70.3045,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hyannis Port",
+          "region": "MA",
+          "country": "USA",
+          "lat": 41.6334,
+          "lng": -70.3045,
+          "label": "Hyannis Port, MA, USA"
+        }
+      ]
     },
     {
       "id": "rfk_jr",
       "name": "Robert F. Kennedy Jr.",
-      "born": "1954-01-17",
+      "born": "1954",
       "died": "",
       "photo": "/static/uploads/kennedy/rfk_jr.png",
-      "location": { "city": "Washington", "region": "DC", "country": "USA", "lat": 38.9072, "lng": -77.0369 }
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Brookline",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3318,
+          "lng": -71.1212,
+          "label": "Brookline, MA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Brookline",
+          "region": "MA",
+          "country": "USA",
+          "lat": 42.3318,
+          "lng": -71.1212,
+          "label": "Brookline, MA, USA"
+        }
+      ]
     },
     {
       "id": "mary",
@@ -114,152 +770,1114 @@
       "born": "1959-10-04",
       "died": "2012-05-16",
       "photo": "/static/uploads/kennedy/mary.png",
-      "location": { "city": "Mount Kisco", "region": "NY", "country": "USA", "lat": 41.2043, "lng": -73.7271 }
+      "location": {
+        "city": "Mount Kisco",
+        "region": "NY",
+        "country": "USA",
+        "lat": 41.2043,
+        "lng": -73.7271,
+        "label": "Mount Kisco, NY, USA"
+      },
+      "migrations": [
+        {
+          "city": "Mount Kisco",
+          "region": "NY",
+          "country": "USA",
+          "lat": 41.2043,
+          "lng": -73.7271,
+          "label": "Mount Kisco, NY, USA"
+        },
+        {
+          "city": "Bayonne",
+          "region": "NJ",
+          "country": "USA",
+          "lat": 40.6687,
+          "lng": -74.1143,
+          "label": "Bayonne, NJ, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ],
+      "current_location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Bayonne",
+          "region": "NJ",
+          "country": "USA",
+          "lat": 40.6687,
+          "lng": -74.1143,
+          "label": "Bayonne, NJ, USA"
+        },
+        {
+          "city": "New York",
+          "region": "NY",
+          "country": "USA",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "label": "New York, NY, USA"
+        }
+      ]
     }
   ],
   "relationships": [
-    { "type": "spouse", "a": "joseph_sr", "b": "rose" },
-    { "type": "spouse", "a": "jfk", "b": "jackie" },
-    { "type": "spouse", "a": "rfk_sr", "b": "ethel" },
-    { "type": "spouse", "a": "ted", "b": "joan" },
-    { "type": "spouse", "a": "rfk_jr", "b": "mary" },
-
-    { "child": "jfk", "parent": "joseph_sr" },
-    { "child": "jfk", "parent": "rose" },
-
-    { "child": "rfk_sr", "parent": "joseph_sr" },
-    { "child": "rfk_sr", "parent": "rose" },
-
-    { "child": "ted", "parent": "joseph_sr" },
-    { "child": "ted", "parent": "rose" },
-
-    { "child": "caroline", "parent": "jfk" },
-    { "child": "caroline", "parent": "jackie" },
-
-    { "child": "john_jr", "parent": "jfk" },
-    { "child": "john_jr", "parent": "jackie" },
-
-    { "child": "rfk_jr", "parent": "rfk_sr" },
-    { "child": "rfk_jr", "parent": "ethel" },
-
-    { "child": "kerry", "parent": "rfk_sr" },
-    { "child": "kerry", "parent": "ethel" },
-
-    { "child": "maria", "parent": "rfk_sr" },
-    { "child": "maria", "parent": "ethel" }
+    {
+      "type": "spouse",
+      "a": "joseph_sr",
+      "b": "rose"
+    },
+    {
+      "type": "spouse",
+      "a": "jfk",
+      "b": "jackie"
+    },
+    {
+      "type": "spouse",
+      "a": "rfk_sr",
+      "b": "ethel"
+    },
+    {
+      "type": "spouse",
+      "a": "ted",
+      "b": "joan"
+    },
+    {
+      "type": "spouse",
+      "a": "rfk_jr",
+      "b": "mary"
+    },
+    {
+      "child": "jfk",
+      "parent": "joseph_sr"
+    },
+    {
+      "child": "jfk",
+      "parent": "rose"
+    },
+    {
+      "child": "rfk_sr",
+      "parent": "joseph_sr"
+    },
+    {
+      "child": "rfk_sr",
+      "parent": "rose"
+    },
+    {
+      "child": "ted",
+      "parent": "joseph_sr"
+    },
+    {
+      "child": "ted",
+      "parent": "rose"
+    },
+    {
+      "child": "caroline",
+      "parent": "jfk"
+    },
+    {
+      "child": "caroline",
+      "parent": "jackie"
+    },
+    {
+      "child": "john_jr",
+      "parent": "jfk"
+    },
+    {
+      "child": "john_jr",
+      "parent": "jackie"
+    },
+    {
+      "child": "rfk_jr",
+      "parent": "rfk_sr"
+    },
+    {
+      "child": "rfk_jr",
+      "parent": "ethel"
+    },
+    {
+      "child": "kerry",
+      "parent": "rfk_sr"
+    },
+    {
+      "child": "kerry",
+      "parent": "ethel"
+    },
+    {
+      "child": "maria",
+      "parent": "rfk_sr"
+    },
+    {
+      "child": "maria",
+      "parent": "ethel"
+    }
   ],
   "events": [
+    {
+      "id": "evt_joseph_sr_migration_1",
+      "type": "migration",
+      "date": "1904-01-01",
+      "people": [
+        "joseph_sr"
+      ],
+      "from": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "to": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "description": "Joseph P. Kennedy Sr. moved from Boston, MA, USA to Hyannis Port, MA, USA."
+    },
+    {
+      "id": "evt_rose_migration_1",
+      "type": "migration",
+      "date": "1906-01-01",
+      "people": [
+        "rose"
+      ],
+      "from": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "to": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "description": "Rose Fitzgerald Kennedy moved from Boston, MA, USA to Hyannis Port, MA, USA."
+    },
+    {
+      "id": "evt_joseph_sr_migration_2",
+      "type": "migration",
+      "date": "1913-01-01",
+      "people": [
+        "joseph_sr"
+      ],
+      "from": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "to": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "description": "Joseph P. Kennedy Sr. moved from Hyannis Port, MA, USA to New York, NY, USA."
+    },
     {
       "id": "evt_1914_joseph_rose_marriage",
       "type": "marriage",
       "date": "1914-10-07",
-      "people": ["joseph_sr", "rose"],
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 },
+      "people": [
+        "joseph_sr",
+        "rose"
+      ],
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589
+      },
       "description": "Married in Boston."
+    },
+    {
+      "id": "evt_mary_migration_1",
+      "type": "migration",
+      "date": "1929-01-01",
+      "people": [
+        "mary"
+      ],
+      "from": {
+        "city": "Mount Kisco",
+        "region": "NY",
+        "country": "USA",
+        "lat": 41.2043,
+        "lng": -73.7271,
+        "label": "Mount Kisco, NY, USA"
+      },
+      "to": {
+        "city": "Bayonne",
+        "region": "NJ",
+        "country": "USA",
+        "lat": 40.6687,
+        "lng": -74.1143,
+        "label": "Bayonne, NJ, USA"
+      },
+      "location": {
+        "city": "Bayonne",
+        "region": "NJ",
+        "country": "USA",
+        "lat": 40.6687,
+        "lng": -74.1143,
+        "label": "Bayonne, NJ, USA"
+      },
+      "description": "Mary Kennedy moved from Mount Kisco, NY, USA to Bayonne, NJ, USA."
+    },
+    {
+      "id": "evt_jfk_migration_1",
+      "type": "migration",
+      "date": "1933-01-01",
+      "people": [
+        "jfk"
+      ],
+      "from": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "to": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "location": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "description": "John F. Kennedy moved from Brookline, MA, USA to Newport, RI, USA."
+    },
+    {
+      "id": "evt_joan_migration_1",
+      "type": "migration",
+      "date": "1937-01-01",
+      "people": [
+        "joan"
+      ],
+      "from": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "to": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "description": "Joan Bennett Kennedy moved from Boston, MA, USA to New York, NY, USA."
+    },
+    {
+      "id": "evt_mary_migration_2",
+      "type": "migration",
+      "date": "1938-01-01",
+      "people": [
+        "mary"
+      ],
+      "from": {
+        "city": "Bayonne",
+        "region": "NJ",
+        "country": "USA",
+        "lat": 40.6687,
+        "lng": -74.1143,
+        "label": "Bayonne, NJ, USA"
+      },
+      "to": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "description": "Mary Kennedy moved from Bayonne, NJ, USA to New York, NY, USA."
+    },
+    {
+      "id": "evt_rfk_sr_migration_1",
+      "type": "migration",
+      "date": "1941-01-01",
+      "people": [
+        "rfk_sr"
+      ],
+      "from": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "to": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "location": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "description": "Robert F. Kennedy moved from Brookline, MA, USA to Greenwich, CT, USA."
+    },
+    {
+      "id": "evt_jfk_migration_2",
+      "type": "migration",
+      "date": "1942-01-01",
+      "people": [
+        "jfk"
+      ],
+      "from": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "to": {
+        "city": "Dallas",
+        "region": "TX",
+        "country": "USA",
+        "lat": 32.7767,
+        "lng": -96.797,
+        "label": "Dallas, TX, USA"
+      },
+      "location": {
+        "city": "Dallas",
+        "region": "TX",
+        "country": "USA",
+        "lat": 32.7767,
+        "lng": -96.797,
+        "label": "Dallas, TX, USA"
+      },
+      "description": "John F. Kennedy moved from Newport, RI, USA to Dallas, TX, USA."
+    },
+    {
+      "id": "evt_ethel_migration_1",
+      "type": "migration",
+      "date": "1944-01-01",
+      "people": [
+        "ethel"
+      ],
+      "from": {
+        "city": "McLean",
+        "region": "VA",
+        "country": "USA",
+        "lat": 38.9339,
+        "lng": -77.1773,
+        "label": "McLean, VA, USA"
+      },
+      "to": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "location": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "description": "Ethel Skakel Kennedy moved from McLean, VA, USA to Greenwich, CT, USA."
+    },
+    {
+      "id": "evt_jackie_migration_1",
+      "type": "migration",
+      "date": "1945-01-01",
+      "people": [
+        "jackie"
+      ],
+      "from": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "to": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "location": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128,
+        "label": "Newport, RI, USA"
+      },
+      "description": "Jacqueline Bouvier Kennedy moved from New York, NY, USA to Newport, RI, USA."
+    },
+    {
+      "id": "evt_ted_migration_1",
+      "type": "migration",
+      "date": "1948-01-01",
+      "people": [
+        "ted"
+      ],
+      "from": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "to": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "description": "Edward 'Ted' Kennedy moved from Boston, MA, USA to Hyannis Port, MA, USA."
+    },
+    {
+      "id": "evt_rfk_sr_migration_2",
+      "type": "migration",
+      "date": "1950-01-01",
+      "people": [
+        "rfk_sr"
+      ],
+      "from": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Robert F. Kennedy moved from Greenwich, CT, USA to Los Angeles, CA, USA."
     },
     {
       "id": "evt_1950_rfk_ethel_marriage",
       "type": "marriage",
       "date": "1950-06-17",
-      "people": ["rfk_sr", "ethel"],
-      "location": { "city": "Greenwich", "region": "CT", "country": "USA", "lat": 41.0262, "lng": -73.6282 },
+      "people": [
+        "rfk_sr",
+        "ethel"
+      ],
+      "location": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282
+      },
       "description": "Married in Greenwich."
+    },
+    {
+      "id": "evt_ethel_migration_2",
+      "type": "migration",
+      "date": "1953-01-01",
+      "people": [
+        "ethel"
+      ],
+      "from": {
+        "city": "Greenwich",
+        "region": "CT",
+        "country": "USA",
+        "lat": 41.0262,
+        "lng": -73.6282,
+        "label": "Greenwich, CT, USA"
+      },
+      "to": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "description": "Ethel Skakel Kennedy moved from Greenwich, CT, USA to New York, NY, USA."
     },
     {
       "id": "evt_1953_jfk_jackie_marriage",
       "type": "marriage",
       "date": "1953-09-12",
-      "people": ["jfk", "jackie"],
-      "location": { "city": "Newport", "region": "RI", "country": "USA", "lat": 41.4901, "lng": -71.3128 },
+      "people": [
+        "jfk",
+        "jackie"
+      ],
+      "location": {
+        "city": "Newport",
+        "region": "RI",
+        "country": "USA",
+        "lat": 41.4901,
+        "lng": -71.3128
+      },
       "description": "Married in Newport."
+    },
+    {
+      "id": "evt_rfk_jr_migration_1",
+      "type": "migration",
+      "date": "1955-01-01",
+      "people": [
+        "rfk_jr"
+      ],
+      "from": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Robert F. Kennedy Jr. moved from New York, NY, USA to Los Angeles, CA, USA."
+    },
+    {
+      "id": "evt_rfk_jr_migration_2",
+      "type": "migration",
+      "date": "1955-01-01",
+      "people": [
+        "rfk_jr"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "location": {
+        "city": "Brookline",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3318,
+        "lng": -71.1212,
+        "label": "Brookline, MA, USA"
+      },
+      "description": "Robert F. Kennedy Jr. moved from Los Angeles, CA, USA to Brookline, MA, USA."
+    },
+    {
+      "id": "evt_maria_migration_1",
+      "type": "migration",
+      "date": "1956-01-01",
+      "people": [
+        "maria"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6334,
+        "lng": -70.3045,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6334,
+        "lng": -70.3045,
+        "label": "Hyannis Port, MA, USA"
+      },
+      "description": "Maria Shriver moved from Los Angeles, CA, USA to Hyannis Port, MA, USA."
+    },
+    {
+      "id": "evt_caroline_migration_1",
+      "type": "migration",
+      "date": "1958-01-01",
+      "people": [
+        "caroline"
+      ],
+      "from": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Caroline Kennedy moved from New York, NY, USA to Los Angeles, CA, USA."
     },
     {
       "id": "evt_1958_ted_joan_marriage",
       "type": "marriage",
       "date": "1958-11-29",
-      "people": ["ted", "joan"],
-      "location": { "city": "Boston", "region": "MA", "country": "USA", "lat": 42.3601, "lng": -71.0589 },
+      "people": [
+        "ted",
+        "joan"
+      ],
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589
+      },
       "description": "Married in Boston."
     },
     {
       "id": "evt_1959_mary_birth",
       "type": "birth",
       "date": "1959-10-04",
-      "people": ["mary"],
-      "location": { "city": "Bayonne", "region": "NJ", "country": "USA", "lat": 40.6687, "lng": -74.1143 },
+      "people": [
+        "mary"
+      ],
+      "location": {
+        "city": "Bayonne",
+        "region": "NJ",
+        "country": "USA",
+        "lat": 40.6687,
+        "lng": -74.1143
+      },
       "description": "Born in Bayonne, New Jersey."
     },
     {
-      "id": "evt_1994_rfk_jr_mary_marriage",
-      "type": "marriage",
-      "date": "1994-04-15",
-      "people": ["rfk_jr", "mary"],
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 },
-      "description": "Married in New York."
+      "id": "evt_1959_mary_birth",
+      "type": "birth",
+      "date": "1959-10-04",
+      "people": [
+        "mary"
+      ],
+      "location": {
+        "city": "Bayonne",
+        "region": "NJ",
+        "country": "USA",
+        "lat": 40.6687,
+        "lng": -74.1143
+      },
+      "description": "Born in Bayonne, New Jersey."
+    },
+    {
+      "id": "evt_kerry_migration_1",
+      "type": "migration",
+      "date": "1960-01-01",
+      "people": [
+        "kerry"
+      ],
+      "from": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "to": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "description": "Kerry Kennedy moved from New York, NY, USA to Boston, MA, USA."
     },
     {
       "id": "evt_1963_jfk_death",
       "type": "death",
       "date": "1963-11-22",
-      "people": ["jfk"],
-      "location": { "city": "Dallas", "region": "TX", "country": "USA", "lat": 32.7767, "lng": -96.7970 },
+      "people": [
+        "jfk"
+      ],
+      "location": {
+        "city": "Dallas",
+        "region": "TX",
+        "country": "USA",
+        "lat": 32.7767,
+        "lng": -96.797
+      },
       "description": "Died in Dallas."
     },
     {
       "id": "evt_1968_rfk_sr_death",
       "type": "death",
       "date": "1968-06-06",
-      "people": ["rfk_sr"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "people": [
+        "rfk_sr"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
       "description": "Died in Los Angeles."
     },
     {
       "id": "evt_1969_joseph_sr_death",
       "type": "death",
       "date": "1969-11-18",
-      "people": ["joseph_sr"],
-      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "people": [
+        "joseph_sr"
+      ],
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923
+      },
       "description": "Passed away in Massachusetts."
+    },
+    {
+      "id": "evt_john_jr_migration_1",
+      "type": "migration",
+      "date": "1976-01-01",
+      "people": [
+        "john_jr"
+      ],
+      "from": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006,
+        "label": "New York, NY, USA"
+      },
+      "to": {
+        "city": "Martha's Vineyard",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.38,
+        "lng": -70.6455,
+        "label": "Martha's Vineyard, MA, USA"
+      },
+      "location": {
+        "city": "Martha's Vineyard",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.38,
+        "lng": -70.6455,
+        "label": "Martha's Vineyard, MA, USA"
+      },
+      "description": "John F. Kennedy Jr. moved from New York, NY, USA to Martha's Vineyard, MA, USA."
+    },
+    {
+      "id": "evt_john_jr_migration_2",
+      "type": "migration",
+      "date": "1985-01-01",
+      "people": [
+        "john_jr"
+      ],
+      "from": {
+        "city": "Martha's Vineyard",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.38,
+        "lng": -70.6455,
+        "label": "Martha's Vineyard, MA, USA"
+      },
+      "to": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "location": {
+        "city": "Boston",
+        "region": "MA",
+        "country": "USA",
+        "lat": 42.3601,
+        "lng": -71.0589,
+        "label": "Boston, MA, USA"
+      },
+      "description": "John F. Kennedy Jr. moved from Martha's Vineyard, MA, USA to Boston, MA, USA."
+    },
+    {
+      "id": "evt_1994_rfk_jr_mary_marriage",
+      "type": "marriage",
+      "date": "1994-04-01",
+      "people": [
+        "rfk_jr",
+        "mary"
+      ],
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006
+      },
+      "description": "Married in New York."
+    },
+    {
+      "id": "evt_1994_rfk_jr_mary_marriage",
+      "type": "marriage",
+      "date": "1994-04-15",
+      "people": [
+        "rfk_jr",
+        "mary"
+      ],
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006
+      },
+      "description": "Married Robert F. Kennedy Jr."
     },
     {
       "id": "evt_1994_jackie_death",
       "type": "death",
       "date": "1994-05-19",
-      "people": ["jackie"],
-      "location": { "city": "New York", "region": "NY", "country": "USA", "lat": 40.7128, "lng": -74.0060 },
+      "people": [
+        "jackie"
+      ],
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "USA",
+        "lat": 40.7128,
+        "lng": -74.006
+      },
       "description": "Passed away in New York."
     },
     {
       "id": "evt_1995_rose_death",
       "type": "death",
       "date": "1995-01-22",
-      "people": ["rose"],
-      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "people": [
+        "rose"
+      ],
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923
+      },
       "description": "Passed away in Massachusetts."
     },
     {
       "id": "evt_1999_john_jr_death",
       "type": "death",
       "date": "1999-07-16",
-      "people": ["john_jr"],
-      "location": { "city": "Martha's Vineyard", "region": "MA", "country": "USA", "lat": 41.38, "lng": -70.6455 },
+      "people": [
+        "john_jr"
+      ],
+      "location": {
+        "city": "Martha's Vineyard",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.38,
+        "lng": -70.6455
+      },
       "description": "Died near Martha's Vineyard."
     },
     {
       "id": "evt_2009_ted_death",
       "type": "death",
       "date": "2009-08-25",
-      "people": ["ted"],
-      "location": { "city": "Hyannis Port", "region": "MA", "country": "USA", "lat": 41.6359, "lng": -70.2923 },
+      "people": [
+        "ted"
+      ],
+      "location": {
+        "city": "Hyannis Port",
+        "region": "MA",
+        "country": "USA",
+        "lat": 41.6359,
+        "lng": -70.2923
+      },
       "description": "Passed away in Massachusetts."
     },
     {
       "id": "evt_2012_mary_death",
       "type": "death",
       "date": "2012-05-16",
-      "people": ["mary"],
-      "location": { "city": "Bedford", "region": "NY", "country": "USA", "lat": 41.2043, "lng": -73.7271 },
-      "description": "Died in Bedford, New York."
+      "people": [
+        "mary"
+      ],
+      "location": {
+        "city": "Mount Kisco",
+        "region": "NY",
+        "country": "USA",
+        "lat": 41.2043,
+        "lng": -73.7271
+      },
+      "description": "Died in Mount Kisco, New York."
     }
   ]
 }

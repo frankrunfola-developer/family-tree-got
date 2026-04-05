@@ -1,99 +1,583 @@
 {
   "meta": {
-    "family_name": "Kardashian–Jenner Family (Sample)",
-    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes core Kardashian + Jenner branches with select spouses/partners and children for richer Tree/Timeline/Map demos."
+    "family_name": "Kardashian\u2013Jenner Family (Sample)",
+    "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes core Kardashian + Jenner branches with select spouses/partners and children for richer Tree/Timeline/Map demos.",
+    "family_id": "kardashian"
   },
   "people": [
     {
       "id": "kris",
       "name": "Kris Jenner",
-      "born": "1955-11-05",
+      "born": "1955",
       "died": "",
       "photo": "/static/uploads/kardashian/kris.png",
-      "location": { "city": "Calabasas", "region": "CA", "country": "USA", "lat": 34.1367, "lng": -118.6615 }
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ]
     },
     {
       "id": "robert_sr",
       "name": "Robert Kardashian Sr.",
-      "born": "1944-02-22",
-      "died": "2003-09-30",
+      "born": "1944",
+      "died": "2003",
       "photo": "/static/uploads/kardashian/robert_sr.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ]
     },
     {
-      "id": "bruce",
-      "name": "Bruce Jenner",
-      "born": "1949-10-28",
+      "id": "caitlyn",
+      "name": "Caitlyn Jenner",
+      "born": "1949",
       "died": "",
-      "photo": "/static/uploads/kardashian/bruce.png",
-      "location": { "city": "Malibu", "region": "CA", "country": "USA", "lat": 34.0259, "lng": -118.7798 }
+      "photo": "/static/uploads/kardashian/caitlyn.png",
+      "location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ]
     },
-
     {
       "id": "kourtney",
       "name": "Kourtney Kardashian",
-      "born": "1979-04-18",
+      "born": "1979",
       "died": "",
       "photo": "/static/uploads/kardashian/kourtney.png",
-      "location": { "city": "Calabasas", "region": "CA", "country": "USA", "lat": 34.1367, "lng": -118.6615 }
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        },
+        {
+          "city": "Santa Barbara",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.4208,
+          "lng": -119.6982,
+          "label": "Santa Barbara, CA, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Santa Barbara",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.4208,
+          "lng": -119.6982,
+          "label": "Santa Barbara, CA, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ]
     },
     {
       "id": "kim",
       "name": "Kim Kardashian",
-      "born": "1980-10-21",
+      "born": "1980",
       "died": "",
       "photo": "/static/uploads/kardashian/kim.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ]
     },
     {
       "id": "khloe",
-      "name": "Khloé Kardashian",
-      "born": "1984-06-27",
+      "name": "Khlo\u00e9 Kardashian",
+      "born": "1984",
       "died": "",
       "photo": "/static/uploads/kardashian/khloe.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ]
     },
     {
-      "id": "robert_jr",
-      "name": "Robert Kardashian Jr.",
-      "born": "1987-03-17",
+      "id": "rob",
+      "name": "Rob Kardashian",
+      "born": "1987",
       "died": "",
-      "photo": "/static/uploads/kardashian/robert_jr.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "photo": "/static/uploads/kardashian/rob.png",
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        },
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        },
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ]
     },
-
     {
       "id": "kendall",
       "name": "Kendall Jenner",
-      "born": "1995-11-03",
+      "born": "1995",
       "died": "",
       "photo": "/static/uploads/kardashian/kendall.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ]
     },
     {
       "id": "kylie",
       "name": "Kylie Jenner",
-      "born": "1997-08-10",
+      "born": "1997",
       "died": "",
       "photo": "/static/uploads/kardashian/kylie.png",
-      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1683,
+          "lng": -118.6576,
+          "label": "Hidden Hills, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ]
     },
-
     {
       "id": "travis_b",
       "name": "Travis Barker",
       "born": "1975",
       "died": "",
       "photo": "/static/uploads/kardashian/travis_b.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-    {
-      "id": "scott",
-      "name": "Scott Disick",
-      "born": "1983-05-26",
-      "died": "",
-      "photo": "/static/uploads/kardashian/scott.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Santa Barbara",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.4208,
+          "lng": -119.6982,
+          "label": "Santa Barbara, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Santa Barbara",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.4208,
+          "lng": -119.6982,
+          "label": "Santa Barbara, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ]
     },
     {
       "id": "kanye",
@@ -101,7 +585,50 @@
       "born": "1977",
       "died": "",
       "photo": "/static/uploads/kardashian/kanye.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ]
     },
     {
       "id": "tristan",
@@ -109,7 +636,50 @@
       "born": "1991",
       "died": "",
       "photo": "/static/uploads/kardashian/tristan.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ]
     },
     {
       "id": "travis_s",
@@ -117,58 +687,117 @@
       "born": "1991",
       "died": "",
       "photo": "/static/uploads/kardashian/travis_s.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ]
     },
-
-    {
-      "id": "blac_chyna",
-      "name": "Blac Chyna",
-      "born": "1988-05-11",
-      "died": "",
-      "photo": "/static/uploads/kardashian/blac_chyna.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-
-    {
-      "id": "mason",
-      "name": "Mason Disick",
-      "born": "2009-12-14",
-      "died": "",
-      "photo": "/static/uploads/kardashian/mason.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-    {
-      "id": "penelope",
-      "name": "Penelope Disick",
-      "born": "2012-07-08",
-      "died": "",
-      "photo": "/static/uploads/kardashian/penelope.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-    {
-      "id": "reign",
-      "name": "Reign Disick",
-      "born": "2014-12-14",
-      "died": "",
-      "photo": "/static/uploads/kardashian/reign.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-    {
-      "id": "rocky",
-      "name": "Rocky Thirteen Barker",
-      "born": "2023-11-01",
-      "died": "",
-      "photo": "/static/uploads/kardashian/rocky.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
-    },
-
     {
       "id": "north",
       "name": "North West",
       "born": "2013",
       "died": "",
       "photo": "/static/uploads/kardashian/north.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ],
+      "current_location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "migrated_locations": [
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        }
+      ]
     },
     {
       "id": "saint",
@@ -176,7 +805,50 @@
       "born": "2015",
       "died": "",
       "photo": "/static/uploads/kardashian/saint.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ]
     },
     {
       "id": "chicago",
@@ -184,7 +856,66 @@
       "born": "2018",
       "died": "",
       "photo": "/static/uploads/kardashian/chicago.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ]
     },
     {
       "id": "psalm",
@@ -192,16 +923,101 @@
       "born": "2019",
       "died": "",
       "photo": "/static/uploads/kardashian/psalm.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1606,
+          "lng": -118.6523,
+          "label": "Hidden Hills, CA, USA"
+        }
+      ]
     },
-
     {
       "id": "true",
       "name": "True Thompson",
       "born": "2018",
       "died": "",
       "photo": "/static/uploads/kardashian/true.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Malibu",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0259,
+          "lng": -118.7798,
+          "label": "Malibu, CA, USA"
+        }
+      ]
     },
     {
       "id": "tatum",
@@ -209,16 +1025,117 @@
       "born": "2022",
       "died": "",
       "photo": "/static/uploads/kardashian/tatum.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        },
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Florence",
+          "region": "Tuscany",
+          "country": "Italy",
+          "lat": 43.7696,
+          "lng": 11.2558,
+          "label": "Florence, Tuscany, Italy"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ]
     },
-
     {
       "id": "stormi",
       "name": "Stormi Webster",
       "born": "2018",
       "died": "",
       "photo": "/static/uploads/kardashian/stormi.png",
-      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1683,
+          "lng": -118.6576,
+          "label": "Hidden Hills, CA, USA"
+        },
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Los Angeles",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.0522,
+          "lng": -118.2437,
+          "label": "Los Angeles, CA, USA"
+        }
+      ]
     },
     {
       "id": "aire",
@@ -226,202 +1143,1228 @@
       "born": "2022",
       "died": "",
       "photo": "/static/uploads/kardashian/aire.png",
-      "location": { "city": "Hidden Hills", "region": "CA", "country": "USA", "lat": 34.1683, "lng": -118.6576 }
-    },
-
-    {
-      "id": "dream",
-      "name": "Dream Kardashian",
-      "born": "2016-11-10",
-      "died": "",
-      "photo": "/static/uploads/kardashian/dream.png",
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 }
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "migrations": [
+        {
+          "city": "Hidden Hills",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1683,
+          "lng": -118.6576,
+          "label": "Hidden Hills, CA, USA"
+        },
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ],
+      "current_location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "migrated_locations": [
+        {
+          "city": "Calabasas",
+          "region": "CA",
+          "country": "USA",
+          "lat": 34.1367,
+          "lng": -118.6615,
+          "label": "Calabasas, CA, USA"
+        }
+      ]
     }
   ],
   "relationships": [
-    { "type": "spouse", "a": "kris", "b": "robert_sr" },
-    { "type": "spouse", "a": "kris", "b": "bruce" },
-
-    { "type": "spouse", "a": "kourtney", "b": "scott" },
-    { "type": "spouse", "a": "kourtney", "b": "travis_b" },
-    { "type": "spouse", "a": "kim", "b": "kanye" },
-    { "type": "spouse", "a": "khloe", "b": "lamar" },
-    { "type": "spouse", "a": "robert_jr", "b": "blac_chyna" },
-
-    { "child": "kourtney", "parent": "kris" },
-    { "child": "kourtney", "parent": "robert_sr" },
-
-    { "child": "kim", "parent": "kris" },
-    { "child": "kim", "parent": "robert_sr" },
-
-    { "child": "khloe", "parent": "kris" },
-    { "child": "khloe", "parent": "robert_sr" },
-
-    { "child": "robert_jr", "parent": "kris" },
-    { "child": "robert_jr", "parent": "robert_sr" },
-
-    { "child": "kendall", "parent": "kris" },
-    { "child": "kendall", "parent": "bruce" },
-
-    { "child": "kylie", "parent": "kris" },
-    { "child": "kylie", "parent": "bruce" },
-
-    { "child": "mason", "parent": "kourtney" },
-    { "child": "mason", "parent": "scott" },
-
-    { "child": "penelope", "parent": "kourtney" },
-    { "child": "penelope", "parent": "scott" },
-
-    { "child": "reign", "parent": "kourtney" },
-    { "child": "reign", "parent": "scott" },
-
-    { "child": "rocky", "parent": "kourtney" },
-    { "child": "rocky", "parent": "travis_b" },
-
-    { "child": "north", "parent": "kim" },
-    { "child": "north", "parent": "kanye" },
-
-    { "child": "saint", "parent": "kim" },
-    { "child": "saint", "parent": "kanye" },
-
-    { "child": "chicago", "parent": "kim" },
-    { "child": "chicago", "parent": "kanye" },
-
-    { "child": "psalm", "parent": "kim" },
-    { "child": "psalm", "parent": "kanye" },
-
-    { "child": "true", "parent": "khloe" },
-    { "child": "true", "parent": "tristan" },
-
-    { "child": "tatum", "parent": "khloe" },
-    { "child": "tatum", "parent": "tristan" },
-
-    { "child": "stormi", "parent": "kylie" },
-    { "child": "stormi", "parent": "travis_s" },
-
-    { "child": "aire", "parent": "kylie" },
-    { "child": "aire", "parent": "travis_s" },
-
-    { "child": "dream", "parent": "robert_jr" },
-    { "child": "dream", "parent": "blac_chyna" }
+    {
+      "type": "spouse",
+      "a": "kris",
+      "b": "robert_sr"
+    },
+    {
+      "type": "spouse",
+      "a": "kris",
+      "b": "caitlyn"
+    },
+    {
+      "type": "spouse",
+      "a": "kourtney",
+      "b": "travis_b"
+    },
+    {
+      "type": "spouse",
+      "a": "kim",
+      "b": "kanye"
+    },
+    {
+      "child": "kourtney",
+      "parent": "kris"
+    },
+    {
+      "child": "kourtney",
+      "parent": "robert_sr"
+    },
+    {
+      "child": "kim",
+      "parent": "kris"
+    },
+    {
+      "child": "kim",
+      "parent": "robert_sr"
+    },
+    {
+      "child": "khloe",
+      "parent": "kris"
+    },
+    {
+      "child": "khloe",
+      "parent": "robert_sr"
+    },
+    {
+      "child": "rob",
+      "parent": "kris"
+    },
+    {
+      "child": "rob",
+      "parent": "robert_sr"
+    },
+    {
+      "child": "kendall",
+      "parent": "kris"
+    },
+    {
+      "child": "kendall",
+      "parent": "caitlyn"
+    },
+    {
+      "child": "kylie",
+      "parent": "kris"
+    },
+    {
+      "child": "kylie",
+      "parent": "caitlyn"
+    },
+    {
+      "child": "north",
+      "parent": "kim"
+    },
+    {
+      "child": "north",
+      "parent": "kanye"
+    },
+    {
+      "child": "saint",
+      "parent": "kim"
+    },
+    {
+      "child": "saint",
+      "parent": "kanye"
+    },
+    {
+      "child": "chicago",
+      "parent": "kim"
+    },
+    {
+      "child": "chicago",
+      "parent": "kanye"
+    },
+    {
+      "child": "psalm",
+      "parent": "kim"
+    },
+    {
+      "child": "psalm",
+      "parent": "kanye"
+    },
+    {
+      "child": "true",
+      "parent": "khloe"
+    },
+    {
+      "child": "true",
+      "parent": "tristan"
+    },
+    {
+      "child": "tatum",
+      "parent": "khloe"
+    },
+    {
+      "child": "tatum",
+      "parent": "tristan"
+    },
+    {
+      "child": "stormi",
+      "parent": "kylie"
+    },
+    {
+      "child": "stormi",
+      "parent": "travis_s"
+    },
+    {
+      "child": "aire",
+      "parent": "kylie"
+    },
+    {
+      "child": "aire",
+      "parent": "travis_s"
+    }
   ],
   "events": [
+    {
+      "id": "evt_caitlyn_migration_1",
+      "type": "migration",
+      "date": "1950-01-01",
+      "people": [
+        "caitlyn"
+      ],
+      "from": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Caitlyn Jenner moved from Malibu, CA, USA to Los Angeles, CA, USA."
+    },
+    {
+      "id": "evt_kris_migration_1",
+      "type": "migration",
+      "date": "1956-01-01",
+      "people": [
+        "kris"
+      ],
+      "from": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Kris Jenner moved from Calabasas, CA, USA to Los Angeles, CA, USA."
+    },
+    {
+      "id": "evt_kris_migration_2",
+      "type": "migration",
+      "date": "1956-01-01",
+      "people": [
+        "kris"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Kris Jenner moved from Los Angeles, CA, USA to Hidden Hills, CA, USA."
+    },
+    {
+      "id": "evt_robert_sr_migration_1",
+      "type": "migration",
+      "date": "1960-01-01",
+      "people": [
+        "robert_sr"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Robert Kardashian Sr. moved from Los Angeles, CA, USA to Hidden Hills, CA, USA."
+    },
+    {
+      "id": "evt_travis_b_migration_1",
+      "type": "migration",
+      "date": "1976-01-01",
+      "people": [
+        "travis_b"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "location": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "description": "Travis Barker moved from Los Angeles, CA, USA to Santa Barbara, CA, USA."
+    },
+    {
+      "id": "evt_travis_b_migration_2",
+      "type": "migration",
+      "date": "1976-01-01",
+      "people": [
+        "travis_b"
+      ],
+      "from": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Travis Barker moved from Santa Barbara, CA, USA to Calabasas, CA, USA."
+    },
+    {
+      "id": "evt_kanye_migration_1",
+      "type": "migration",
+      "date": "1978-01-01",
+      "people": [
+        "kanye"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "Kanye West moved from Los Angeles, CA, USA to Florence, Tuscany, Italy."
+    },
     {
       "id": "evt_1978_kris_robert_marriage",
       "type": "marriage",
       "date": "1978-07-08",
-      "people": ["kris", "robert_sr"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "people": [
+        "kris",
+        "robert_sr"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
       "description": "Kris Jenner married Robert Kardashian Sr."
+    },
+    {
+      "id": "evt_kourtney_migration_1",
+      "type": "migration",
+      "date": "1980-01-01",
+      "people": [
+        "kourtney"
+      ],
+      "from": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "to": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "location": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "description": "Kourtney Kardashian moved from Calabasas, CA, USA to Santa Barbara, CA, USA."
+    },
+    {
+      "id": "evt_kourtney_migration_2",
+      "type": "migration",
+      "date": "1980-01-01",
+      "people": [
+        "kourtney"
+      ],
+      "from": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982,
+        "label": "Santa Barbara, CA, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Kourtney Kardashian moved from Santa Barbara, CA, USA to Los Angeles, CA, USA."
+    },
+    {
+      "id": "evt_kim_migration_1",
+      "type": "migration",
+      "date": "1981-01-01",
+      "people": [
+        "kim"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "Kim Kardashian moved from Los Angeles, CA, USA to Florence, Tuscany, Italy."
+    },
+    {
+      "id": "evt_khloe_migration_1",
+      "type": "migration",
+      "date": "1985-01-01",
+      "people": [
+        "khloe"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Khlo\u00e9 Kardashian moved from Los Angeles, CA, USA to Calabasas, CA, USA."
+    },
+    {
+      "id": "evt_rob_migration_1",
+      "type": "migration",
+      "date": "1988-01-01",
+      "people": [
+        "rob"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Rob Kardashian moved from Los Angeles, CA, USA to Hidden Hills, CA, USA."
+    },
+    {
+      "id": "evt_rob_migration_2",
+      "type": "migration",
+      "date": "1988-01-01",
+      "people": [
+        "rob"
+      ],
+      "from": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "to": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "description": "Rob Kardashian moved from Hidden Hills, CA, USA to Malibu, CA, USA."
     },
     {
       "id": "evt_1991_kris_robert_divorce",
       "type": "other",
       "date": "1991-03-01",
-      "people": ["kris", "robert_sr"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "people": [
+        "kris",
+        "robert_sr"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
       "description": "Divorce finalized (month-level date used for timeline)."
     },
     {
       "id": "evt_1991_kris_caitlyn_marriage",
       "type": "marriage",
       "date": "1991-04-01",
-      "people": ["kris", "caitlyn"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "people": [
+        "kris",
+        "caitlyn"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
       "description": "Kris married Caitlyn Jenner (month-level date used for timeline)."
+    },
+    {
+      "id": "evt_tristan_migration_1",
+      "type": "migration",
+      "date": "1992-01-01",
+      "people": [
+        "tristan"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Tristan Thompson moved from Los Angeles, CA, USA to Hidden Hills, CA, USA."
+    },
+    {
+      "id": "evt_travis_s_migration_1",
+      "type": "migration",
+      "date": "1992-01-01",
+      "people": [
+        "travis_s"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "description": "Travis Scott moved from Los Angeles, CA, USA to Malibu, CA, USA."
+    },
+    {
+      "id": "evt_travis_s_migration_2",
+      "type": "migration",
+      "date": "1992-01-01",
+      "people": [
+        "travis_s"
+      ],
+      "from": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "Travis Scott moved from Malibu, CA, USA to Florence, Tuscany, Italy."
+    },
+    {
+      "id": "evt_kendall_migration_1",
+      "type": "migration",
+      "date": "1996-01-01",
+      "people": [
+        "kendall"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "description": "Kendall Jenner moved from Los Angeles, CA, USA to Malibu, CA, USA."
+    },
+    {
+      "id": "evt_kylie_migration_1",
+      "type": "migration",
+      "date": "1998-01-01",
+      "people": [
+        "kylie"
+      ],
+      "from": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "Kylie Jenner moved from Hidden Hills, CA, USA to Florence, Tuscany, Italy."
+    },
+    {
+      "id": "evt_2003_robert_sr_death",
+      "type": "death",
+      "date": "2003-09-30",
+      "people": [
+        "robert_sr"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
+      "description": "Died in Los Angeles."
+    },
+    {
+      "id": "evt_north_migration_1",
+      "type": "migration",
+      "date": "2014-01-01",
+      "people": [
+        "north"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "North West moved from Los Angeles, CA, USA to Florence, Tuscany, Italy."
+    },
+    {
+      "id": "evt_2014_kim_kanye_marriage",
+      "type": "marriage",
+      "date": "2014-05-24",
+      "people": [
+        "kim",
+        "kanye"
+      ],
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558
+      },
+      "description": "Married in Florence, Italy."
     },
     {
       "id": "evt_2015_kris_caitlyn_divorce",
       "type": "other",
       "date": "2015-03-23",
-      "people": ["kris", "caitlyn"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
+      "people": [
+        "kris",
+        "caitlyn"
+      ],
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437
+      },
       "description": "Divorce became official."
     },
-
     {
-      "id": "evt_2009_mason_birth",
-      "type": "birth",
-      "date": "2009-12-14",
-      "people": ["mason", "kourtney", "scott"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Mason Disick was born."
+      "id": "evt_saint_migration_1",
+      "type": "migration",
+      "date": "2016-01-01",
+      "people": [
+        "saint"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Saint West moved from Los Angeles, CA, USA to Calabasas, CA, USA."
     },
     {
-      "id": "evt_2012_penelope_birth",
-      "type": "birth",
-      "date": "2012-07-08",
-      "people": ["penelope", "kourtney", "scott"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Penelope Disick was born."
+      "id": "evt_chicago_migration_1",
+      "type": "migration",
+      "date": "2019-01-01",
+      "people": [
+        "chicago"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Chicago West moved from Los Angeles, CA, USA to Calabasas, CA, USA."
     },
     {
-      "id": "evt_2014_reign_birth",
-      "type": "birth",
-      "date": "2014-12-14",
-      "people": ["reign", "kourtney", "scott"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Reign Disick was born."
+      "id": "evt_chicago_migration_2",
+      "type": "migration",
+      "date": "2019-01-01",
+      "people": [
+        "chicago"
+      ],
+      "from": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Chicago West moved from Calabasas, CA, USA to Hidden Hills, CA, USA."
     },
-
     {
-      "id": "evt_2014_kim_kanye_marriage",
-      "type": "marriage",
-      "date": "2014-05-24",
-      "people": ["kim", "kanye"],
-      "location": { "city": "Florence", "region": "Tuscany", "country": "Italy", "lat": 43.7696, "lng": 11.2558 },
-      "description": "Married in Florence, Italy."
+      "id": "evt_true_migration_1",
+      "type": "migration",
+      "date": "2019-01-01",
+      "people": [
+        "true"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "location": {
+        "city": "Malibu",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0259,
+        "lng": -118.7798,
+        "label": "Malibu, CA, USA"
+      },
+      "description": "True Thompson moved from Los Angeles, CA, USA to Malibu, CA, USA."
+    },
+    {
+      "id": "evt_stormi_migration_1",
+      "type": "migration",
+      "date": "2019-01-01",
+      "people": [
+        "stormi"
+      ],
+      "from": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "to": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "location": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "description": "Stormi Webster moved from Hidden Hills, CA, USA to Los Angeles, CA, USA."
+    },
+    {
+      "id": "evt_psalm_migration_1",
+      "type": "migration",
+      "date": "2020-01-01",
+      "people": [
+        "psalm"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "location": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1606,
+        "lng": -118.6523,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "description": "Psalm West moved from Los Angeles, CA, USA to Hidden Hills, CA, USA."
     },
     {
       "id": "evt_2022_kourtney_travis_marriage",
       "type": "marriage",
       "date": "2022-05-15",
-      "people": ["kourtney", "travis_b"],
-      "location": { "city": "Santa Barbara", "region": "CA", "country": "USA", "lat": 34.4208, "lng": -119.6982 },
+      "people": [
+        "kourtney",
+        "travis_b"
+      ],
+      "location": {
+        "city": "Santa Barbara",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.4208,
+        "lng": -119.6982
+      },
       "description": "Courthouse wedding in Santa Barbara."
     },
     {
-      "id": "evt_2023_rocky_birth",
-      "type": "birth",
-      "date": "2023-11-01",
-      "people": ["rocky", "kourtney", "travis_b"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Rocky Thirteen Barker was born."
+      "id": "evt_tatum_migration_1",
+      "type": "migration",
+      "date": "2023-01-01",
+      "people": [
+        "tatum"
+      ],
+      "from": {
+        "city": "Los Angeles",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.0522,
+        "lng": -118.2437,
+        "label": "Los Angeles, CA, USA"
+      },
+      "to": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "location": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "description": "Tatum Thompson moved from Los Angeles, CA, USA to Florence, Tuscany, Italy."
     },
-
     {
-      "id": "evt_2009_khloe_lamar_marriage",
-      "type": "marriage",
-      "date": "2009-09-27",
-      "people": ["khloe", "lamar"],
-      "location": { "city": "Beverly Hills", "region": "CA", "country": "USA", "lat": 34.0736, "lng": -118.4004 },
-      "description": "Married in Beverly Hills."
+      "id": "evt_tatum_migration_2",
+      "type": "migration",
+      "date": "2023-01-01",
+      "people": [
+        "tatum"
+      ],
+      "from": {
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": "Italy",
+        "lat": 43.7696,
+        "lng": 11.2558,
+        "label": "Florence, Tuscany, Italy"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Tatum Thompson moved from Florence, Tuscany, Italy to Calabasas, CA, USA."
     },
-
     {
-      "id": "evt_2016_rob_chyna_engagement",
-      "type": "other",
-      "date": "2016-04-05",
-      "people": ["robert_jr", "blac_chyna"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Rob Kardashian and Blac Chyna announced their engagement."
-    },
-    {
-      "id": "evt_2016_dream_birth",
-      "type": "birth",
-      "date": "2016-11-10",
-      "people": ["dream", "rob", "blac_chyna"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Dream Kardashian was born."
-    },
-
-    {
-      "id": "evt_2003_robert_sr_death",
-      "type": "death",
-      "date": "2003-09-30",
-      "people": ["robert_sr"],
-      "location": { "city": "Los Angeles", "region": "CA", "country": "USA", "lat": 34.0522, "lng": -118.2437 },
-      "description": "Died in Los Angeles."
+      "id": "evt_aire_migration_1",
+      "type": "migration",
+      "date": "2023-01-01",
+      "people": [
+        "aire"
+      ],
+      "from": {
+        "city": "Hidden Hills",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1683,
+        "lng": -118.6576,
+        "label": "Hidden Hills, CA, USA"
+      },
+      "to": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "location": {
+        "city": "Calabasas",
+        "region": "CA",
+        "country": "USA",
+        "lat": 34.1367,
+        "lng": -118.6615,
+        "label": "Calabasas, CA, USA"
+      },
+      "description": "Aire Webster moved from Hidden Hills, CA, USA to Calabasas, CA, USA."
     }
   ]
 }

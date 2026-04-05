@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-fixes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-fixes.css') }}">
+    {% block head_extras %}{% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
     <main class="page-shell">

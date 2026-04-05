@@ -8,15 +8,23 @@
 
     <div class="nav-actions">
       <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="{{ url_for('index') }}#story">Story</a>
         <a href="{{ url_for('tree') }}">Tree</a>
-        <a href="{{ url_for('index') }}#journey">Journey</a>
+        <a href="{{ url_for('map_view') }}">Map</a>
         {% if logged_in_user %}
         <a href="{{ url_for('dashboard') }}">Workspace</a>
         <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
         <a href="{{ url_for('login') }}">Login</a>
         {% endif %}
+        <form class="family-switcher" action="{{ url_for('select_family') }}" method="get">
+          <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
+          <label class="family-switcher-label" for="desktopFamilySelect">Family</label>
+          <select id="desktopFamilySelect" name="family" onchange="this.form.submit()">
+            {% for family in family_options %}
+            <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
+            {% endfor %}
+          </select>
+        </form>
       </nav>
 
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
@@ -28,14 +36,24 @@
   </div>
 
   <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
-    <a href="{{ url_for('index') }}#story">✦ Story</a>
-    <a href="{{ url_for('tree') }}">🌿 Tree</a>
-    <a href="{{ url_for('index') }}#journey">🗺 Journey</a>
-    {% if logged_in_user %}
-    <a href="{{ url_for('dashboard') }}">👤 Workspace</a>
-    <a href="{{ url_for('logout') }}">↩ Logout</a>
-    {% else %}
-    <a href="{{ url_for('login') }}">🔐 Login</a>
-    {% endif %}
+    <div class="mobile-nav-links">
+      <a href="{{ url_for('tree') }}">🌿 Tree</a>
+      <a href="{{ url_for('map_view') }}">🧭 Map</a>
+      {% if logged_in_user %}
+      <a href="{{ url_for('dashboard') }}">👤 Workspace</a>
+      <a href="{{ url_for('logout') }}">↩ Logout</a>
+      {% else %}
+      <a href="{{ url_for('login') }}">🔐 Login</a>
+      {% endif %}
+    </div>
+    <form class="family-switcher family-switcher-mobile" action="{{ url_for('select_family') }}" method="get">
+      <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
+      <label class="family-switcher-label" for="mobileFamilySelect">Family</label>
+      <select id="mobileFamilySelect" name="family" onchange="this.form.submit()">
+        {% for family in family_options %}
+        <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
+        {% endfor %}
+      </select>
+    </form>
   </nav>
 </header>

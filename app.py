@@ -17,10 +17,10 @@ from flask import Flask, flash, redirect, render_template, request, session, url
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
 USERS_PATH = DATA_DIR / 'users.json'
-DEMO_FAMILY_PATH = DATA_DIR / 'kennedy.json'
-MARKETING_PATH = DATA_DIR / 'family.json'
-USER_FAMILIES_DIR = DATA_DIR / 'user_families'
-USER_FAMILIES_DIR.mkdir(exist_ok=True)
+SAMPLES_DIR = DATA_DIR / 'samples'
+DEMO_FAMILY_PATH = SAMPLES_DIR / 'johnson.json'
+USER_FAMILIES_DIR = BASE_DIR / 'instance' / 'user_families'
+USER_FAMILIES_DIR.mkdir(parents=True, exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key = 'lineagemap-dev-secret'
@@ -66,10 +66,6 @@ def user_family_path(username: str) -> Path:
     return USER_FAMILIES_DIR / f'{username}.json'
 
 
-def load_marketing_data() -> dict:
-    return load_json(MARKETING_PATH, default={})
-
-
 def ensure_user_family(username: str) -> dict:
     path = user_family_path(username)
     if not path.exists():
@@ -79,7 +75,7 @@ def ensure_user_family(username: str) -> dict:
                 'family_name': f"{username.title()} Family",
                 'owner_username': username,
                 'profile_name': username.title(),
-                'profile_photo': '/static/img/you.jpg',
+                'profile_photo': '/static/img/placeholder-avatar.png',
                 'description': 'Start with the sample tree, then add your own relatives.'
             },
             'people': demo.get('people', []),
@@ -128,317 +124,510 @@ def family_stats(data: dict) -> dict:
     }
 
 
+def _num(value, default=0.0):
+    try:
+        return float(value)
+    except Exception:
+        return float(default)
+
+
+
+def _normalize_photo_path(raw: str | None, family_id: str | None = None) -> str:
+    value = str(raw or '').strip()
+    if not value:
+        return '/static/img/placeholder-avatar.png'
+    if value.endswith('/you.jpg'):
+        return '/static/img/placeholder-avatar.png'
+    if value.startswith('/static/uploads/'):
+        return value
+    if value.startswith('static/uploads/'):
+        return '/' + value.lstrip('/')
+    if value.startswith('/static/img/placeholder-avatar.png'):
+        return value
+    if value.startswith('static/img/placeholder-avatar.png'):
+        return '/' + value.lstrip('/')
+    if value.startswith('/static/img/'):
+        basename = Path(value).name
+        if family_id:
+            candidate = BASE_DIR / 'static' / 'uploads' / family_id / basename
+            if candidate.exists():
+                return f'/static/uploads/{family_id}/{basename}'
+        return '/static/img/placeholder-avatar.png'
+    if value.startswith('/uploads/'):
+        return '/static' + value
+    if value.startswith('uploads/'):
+        return '/static/' + value
+    if value.startswith('/'):
+        basename = Path(value).name
+    else:
+        basename = Path(value).name
+    if family_id:
+        candidate = BASE_DIR / 'static' / 'uploads' / family_id / basename
+        if candidate.exists():
+            return f'/static/uploads/{family_id}/{basename}'
+    return '/static/img/placeholder-avatar.png'
+
+
+def _normalize_family_photo_paths(data: dict, family_id: str | None = None) -> dict:
+    for person in data.get('people', []):
+        person['photo'] = _normalize_photo_path(person.get('photo') or person.get('image'), family_id)
+    meta = data.get('meta', {})
+    meta['profile_photo'] = _normalize_photo_path(meta.get('profile_photo'), family_id)
+    return data
+
+
 def build_tree_layout(data: dict) -> dict:
-    people_by_id = {person['id']: person for person in data.get('people', [])}
+    people = data.get('people', [])
     relationships = data.get('relationships', [])
+    people_by_id = {person['id']: person for person in people if person.get('id')}
 
     spouse_of: dict[str, str] = {}
-    child_to_parents: dict[str, set[str]] = defaultdict(set)
+    spouse_pairs: list[tuple[str, str]] = []
+    parent_map: dict[str, set[str]] = defaultdict(set)
+    child_map: dict[str, set[str]] = defaultdict(set)
 
     for rel in relationships:
         if rel.get('type') == 'spouse':
             a = rel.get('a')
             b = rel.get('b')
-            if a in people_by_id and b in people_by_id:
+            if a in people_by_id and b in people_by_id and a != b:
                 spouse_of[a] = b
                 spouse_of[b] = a
+                pair = tuple(sorted((a, b), key=lambda pid: str(people_by_id[pid].get('born', '9999'))))
+                if pair not in spouse_pairs:
+                    spouse_pairs.append(pair)
         elif rel.get('child') and rel.get('parent'):
             child = rel['child']
             parent = rel['parent']
-            if child in people_by_id and parent in people_by_id:
-                child_to_parents[child].add(parent)
+            if child in people_by_id and parent in people_by_id and child != parent:
+                parent_map[child].add(parent)
+                child_map[parent].add(child)
 
-    people_order = {pid: idx for idx, pid in enumerate(people_by_id.keys())}
-
-    def person_sort_key(person_id: str):
-        person = people_by_id[person_id]
-        born = str(person.get('born', '')).strip()
+    def born_sort(pid: str):
+        raw = str(people_by_id[pid].get('born', '')).strip()
         try:
-            born_key = int(born) if born else 999999
-        except ValueError:
-            born_key = 999999
-        return (born_key, person.get('name', ''), people_order.get(person_id, 0))
+            born = int(raw) if raw else 999999
+        except Exception:
+            born = 999999
+        return (born, people_by_id[pid].get('name', ''), pid)
 
-    family_defs: dict[str, dict] = {}
+    gen_memo: dict[str, int] = {}
+    def generation(pid: str) -> int:
+        if pid in gen_memo:
+            return gen_memo[pid]
+        parents = [p for p in parent_map.get(pid, set()) if p in people_by_id]
+        if not parents:
+            gen_memo[pid] = 0
+            return 0
+        gen_memo[pid] = max(generation(parent) for parent in parents) + 1
+        return gen_memo[pid]
 
-    def family_id_for(parents: list[str]) -> str:
-        return 'fam__' + '__'.join(sorted(parents)) if parents else ''
-
-    def ensure_family(parents: list[str]) -> dict:
-        parent_ids = sorted(dict.fromkeys([pid for pid in parents if pid in people_by_id]), key=person_sort_key)
-        fid = family_id_for(parent_ids)
-        if fid not in family_defs:
-            family_defs[fid] = {
-                'id': fid,
-                'parent_ids': parent_ids,
-                'child_ids': [],
-                'sort_key': min((person_sort_key(pid) for pid in parent_ids), default=(999999, '', 0)),
-            }
-        return family_defs[fid]
-
-    seen_spouse_pairs = set()
-    for a, b in spouse_of.items():
-        pair = tuple(sorted((a, b), key=person_sort_key))
-        if pair in seen_spouse_pairs:
-            continue
-        seen_spouse_pairs.add(pair)
-        ensure_family(list(pair))
-
-    for child_id, parent_ids in child_to_parents.items():
-        if not parent_ids:
-            continue
-        family = ensure_family(sorted(parent_ids, key=person_sort_key))
-        family['child_ids'].append(child_id)
-
-    people_in_parent_units = {pid for fam in family_defs.values() for pid in fam['parent_ids']}
-    for person_id in people_by_id:
-        if person_id not in people_in_parent_units and person_id not in spouse_of:
-            ensure_family([person_id])
-
-    for fam in family_defs.values():
-        fam['child_ids'] = sorted(dict.fromkeys(fam['child_ids']), key=person_sort_key)
-
-    family_ids_by_parent: dict[str, list[str]] = defaultdict(list)
-    for fam in family_defs.values():
-        for pid in fam['parent_ids']:
-            family_ids_by_parent[pid].append(fam['id'])
-
-    def family_priority(fid: str) -> tuple[int, int, tuple]:
-        fam = family_defs[fid]
-        return (len(fam['child_ids']), len(fam['parent_ids']), tuple(person_sort_key(pid) for pid in fam['parent_ids']))
-
-    home_family_for_person: dict[str, str] = {}
+    gens: dict[int, list[str]] = defaultdict(list)
     for pid in people_by_id:
-        fam_ids = family_ids_by_parent.get(pid, [])
-        if fam_ids:
-            home_family_for_person[pid] = sorted(fam_ids, key=family_priority, reverse=True)[0]
+        gens[generation(pid)].append(pid)
 
-    for fam in family_defs.values():
-        fam['child_parts'] = []
+    CARD_W = 126
+    CARD_H = 194
+    SPOUSE_GAP = 30
+    UNIT_GAP = 52
+    GEN_GAP = 116
+    SIDE_PAD = 52
+    TOP_PAD = 26
 
-    attached_family_ids = set()
-    for fam in family_defs.values():
-        child_parts = []
-        for child_id in fam['child_ids']:
-            child_home = home_family_for_person.get(child_id)
-            if child_home and child_home != fam['id'] and child_home in family_defs:
-                child_parts.append({'kind': 'family', 'child_id': child_id, 'family_id': child_home})
-                attached_family_ids.add(child_home)
+    pair_set = {frozenset((a, b)) for a, b in spouse_pairs}
+
+    def parent_anchor(pid: str, centers: dict[str, float]) -> float:
+        parents = sorted([p for p in parent_map.get(pid, set()) if p in centers], key=born_sort)
+        if not parents:
+            return 0.0
+        return sum(centers[p] for p in parents) / len(parents)
+
+    rows: dict[int, list[dict]] = {}
+    centers: dict[str, float] = {}
+    people_out: list[dict] = []
+    connectors: list[dict] = []
+    max_row_width = 0.0
+
+    for gen in sorted(gens):
+        members = sorted(gens[gen], key=born_sort)
+        units = []
+        consumed = set()
+        for pid in members:
+            if pid in consumed:
+                continue
+            spouse = spouse_of.get(pid)
+            if spouse and spouse in gens[gen] and spouse not in consumed and frozenset((pid, spouse)) in pair_set:
+                ordered = sorted((pid, spouse), key=born_sort)
+                anchor = sum(parent_anchor(x, centers) for x in ordered) / 2 if gen > 0 else 0.0
+                units.append({'kind': 'pair', 'members': ordered, 'width': CARD_W * 2 + SPOUSE_GAP, 'anchor': anchor, 'born': min(born_sort(x) for x in ordered)})
+                consumed.update(ordered)
             else:
-                child_parts.append({'kind': 'leaf', 'child_id': child_id})
-        unique_parts = []
-        seen_family_links = set()
-        for part in child_parts:
-            if part['kind'] == 'family':
-                key = (part['child_id'], part['family_id'])
-                if key in seen_family_links:
-                    continue
-                seen_family_links.add(key)
-            unique_parts.append(part)
-        fam['child_parts'] = sorted(unique_parts, key=lambda p: person_sort_key(p['child_id']))
+                anchor = parent_anchor(pid, centers) if gen > 0 else 0.0
+                units.append({'kind': 'single', 'members': [pid], 'width': CARD_W, 'anchor': anchor, 'born': born_sort(pid)})
+                consumed.add(pid)
 
-    root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key']) if fam['id'] not in attached_family_ids]
-    if not root_family_ids:
-        root_family_ids = [fam['id'] for fam in sorted(family_defs.values(), key=lambda fam: fam['sort_key'])]
+        if gen == 0:
+            units.sort(key=lambda item: item['born'])
+        else:
+            units.sort(key=lambda item: (item['anchor'], item['born']))
 
-    CARD_W = 96
-    PHOTO_H = 116
-    NAME_H = 48
-    CARD_H = PHOTO_H + NAME_H + 14
-    PARENT_GAP = 10
-    SIBLING_GAP = 18
-    FAMILY_GAP = 40
-    LEVEL_GAP = 48
-    SIDE_PAD = 30
-    TOP_PAD = 20
+        row_width = sum(item['width'] for item in units) + UNIT_GAP * max(0, len(units) - 1)
+        max_row_width = max(max_row_width, row_width)
+        rows[gen] = units
 
-    size_cache: dict[str, float] = {}
-
-    def family_row_width(count: int) -> float:
-        if count <= 0:
-            return CARD_W
-        return count * CARD_W + max(0, count - 1) * PARENT_GAP
-
-    def subtree_width(fid: str) -> float:
-        if fid in size_cache:
-            return size_cache[fid]
-        fam = family_defs[fid]
-        parent_width = family_row_width(len(fam['parent_ids']))
-        child_parts = []
-        for part in fam['child_parts']:
-            if part['kind'] == 'family':
-                child_parts.append(subtree_width(part['family_id']))
+        canvas_width = max(760, int(max_row_width + SIDE_PAD * 2))
+        y = TOP_PAD + gen * (CARD_H + GEN_GAP)
+        cursor = (canvas_width - row_width) / 2
+        for item in units:
+            if item['kind'] == 'pair':
+                pid1, pid2 = item['members']
+                x1 = cursor
+                x2 = cursor + CARD_W + SPOUSE_GAP
+                pair_mid_y = y + 76
+                connectors.append({'x1': round(x1 + CARD_W / 2, 1), 'y1': round(pair_mid_y, 1), 'x2': round(x2 + CARD_W / 2, 1), 'y2': round(pair_mid_y, 1)})
+                placements = [(pid1, x1), (pid2, x2)]
             else:
-                child_parts.append(CARD_W)
-        children_width = sum(child_parts) + SIBLING_GAP * max(0, len(child_parts) - 1) if child_parts else 0.0
-        total = max(parent_width, children_width, CARD_W)
-        size_cache[fid] = total
-        return total
+                placements = [(item['members'][0], cursor)]
 
-    layout_people = []
-    connectors = []
-    placed_people = set()
-    max_x = 0.0
-    max_y = 0.0
+            for pid, x in placements:
+                centers[pid] = x + CARD_W / 2
+                person = people_by_id[pid]
+                years = f"{person.get('born', '')}-{person.get('died', '')}".strip('-')
+                people_out.append({
+                    'id': pid,
+                    'name': person.get('name', 'Unknown'),
+                    'years': years,
+                    'photo': _normalize_photo_path(person.get('photo') or person.get('image'), data.get('meta', {}).get('family_id')),
+                    'x': round(x, 1),
+                    'y': round(y, 1),
+                })
+            cursor += item['width'] + UNIT_GAP
 
-    def add_person(person_id: str, center_x: float, top_y: float) -> None:
-        nonlocal max_x, max_y
-        if person_id in placed_people:
-            return
-        placed_people.add(person_id)
-        person = people_by_id[person_id]
-        years = f"{person.get('born', '')}-{person.get('died', '')}".strip('-')
-        layout_people.append({
-            'id': person_id,
+    canvas_width = max(760, int(max_row_width + SIDE_PAD * 2))
+
+    def row_y(gen: int) -> float:
+        return TOP_PAD + gen * (CARD_H + GEN_GAP)
+
+    for child in sorted(parent_map.keys(), key=born_sort):
+        if child not in centers:
+            continue
+        parents = sorted([p for p in parent_map.get(child, set()) if p in centers], key=born_sort)
+        if not parents:
+            continue
+        child_gen = generation(child)
+        parent_gen = min(generation(pid) for pid in parents)
+        parent_center = sum(centers[pid] for pid in parents) / len(parents)
+        parent_bottom = row_y(parent_gen) + CARD_H
+        bus_y = parent_bottom + 34
+        child_top = row_y(child_gen)
+
+        connectors.append({'x1': round(parent_center, 1), 'y1': round(parent_bottom, 1), 'x2': round(parent_center, 1), 'y2': round(bus_y, 1)})
+        connectors.append({'x1': round(parent_center, 1), 'y1': round(bus_y, 1), 'x2': round(centers[child], 1), 'y2': round(bus_y, 1)})
+        connectors.append({'x1': round(centers[child], 1), 'y1': round(bus_y, 1), 'x2': round(centers[child], 1), 'y2': round(child_top, 1)})
+
+    max_gen = max(gens.keys(), default=0)
+    canvas_height = TOP_PAD + (max_gen + 1) * CARD_H + max_gen * GEN_GAP + TOP_PAD
+
+    safe_people = []
+    for person in people_out:
+        safe_people.append({
+            'id': person.get('id', ''),
             'name': person.get('name', 'Unknown'),
-            'years': years,
-            'photo': person.get('photo', '/static/img/placeholder-avatar.png'),
-            'x': round(center_x - CARD_W / 2, 1),
-            'y': round(top_y, 1),
-            'generation': 0,
-        })
-        max_x = max(max_x, center_x + CARD_W / 2)
-        max_y = max(max_y, top_y + CARD_H)
-
-    def layout_family(fid: str, center_x: float, top_y: float):
-        nonlocal max_x, max_y
-        fam = family_defs[fid]
-        parent_count = max(1, len(fam['parent_ids']))
-        parent_row_width = family_row_width(parent_count)
-        parent_left = center_x - parent_row_width / 2
-        parent_centers: dict[str, float] = {}
-        ordered_parent_centers: list[float] = []
-        for idx, pid in enumerate(fam['parent_ids']):
-            px = parent_left + idx * (CARD_W + PARENT_GAP) + CARD_W / 2
-            parent_centers[pid] = px
-            ordered_parent_centers.append(px)
-            add_person(pid, px, top_y)
-
-        spouse_y = top_y + PHOTO_H / 2
-        if len(ordered_parent_centers) >= 2:
-            connectors.append({
-                'x1': round(ordered_parent_centers[0], 1),
-                'y1': round(spouse_y, 1),
-                'x2': round(ordered_parent_centers[-1], 1),
-                'y2': round(spouse_y, 1),
-            })
-
-        child_parts = []
-        for part in fam['child_parts']:
-            if part['kind'] == 'family':
-                child_parts.append((part, subtree_width(part['family_id'])))
-            else:
-                child_parts.append((part, CARD_W))
-
-        family_top_anchor = sum(ordered_parent_centers) / len(ordered_parent_centers) if ordered_parent_centers else center_x
-        family_anchor_y = spouse_y if ordered_parent_centers else top_y
-        if not child_parts:
-            max_y = max(max_y, top_y + CARD_H)
-            return {'top_anchor_x': family_top_anchor, 'anchor_y': family_anchor_y, 'parent_centers': parent_centers}
-
-        child_y = top_y + CARD_H + LEVEL_GAP
-        child_bus_y = top_y + CARD_H + max(12, LEVEL_GAP * 0.42)
-        parent_anchor_x = family_top_anchor
-
-        connectors.append({
-            'x1': round(parent_anchor_x, 1),
-            'y1': round(top_y + CARD_H, 1),
-            'x2': round(parent_anchor_x, 1),
-            'y2': round(child_bus_y, 1),
+            'years': person.get('years', ''),
+            'photo': _normalize_photo_path(person.get('photo') or person.get('image'), data.get('meta', {}).get('family_id')),
+            'x': round(_num(person.get('x')), 1),
+            'y': round(_num(person.get('y')), 1),
         })
 
-        total_children_width = sum(width for _, width in child_parts) + SIBLING_GAP * max(0, len(child_parts) - 1)
-        child_cursor = center_x - total_children_width / 2
-        child_anchor_xs = []
-
-        for part, width in child_parts:
-            block_center_x = child_cursor + width / 2
-            if part['kind'] == 'family':
-                child_layout = layout_family(part['family_id'], block_center_x, child_y)
-                anchor_x = child_layout['top_anchor_x']
-                anchor_y = child_layout['anchor_y']
-            else:
-                add_person(part['child_id'], block_center_x, child_y)
-                anchor_x = block_center_x
-                anchor_y = child_y
-
-            child_anchor_xs.append(anchor_x)
-            connectors.append({
-                'x1': round(anchor_x, 1),
-                'y1': round(child_bus_y, 1),
-                'x2': round(anchor_x, 1),
-                'y2': round(anchor_y, 1),
-            })
-            child_cursor += width + SIBLING_GAP
-
-        if child_anchor_xs:
-            connectors.append({
-                'x1': round(min(child_anchor_xs), 1),
-                'y1': round(child_bus_y, 1),
-                'x2': round(max(child_anchor_xs), 1),
-                'y2': round(child_bus_y, 1),
-            })
-
-        max_y = max(max_y, child_y + CARD_H)
-        return {'top_anchor_x': family_top_anchor, 'anchor_y': family_anchor_y, 'parent_centers': parent_centers}
-
-    forest_width = sum(subtree_width(fid) for fid in root_family_ids) + FAMILY_GAP * max(0, len(root_family_ids) - 1)
-    canvas_width = max(720, int(forest_width + SIDE_PAD * 2))
-    cursor_x = (canvas_width - forest_width) / 2
-
-    for family_id in root_family_ids:
-        width = subtree_width(family_id)
-        center_x = cursor_x + width / 2
-        layout_family(family_id, center_x, TOP_PAD)
-        cursor_x += width + FAMILY_GAP
-
-    canvas_height = int(max_y + TOP_PAD + 18)
+    safe_connectors = []
+    for link in connectors:
+        safe_connectors.append({
+            'x1': round(_num(link.get('x1')), 1),
+            'y1': round(_num(link.get('y1')), 1),
+            'x2': round(_num(link.get('x2')), 1),
+            'y2': round(_num(link.get('y2')), 1),
+        })
 
     return {
         'family_name': data.get('meta', {}).get('family_name', 'Family Tree'),
         'profile_name': data.get('meta', {}).get('profile_name', ''),
-        'profile_photo': data.get('meta', {}).get('profile_photo', '/static/img/you.jpg'),
-        'canvas_width': int(canvas_width),
-        'canvas_height': int(canvas_height),
-        'people': sorted(layout_people, key=lambda p: (p['y'], p['x'], p['name'])),
-        'connectors': connectors,
+        'profile_photo': data.get('meta', {}).get('profile_photo', '/static/img/placeholder-avatar.png'),
+        'canvas_width': int(max(640, _num(canvas_width, 760))),
+        'canvas_height': int(max(280, _num(canvas_height, 420))),
+        'people': sorted(safe_people, key=lambda p: (p['y'], p['x'], p['name'])),
+        'connectors': safe_connectors,
         'stats': family_stats(data),
     }
 
 
+def sample_family_ids() -> list[str]:
+    ids: list[str] = []
+    if not SAMPLES_DIR.exists():
+        return ids
+    for path in sorted(SAMPLES_DIR.glob('*.json')):
+        payload = load_json(path, default={})
+        if isinstance(payload, dict) and all(key in payload for key in ('people', 'relationships', 'events')):
+            ids.append(path.stem)
+    return ids
+
+
+def selected_family_id() -> str:
+    requested = (request.args.get('family') or '').strip().lower()
+    options = sample_family_ids()
+    fallback = 'johnson' if 'johnson' in options else (options[0] if options else 'kennedy')
+    if requested and requested in options:
+        session['selected_family'] = requested
+        return requested
+    stored = (session.get('selected_family') or '').strip().lower()
+    if stored in options:
+        return stored
+    session['selected_family'] = fallback
+    return fallback
+
+
+def sample_family_label(sample_id: str) -> str:
+    payload = load_json(SAMPLES_DIR / f'{sample_id}.json', default={})
+    family_name = payload.get('meta', {}).get('family_name') or sample_id.replace('_', ' ').title()
+    return family_name
+
+
+def load_sample_family(sample_id: str | None = None) -> dict:
+    sid = sample_id or selected_family_id()
+    return load_json(SAMPLES_DIR / f'{sid}.json', default={})
+
+
+def format_place(location: dict | None) -> str:
+    if not isinstance(location, dict):
+        return ''
+    parts = [location.get('city'), location.get('region'), location.get('country')]
+    return ', '.join(part for part in parts if part)
+
+
+def canonical_location(location: dict | None) -> dict | None:
+    if not isinstance(location, dict):
+        return None
+    lng = location.get('lng', location.get('lon'))
+    lat = location.get('lat')
+    out = {
+        'city': location.get('city', ''),
+        'region': location.get('region', ''),
+        'country': location.get('country', ''),
+        'lat': lat,
+        'lng': lng,
+        'label': location.get('label') or format_place(location),
+    }
+    if out['lat'] in (None, '') or out['lng'] in (None, ''):
+        return None
+    return out
+
+
+def enrich_family_data(payload: dict, family_id: str | None = None) -> dict:
+    data = json.loads(json.dumps(payload or {}))
+    data.setdefault('meta', {})
+    if family_id:
+        data['meta'].setdefault('family_id', family_id)
+    data.setdefault('people', [])
+    data.setdefault('relationships', [])
+    data.setdefault('events', [])
+
+    events_by_person: dict[str, list[dict]] = defaultdict(list)
+    for event in data['events']:
+        for pid in event.get('people', []):
+            events_by_person[pid].append(event)
+
+    for pid in list(events_by_person):
+        events_by_person[pid].sort(key=lambda item: str(item.get('date', '')))
+
+    for person in data['people']:
+        route: list[dict] = []
+        seen = set()
+
+        def add_location(loc: dict | None):
+            item = canonical_location(loc)
+            if not item:
+                return
+            key = (item.get('city'), item.get('region'), item.get('country'), item.get('lat'), item.get('lng'))
+            if key in seen:
+                return
+            seen.add(key)
+            route.append(item)
+
+        add_location(person.get('location'))
+        for loc in person.get('migrations', []):
+            add_location(loc)
+        for loc in person.get('migrated_locations', []):
+            add_location(loc)
+        for event in events_by_person.get(person.get('id'), []):
+            add_location(event.get('location'))
+        add_location(person.get('current_location'))
+
+        if not route and isinstance(person.get('location'), dict):
+            add_location(person.get('location'))
+
+        person['migrations'] = route
+        person['photo'] = _normalize_photo_path(person.get('photo') or person.get('image'), family_id)
+        person.setdefault('location', route[0] if route else {})
+        if route:
+            person['current_location'] = route[-1]
+
+    return data
+
+
+def current_sample_family() -> dict:
+    sid = selected_family_id()
+    return enrich_family_data(load_sample_family(sid), sid)
+
+
+def current_family_payload() -> dict:
+    user = current_user()
+    if user:
+        return enrich_family_data(ensure_user_family(user['username']), user['username'])
+    return current_sample_family()
+
+
+def family_ancestor(data: dict) -> dict | None:
+    people = data.get('people', [])
+    if not people:
+        return None
+
+    def born_key(person: dict):
+        born = str(person.get('born', '')).strip()
+        try:
+            return int(born)
+        except Exception:
+            return 999999
+
+    return sorted(people, key=lambda person: (born_key(person), person.get('name', '')))[0]
+
+
+def landing_summary_from_family(data: dict) -> dict:
+    family_name = data.get('meta', {}).get('family_name', 'Family Legacy')
+    stats = family_stats(data)
+    ancestor = family_ancestor(data)
+    if ancestor:
+        ancestor = dict(ancestor)
+        ancestor['photo'] = _normalize_photo_path(ancestor.get('photo') or ancestor.get('image'), data.get('meta', {}).get('family_id'))
+    people = data.get('people', [])
+    migration_places = []
+    seen_places = set()
+    for person in people:
+        for loc in person.get('migrations', []):
+            label = loc.get('label') or format_place(loc)
+            if label and label not in seen_places:
+                seen_places.add(label)
+                migration_places.append(label)
+    start_year = min((int(str(p.get('born')).strip()) for p in people if str(p.get('born', '')).strip().isdigit()), default='')
+    end_year = max((int(str(p.get('died') or p.get('born')).strip()) for p in people if str(p.get('died') or p.get('born') or '').strip().isdigit()), default='')
+    years = f"{start_year}–{end_year}" if start_year and end_year else (str(start_year) if start_year else '')
+
+    tree_layout = build_tree_layout(data)
+    landing_tree = {
+        'links': tree_layout.get('connectors', []),
+        'people': [],
+    }
+    for idx, person in enumerate(tree_layout.get('people', [])):
+        photo = _normalize_photo_path(person.get('photo'), data.get('meta', {}).get('family_id'))
+        landing_tree['people'].append({
+            'id': person.get('id', f'p{idx}'),
+            'name': person.get('name', 'Unknown'),
+            'years': person.get('years', ''),
+            'image': photo,
+            'photo': photo,
+            'x': f"{person.get('x', 0)}px",
+            'y': f"{person.get('y', 0)}px",
+            'w': '116px',
+            'featured': idx == 0,
+        })
+
+    return {
+        'brand': 'LineAgeMap',
+        'hero': {
+            'subtitle': 'Trace your family through stories, movement, and generations.',
+            'search_placeholder': 'Enter your family name',
+            'cta': 'Begin to Build Your Archive',
+        },
+        'family': {
+            'eyebrow': 'Family Time Capsule',
+            'name': family_name.replace(' Family', ' Legacy'),
+            'years': years,
+            'locations': migration_places[:4],
+            'tree_cta': 'View Full Legacy Archive',
+            'stats': [
+                {'value': stats['members'], 'label': 'Members'},
+                {'value': stats['generations'], 'label': 'Generations'},
+                {'value': max(1, stats['couples']), 'label': 'Branches'},
+            ],
+            'ancestor': ancestor,
+        },
+        'tree': landing_tree,
+        'map': {
+            'title': f'{family_name} Migration Map',
+            'subtitle': 'View individual routes or show every migration path at once.',
+            'legend': [
+                {'kind': 'origin', 'label': 'Origin'},
+                {'kind': 'migration', 'label': 'Migration'},
+                {'kind': 'settlement', 'label': 'Current / Latest'},
+            ],
+        },
+    }
+
+
+def map_people_payload(data: dict) -> dict:
+    people_payload = []
+    all_places = []
+    seen_places = set()
+    for person in data.get('people', []):
+        migrations = person.get('migrations', [])
+        coords_path = []
+        for loc in migrations:
+            if loc.get('lng') in (None, '') or loc.get('lat') in (None, ''):
+                continue
+            coords = [float(loc['lng']), float(loc['lat'])]
+            coords_path.append(coords)
+            place_key = (loc.get('label'), coords[0], coords[1])
+            if place_key not in seen_places:
+                seen_places.add(place_key)
+                all_places.append({'name': loc.get('label') or format_place(loc), 'coords': coords, 'kind': 'migration'})
+        if not coords_path:
+            continue
+        years = f"{person.get('born', '')}-{person.get('died', '')}".strip('-')
+        people_payload.append({
+            'id': person.get('id'),
+            'name': person.get('name'),
+            'years': years,
+            'image': _normalize_photo_path(person.get('photo') or person.get('image'), data.get('meta', {}).get('family_id')),
+            'label': format_place(person.get('current_location') or person.get('location')),
+            'placeLabels': [loc.get('label') or format_place(loc) for loc in migrations if (loc.get('label') or format_place(loc))],
+            'path': coords_path,
+        })
+    return {'people': people_payload, 'places': all_places}
+
+
 @app.context_processor
 def inject_helpers():
-    return {'logged_in_user': current_user()}
+    family_options = [{'id': sid, 'label': sample_family_label(sid)} for sid in sample_family_ids()]
+    return {
+        'logged_in_user': current_user(),
+        'family_options': family_options,
+        'current_family_id': selected_family_id(),
+    }
 
 
 @app.route('/')
 def index():
     user = current_user()
-    marketing = load_marketing_data()
-    marketing.setdefault('brand', 'LineAgeMap')
-    marketing.setdefault('hero', {})
-    marketing['hero'].setdefault('subtitle', '')
-    marketing['hero'].setdefault('search_placeholder', 'Enter your family name')
-    marketing['hero'].setdefault('cta', 'Begin to Build Your Archive')
-    marketing.setdefault('family', {})
-    marketing['family'].setdefault('name', 'Featured Family')
-    marketing['family'].setdefault('eyebrow', 'Featured Family Summary')
-    marketing['family'].setdefault('years', '')
-    marketing['family'].setdefault('locations', [])
-    marketing['family'].setdefault('tree_cta', 'View Full Legacy Archive')
-    marketing['family'].setdefault('stats', [])
-    marketing.setdefault('tree', {})
-    marketing['tree'].setdefault('people', [])
-    marketing.setdefault('map', {})
-    marketing['map'].setdefault('title', 'Family Journey Map')
-    marketing['map'].setdefault('subtitle', 'A clean interactive view of where each branch began, moved, and settled.')
-    marketing['map'].setdefault('legend', [])
-    marketing.setdefault('journey', {'title': '', 'cards': []})
-    user_tree = None
-    if user:
-        user_family = ensure_user_family(user['username'])
-        user_tree = build_tree_layout(user_family)
-    return render_template('index.html', data=marketing, user_family=user_tree, user=user, mapbox_public_token=MAPBOX_PUBLIC_TOKEN)
+    family = current_sample_family()
+    data = landing_summary_from_family(family)
+    return render_template('index.html', data=data, landing_family=family, user=user, mapbox_public_token=MAPBOX_PUBLIC_TOKEN)
+
+
+@app.get('/select-family')
+def select_family():
+    family_id = (request.args.get('family') or '').strip().lower()
+    if family_id in sample_family_ids():
+        session['selected_family'] = family_id
+    next_url = request.args.get('next') or request.referrer or url_for('index')
+    return redirect(next_url)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -475,14 +664,27 @@ def dashboard():
 @app.route('/tree')
 def tree():
     owner = request.args.get('user')
+    user = current_user()
     if owner:
-        family = ensure_user_family(owner)
-    elif current_user():
-        family = ensure_user_family(current_user()['username'])
+        family = enrich_family_data(ensure_user_family(owner), owner)
+    elif user:
+        family = enrich_family_data(ensure_user_family(user['username']), user['username'])
     else:
-        family = load_json(DEMO_FAMILY_PATH, default={})
+        family = current_sample_family()
     tree_data = build_tree_layout(family)
     return render_template('tree.html', tree_data=tree_data)
+
+
+@app.route('/map')
+def map_view():
+    family = current_family_payload()
+    data = landing_summary_from_family(family)
+    return render_template('map.html', data=data, mapbox_public_token=MAPBOX_PUBLIC_TOKEN)
+
+
+@app.get('/api/current-family/people')
+def api_current_family_people():
+    return map_people_payload(current_family_payload())
 
 
 @app.post('/profile/update')
@@ -528,7 +730,7 @@ def add_person():
         'name': name,
         'born': request.form.get('born', '').strip(),
         'died': request.form.get('died', '').strip(),
-        'photo': request.form.get('photo', '').strip() or '/static/img/you.jpg',
+        'photo': request.form.get('photo', '').strip() or '/static/img/placeholder-avatar.png',
     })
     save_user_family(user['username'], family)
     flash(f'{name} added.')

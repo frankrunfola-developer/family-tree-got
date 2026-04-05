@@ -34,7 +34,7 @@
     warmMapStyle(map);
   });
 
-  fetch('/static/data/landing-locations.json')
+  fetch(window.MAP_API_URL || '/api/family/current/people', { cache: 'no-store', credentials: 'same-origin' })
     .then(r => r.json())
     .then(data => {
       state.people = data.people || [];

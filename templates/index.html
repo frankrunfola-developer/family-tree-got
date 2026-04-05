@@ -1,183 +1,151 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ data.brand }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-fixes.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-fixes.css') }}">
-  </head>
-  <body class="landing-page">
-    <main class="page-shell">
-      {% include '_topbar.html' %}
+{% extends 'base.html' %}
+{% block title %}{{ data.brand }}{% endblock %}
+{% block body_class %}landing-page{% endblock %}
 
-      <section class="hero-card raised-card parchment-card">
-        <div class="hero-inner">
-          <div class="hero-copy">
-            <h1><span class="hero-title-top">Build Your Family Time Capsule</span></h1>
-            <p class="subtitle">{{ data.hero.subtitle }}</p>
-            <div class="hero-mini-icons" aria-hidden="true">
-              <span>Family archive</span>
-              <span>Generations</span>
-              <span>Legacy map</span>
-            </div>
-            <div class="search-row cta-only">
-              <a class="btn-primary" href="{{ url_for('tree') }}">Start Building Your Archive</a>
-            </div>
-            <div class="hero-actions hero-auth-actions">
-              {% if user %}
-              <a class="btn-secondary" href="{{ url_for('dashboard') }}">Open your archive</a>
-              {% else %}
-              <a class="btn-secondary" href="{{ url_for('login') }}">Login To Continue Building</a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </section>
+{% block head_extras %}
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+{% endblock %}
 
-      <section class="story-grid" id="story">
-        <article class="summary-card raised-card parchment-card capsule-summary-card">
-          <div class="capsule-family-card">
-            <p class="summary-eyebrow capsule-eyebrow">Family Time Capsule</p>
-            <h2 class="capsule-family-name">{{ data.family.name }}</h2>
-
-            {% set ancestor = data.tree.people[0] %}
-            {% set earliest_trace = ancestor.years.split('-')[0] %}
-            <div class="capsule-portrait-block">
-              <div class="capsule-portrait-shell">
-                <span class="capsule-leaf capsule-leaf-left" aria-hidden="true"></span>
-                <div class="capsule-portrait-oval">
-                  <img src="{{ url_for('static', filename='img/' ~ ancestor.image) }}" alt="{{ ancestor.name }} portrait">
-                </div>
-                <span class="capsule-leaf capsule-leaf-right" aria-hidden="true"></span>
-              </div>
-              <div class="capsule-ancestor-name">{{ ancestor.name }}</div>
-              <div class="capsule-ancestor-role">Original Ancestor</div>
-              <div class="capsule-earliest-pill">✦&nbsp; Earliest traces: {{ earliest_trace }}</div>
-            </div>
-          </div>
-
-          <div class="capsule-overview-card">
-            <h3 class="capsule-overview-title">Your Ancestry Overview</h3>
-            <div class="capsule-overview-grid">
-              <article class="capsule-metric-card metric-tree">
-                <div class="capsule-metric-art" aria-hidden="true"></div>
-                <div class="capsule-metric-value">{{ data.family.stats[0].value }}</div>
-                <div class="capsule-metric-label">{{ data.family.stats[0].label }}</div>
-              </article>
-              <article class="capsule-metric-card metric-hourglass">
-                <div class="capsule-metric-art" aria-hidden="true"></div>
-                <div class="capsule-metric-value">{{ data.family.stats[1].value }}</div>
-                <div class="capsule-metric-label">{{ data.family.stats[1].label }}</div>
-              </article>
-              <article class="capsule-metric-card metric-globe">
-                <div class="capsule-metric-art" aria-hidden="true"></div>
-                <div class="capsule-metric-value">{{ data.family.stats[2].value }}</div>
-                <div class="capsule-metric-label">Branches</div>
-              </article>
-              <article class="capsule-metric-card metric-scroll">
-                <div class="capsule-metric-art" aria-hidden="true"></div>
-                <div class="capsule-metric-value">170+</div>
-                <div class="capsule-metric-label">Years of History</div>
-              </article>
-            </div>
-          </div>
-
-          <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ data.family.tree_cta }}</a>
-        </article>
-
-        <article class="tree-card raised-card parchment-card" id="tree">
-          <div class="tree-controls">
-            <div class="tree-speed-toggle" id="treeSpeedToggle" role="group" aria-label="Tree build speed">
-              <button class="tree-speed-btn" type="button" data-speed="slow">Slow</button>
-              <button class="tree-speed-btn is-active" type="button" data-speed="medium">Medium</button>
-              <button class="tree-speed-btn" type="button" data-speed="fast">Fast</button>
-            </div>
-            <button class="btn-secondary tree-play-btn" id="treePlayBtn" type="button">Pause tree</button>
-          </div>
-          <div class="tree-canvas" data-tree-links='{{ data.tree.links|tojson|safe }}'>
-            <svg class="tree-svg" aria-hidden="true"></svg>
-            {% for person in data.tree.people %}
-            <figure class="person-card person-{{ person.id }} {% if person.featured %}featured{% endif %}"
-              data-person-name="{{ person.name }}"
-              style="left: {{ person.x }}; width: {{ person.w }};">
-              <div class="portrait-frame">
-                <img src="{{ url_for('static', filename='img/' ~ person.image) }}" alt="{{ person.name }} portrait">
-              </div>
-              <figcaption class="nameplate">
-                <span class="person-name">{{ person.name }}</span>
-                <span class="person-years">{{ person.years }}</span>
-              </figcaption>
-            </figure>
-            {% endfor %}
-          </div>
-        </article>
-      </section>
-
-      <section class="map-card map-card-live raised-card parchment-card" id="journey">
-        <div class="map-header">
-          <div>
-            <h3>{{ data.map.title }}</h3>
-            <p>{{ data.map.subtitle }}</p>
-          </div>
-          <div class="map-controls">
-            <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
-              <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
-              <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
-              <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
-            </div>
-            <button class="btn-secondary map-play-btn" id="mapPlayBtn" type="button">Play migration</button>
-          </div>
-        </div>
-
-        {% if data.map.legend %}
-        <div class="map-legend">
-          {% for item in data.map.legend %}
-          <span class="legend-item legend-{{ item.kind|lower|replace(' ', '-') }}">{{ item.label }}</span>
-          {% endfor %}
-        </div>
+{% block content %}
+<section class="hero-card raised-card parchment-card">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <h1><span class="hero-title-top">Build Your Family Time Capsule</span></h1>
+      <p class="subtitle">{{ data.hero.subtitle }}</p>
+      <div class="hero-mini-icons" aria-hidden="true">
+        <span>Family archive</span>
+        <span>Generations</span>
+        <span>Legacy map</span>
+      </div>
+      <div class="search-row cta-only">
+        <a class="btn-primary" href="{{ url_for('tree') }}">Start Building Your Archive</a>
+      </div>
+      <div class="hero-actions hero-auth-actions">
+        {% if user %}
+        <a class="btn-secondary" href="{{ url_for('dashboard') }}">Open your archive</a>
+        {% else %}
+        <a class="btn-secondary" href="{{ url_for('login') }}">Login To Continue Building</a>
         {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
 
-        <div class="person-chip-row" id="personChipRow"></div>
-        <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
-      </section>
-    </main>
+<section class="story-grid" id="story">
+  <article class="summary-card raised-card parchment-card capsule-summary-card">
+    <div class="capsule-family-card">
+      <h2 class="capsule-family-name">{{ data.family.name }}</h2>
 
-    <script>window.MAPBOX_TOKEN = {{ mapbox_public_token|tojson }};</script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script src="{{ url_for('static', filename='js/landing-tree.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>
-    <script>
-      const toggle = document.querySelector('.nav-toggle');
-      const mobileNav = document.querySelector('.mobile-nav');
-      if (toggle && mobileNav) {
-        toggle.addEventListener('click', () => {
-          const isOpen = mobileNav.classList.toggle('is-open');
-          toggle.classList.toggle('is-open', isOpen);
-          toggle.setAttribute('aria-expanded', String(isOpen));
-        });
-        mobileNav.querySelectorAll('a').forEach((link) => {
-          link.addEventListener('click', () => {
-            mobileNav.classList.remove('is-open');
-            toggle.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
-          });
-        });
-        document.addEventListener('click', (event) => {
-          if (!mobileNav.contains(event.target) && !toggle.contains(event.target)) {
-            mobileNav.classList.remove('is-open');
-            toggle.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
-    </script>
-  </body>
-</html>
+      {% set ancestor = data.family.ancestor if data.family and data.family.ancestor else None %}
+      {% if ancestor and ancestor.born %}
+      {% set earliest_trace = ancestor.born %}
+      {% else %}
+      {% set earliest_trace = '' %}
+      {% endif %}
+      <div class="capsule-portrait-block">
+        <div class="capsule-portrait-shell" aria-hidden="true">
+          <img class="capsule-portrait-frame" src="{{ url_for('static', filename='img/ui/family-summary-frame.png') }}" alt="">
+          <div class="capsule-portrait-photo-wrap">
+            <img class="capsule-portrait-photo" src="{{ ancestor.photo if ancestor and ancestor.photo else url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
+          </div>
+        </div>
+        <div class="capsule-ancestor-name">{{ ancestor.name if ancestor else data.family.name }}</div>
+        <div class="capsule-ancestor-role">Original Ancestor</div>
+        <div class="capsule-earliest-pill">Earliest traces: {{ earliest_trace }}</div>
+      </div>
+    </div>
+
+    {% set stats = data.family.stats if data.family and data.family.stats else [] %}
+    {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
+    {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
+    {% set stat3 = stats[2] if stats|length > 2 else {'value': '—', 'label': 'Branches'} %}
+    <div class="capsule-overview-card">
+      <h3 class="capsule-overview-title">Your Ancestry Overview</h3>
+      <div class="capsule-overview-grid">
+        <article class="capsule-metric-card metric-tree">
+          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
+          <div class="capsule-metric-value">{{ stat1.value }}</div>
+          <div class="capsule-metric-label">{{ stat1.label }}</div>
+        </article>
+        <article class="capsule-metric-card metric-hourglass">
+          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
+          <div class="capsule-metric-value">{{ stat2.value }}</div>
+          <div class="capsule-metric-label">{{ stat2.label }}</div>
+        </article>
+        <article class="capsule-metric-card metric-globe">
+          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
+          <div class="capsule-metric-value">{{ stat3.value }}</div>
+          <div class="capsule-metric-label">Branches</div>
+        </article>
+        <article class="capsule-metric-card metric-scroll">
+          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
+          <div class="capsule-metric-value">170+</div>
+          <div class="capsule-metric-label">Years</div>
+        </article>
+      </div>
+    </div>
+
+    <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ data.family.tree_cta }}</a>
+  </article>
+
+  <article class="tree-card raised-card parchment-card" id="tree">
+    <div class="tree-controls">
+      <div class="tree-speed-toggle" id="treeSpeedToggle" role="group" aria-label="Tree build speed">
+        <button class="tree-speed-btn" type="button" data-speed="slow">Slow</button>
+        <button class="tree-speed-btn is-active" type="button" data-speed="medium">Medium</button>
+        <button class="tree-speed-btn" type="button" data-speed="fast">Fast</button>
+      </div>
+      <button class="btn-secondary tree-play-btn" id="treePlayBtn" type="button">Pause tree</button>
+    </div>
+    <div class="tree-frame landing-tree-frame">
+      {% set tree = data.tree %}
+      {% include '_tree_canvas.html' %}
+    </div>
+  </article>
+</section>
+
+<section class="map-card map-card-live raised-card parchment-card" id="journey">
+  <div class="map-header">
+    <div>
+      <h3>{{ data.map.title }}</h3>
+      <p>{{ data.map.subtitle }}</p>
+    </div>
+    <div class="map-controls">
+      <div class="pill-group map-action-group" id="mapActionToggle" aria-label="Journey playback">
+        <button class="btn-secondary map-action-btn" type="button" data-action="play">Play migration</button>
+        <button class="btn-secondary map-action-btn" type="button" data-action="stop">Stop</button>
+        <button class="btn-secondary map-action-btn" type="button" data-action="all">All</button>
+      </div>
+      <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
+        <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
+        <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
+        <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
+      </div>
+      <a class="btn-secondary" href="{{ url_for('map_view') }}">Open full map</a>
+    </div>
+  </div>
+
+  {% if data.map.legend %}
+  <div class="map-legend">
+    {% for item in data.map.legend %}
+    <span class="legend-item legend-{{ item.kind|lower|replace(' ', '-') }}">{{ item.label }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="person-chip-row" id="personChipRow"></div>
+  <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.MAPBOX_TOKEN = {{ mapbox_public_token|tojson }};
+  window.MAP_API_URL = {{ url_for('api_current_family_people')|tojson }};
+</script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/landing-tree.js') }}"></script>
+<script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>
+{% endblock %}
