@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const ns = 'http://www.w3.org/2000/svg';
-  const speedProfiles = { slow: 1700, medium: 1100, fast: 760 };
+  const speedProfiles = { slow: 2600, medium: 1100, fast: 760 };
   let playbackSpeed = 'medium';
   let playbackRunning = true;
   let generationCount = 0;

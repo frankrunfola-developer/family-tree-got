@@ -44,9 +44,8 @@
       {% set earliest_trace = '' %}
       {% endif %}
       <div class="capsule-portrait-block">
-        <div class="capsule-portrait-shell" aria-hidden="true">
-          <img class="capsule-portrait-frame" src="{{ url_for('static', filename='img/ui/family-summary-frame.png') }}" alt="">
-          <div class="capsule-portrait-photo-wrap">
+        <div class="capsule-portrait-shell capsule-portrait-shell-plain" aria-hidden="true">
+          <div class="capsule-portrait-photo-wrap capsule-portrait-photo-wrap-plain">
             <img class="capsule-portrait-photo" src="{{ ancestor.photo if ancestor and ancestor.photo else url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
           </div>
         </div>

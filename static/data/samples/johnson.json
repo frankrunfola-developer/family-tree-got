@@ -9,7 +9,7 @@
       "name": "Giovanni Johnson",
       "born": "1854",
       "died": "1932",
-      "photo": "/static/img/giovanni.jpg",
+      "photo": "/static/uploads/johnson/giovanni.jpg",
       "location": {
         "city": "Ruvo del Monte",
         "region": "Potenza, Basilicata",
@@ -46,7 +46,7 @@
       "name": "Maria Johnson",
       "born": "1855",
       "died": "1936",
-      "photo": "/static/img/maria.jpg",
+      "photo": "/static/uploads/johnson/maria.jpg",
       "location": {
         "city": "Ruvo del Monte",
         "region": "Potenza, Basilicata",
@@ -83,7 +83,7 @@
       "name": "Antonio Johnson",
       "born": "1884",
       "died": "1958",
-      "photo": "/static/img/antonio.jpg",
+      "photo": "/static/uploads/johnson/antonio.jpg",
       "location": {
         "city": "Potenza",
         "region": "Basilicata",
@@ -120,7 +120,7 @@
       "name": "Lucia Johnson",
       "born": "1877",
       "died": "1961",
-      "photo": "/static/img/lucia.jpg",
+      "photo": "/static/uploads/johnson/lucia.jpg",
       "location": {
         "city": "Buffalo",
         "region": "New York",
@@ -157,7 +157,7 @@
       "name": "Henry Johnson",
       "born": "1924",
       "died": "1975",
-      "photo": "/static/img/henry.jpg",
+      "photo": "/static/uploads/johnson/henry.jpg",
       "location": {
         "city": "Buffalo",
         "region": "New York",
@@ -194,7 +194,7 @@
       "name": "Rosa Johnson",
       "born": "1926",
       "died": "2003",
-      "photo": "/static/img/rosa.jpg",
+      "photo": "/static/uploads/johnson/rosa.jpg",
       "location": {
         "city": "Buffalo",
         "region": "New York",
@@ -231,7 +231,7 @@
       "name": "You",
       "born": "Present",
       "died": "",
-      "photo": "/static/img/you.jpg",
+      "photo": "/static/uploads/johnson/frank.jpg",
       "location": {
         "city": "Buffalo",
         "region": "New York",

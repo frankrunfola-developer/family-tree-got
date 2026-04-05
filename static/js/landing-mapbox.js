@@ -124,6 +124,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     return el;
   }
 
+  function buildCityLabel(text) {
+    const el = document.createElement('span');
+    el.className = 'map-city-label';
+    el.innerHTML = `<strong>${escapeHtml(text || '')}</strong>`;
+    return el;
+  }
+
+  function endpointLabel(person, index) {
+    if (!Array.isArray(person.path) || !person.path.length) return '';
+    const targetCoords = person.path[index === 0 ? 0 : person.path.length - 1];
+    const place = places.find((place) => place.coords[0] === targetCoords[0] && place.coords[1] === targetCoords[1]);
+    if (place?.name) return place.name;
+    const raw = index === 0 ? (person.origin_label || '') : (person.settlement_label || '');
+    return String(raw).split(',')[0].trim() || (index === 0 ? 'Origin' : 'Destination');
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
   function clearEndpointDots() {
     endpointDots.forEach((marker) => {
       try { marker.remove(); } catch (err) {}
@@ -177,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       container: 'lmMap',
       style: 'mapbox://styles/mapbox/light-v11',
       center: [-50, 39],
-      zoom: 1.78,
+      zoom: 2.35,
       attributionControl: false
     });
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -237,7 +262,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const travelerMarker = new mapboxgl.Marker({ element: travelerEl, anchor: 'center' }).setLngLat(places[0].coords).addTo(map);
     travelerEl.style.display = 'none';
 
-    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 74, maxZoom: 3.55, duration: 0 });
+    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 28, maxZoom: 5.25, duration: 0 });
 
     let activeRouteId = null;
     let activeRouteArrowId = null;
@@ -278,16 +303,20 @@ document.addEventListener("DOMContentLoaded", async () => {
               layout: { 'line-cap': 'round', 'line-join': 'round' },
               paint: { 'line-color': '#8a5a34', 'line-width': 4.5, 'line-opacity': 0.96, 'line-dasharray': [1.2, 0.85] }
             });
-            const startDot = new mapboxgl.Marker({ element: buildEndpointDot('origin'), anchor: 'center' }).setLngLat(person.path[0]).addTo(map);
-            const endDot = new mapboxgl.Marker({ element: buildEndpointDot('destination'), anchor: 'center' }).setLngLat(person.path[person.path.length - 1]).addTo(map);
-            endpointDots.push(startDot, endDot);
+            const startCoords = person.path[0];
+            const endCoords = person.path[person.path.length - 1];
+            const startDot = new mapboxgl.Marker({ element: buildEndpointDot('origin'), anchor: 'center' }).setLngLat(startCoords).addTo(map);
+            const endDot = new mapboxgl.Marker({ element: buildEndpointDot('destination'), anchor: 'center' }).setLngLat(endCoords).addTo(map);
+            const startLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 0)), anchor: 'bottom-left', offset: [10, -6] }).setLngLat(startCoords).addTo(map);
+            const endLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 1)), anchor: 'bottom-left', offset: [10, -6] }).setLngLat(endCoords).addTo(map);
+            endpointDots.push(startDot, endDot, startLabel, endLabel);
           }
         }
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
-            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 80, maxZoom: 3.95, duration: animateTraveler ? 350 : 700 });
+            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 22, maxZoom: 6.35, duration: animateTraveler ? 350 : 700 });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
-            map.flyTo({ center: person.coords, zoom: 5, duration: animateTraveler ? 350 : 700 });
+            map.flyTo({ center: person.coords, zoom: 6.1, duration: animateTraveler ? 350 : 700 });
           }
         }
       },
@@ -326,9 +355,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const travelerMarker = L.marker([places[0].coords[1], places[0].coords[0]], { icon: travelerIcon, opacity: 0 }).addTo(map);
 
     if (allLatLngs.length) {
-      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [36, 36] });
+      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [18, 18], maxZoom: 5.25 });
     } else {
-      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [36, 36] });
+      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [18, 18], maxZoom: 5.25 });
     }
 
     let activeLine = null;
@@ -356,15 +385,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeLine = L.polyline(latlngs, { color: '#8a5a34', weight: 4, opacity: 0.96, dashArray: '8 5' }).addTo(map);
             const startDot = L.marker(latlngs[0], { icon: L.divIcon({ className: 'leaflet-endpoint', html: '<span class="map-endpoint-dot map-endpoint-dot-origin"></span>', iconSize: [18,18], iconAnchor: [9,9] }) }).addTo(map);
             const endDot = L.marker(latlngs[latlngs.length - 1], { icon: L.divIcon({ className: 'leaflet-endpoint', html: '<span class="map-endpoint-dot map-endpoint-dot-destination"></span>', iconSize: [18,18], iconAnchor: [9,9] }) }).addTo(map);
-            endpointDots.push(startDot, endDot);
+            const startLabel = L.marker(latlngs[0], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 0))}</strong></span>`, iconSize: [150, 30], iconAnchor: [-8, 22] }) }).addTo(map);
+            const endLabel = L.marker(latlngs[latlngs.length - 1], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 1))}</strong></span>`, iconSize: [150, 30], iconAnchor: [-8, 22] }) }).addTo(map);
+            endpointDots.push(startDot, endDot, startLabel, endLabel);
           }
         }
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
             const latlngs = person.path.map(([lng, lat]) => [lat, lng]);
-            map.fitBounds(L.latLngBounds(latlngs), { padding: [36, 36] });
+            map.fitBounds(L.latLngBounds(latlngs), { padding: [12, 12], maxZoom: 6.35 });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
-            map.flyTo([person.coords[1], person.coords[0]], 5, { duration: animateTraveler ? 0.35 : 0.75 });
+            map.flyTo([person.coords[1], person.coords[0]], 6.1, { duration: animateTraveler ? 0.35 : 0.75 });
           }
         }
       },
