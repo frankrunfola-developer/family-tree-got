@@ -44,8 +44,8 @@
       {% set earliest_trace = '' %}
       {% endif %}
       <div class="capsule-portrait-block">
-        <div class="capsule-portrait-shell capsule-portrait-shell-plain" aria-hidden="true">
-          <div class="capsule-portrait-photo-wrap capsule-portrait-photo-wrap-plain">
+        <div class="capsule-portrait-shell" aria-hidden="true">
+          <div class="capsule-portrait-photo-wrap">
             <img class="capsule-portrait-photo" src="{{ ancestor.photo if ancestor and ancestor.photo else url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
           </div>
         </div>
@@ -60,8 +60,7 @@
     {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
     {% set stat3 = stats[2] if stats|length > 2 else {'value': '—', 'label': 'Branches'} %}
     <div class="capsule-overview-card">
-      <h3 class="capsule-overview-title">Your Ancestry Overview</h3>
-      <div class="capsule-overview-grid">
+            <div class="capsule-overview-grid">
         <article class="capsule-metric-card metric-tree">
           <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
           <div class="capsule-metric-value">{{ stat1.value }}</div>
@@ -108,14 +107,8 @@
   <div class="map-header">
     <div>
       <h3>{{ data.map.title }}</h3>
-      <p>{{ data.map.subtitle }}</p>
     </div>
     <div class="map-controls">
-      <div class="pill-group map-action-group" id="mapActionToggle" aria-label="Journey playback">
-        <button class="btn-secondary map-action-btn" type="button" data-action="play">Play migration</button>
-        <button class="btn-secondary map-action-btn" type="button" data-action="stop">Stop</button>
-        <button class="btn-secondary map-action-btn" type="button" data-action="all">All</button>
-      </div>
       <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
         <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
         <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
@@ -125,16 +118,25 @@
     </div>
   </div>
 
+  <div class="map-selector-shell">
+    <details class="map-selector-details" id="mapSelectorDetails">
+      <summary class="map-selector-summary">Choose route</summary>
+      <div class="map-selector-body">
+        <button class="btn-secondary map-action-btn map-all-inline-btn" type="button" data-action="all">All</button>
+        <div class="person-chip-row" id="personChipRow"></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
+
   {% if data.map.legend %}
-  <div class="map-legend">
+  <div class="map-legend map-legend-bottom">
     {% for item in data.map.legend %}
     <span class="legend-item legend-{{ item.kind|lower|replace(' ', '-') }}">{{ item.label }}</span>
     {% endfor %}
   </div>
   {% endif %}
-
-  <div class="person-chip-row" id="personChipRow"></div>
-  <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
 </section>
 {% endblock %}
 

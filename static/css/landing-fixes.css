@@ -1922,110 +1922,56 @@ html, body {
 
 
 
-/* ==== v25 forced portrait rollback + map emphasis ==== */
-.landing-page .capsule-portrait-shell-plain {
-  position: relative !important;
-  width: 122px !important;
-  aspect-ratio: 0.78 !important;
-  margin: 4px auto 12px !important;
-  padding: 0 !important;
-}
-
-.landing-page .capsule-portrait-shell-plain::before,
-.landing-page .capsule-portrait-shell-plain::after,
-.landing-page .capsule-portrait-frame {
-  display: none !important;
-  content: none !important;
-}
-
-.landing-page .capsule-portrait-photo-wrap-plain {
-  position: relative !important;
-  inset: auto !important;
-  left: auto !important;
-  top: auto !important;
-  width: 100% !important;
-  height: 100% !important;
-  overflow: hidden !important;
-  border-radius: 50% / 50% !important;
-  border: 3px solid #b1885d !important;
-  box-shadow:
-    0 0 0 2px rgba(244,233,214,0.95) inset,
-    0 10px 20px rgba(73, 45, 24, 0.18) !important;
-  background: linear-gradient(180deg, rgba(226,210,184,0.95), rgba(199,177,146,0.92)) !important;
-}
-
-.landing-page .capsule-portrait-photo-wrap-plain::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  border-radius: inherit !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.14), rgba(0,0,0,0.06)),
-    radial-gradient(circle at 50% 35%, rgba(255,255,255,0.06), transparent 55%) !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
-}
-
-.landing-page .capsule-portrait-photo {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  display: block !important;
-  object-fit: contain !important;
-  object-position: center center !important;
-  background: linear-gradient(180deg, rgba(230,214,191,0.92), rgba(208,188,160,0.9)) !important;
-  filter: sepia(0.16) contrast(1.02) saturate(0.93) !important;
-  z-index: 1 !important;
+/* ==== v30 actual map controls fix ==== */
+.landing-page .map-traveler-avatar {
+  width: 42px !important;
+  height: 42px !important;
 }
 
 .landing-page .map-endpoint-dot {
   width: 16px !important;
   height: 16px !important;
-  border-radius: 999px !important;
   border: 2px solid rgba(255,255,255,0.96) !important;
   box-shadow: 0 0 0 4px rgba(255,255,255,0.18) !important;
 }
 
 .landing-page .map-endpoint-dot-origin {
-  background: #d73d3d !important;
+  background: #d83f3f !important;
 }
 
 .landing-page .map-endpoint-dot-destination {
-  background: #2aa44f !important;
+  background: #2ca44f !important;
 }
 
 .landing-page .map-city-label {
   display: inline-flex !important;
   align-items: center !important;
-  padding: 5px 10px !important;
+  padding: 4px 10px !important;
   border-radius: 999px !important;
-  border: 1px solid rgba(121, 84, 45, 0.22) !important;
-  background: rgba(255,251,244,0.96) !important;
+  background: rgba(255,251,244,0.97) !important;
+  border: 1px solid rgba(121,84,45,0.22) !important;
   box-shadow: 0 8px 18px rgba(86,58,33,0.16) !important;
   color: #4f311d !important;
-  font-family: var(--font-display) !important;
-  font-size: 0.92rem !important;
-  line-height: 1 !important;
   white-space: nowrap !important;
+  pointer-events: none !important;
 }
 
 .landing-page .map-city-label strong {
   font-weight: 900 !important;
 }
 
+.landing-page .map-action-btn[hidden] {
+  display: none !important;
+}
+
+.landing-page .map-action-btn.is-active {
+  background: linear-gradient(180deg, rgba(182,108,49,0.95), rgba(151,77,28,0.98)) !important;
+  color: #fff8ee !important;
+  border-color: rgba(130,67,25,0.9) !important;
+}
+
 .leaflet-city-marker,
 .leaflet-endpoint {
   background: transparent !important;
   border: 0 !important;
-}
-
-@media (max-width: 559px) {
-  .landing-page .capsule-portrait-shell-plain {
-    width: 116px !important;
-  }
-  .landing-page .map-city-label {
-    font-size: 0.82rem !important;
-    padding: 4px 8px !important;
-  }
 }

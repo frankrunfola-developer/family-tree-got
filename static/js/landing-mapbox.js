@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const byName = new Map(people.map((p) => [String(p.name || '').toLowerCase(), p]));
   const chipRow = document.getElementById('personChipRow');
-  const playBtn = document.getElementById('mapPlayBtn');
+  const selectorDetails = document.getElementById('mapSelectorDetails');
+  const allActionBtn = document.querySelector('[data-action="all"]');
   const mapCard = mapEl.closest('.map-card-live');
   const mapFrame = mapEl.closest('.map-frame');
   const sequenceBanner = document.createElement('div');
@@ -45,9 +46,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const speedToggle = document.getElementById('mapSpeedToggle');
   let playbackSpeed = 'slow';
   const speedProfiles = {
-    slow: { routeDuration: 1900, transitionDuration: 250 },
-    medium: { routeDuration: 1300, transitionDuration: 180 },
-    fast: { routeDuration: 900, transitionDuration: 130 }
+    slow: { routeDuration: 2600, transitionDuration: 420 },
+    medium: { routeDuration: 1800, transitionDuration: 300 },
+    fast: { routeDuration: 1200, transitionDuration: 180 }
   };
 
   function setActiveUI(person, traveling = false) {
@@ -60,11 +61,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  function setActionMode(mode) {
+    if (allActionBtn) allActionBtn.classList.toggle('is-active', mode === 'all' || mode === 'playing');
+  }
+
   function stopLoop() {
     playbackActive = false;
     if (loopRaf) cancelAnimationFrame(loopRaf);
     loopRaf = null;
-    if (playBtn) playBtn.textContent = 'Play migration';
+    setActionMode('stopped');
     adapter?.stopTraveler();
     if (activePerson) {
       setActiveUI(activePerson, false);
@@ -202,7 +207,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       container: 'lmMap',
       style: 'mapbox://styles/mapbox/light-v11',
       center: [-50, 39],
-      zoom: 2.35,
+      zoom: 2.0,
       attributionControl: false
     });
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -262,7 +267,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const travelerMarker = new mapboxgl.Marker({ element: travelerEl, anchor: 'center' }).setLngLat(places[0].coords).addTo(map);
     travelerEl.style.display = 'none';
 
-    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 28, maxZoom: 5.25, duration: 0 });
+    map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 48, maxZoom: 4.45, duration: 0 });
 
     let activeRouteId = null;
     let activeRouteArrowId = null;
@@ -276,12 +281,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       activeRouteArrowId = null;
     }
 
+    function showAllRoutes() {
+      clearEndpointDots();
+      clearActiveRoute();
+      travelerEl.style.display = 'none';
+      if (map.getLayer('all-routes-line')) map.setPaintProperty('all-routes-line', 'line-opacity', 0.78);
+      if (map.getLayer('all-routes-arrows')) map.setPaintProperty('all-routes-arrows', 'text-opacity', 0);
+      map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 40, maxZoom: 5.15, duration: 350 });
+      if (sequenceValue) sequenceValue.textContent = 'All migrations';
+      document.querySelectorAll('.person-chip').forEach((chip) => chip.classList.remove('is-active'));
+      document.querySelectorAll('.person-card').forEach((card) => card.classList.remove('is-active-map'));
+    }
+
     return {
+      showAllRoutes,
       highlightPerson(person, options = {}) {
         const animateTraveler = Boolean(options.animateTraveler);
         const skipCamera = Boolean(options.skipCamera);
         setActiveUI(person, animateTraveler);
         clearEndpointDots();
+        clearAllRouteLayers();
         if (map.getLayer('all-routes-line')) {
           map.setPaintProperty('all-routes-line', 'line-opacity', 0);
         }
@@ -301,22 +320,22 @@ document.addEventListener("DOMContentLoaded", async () => {
               type: 'line',
               source: routeId,
               layout: { 'line-cap': 'round', 'line-join': 'round' },
-              paint: { 'line-color': '#8a5a34', 'line-width': 4.5, 'line-opacity': 0.96, 'line-dasharray': [1.2, 0.85] }
+              paint: { 'line-color': '#8a5a34', 'line-width': 4.5, 'line-opacity': 0.96, 'line-dasharray': [0.85, 1.35] }
             });
             const startCoords = person.path[0];
             const endCoords = person.path[person.path.length - 1];
             const startDot = new mapboxgl.Marker({ element: buildEndpointDot('origin'), anchor: 'center' }).setLngLat(startCoords).addTo(map);
             const endDot = new mapboxgl.Marker({ element: buildEndpointDot('destination'), anchor: 'center' }).setLngLat(endCoords).addTo(map);
-            const startLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 0)), anchor: 'bottom-left', offset: [10, -6] }).setLngLat(startCoords).addTo(map);
-            const endLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 1)), anchor: 'bottom-left', offset: [10, -6] }).setLngLat(endCoords).addTo(map);
+            const startLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 0)), anchor: 'left', offset: [22, -20] }).setLngLat(startCoords).addTo(map);
+            const endLabel = new mapboxgl.Marker({ element: buildCityLabel(endpointLabel(person, 1)), anchor: 'left', offset: [22, 18] }).setLngLat(endCoords).addTo(map);
             endpointDots.push(startDot, endDot, startLabel, endLabel);
           }
         }
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
-            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 22, maxZoom: 6.35, duration: animateTraveler ? 350 : 700 });
+            map.fitBounds(person.path.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds()), { padding: 36, maxZoom: 5.8, duration: animateTraveler ? 350 : 700 });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
-            map.flyTo({ center: person.coords, zoom: 6.1, duration: animateTraveler ? 350 : 700 });
+            map.flyTo({ center: person.coords, zoom: 5, duration: animateTraveler ? 350 : 700 });
           }
         }
       },
@@ -351,18 +370,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    let travelerIcon = L.divIcon({ className: 'leaflet-traveler', html: '<span class="map-traveler-avatar"></span>', iconSize: [38, 38], iconAnchor: [19, 19] });
+    let travelerIcon = L.divIcon({ className: 'leaflet-traveler', html: '<span class="map-traveler-avatar"></span>', iconSize: [42, 42], iconAnchor: [21, 21] });
     const travelerMarker = L.marker([places[0].coords[1], places[0].coords[0]], { icon: travelerIcon, opacity: 0 }).addTo(map);
 
     if (allLatLngs.length) {
-      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [18, 18], maxZoom: 5.25 });
+      map.fitBounds(L.latLngBounds(allLatLngs), { padding: [44, 44], maxZoom: 4.45 });
     } else {
-      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [18, 18], maxZoom: 5.25 });
+      map.fitBounds(fitLngLatBounds(places.map((p) => p.coords)), { padding: [44, 44], maxZoom: 4.45 });
     }
 
     let activeLine = null;
     let activeArrowMarkers = [];
     let currentPersonId = null;
+    let allRouteLayers = [];
 
     function clearActiveRoute() {
       if (activeLine) map.removeLayer(activeLine);
@@ -371,37 +391,62 @@ document.addEventListener("DOMContentLoaded", async () => {
       activeLine = null;
     }
 
+    function clearAllRouteLayers() {
+      allRouteLayers.forEach((layer) => {
+        try { map.removeLayer(layer); } catch (err) {}
+      });
+      allRouteLayers = [];
+    }
+
     return {
+      showAllRoutes() {
+        clearEndpointDots();
+        clearActiveRoute();
+        clearAllRouteLayers();
+        travelerMarker.setOpacity(0);
+        people.forEach((person) => {
+          if (!Array.isArray(person.path) || person.path.length < 2) return;
+          const latlngs = person.path.map(([lng, lat]) => [lat, lng]);
+          allRouteLayers.push(L.polyline(latlngs, { color: '#8a5a34', weight: 3.5, opacity: 0.74, dashArray: '4 8' }).addTo(map));
+        });
+        if (allLatLngs.length) {
+          map.fitBounds(L.latLngBounds(allLatLngs), { padding: [36, 36], maxZoom: 5.15 });
+        }
+        if (sequenceValue) sequenceValue.textContent = 'All migrations';
+        document.querySelectorAll('.person-chip').forEach((chip) => chip.classList.remove('is-active'));
+        document.querySelectorAll('.person-card').forEach((card) => card.classList.remove('is-active-map'));
+      },
       highlightPerson(person, options = {}) {
         const animateTraveler = Boolean(options.animateTraveler);
         const skipCamera = Boolean(options.skipCamera);
         setActiveUI(person, animateTraveler);
         clearEndpointDots();
+        clearAllRouteLayers();
         if (currentPersonId !== person.id) {
           clearActiveRoute();
           currentPersonId = person.id;
           if (Array.isArray(person.path) && person.path.length > 1) {
             const latlngs = person.path.map(([lng, lat]) => [lat, lng]);
-            activeLine = L.polyline(latlngs, { color: '#8a5a34', weight: 4, opacity: 0.96, dashArray: '8 5' }).addTo(map);
+            activeLine = L.polyline(latlngs, { color: '#8a5a34', weight: 4, opacity: 0.96, dashArray: '4 8' }).addTo(map);
             const startDot = L.marker(latlngs[0], { icon: L.divIcon({ className: 'leaflet-endpoint', html: '<span class="map-endpoint-dot map-endpoint-dot-origin"></span>', iconSize: [18,18], iconAnchor: [9,9] }) }).addTo(map);
             const endDot = L.marker(latlngs[latlngs.length - 1], { icon: L.divIcon({ className: 'leaflet-endpoint', html: '<span class="map-endpoint-dot map-endpoint-dot-destination"></span>', iconSize: [18,18], iconAnchor: [9,9] }) }).addTo(map);
-            const startLabel = L.marker(latlngs[0], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 0))}</strong></span>`, iconSize: [150, 30], iconAnchor: [-8, 22] }) }).addTo(map);
-            const endLabel = L.marker(latlngs[latlngs.length - 1], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 1))}</strong></span>`, iconSize: [150, 30], iconAnchor: [-8, 22] }) }).addTo(map);
+            const startLabel = L.marker(latlngs[0], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 0))}</strong></span>`, iconSize: [160, 24], iconAnchor: [-18, 18] }) }).addTo(map);
+            const endLabel = L.marker(latlngs[latlngs.length - 1], { icon: L.divIcon({ className: 'leaflet-city-marker', html: `<span class="map-city-label"><strong>${escapeHtml(endpointLabel(person, 1))}</strong></span>`, iconSize: [180, 24], iconAnchor: [-20, -14] }) }).addTo(map);
             endpointDots.push(startDot, endDot, startLabel, endLabel);
           }
         }
         if (!skipCamera) {
           if (Array.isArray(person.path) && person.path.length > 1) {
             const latlngs = person.path.map(([lng, lat]) => [lat, lng]);
-            map.fitBounds(L.latLngBounds(latlngs), { padding: [12, 12], maxZoom: 6.35 });
+            map.fitBounds(L.latLngBounds(latlngs), { padding: [30, 30], maxZoom: 5.8 });
           } else if (Array.isArray(person.coords) && person.coords.length === 2) {
-            map.flyTo([person.coords[1], person.coords[0]], 6.1, { duration: animateTraveler ? 0.35 : 0.75 });
+            map.flyTo([person.coords[1], person.coords[0]], 5, { duration: animateTraveler ? 0.35 : 0.75 });
           }
         }
       },
       setTravelerPosition(person, coords) {
         if (!coords || !person) return;
-        travelerIcon = L.divIcon({ className: 'leaflet-traveler', html: `<span class="map-traveler-avatar" style="background-image:url(${person.image})"></span>`, iconSize: [38, 38], iconAnchor: [19, 19] });
+        travelerIcon = L.divIcon({ className: 'leaflet-traveler', html: `<span class="map-traveler-avatar" style="background-image:url(${person.image})"></span>`, iconSize: [42, 42], iconAnchor: [21, 21] });
         travelerMarker.setIcon(travelerIcon);
         travelerMarker.setOpacity(1);
         travelerMarker.setLatLng([coords[1], coords[0]]);
@@ -432,7 +477,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     playbackActive = true;
     playbackIndex = 0;
     playbackStartedAt = performance.now();
-    if (playBtn) playBtn.textContent = 'Stop playback';
+    setActionMode('playing');
+    if (selectorDetails) selectorDetails.open = false;
     loopCurrentPersonId = null;
 
     function frame(now) {
@@ -460,13 +506,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     loopRaf = requestAnimationFrame(frame);
   }
 
-  playBtn?.addEventListener('click', () => {
-    if (playbackActive) {
-      stopLoop();
-      if (people[0] && adapter) adapter.highlightPerson(people[0], { animateTraveler: false });
-      return;
-    }
+
+  allActionBtn?.addEventListener('click', () => {
+    stopLoop();
     startLoop();
+    if (selectorDetails) selectorDetails.open = false;
   });
 
   const token = String(window.MAPBOX_TOKEN || '').trim();
@@ -483,9 +527,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  if (people[0] && adapter) {
-    adapter.highlightPerson(people[0], { animateTraveler: false });
-    sequenceValue.textContent = pairLabel(people[0]);
-    startLoop();
+  setActionMode('all');
+  if (adapter) {
+    adapter.showAllRoutes?.();
   }
 });

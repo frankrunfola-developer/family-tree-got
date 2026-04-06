@@ -1,0 +1,21 @@
+
+.portrait-frame {
+    width: 220px;
+    height: 280px;
+    margin: 0 auto;
+    border-radius: 50% / 60%;
+    overflow: hidden;
+    position: relative;
+    border: 6px solid #c8a46b;
+    box-shadow:
+        inset 0 0 0 3px #f3e6c9,
+        0 8px 18px rgba(0,0,0,0.25);
+}
+
+.portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
