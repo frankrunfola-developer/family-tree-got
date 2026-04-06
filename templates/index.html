@@ -94,8 +94,7 @@
         <button class="tree-speed-btn is-active" type="button" data-speed="medium">Medium</button>
         <button class="tree-speed-btn" type="button" data-speed="fast">Fast</button>
       </div>
-      <button class="btn-secondary tree-play-btn" id="treePlayBtn" type="button">Pause tree</button>
-    </div>
+          </div>
     <div class="tree-frame landing-tree-frame">
       {% set tree = data.tree %}
       {% include '_tree_canvas.html' %}
@@ -106,7 +105,7 @@
 <section class="map-card map-card-live raised-card parchment-card" id="journey">
   <div class="map-header">
     <div>
-      <h3>{{ data.map.title }}</h3>
+      <h3 class="map-title-centered">{{ data.map.title }}</h3>
     </div>
     <div class="map-controls">
       <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
@@ -120,7 +119,7 @@
 
   <div class="map-selector-shell">
     <details class="map-selector-details" id="mapSelectorDetails">
-      <summary class="map-selector-summary">Choose route</summary>
+      <summary class="map-selector-summary">Choose route <span class="map-selector-summary-icon" aria-hidden="true">▾</span></summary>
       <div class="map-selector-body">
         <button class="btn-secondary map-action-btn map-all-inline-btn" type="button" data-action="all">All</button>
         <div class="person-chip-row" id="personChipRow"></div>

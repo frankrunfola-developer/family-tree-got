@@ -500,6 +500,90 @@ def family_ancestor(data: dict) -> dict | None:
     return sorted(people, key=lambda person: (born_key(person), person.get('name', '')))[0]
 
 
+def landing_tree_family_subset(data: dict, max_generations: int = 4) -> dict:
+    if max_generations < 1:
+        return data
+
+    people = list(data.get('people', []))
+    relationships = list(data.get('relationships', []))
+    if not people or not relationships:
+        return data
+
+    people_by_id = {str(person.get('id')): person for person in people if person.get('id')}
+    spouse_of: dict[str, str] = {}
+    children_of: dict[frozenset[str], list[str]] = {}
+
+    def born_sort(pid: str) -> tuple[int, str]:
+        person = people_by_id.get(pid, {})
+        born = str(person.get('born', '')).strip()
+        year = int(born) if born.isdigit() else 999999
+        return (year, str(person.get('name', '')))
+
+    for rel in relationships:
+        if rel.get('type') == 'spouse' and rel.get('a') in people_by_id and rel.get('b') in people_by_id:
+            spouse_of[str(rel['a'])] = str(rel['b'])
+            spouse_of[str(rel['b'])] = str(rel['a'])
+
+    parent_map: dict[str, set[str]] = {}
+    for rel in relationships:
+        child = rel.get('child')
+        parent = rel.get('parent')
+        if child in people_by_id and parent in people_by_id:
+            parent_map.setdefault(str(child), set()).add(str(parent))
+
+    for child, parents in parent_map.items():
+        children_of.setdefault(frozenset(parents), []).append(child)
+
+    root = family_ancestor(data) or {}
+    root_id = str(root.get('id') or '')
+    if not root_id or root_id not in people_by_id:
+        ordered = sorted(people_by_id, key=born_sort)
+        if not ordered:
+            return data
+        root_id = ordered[0]
+
+    included: list[str] = []
+    included_set: set[str] = set()
+
+    def include(pid: str | None):
+        if pid and pid in people_by_id and pid not in included_set:
+            included.append(pid)
+            included_set.add(pid)
+
+    current_primary = root_id
+    current_spouse = spouse_of.get(root_id)
+    include(current_primary)
+    include(current_spouse)
+
+    for _ in range(1, max_generations):
+        parent_key = frozenset(pid for pid in (current_primary, current_spouse) if pid)
+        candidates = sorted(children_of.get(parent_key, []), key=born_sort)
+        if not candidates and current_primary:
+            candidates = sorted([child for child, parents in parent_map.items() if current_primary in parents], key=born_sort)
+        if not candidates:
+            break
+        chosen_child = candidates[0]
+        chosen_spouse = spouse_of.get(chosen_child)
+        include(chosen_child)
+        include(chosen_spouse)
+        current_primary = chosen_child
+        current_spouse = chosen_spouse
+
+    filtered_relationships = []
+    for rel in relationships:
+        if rel.get('type') == 'spouse':
+            if rel.get('a') in included_set and rel.get('b') in included_set:
+                filtered_relationships.append(rel)
+        elif rel.get('child') in included_set and rel.get('parent') in included_set:
+            filtered_relationships.append(rel)
+
+    return {
+        **data,
+        'people': [people_by_id[pid] for pid in included if pid in people_by_id],
+        'relationships': filtered_relationships,
+    }
+
+
 def landing_summary_from_family(data: dict) -> dict:
     family_name = data.get('meta', {}).get('family_name', 'Family Legacy')
     stats = family_stats(data)
@@ -520,7 +604,8 @@ def landing_summary_from_family(data: dict) -> dict:
     end_year = max((int(str(p.get('died') or p.get('born')).strip()) for p in people if str(p.get('died') or p.get('born') or '').strip().isdigit()), default='')
     years = f"{start_year}–{end_year}" if start_year and end_year else (str(start_year) if start_year else '')
 
-    tree_layout = build_tree_layout(data)
+    landing_tree_source = landing_tree_family_subset(data, max_generations=4)
+    tree_layout = build_tree_layout(landing_tree_source)
     landing_tree = {
         'links': tree_layout.get('connectors', []),
         'people': [],
@@ -562,7 +647,7 @@ def landing_summary_from_family(data: dict) -> dict:
         'tree': landing_tree,
         'map': {
             'title': f'{family_name} Migration Map',
-            'subtitle': 'View individual routes or show every migration path at once.',
+            'subtitle': '',
             'legend': [
                 {'kind': 'origin', 'label': 'Origin'},
                 {'kind': 'migration', 'label': 'Migration'},
