@@ -4673,3 +4673,84 @@ body.tree-page .treeCanvas--page #treeSvg {
   line-height: 1.04 !important;
   letter-spacing: 0.01em !important;
 }
+
+/* ===== Summary polish pass v20 ===== */
+.landing-page .capsule-ancestor-name {
+  font-size: clamp(1.24rem, 2.2vw, 1.7rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.landing-page .capsule-summary-shell {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.landing-page .capsule-overview-card {
+  width: calc(100% + 12px) !important;
+  max-width: none !important;
+  margin-left: -6px !important;
+  margin-right: -6px !important;
+  padding: 10px 8px 12px !important;
+  border-radius: 24px !important;
+}
+
+.landing-page .capsule-overview-grid {
+  gap: 6px !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.landing-page .capsule-metric-card {
+  min-height: 116px !important;
+  padding: 10px 6px 11px !important;
+}
+
+.landing-page .capsule-portrait-shell,
+.landing-page .capsule-portrait-oval {
+  width: clamp(130px, 19.5vw, 164px) !important;
+  height: clamp(130px, 19.5vw, 164px) !important;
+}
+
+.landing-page .capsule-portrait-oval {
+  padding: 12px !important;
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255,250,241,0.98), rgba(255,250,241,0) 30%),
+    radial-gradient(circle at 78% 76%, rgba(121,74,38,0.18), rgba(121,74,38,0) 34%),
+    linear-gradient(180deg, #d4ab76 0%, #c18f5c 16%, #8c5c35 46%, #6f4325 66%, #b58453 84%, #e6c391 100%) !important;
+  border: 2px solid rgba(112, 69, 35, 0.48) !important;
+  box-shadow:
+    0 18px 34px rgba(61, 37, 19, 0.22),
+    0 6px 14px rgba(61, 37, 19, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 0 0 3px rgba(250,232,204,0.72),
+    inset 0 0 0 7px rgba(135, 86, 45, 0.18),
+    inset 0 0 0 11px rgba(244,221,188,0.36) !important;
+}
+
+.landing-page .capsule-portrait-oval::before {
+  inset: 5px !important;
+  border: 1px solid rgba(248, 233, 208, 0.95) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(145, 97, 56, 0.22),
+    inset 0 0 0 8px rgba(255,245,226,0.07),
+    0 0 12px rgba(114, 72, 38, 0.08) !important;
+}
+
+.landing-page .capsule-portrait-oval::after {
+  inset: 1px !important;
+  background:
+    repeating-conic-gradient(
+      from -4deg,
+      rgba(247,228,198,0.24) 0deg 7deg,
+      rgba(131,84,44,0.10) 7deg 14deg,
+      rgba(245,229,205,0.06) 14deg 21deg
+    ) !important;
+  opacity: 0.82 !important;
+}
+
+.landing-page .capsule-portrait-photo-wrap {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,250,242,0.62),
+    inset 0 0 0 4px rgba(108, 68, 36, 0.10),
+    0 7px 16px rgba(67, 42, 20, 0.14) !important;
+}
