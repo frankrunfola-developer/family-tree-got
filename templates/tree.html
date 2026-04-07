@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Tree | LineAgeMap{% endblock %}
+{% block title %}Tree | LineAgeMap
+{% endblock %}
 {% block body_class %}landing-page tree-page{% endblock %}
 {% block content %}
 <section class="tree-page-card raised-card parchment-card">
@@ -24,4 +25,5 @@
 {% block scripts %}
 <script>window.TREE_API_URL = {{ tree_api_url|tojson }};</script>
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+
 {% endblock %}

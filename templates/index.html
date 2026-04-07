@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}{{ data.brand }}{% endblock %}
+{% block title %}{{ data.brand }}
+{% endblock %}
 {% block body_class %}landing-page{% endblock %}
 
 {% block head_extras %}
@@ -141,5 +142,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>window.TREE_API_URL = {{ landing_tree_api_url|tojson }};</script>
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>
 {% endblock %}
