@@ -26,11 +26,11 @@ export const TREE_CFG = {
 
 sizing: {
   CARD_W: 96,
-  CARD_H: 152,
+  CARD_H: 156,
   CARD_R: 14,
   PHOTO_W: 84,
-  PHOTO_H: 106,
-  BOTTOM_PANEL_H: 38,
+  PHOTO_H: 112,
+  BOTTOM_PANEL_H: 34,
 },
   view: {
     stackLastGeneration: true,

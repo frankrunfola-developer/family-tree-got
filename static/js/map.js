@@ -361,7 +361,7 @@ function toNum(v) {
 
 function getStyle(lib) {
   if (lib.engine === "mapbox") {
-    return "mapbox://styles/mapbox/standard";
+    return "mapbox://styles/mapbox/outdoors-v12";
   }
 
   return {

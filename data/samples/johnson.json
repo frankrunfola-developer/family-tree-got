@@ -1,6 +1,6 @@
 {
   "meta": {
-    "family_name": "Johnson Family",
+    "family_name": "Johnson",
     "note": "Sample family demonstrating direct parent-child lineage.",
     "family_id": "johnson"
   },
@@ -348,7 +348,7 @@
       "name": "You",
       "born": "Present",
       "died": "",
-      "photo": "/static/img/placeholder-avatar.png",
+      "photo": "/static/img/frank.jpg",
       "location": {
         "city": "Buffalo",
         "region": "New York",

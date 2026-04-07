@@ -1,6 +1,6 @@
 {
   "meta": {
-    "family_name": "Kardashian\u2013Jenner Family (Sample)",
+    "family_name": "Kardashian\u2013Jenner (Sample)",
     "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events). Includes core Kardashian + Jenner branches with select spouses/partners and children for richer Tree/Timeline/Map demos.",
     "family_id": "kardashian"
   },

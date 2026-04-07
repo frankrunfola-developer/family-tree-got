@@ -104,11 +104,11 @@ function normalizeTree(treeJson) {
   const familiesById = new Map();
   let familyOrder = 0;
   const ensureFamily = (parentIds) => {
-    const ids = uniq((parentIds || []).filter(Boolean).map(String)).slice(0, 2).sort();
-    const key = ids.join('|');
+    const displayIds = uniq((parentIds || []).filter(Boolean).map(String)).slice(0, 2);
+    const key = displayIds.slice().sort().join('|');
     if (!key) return null;
     if (!familiesById.has(key)) {
-      familiesById.set(key, { id: key, parentIds: ids, childIds: [], order: familyOrder++ });
+      familiesById.set(key, { id: key, parentIds: displayIds, childIds: [], order: familyOrder++ });
     }
     return familiesById.get(key);
   };
@@ -393,47 +393,28 @@ function layoutChildrenList(children, left, top, metrics, segments, cards, verti
   return out;
 }
 
-function getNodeAttachSpec(node) {
+function getNodeAttachSpec(node, metrics) {
+  const stem = Math.max(12, Math.round((metrics?.spacing?.childStem ?? 18) * 0.9));
   if (node.type !== "family") {
     return {
       y: node.top,
+      stemTopY: node.top - stem,
       joinX: node.unionX,
       leftX: node.unionX,
       rightX: node.unionX,
     };
   }
 
-  const inboundX = Number.isFinite(node.cardCenters?.get?.(node.inboundPersonId))
+  const inboundX = node.inboundPersonId && node.cardCenters instanceof Map
     ? node.cardCenters.get(node.inboundPersonId)
     : null;
-  if (Number.isFinite(inboundX)) {
-    return {
-      y: node.top,
-      joinX: inboundX,
-      leftX: inboundX,
-      rightX: inboundX,
-    };
-  }
-
-  const centers = Array.from(node.cardCenters?.values?.() || []).filter(Number.isFinite).sort((a, b) => a - b);
-  if (!centers.length) {
-    return {
-      y: node.top,
-      joinX: node.unionX,
-      leftX: node.unionX,
-      rightX: node.unionX,
-    };
-  }
-
-  const leftX = centers[0];
-  const rightX = centers[centers.length - 1];
-  const joinX = Math.max(leftX, Math.min(rightX, node.unionX));
-
+  const joinX = Number.isFinite(inboundX) ? inboundX : node.unionX;
   return {
     y: node.top,
+    stemTopY: node.top - stem,
     joinX,
-    leftX,
-    rightX,
+    leftX: joinX,
+    rightX: joinX,
   };
 }
 
@@ -445,7 +426,7 @@ function drawAttachSpan(segments, attach) {
       y1: attach.y,
       x2: attach.rightX,
       y2: attach.y,
-      cls: "tree-link tree-link-child",
+      cls: "tree-connector tree-connector-child",
     });
   }
 }
@@ -468,17 +449,20 @@ function layoutNode(node, left, top, metrics, segments, cards) {
   }
 
   const cardCenters = new Map();
+  const cardLefts = new Map();
   const rowLeft = node.centerX - (node.selfWidth / 2);
   let cursor = rowLeft;
   for (const pid of node.displayedParentIds) {
     const person = node.people.find((it) => it?.id === pid);
     if (person) cards.push({ person, x: cursor, y: top });
+    cardLefts.set(pid, cursor);
     cardCenters.set(pid, cursor + (CARD_W / 2));
     cursor += CARD_W + coupleGap;
   }
 
   node.contentLeft = rowLeft;
   node.cardCenters = cardCenters;
+  node.cardLefts = cardLefts;
   node.unionX = (() => {
     const primary = node.primaryParentIds || node.displayedParentIds.slice(0, 2);
     const centers = primary.map((pid) => cardCenters.get(pid)).filter(Number.isFinite);
@@ -486,22 +470,45 @@ function layoutNode(node, left, top, metrics, segments, cards) {
     return centers.length === 1 ? centers[0] : (centers[0] + centers[centers.length - 1]) / 2;
   })();
   node.anchorTopY = top + CARD_H;
-  node.attach = getNodeAttachSpec(node);
+  node.attachY = top - childStem;
+  node.attach = getNodeAttachSpec(node, metrics);
+
+  if (node.depth > 0) {
+    segments.push({
+      x1: node.unionX,
+      y1: node.attach.y,
+      x2: node.unionX,
+      y2: top,
+      cls: "tree-connector tree-connector-child",
+    });
+  }
 
   for (const union of node.unions) {
     const centers = union.parentIds.map((pid) => cardCenters.get(pid)).filter(Number.isFinite);
-    const unionY = top + CARD_H;
-    if (centers.length >= 2) {
+    const orderedParents = union.parentIds
+      .map((pid) => ({ pid, cx: cardCenters.get(pid), left: cardLefts.get(pid) }))
+      .filter((pt) => Number.isFinite(pt.cx) && Number.isFinite(pt.left))
+      .sort((a, b) => a.cx - b.cx);
+    const parentMidY = top + Math.round(CARD_H / 2);
+    const innerInset = Math.max(12, Math.round(CARD_W * 0.16));
+    let connectorXs = orderedParents.map((pt) => pt.cx);
+
+    if (orderedParents.length >= 2) {
+      connectorXs = orderedParents.map((pt, idx) => {
+        if (idx === 0) return pt.left + CARD_W - innerInset;
+        if (idx === orderedParents.length - 1) return pt.left + innerInset;
+        return pt.cx;
+      });
       segments.push({
-        x1: centers[0],
-        y1: unionY,
-        x2: centers[centers.length - 1],
-        y2: unionY,
-        cls: "tree-link tree-link-parent",
+        x1: connectorXs[0],
+        y1: parentMidY,
+        x2: connectorXs[connectorXs.length - 1],
+        y2: parentMidY,
+        cls: "tree-connector tree-connector-parent",
       });
     }
-    union.unionX = centers.length >= 2 ? (centers[0] + centers[centers.length - 1]) / 2 : (centers[0] ?? node.unionX);
-    union.unionY = unionY;
+    union.unionX = connectorXs.length >= 2 ? (connectorXs[0] + connectorXs[connectorXs.length - 1]) / 2 : (connectorXs[0] ?? centers[0] ?? node.unionX);
+    union.unionY = parentMidY;
   }
 
   const activeUnions = node.unions.filter((union) => union.childNodes.length);
@@ -518,44 +525,47 @@ function layoutNode(node, left, top, metrics, segments, cards) {
     const branchLeft = Math.max(cursorLeft, Math.min(desiredLeft, maxLeft));
     const laidOut = layoutChildrenList(union.childNodes, branchLeft, childrenTop, metrics, segments, cards, union.verticalChildren);
     const childTargets = laidOut
-      .map((child) => ({ child, attach: getNodeAttachSpec(child) }))
+      .map((child) => ({ child, attach: getNodeAttachSpec(child, metrics) }))
       .filter((pt) => Number.isFinite(pt.attach.joinX) && Number.isFinite(pt.attach.y));
     const childXs = childTargets.map((pt) => pt.attach.joinX);
-    const trunkTop = union.unionY ?? (top + CARD_H);
-    const trunkBottom = trunkTop + trunkDrop;
+    const trunkTop = (union.unionY ?? (top + CARD_H)) - 1;
+    const trunkBottom = Math.max(top + CARD_H + 10, trunkTop + trunkDrop);
 
     if (union.verticalChildren && childTargets.length > 1) {
-      const railTop = childTargets[0].attach.y;
-      const railBottom = childTargets[childTargets.length - 1].attach.y;
-      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: railTop, cls: "tree-link tree-link-child" });
+      const railTop = Math.min(...childTargets.map((pt) => pt.attach.stemTopY));
+      const railBottom = Math.max(...childTargets.map((pt) => pt.attach.stemTopY));
+      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: railTop + 1, cls: "tree-connector tree-connector-child" });
       if (railBottom > railTop) {
-        segments.push({ x1: union.unionX, y1: railTop, x2: union.unionX, y2: railBottom, cls: "tree-link tree-link-child" });
+        segments.push({ x1: union.unionX, y1: railTop, x2: union.unionX, y2: railBottom, cls: "tree-connector tree-connector-child" });
       }
       for (const pt of childTargets) {
-        segments.push({ x1: union.unionX, y1: pt.attach.y, x2: pt.attach.joinX, y2: pt.attach.y, cls: "tree-link tree-link-child" });
+        segments.push({ x1: union.unionX, y1: pt.attach.stemTopY, x2: pt.attach.joinX, y2: pt.attach.stemTopY, cls: "tree-connector tree-connector-child" });
+        segments.push({ x1: pt.attach.joinX, y1: pt.attach.stemTopY, x2: pt.attach.joinX, y2: pt.attach.y, cls: "tree-connector tree-connector-child" });
         drawAttachSpan(segments, pt.attach);
       }
     } else if (childXs.length === 1) {
       const target = childTargets[0].attach;
-      const joinY = Math.min(trunkBottom, target.y);
-      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: joinY, cls: "tree-link tree-link-child" });
+      const parentBottomY = top + CARD_H;
+      const joinY = target.stemTopY > parentBottomY
+        ? Math.round(parentBottomY + ((target.stemTopY - parentBottomY) / 2))
+        : Math.min(parentBottomY, target.stemTopY);
+      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: joinY + 1, cls: "tree-connector tree-connector-child" });
       if (union.unionX !== target.joinX) {
-        segments.push({ x1: union.unionX, y1: joinY, x2: target.joinX, y2: joinY, cls: "tree-link tree-link-child" });
+        segments.push({ x1: union.unionX, y1: joinY, x2: target.joinX, y2: joinY, cls: "tree-connector tree-connector-child" });
       }
-      if (joinY !== target.y) {
-        segments.push({ x1: target.joinX, y1: joinY, x2: target.joinX, y2: target.y, cls: "tree-link tree-link-child" });
-      }
+      segments.push({ x1: target.joinX, y1: joinY, x2: target.joinX, y2: target.y, cls: "tree-connector tree-connector-child" });
       drawAttachSpan(segments, target);
     } else if (childXs.length > 1) {
-      const minX = Math.min(...childXs);
-      const maxX = Math.max(...childXs);
-      const highestAttachY = Math.min(...childTargets.map((pt) => pt.attach.y));
-      const busLift = Math.max(12, childStem);
-      const busY = Math.max(trunkTop + 10, highestAttachY - busLift);
-      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: busY, cls: "tree-link tree-link-child" });
-      segments.push({ x1: minX, y1: busY, x2: maxX, y2: busY, cls: "tree-link tree-link-child" });
-      for (const pt of childTargets) {
-        segments.push({ x1: pt.attach.joinX, y1: busY, x2: pt.attach.joinX, y2: pt.attach.y, cls: "tree-link tree-link-child" });
+      const orderedTargets = childTargets.slice().sort((a, b) => (a.attach.joinX - b.attach.joinX) || (a.attach.y - b.attach.y));
+      const highestStemTop = Math.min(...orderedTargets.map((pt) => pt.attach.stemTopY));
+      const parentBottomY = top + CARD_H;
+      const joinY = highestStemTop > parentBottomY
+        ? Math.round(parentBottomY + ((highestStemTop - parentBottomY) / 2))
+        : highestStemTop;
+      segments.push({ x1: union.unionX, y1: trunkTop, x2: union.unionX, y2: joinY + 1, cls: "tree-connector tree-connector-child" });
+      segments.push({ x1: orderedTargets[0].attach.joinX, y1: joinY, x2: orderedTargets[orderedTargets.length - 1].attach.joinX, y2: joinY, cls: "tree-connector tree-connector-child" });
+      for (const pt of orderedTargets) {
+        segments.push({ x1: pt.attach.joinX, y1: joinY, x2: pt.attach.joinX, y2: pt.attach.y, cls: "tree-connector tree-connector-child" });
         drawAttachSpan(segments, pt.attach);
       }
     }
@@ -564,26 +574,89 @@ function layoutNode(node, left, top, metrics, segments, cards) {
   }
 }
 
-function buildScene(treeJson, previewMode) {
+
+function estimateNodeDepth(node) {
+  if (!node || node.type !== "family") return 1;
+  const unionChildren = (node.unions || []).flatMap((union) => union.childNodes || []);
+  if (!unionChildren.length) return 1;
+  return 1 + Math.max(...unionChildren.map((child) => estimateNodeDepth(child)));
+}
+
+function chooseLineageChild(children) {
+  if (!children.length) return null;
+  const scored = children.map((child) => {
+    const depth = estimateNodeDepth(child);
+    let yearScore = -Infinity;
+    if (child?.type === "person") {
+      const birth = Number(child?.person?.birth ?? child?.person?.raw?.birthYear ?? child?.person?.raw?.born ?? NaN);
+      if (Number.isFinite(birth)) yearScore = birth;
+    } else if (child?.type === "family") {
+      const people = child.people || [];
+      const births = people
+        .map((p) => Number(p?.birth ?? p?.raw?.birthYear ?? p?.raw?.born ?? NaN))
+        .filter(Number.isFinite);
+      if (births.length) yearScore = Math.max(...births);
+    }
+    return { child, depth, yearScore };
+  });
+  scored.sort((a, b) => {
+    if (b.depth !== a.depth) return b.depth - a.depth;
+    return b.yearScore - a.yearScore;
+  });
+  return scored[0]?.child || null;
+}
+
+function buildLineageSlice(roots) {
+  const root = roots[0];
+  if (!root) return roots;
+  const cloneNode = (node) => structuredClone(node);
+
+  function walk(node) {
+    const current = cloneNode(node);
+    if (current.type !== "family") return current;
+    const allChildren = (current.unions || []).flatMap((union) => union.childNodes || []);
+    const chosen = chooseLineageChild(allChildren);
+    current.unions = (current.unions || []).map((union) => {
+      const found = (union.childNodes || []).find((child) => child.id === chosen?.id);
+      return {
+        ...union,
+        childNodes: found ? [walk(found)] : [],
+      };
+    }).filter((union) => union.childNodes.length);
+    current.children = current.unions.flatMap((union) => union.childNodes || []);
+    return current;
+  }
+
+  return [walk(root)];
+}
+
+function buildPartialSlice(roots, partialChildrenVisible) {
+  const trim = (node) => {
+    if (node.type !== "family") return;
+    node.unions = (node.unions || []).map((union) => {
+      const limitedChildren = (union.childNodes || []).slice(0, partialChildrenVisible);
+      limitedChildren.forEach((child) => trim(child));
+      return {
+        ...union,
+        childNodes: limitedChildren,
+      };
+    });
+    node.children = node.unions.flatMap((union) => union.childNodes || []);
+  };
+  roots.forEach((root) => trim(root));
+  return roots;
+}
+
+function buildScene(treeJson, previewMode, renderMode = "tree") {
   const metrics = makeLayoutMetrics();
   const model = normalizeTree(treeJson);
   let roots = buildRenderForest(model);
 
   const partialChildrenVisible = Math.max(1, metrics.view.partialChildrenVisible ?? 3);
-  if (previewMode) {
-    const trim = (node) => {
-      if (node.type !== "family") return;
-      node.unions = (node.unions || []).map((union) => {
-        const limitedChildren = (union.childNodes || []).slice(0, partialChildrenVisible);
-        limitedChildren.forEach((child) => trim(child));
-        return {
-          ...union,
-          childNodes: limitedChildren,
-        };
-      });
-      node.children = node.unions.flatMap((union) => union.childNodes || []);
-    };
-    roots.forEach((root) => trim(root));
+  if (renderMode === "landing") {
+    roots = buildLineageSlice(roots);
+  } else if (previewMode) {
+    roots = buildPartialSlice(roots, partialChildrenVisible);
   }
 
   roots = roots.map((root) => measureNode(root, metrics));
@@ -593,12 +666,10 @@ function buildScene(treeJson, previewMode) {
   const { sidePad, topPad, bottomPad, clusterGap } = metrics.spacing;
 
   const totalWidth = roots.reduce((sum, root, idx) => sum + root.subtreeWidth + (idx > 0 ? clusterGap : 0), 0);
-  const extraLeadPad = Math.max(sidePad, 24);
-  const centeredLeadPad = Math.max(extraLeadPad, Math.round((totalWidth + (extraLeadPad * 2) > 0 ? 0 : 0)));
+  const extraLeadPad = Math.max(sidePad, 18);
   let cursorLeft = extraLeadPad;
   const top = topPad;
-  const estimatedWidth = Math.max((extraLeadPad * 2) + totalWidth, window.innerWidth ? Math.round(window.innerWidth * 0.84) : 0);
-  cursorLeft = Math.max(extraLeadPad, Math.round((estimatedWidth - totalWidth) / 2));
+  const estimatedWidth = Math.max((extraLeadPad * 2) + totalWidth, 0);
   for (const root of roots) {
     layoutNode(root, cursorLeft, top, metrics, segments, cards);
     cursorLeft += root.subtreeWidth + clusterGap;
@@ -630,11 +701,17 @@ function wireToolbar(state, render) {
 
   const toggleBtn = $("#treeDepthToggleBtn") || $("#treeMoreBtn") || $("#btnFull");
   if (toggleBtn) {
+    const isLandingToggle = toggleBtn.textContent.trim().toLowerCase().includes("view full tree");
     const syncLabel = () => {
+      if (isLandingToggle) return;
       toggleBtn.textContent = state.preview ? "See Full Tree" : "See Partial Tree";
     };
     syncLabel();
     toggleBtn.addEventListener("click", () => {
+      if (isLandingToggle) {
+        window.location.href = "/tree";
+        return;
+      }
       state.preview = !state.preview;
       syncLabel();
       render();
@@ -655,11 +732,14 @@ async function boot() {
   }
 
   const metrics = makeLayoutMetrics();
-  const state = { preview: metrics.view.defaultPartial !== false, treeJson };
+  const renderMode = document.body.classList.contains("landing-page") && document.querySelector(".treeCanvas--landing")
+    ? "landing"
+    : "tree";
+  const state = { preview: renderMode === "landing" ? true : (metrics.view.defaultPartial !== false), treeJson };
 
   const render = () => {
     try {
-      const scene = buildScene(state.treeJson, state.preview);
+      const scene = buildScene(state.treeJson, state.preview, renderMode);
       renderFamilyTree(svg, scene);
       fitTreeToScreen();
     } catch (err) {
@@ -668,6 +748,10 @@ async function boot() {
   };
 
   wireToolbar(state, render);
+  const toggleBtn = $("#treeDepthToggleBtn") || $("#treeMoreBtn") || $("#btnFull");
+  if (renderMode === "landing" && toggleBtn) {
+    toggleBtn.textContent = "View Full Tree";
+  }
   render();
 }
 

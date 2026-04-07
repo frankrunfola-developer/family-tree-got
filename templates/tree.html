@@ -13,8 +13,10 @@
     <button id="treeDepthToggleBtn" class="treeToolbarBtn" type="button">See Full Tree</button>
   </div>
 
-  <div id="treeCanvas" class="treeCanvas treeCanvas--page" data-tree-api-url="{{ tree_api_url }}">
-    <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
+  <div class="tree-frame landing-tree-frame tree-frame--page">
+    <div id="treeCanvas" class="treeCanvas treeCanvas--page" data-tree-api-url="{{ tree_api_url }}">
+      <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
+    </div>
   </div>
 </section>
 {% endblock %}

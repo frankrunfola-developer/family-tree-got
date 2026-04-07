@@ -30,9 +30,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const mapFrame = mapEl.closest('.map-frame');
   const sequenceBanner = document.createElement('div');
   sequenceBanner.className = 'map-sequence-banner';
-  sequenceBanner.innerHTML = '<span class="map-sequence-kicker">Active route</span><span class="map-sequence-value">—</span>';
+  sequenceBanner.innerHTML = `
+    <span class="map-sequence-kicker">Active route</span>
+    <div class="map-sequence-body">
+      <span class="map-sequence-avatar" aria-hidden="true"><img class="map-sequence-avatar-img" alt=""></span>
+      <div class="map-sequence-copy">
+        <div class="map-sequence-name">—</div>
+        <div class="map-sequence-route">Choose a route to begin</div>
+      </div>
+    </div>
+  `;
   mapFrame?.before(sequenceBanner);
-  const sequenceValue = sequenceBanner.querySelector('.map-sequence-value');
+  const sequenceAvatar = sequenceBanner.querySelector('.map-sequence-avatar');
+  const sequenceAvatarImg = sequenceBanner.querySelector('.map-sequence-avatar-img');
+  const sequenceName = sequenceBanner.querySelector('.map-sequence-name');
+  const sequenceRoute = sequenceBanner.querySelector('.map-sequence-route');
 
   let playbackActive = false;
   let adapter = null;
@@ -56,8 +68,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     const activeName = person?.name || '';
     document.querySelectorAll('.person-chip').forEach((chip) => chip.classList.toggle('is-active', chip.dataset.personName === activeName));
     document.querySelectorAll('.person-card').forEach((card) => card.classList.toggle('is-active-map', card.dataset.personName === activeName));
-    if (sequenceValue) {
-      sequenceValue.textContent = person ? `${person.name}: ${pairLabel(person)}` : '—';
+    if (sequenceAvatar && sequenceAvatarImg && sequenceName && sequenceRoute) {
+      if (person) {
+        const avatar = avatarForPerson(person);
+        if (avatar) {
+          sequenceAvatar.classList.add('has-image');
+          sequenceAvatarImg.src = avatar;
+          sequenceAvatarImg.alt = `${person.name || 'Person'} portrait`;
+        } else {
+          sequenceAvatar.classList.remove('has-image');
+          sequenceAvatarImg.removeAttribute('src');
+          sequenceAvatarImg.alt = '';
+        }
+        sequenceName.textContent = person.name || '—';
+        sequenceRoute.innerHTML = routeMarkup(person);
+      } else {
+        sequenceAvatar.classList.remove('has-image');
+        sequenceAvatarImg.removeAttribute('src');
+        sequenceAvatarImg.alt = '';
+        sequenceName.textContent = '—';
+        sequenceRoute.textContent = 'Choose a route to begin';
+      }
     }
   }
 
@@ -120,6 +151,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const startPlace = places.find((place) => place.coords[0] === start[0] && place.coords[1] === start[1])?.name || 'Origin';
     const endPlace = places.find((place) => place.coords[0] === end[0] && place.coords[1] === end[1])?.name || 'Destination';
     return `${startPlace} → ${endPlace}`;
+  }
+
+  function avatarForPerson(person) {
+    return person?.image || person?.photo || person?.avatar || '';
+  }
+
+  function routeMarkup(person) {
+    if (!person) return 'Choose a route to begin';
+    const label = pairLabel(person);
+    const parts = String(label || '').split('→').map((part) => part.trim()).filter(Boolean);
+    if (parts.length < 2) return `<span class="map-route-pill">${escapeHtml(label || '')}</span>`;
+    return `
+      <span class="map-route-prefix">Route</span>
+      <span class="map-route-pill">${escapeHtml(parts[0])}</span>
+      <span class="map-route-arrow" aria-hidden="true">→</span>
+      <span class="map-route-pill">${escapeHtml(parts[1])}</span>
+    `;
   }
 
 
@@ -205,7 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     mapboxgl.accessToken = token;
     const map = new mapboxgl.Map({
       container: 'lmMap',
-      style: 'mapbox://styles/mapbox/light-v11',
+      style: 'mapbox://styles/mapbox/outdoors-v12',
       center: [-50, 39],
       zoom: 2.0,
       attributionControl: false
@@ -292,7 +340,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (map.getLayer('all-routes-line')) map.setPaintProperty('all-routes-line', 'line-opacity', 0.78);
       if (map.getLayer('all-routes-arrows')) map.setPaintProperty('all-routes-arrows', 'text-opacity', 0);
       map.fitBounds(places.reduce((b, p) => b.extend(p.coords), new mapboxgl.LngLatBounds()), { padding: 40, maxZoom: 5.15, duration: 350 });
-      if (sequenceValue) sequenceValue.textContent = 'All migrations';
+      if (sequenceAvatar && sequenceName && sequenceRoute) {
+        sequenceAvatar.style.backgroundImage = '';
+        sequenceName.textContent = 'All migrations';
+        sequenceRoute.textContent = 'Showing every family journey together';
+      }
       document.querySelectorAll('.person-chip').forEach((chip) => chip.classList.remove('is-active'));
       document.querySelectorAll('.person-card').forEach((card) => card.classList.remove('is-active-map'));
     }
@@ -416,7 +468,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (allLatLngs.length) {
           map.fitBounds(L.latLngBounds(allLatLngs), { padding: [36, 36], maxZoom: 5.15 });
         }
-        if (sequenceValue) sequenceValue.textContent = 'All migrations';
+        if (sequenceAvatar && sequenceName && sequenceRoute) {
+        sequenceAvatar.style.backgroundImage = '';
+        sequenceName.textContent = 'All migrations';
+        sequenceRoute.textContent = 'Showing every family journey together';
+      }
         document.querySelectorAll('.person-chip').forEach((chip) => chip.classList.remove('is-active'));
         document.querySelectorAll('.person-card').forEach((card) => card.classList.remove('is-active-map'));
       },

@@ -14,18 +14,16 @@
       <h1><span class="hero-title-top">Build Your Family Time Capsule</span></h1>
       <p class="subtitle">{{ data.hero.subtitle }}</p>
       <div class="hero-mini-icons" aria-hidden="true">
-        <span>Family archive</span>
-        <span>Generations</span>
-        <span>Legacy map</span>
+        <span>Summary</span>
+        <span>Tree</span>
+        <span>Migration Map</span>
       </div>
-      <div class="search-row cta-only">
-        <a class="btn-primary" href="{{ url_for('tree') }}">Start Building Your Archive</a>
-      </div>
-      <div class="hero-actions hero-auth-actions">
+      <div class="hero-cta-row">
+        <a class="btn-primary" href="{{ url_for('tree') }}">Start Building</a>
         {% if user %}
-        <a class="btn-secondary" href="{{ url_for('dashboard') }}">Open your archive</a>
+        <a class="btn-secondary hero-cta-secondary" href="{{ url_for('dashboard') }}">Continue Building</a>
         {% else %}
-        <a class="btn-secondary" href="{{ url_for('login') }}">Login To Continue Building</a>
+        <a class="btn-secondary hero-cta-secondary" href="{{ url_for('login') }}">Continue Building</a>
         {% endif %}
       </div>
     </div>
@@ -34,53 +32,56 @@
 
 <section class="story-grid" id="story">
   <article class="summary-card raised-card parchment-card capsule-summary-card">
-    <div class="capsule-family-card">
-      <h2 class="capsule-family-name">{{ data.family.name }}</h2>
+    <div class="capsule-summary-shell">
+      <div class="capsule-family-card">
+        <h2 class="capsule-section-title">Summary</h2>
+        <div class="capsule-family-name">{{ data.family.name }}</div>
 
-      {% set ancestor = data.family.ancestor if data.family and data.family.ancestor else None %}
-      {% if ancestor and ancestor.born %}
-      {% set earliest_trace = ancestor.born %}
-      {% else %}
-      {% set earliest_trace = '' %}
-      {% endif %}
-      <div class="capsule-portrait-block">
-        <div class="capsule-portrait-shell" aria-hidden="true">
-          <div class="capsule-portrait-photo-wrap">
-            <img class="capsule-portrait-photo" src="{{ ancestor.photo if ancestor and ancestor.photo else url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
+        {% set ancestor = data.family.ancestor if data.family and data.family.ancestor else None %}
+        {% if ancestor and ancestor.born %}
+        {% set earliest_trace = ancestor.born %}
+        {% else %}
+        {% set earliest_trace = '' %}
+        {% endif %}
+        <div class="capsule-portrait-block">
+          <div class="capsule-portrait-shell" aria-hidden="true">
+            <div class="capsule-portrait-photo-wrap">
+              <img class="capsule-portrait-photo" src="{{ ancestor.photo if ancestor and ancestor.photo else url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
+            </div>
           </div>
+          <div class="capsule-ancestor-name">{{ ancestor.name if ancestor else data.family.name }}</div>
+          <div class="capsule-ancestor-role">Original Ancestor</div>
+          <div class="capsule-earliest-pill">Earliest traces: {{ earliest_trace }}</div>
         </div>
-        <div class="capsule-ancestor-name">{{ ancestor.name if ancestor else data.family.name }}</div>
-        <div class="capsule-ancestor-role">Original Ancestor</div>
-        <div class="capsule-earliest-pill">Earliest traces: {{ earliest_trace }}</div>
       </div>
-    </div>
 
-    {% set stats = data.family.stats if data.family and data.family.stats else [] %}
-    {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
-    {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
-    {% set stat3 = stats[2] if stats|length > 2 else {'value': '—', 'label': 'Branches'} %}
-    <div class="capsule-overview-card">
-            <div class="capsule-overview-grid">
-        <article class="capsule-metric-card metric-tree">
-          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
-          <div class="capsule-metric-value">{{ stat1.value }}</div>
-          <div class="capsule-metric-label">{{ stat1.label }}</div>
-        </article>
-        <article class="capsule-metric-card metric-hourglass">
-          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
-          <div class="capsule-metric-value">{{ stat2.value }}</div>
-          <div class="capsule-metric-label">{{ stat2.label }}</div>
-        </article>
-        <article class="capsule-metric-card metric-globe">
-          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
-          <div class="capsule-metric-value">{{ stat3.value }}</div>
-          <div class="capsule-metric-label">Branches</div>
-        </article>
-        <article class="capsule-metric-card metric-scroll">
-          <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
-          <div class="capsule-metric-value">170+</div>
-          <div class="capsule-metric-label">Years</div>
-        </article>
+      {% set stats = data.family.stats if data.family and data.family.stats else [] %}
+      {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
+      {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
+      {% set stat3 = stats[2] if stats|length > 2 else {'value': '—', 'label': 'Branches'} %}
+      <div class="capsule-overview-card">
+        <div class="capsule-overview-grid">
+          <article class="capsule-metric-card metric-tree">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ stat1.value }}</div>
+            <div class="capsule-metric-label">{{ stat1.label }}</div>
+          </article>
+          <article class="capsule-metric-card metric-hourglass">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ stat2.value }}</div>
+            <div class="capsule-metric-label">{{ stat2.label }}</div>
+          </article>
+          <article class="capsule-metric-card metric-globe">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ stat3.value }}</div>
+            <div class="capsule-metric-label">Branches</div>
+          </article>
+          <article class="capsule-metric-card metric-scroll">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">170+</div>
+            <div class="capsule-metric-label">Years</div>
+          </article>
+        </div>
       </div>
     </div>
 
@@ -88,21 +89,23 @@
   </article>
 
   <article class="tree-card raised-card parchment-card" id="tree">
-    <div class="tree-controls tree-controls--landing">
-      <a class="btn-secondary tree-full-link" href="{{ url_for('tree') }}">View Full Tree</a>
+    <div class="tree-section-head">
+      <h2 class="tree-section-title">Tree</h2>
+      <p class="tree-section-subtitle">Family lineage at a glance</p>
     </div>
     <div class="tree-frame landing-tree-frame">
       <div id="treeCanvas" class="treeCanvas treeCanvas--landing" data-tree-api-url="{{ landing_tree_api_url }}">
         <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
       </div>
     </div>
+    <a class="btn-primary wide tree-full-link tree-full-link-bottom" href="{{ url_for('tree') }}">View Full Tree</a>
   </article>
 </section>
 
 <section class="map-card map-card-live raised-card parchment-card" id="journey">
   <div class="map-header">
     <div>
-      <h3 class="map-title-centered">{{ data.map.title }}</h3>
+      <h3 class="map-title-centered">Migration Map</h3>
     </div>
     <div class="map-controls">
       <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
@@ -110,7 +113,6 @@
         <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
         <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
       </div>
-      <a class="btn-secondary" href="{{ url_for('map_view') }}">Open full map</a>
     </div>
   </div>
 

@@ -885,9 +885,7 @@ def api_current_family_tree():
 
 @app.route('/map')
 def map_view():
-    family = current_family_payload()
-    data = landing_summary_from_family(family)
-    return render_template('map.html', data=data, mapbox_public_token=MAPBOX_PUBLIC_TOKEN)
+    return redirect(url_for('index', _anchor='journey'))
 
 
 @app.get('/api/current-family/people')

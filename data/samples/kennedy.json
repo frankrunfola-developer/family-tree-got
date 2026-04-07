@@ -1,6 +1,6 @@
 {
   "meta": {
-    "family_name": "Kennedy Family (Sample)",
+    "family_name": "Kennedy (Sample)",
     "note": "Sample dataset for exploring the app UI. Structured like gupta.json (spouse + parent/child relationships, top-level events).",
     "family_id": "kennedy"
   },

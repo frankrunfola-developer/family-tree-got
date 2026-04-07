@@ -1,6 +1,6 @@
 {
   "meta": {
-    "family_name": "Sen Family (Sample)",
+    "family_name": "Sen (Sample)",
     "note": "Mocked from the provided Sen tree image. Uses spouse + parent/child relationships (Gupta-style). Dates are year-level where only years were shown.",
     "family_id": "sen"
   },
