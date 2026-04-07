@@ -1975,3 +1975,131 @@ html, body {
   background: transparent !important;
   border: 0 !important;
 }
+
+/* ==== final landing tree card restoration ==== */
+.landing-page .tree-frame .person-card,
+.landing-page .tree-canvas .person-card {
+  max-width: 96px !important;
+}
+
+.landing-page .person-you {
+  width: 96px !important;
+}
+
+
+/* ==== v-next tree card normalization across landing + tree page ==== */
+.landing-page .treeCanvas--landing .person-card,
+.landing-page .tree-frame .person-card,
+.landing-page .tree-canvas .person-card,
+body.tree-page .treeCanvas--page .person-card,
+body.tree-page .tree-page-card .tree-canvas .person-card {
+  position: absolute !important;
+  width: 96px !important;
+  max-width: 96px !important;
+  min-width: 96px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.landing-page .treeCanvas--landing .portrait-frame,
+.landing-page .tree-frame .portrait-frame,
+.landing-page .tree-canvas .portrait-frame,
+body.tree-page .treeCanvas--page .portrait-frame,
+body.tree-page .tree-page-card .tree-canvas .portrait-frame {
+  display: block !important;
+  width: 96px !important;
+  padding: 5px !important;
+  background: linear-gradient(180deg, #ece5da 0%, #e2d8c9 100%) !important;
+  border: 1px solid rgba(186, 161, 125, 0.62) !important;
+  border-radius: 14px 14px 0 0 !important;
+  box-shadow: 0 4px 12px rgba(84, 58, 31, 0.10), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+  overflow: hidden !important;
+}
+
+.landing-page .treeCanvas--landing .portrait-frame img,
+.landing-page .tree-frame .portrait-frame img,
+.landing-page .tree-canvas .portrait-frame img,
+body.tree-page .treeCanvas--page .portrait-frame img,
+body.tree-page .tree-page-card .tree-canvas .portrait-frame img {
+  display: block !important;
+  width: 84px !important;
+  height: 84px !important;
+  max-width: 84px !important;
+  max-height: 84px !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(170, 142, 104, 0.22) !important;
+  filter: none !important;
+}
+
+.landing-page .treeCanvas--landing .nameplate,
+.landing-page .tree-frame .nameplate,
+.landing-page .tree-canvas .nameplate,
+body.tree-page .treeCanvas--page .nameplate,
+body.tree-page .tree-page-card .tree-canvas .nameplate {
+  display: block !important;
+  width: 96px !important;
+  min-height: 0 !important;
+  padding: 6px 6px 7px !important;
+  background: linear-gradient(180deg, #f4efe8 0%, #ece4d8 100%) !important;
+  border: 1px solid rgba(186, 161, 125, 0.64) !important;
+  border-top: 0 !important;
+  border-radius: 0 0 12px 12px !important;
+  box-shadow: 0 3px 8px rgba(84, 58, 31, 0.08) !important;
+}
+
+.landing-page .treeCanvas--landing .person-name,
+.landing-page .tree-frame .person-name,
+.landing-page .tree-canvas .person-name,
+body.tree-page .treeCanvas--page .person-name,
+body.tree-page .tree-page-card .tree-canvas .person-name {
+  display: block !important;
+  font-family: "Cormorant Garamond", serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  line-height: 0.95 !important;
+  letter-spacing: 0 !important;
+  color: #6a4529 !important;
+  text-align: center !important;
+  text-shadow: none !important;
+}
+
+.landing-page .treeCanvas--landing .person-years,
+.landing-page .tree-frame .person-years,
+.landing-page .tree-canvas .person-years,
+body.tree-page .treeCanvas--page .person-years,
+body.tree-page .tree-page-card .tree-canvas .person-years {
+  display: block !important;
+  margin-top: 2px !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-size: 0.52rem !important;
+  line-height: 1.05 !important;
+  color: rgba(106, 69, 41, 0.92) !important;
+  text-align: center !important;
+  text-shadow: none !important;
+}
+
+.landing-page .treeCanvas--landing .person-card::before,
+.landing-page .treeCanvas--landing .person-card::after,
+.landing-page .tree-frame .person-card::before,
+.landing-page .tree-frame .person-card::after,
+.landing-page .tree-canvas .person-card::before,
+.landing-page .tree-canvas .person-card::after,
+body.tree-page .treeCanvas--page .person-card::before,
+body.tree-page .treeCanvas--page .person-card::after,
+body.tree-page .tree-page-card .tree-canvas .person-card::before,
+body.tree-page .tree-page-card .tree-canvas .person-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+.landing-page .treeCanvas--landing,
+body.tree-page .treeCanvas--page {
+  overflow: auto !important;
+}

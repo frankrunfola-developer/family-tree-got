@@ -70,17 +70,9 @@ function normalizeTree(treeJson) {
   };
 
   const parentSetByChild = new Map();
-  const spousePairs = [];
 
   for (const rel of relationships) {
     if (!rel) continue;
-
-    if (rel.type === "spouse" && rel.a && rel.b) {
-      const a = ensurePerson(rel.a);
-      const b = ensurePerson(rel.b);
-      if (a && b) spousePairs.push([a, b]);
-      continue;
-    }
 
     if (rel.childId && rel.parentId) {
       const child = ensurePerson(rel.childId);
@@ -110,165 +102,87 @@ function normalizeTree(treeJson) {
   }
 
   const familiesById = new Map();
-  const familyOrder = [];
-
-  function ensureFamily(parentIds, sourceOrder = familyOrder.length) {
+  let familyOrder = 0;
+  const ensureFamily = (parentIds) => {
     const ids = uniq((parentIds || []).filter(Boolean).map(String)).slice(0, 2).sort();
-    const key = ids.join("|") || `single:${sourceOrder}`;
+    const key = ids.join('|');
+    if (!key) return null;
     if (!familiesById.has(key)) {
-      familiesById.set(key, {
-        id: key,
-        parentIds: ids,
-        childIds: [],
-        order: sourceOrder,
-      });
-      familyOrder.push(key);
+      familiesById.set(key, { id: key, parentIds: ids, childIds: [], order: familyOrder++ });
     }
     return familiesById.get(key);
-  }
+  };
 
   for (const [childId, parentSet] of parentSetByChild.entries()) {
-    const parents = Array.from(parentSet).filter(Boolean).slice(0, 2).sort();
-    const fam = ensureFamily(parents);
+    const fam = ensureFamily(Array.from(parentSet));
+    if (!fam) continue;
     if (!fam.childIds.includes(childId)) fam.childIds.push(childId);
   }
 
-  for (const [a, b] of spousePairs) {
-    ensureFamily([a, b]);
-  }
-
   const childToParentFamilyIds = new Map();
+  const familyIdsByParent = new Map();
   for (const fam of familiesById.values()) {
     for (const childId of fam.childIds) {
       if (!childToParentFamilyIds.has(childId)) childToParentFamilyIds.set(childId, []);
       childToParentFamilyIds.get(childId).push(fam.id);
     }
-  }
-
-  const familyIdsByParent = new Map();
-  for (const fam of familiesById.values()) {
     for (const pid of fam.parentIds) {
       if (!familyIdsByParent.has(pid)) familyIdsByParent.set(pid, []);
       familyIdsByParent.get(pid).push(fam.id);
     }
   }
 
-  const familyWeightMemo = new Map();
-  function familyWeight(familyId, seen = new Set()) {
-    if (familyWeightMemo.has(familyId)) return familyWeightMemo.get(familyId);
-    if (seen.has(familyId)) return 0;
-    seen.add(familyId);
-    const fam = familiesById.get(familyId);
-    if (!fam) return 0;
-    let total = fam.childIds.length;
-    for (const childId of fam.childIds) {
-      const childHome = chooseHomeFamilyForPerson(childId, seen);
-      if (childHome) total += familyWeight(childHome, seen);
-    }
-    seen.delete(familyId);
-    familyWeightMemo.set(familyId, total);
-    return total;
-  }
-
   const homeFamilyMemo = new Map();
-  function chooseHomeFamilyForPerson(personId, seen = new Set()) {
+  function chooseHomeFamilyForPerson(personId) {
     if (homeFamilyMemo.has(personId)) return homeFamilyMemo.get(personId);
-    const famIds = familyIdsByParent.get(personId) || [];
+    const famIds = (familyIdsByParent.get(personId) || []).slice();
     if (!famIds.length) {
       homeFamilyMemo.set(personId, null);
       return null;
     }
-    let best = famIds[0];
-    let bestScore = -1;
-    for (const famId of famIds) {
-      const fam = familiesById.get(famId);
-      const childCount = fam?.childIds?.length || 0;
-      const score = (childCount * 1000) - (fam?.order || 0);
-      if (score > bestScore) {
-        bestScore = score;
-        best = famId;
-      }
-    }
-    homeFamilyMemo.set(personId, best);
-    return best;
-  }
-
-  const parentFamilyByPerson = new Map();
-  for (const personId of peopleById.keys()) {
-    const parentFamIds = childToParentFamilyIds.get(personId) || [];
-    if (parentFamIds.length) {
-      parentFamIds.sort((a, b) => {
-        const fa = familiesById.get(a);
-        const fb = familiesById.get(b);
-        return (fa?.order || 0) - (fb?.order || 0);
-      });
-      parentFamilyByPerson.set(personId, parentFamIds[0]);
-    } else {
-      parentFamilyByPerson.set(personId, null);
-    }
+    famIds.sort((a, b) => {
+      const fa = familiesById.get(a);
+      const fb = familiesById.get(b);
+      const childDelta = (fb?.childIds?.length || 0) - (fa?.childIds?.length || 0);
+      if (childDelta !== 0) return childDelta;
+      return (fa?.order || 0) - (fb?.order || 0);
+    });
+    homeFamilyMemo.set(personId, famIds[0]);
+    return famIds[0];
   }
 
   const familyIncoming = new Map();
   for (const fam of familiesById.values()) familyIncoming.set(fam.id, 0);
   for (const fam of familiesById.values()) {
-    for (const childId of fam.childIds) {
-      const childHome = chooseHomeFamilyForPerson(childId);
-      if (childHome && childHome !== fam.id && familiesById.has(childHome)) {
-        familyIncoming.set(childHome, (familyIncoming.get(childHome) || 0) + 1);
+    for (const pid of fam.parentIds) {
+      const parentOriginFamilies = childToParentFamilyIds.get(pid) || [];
+      for (const originId of parentOriginFamilies) {
+        familyIncoming.set(fam.id, (familyIncoming.get(fam.id) || 0) + 1);
       }
     }
   }
 
-  const rootFamilyIds = Array.from(familiesById.values())
+  const orderedRootIds = Array.from(familiesById.values())
     .filter((fam) => (familyIncoming.get(fam.id) || 0) === 0)
     .sort((a, b) => a.order - b.order)
     .map((fam) => fam.id);
 
-  const orderedRootIds = rootFamilyIds.length ? rootFamilyIds : Array.from(familiesById.keys());
-
   return {
     peopleById,
     familiesById,
-    orderedRootIds,
+    orderedRootIds: orderedRootIds.length ? orderedRootIds : Array.from(familiesById.keys()),
     chooseHomeFamilyForPerson,
-    parentFamilyByPerson,
   };
 }
 
-
 function buildRenderForest(model) {
-  const {
-    peopleById,
-    familiesById,
-    orderedRootIds,
-    chooseHomeFamilyForPerson,
-  } = model;
-
-  const attachedFamilyIdsByHost = new Map();
-  const attachedFamilyIds = new Set();
-
-  for (const fam of familiesById.values()) {
-    let hostId = null;
-    for (const pid of fam.parentIds) {
-      const homeId = chooseHomeFamilyForPerson(pid);
-      if (homeId && homeId !== fam.id && familiesById.has(homeId)) {
-        hostId = homeId;
-        break;
-      }
-    }
-    if (hostId) {
-      attachedFamilyIds.add(fam.id);
-      if (!attachedFamilyIdsByHost.has(hostId)) attachedFamilyIdsByHost.set(hostId, []);
-      attachedFamilyIdsByHost.get(hostId).push(fam.id);
-    }
-  }
-
+  const { peopleById, familiesById, orderedRootIds, chooseHomeFamilyForPerson } = model;
   const nodeMemo = new Map();
 
   function buildLeafPerson(personId) {
     return {
       id: `person:${personId}`,
-      type: "person",
+      type: 'person',
       personId,
       person: peopleById.get(personId),
       children: [],
@@ -276,116 +190,56 @@ function buildRenderForest(model) {
     };
   }
 
-  function buildUnionChildren(familyId, trail, depth) {
+  function buildFamilyNode(familyId, trail = new Set(), depth = 0, inboundPersonId = null) {
+    if (trail.has(familyId)) return null;
+    const memoKey = `${familyId}|${inboundPersonId || ''}`;
+    if (nodeMemo.has(memoKey)) return structuredClone(nodeMemo.get(memoKey));
     const fam = familiesById.get(familyId);
-    if (!fam) return [];
-    const out = [];
+    if (!fam) return null;
+
+    const nextTrail = new Set(trail);
+    nextTrail.add(familyId);
+
+    const childNodes = [];
     for (const childId of fam.childIds) {
       const childHome = chooseHomeFamilyForPerson(childId);
-      if (childHome && childHome !== familyId && !trail.has(childHome)) {
-        const childNode = buildFamilyNode(childHome, new Set(trail), depth + 1);
-        if (childNode) {
-          childNode.depth = depth + 1;
-          childNode.inboundPersonId = childId;
-          out.push(childNode);
+      if (childHome && childHome !== familyId && !nextTrail.has(childHome)) {
+        const sub = buildFamilyNode(childHome, nextTrail, depth + 1, childId);
+        if (sub) {
+          sub.depth = depth + 1;
+          childNodes.push(sub);
           continue;
         }
       }
       const leaf = buildLeafPerson(childId);
       leaf.depth = depth + 1;
-      out.push(leaf);
-    }
-    return out;
-  }
-
-  function buildFamilyNode(familyId, trail = new Set(), depth = 0) {
-    if (nodeMemo.has(familyId)) return nodeMemo.get(familyId);
-    const fam = familiesById.get(familyId);
-    if (!fam || trail.has(familyId)) return null;
-    trail.add(familyId);
-
-    const primaryParentIds = fam.parentIds.slice(0, 2);
-    const displayedParentIds = primaryParentIds.slice();
-    const unions = [];
-
-    unions.push({
-      familyId: fam.id,
-      parentIds: primaryParentIds.slice(),
-      childNodes: buildUnionChildren(fam.id, new Set(trail), depth),
-      anchorParentId: null,
-      sideHint: 0,
-    });
-
-    const extras = (attachedFamilyIdsByHost.get(fam.id) || []).slice();
-    const anchorSlots = new Map();
-    for (const pid of primaryParentIds) anchorSlots.set(pid, { left: [], right: [] });
-
-    for (const extraFamId of extras) {
-      if (trail.has(extraFamId)) continue;
-      const extraFam = familiesById.get(extraFamId);
-      if (!extraFam) continue;
-      const anchorParentId = extraFam.parentIds.find((pid) => chooseHomeFamilyForPerson(pid) === fam.id) || null;
-      const partnerIds = extraFam.parentIds.filter((pid) => pid !== anchorParentId);
-      const partnerId = partnerIds[0] || null;
-      if (!anchorParentId || !partnerId) continue;
-
-      if (!displayedParentIds.includes(partnerId)) displayedParentIds.push(partnerId);
-
-      const anchorIndex = primaryParentIds.indexOf(anchorParentId);
-      const defaultSide = anchorIndex <= 0 ? 1 : -1;
-      const slot = anchorSlots.get(anchorParentId) || { left: [], right: [] };
-      const sideHint = defaultSide > 0
-        ? (slot.right.length <= slot.left.length ? 1 : -1)
-        : (slot.left.length <= slot.right.length ? -1 : 1);
-      if (sideHint < 0) slot.left.push(partnerId); else slot.right.push(partnerId);
-      anchorSlots.set(anchorParentId, slot);
-
-      unions.push({
-        familyId: extraFam.id,
-        parentIds: [anchorParentId, partnerId],
-        childNodes: buildUnionChildren(extraFam.id, new Set([...trail, extraFamId]), depth),
-        anchorParentId,
-        sideHint,
-      });
-    }
-
-    let orderedParentIds = displayedParentIds.slice();
-    if (primaryParentIds.length === 2) {
-      const [p0, p1] = primaryParentIds;
-      const leftForP0 = unions.filter((u) => u.anchorParentId === p0 && u.sideHint < 0).map((u) => u.parentIds.find((pid) => pid !== p0)).filter(Boolean);
-      const rightForP0 = unions.filter((u) => u.anchorParentId === p0 && u.sideHint > 0).map((u) => u.parentIds.find((pid) => pid !== p0)).filter(Boolean);
-      const leftForP1 = unions.filter((u) => u.anchorParentId === p1 && u.sideHint < 0).map((u) => u.parentIds.find((pid) => pid !== p1)).filter(Boolean);
-      const rightForP1 = unions.filter((u) => u.anchorParentId === p1 && u.sideHint > 0).map((u) => u.parentIds.find((pid) => pid !== p1)).filter(Boolean);
-      orderedParentIds = uniq([
-        ...leftForP0,
-        ...leftForP1,
-        p1,
-        p0,
-        ...rightForP0,
-        ...rightForP1,
-      ]).filter(Boolean);
+      childNodes.push(leaf);
     }
 
     const node = {
       id: `family:${familyId}`,
-      type: "family",
+      type: 'family',
       familyId,
-      displayedParentIds: orderedParentIds,
-      people: orderedParentIds.map((pid) => peopleById.get(pid)).filter(Boolean),
-      unions,
-      children: unions.flatMap((u) => u.childNodes),
+      displayedParentIds: fam.parentIds.slice(),
+      people: fam.parentIds.map((pid) => peopleById.get(pid)).filter(Boolean),
+      unions: [{
+        familyId: fam.id,
+        parentIds: fam.parentIds.slice(),
+        childNodes,
+        anchorParentId: null,
+        sideHint: 0,
+      }],
+      children: childNodes,
       depth,
+      inboundPersonId,
     };
-    nodeMemo.set(familyId, node);
-    return node;
+    nodeMemo.set(memoKey, node);
+    return structuredClone(node);
   }
 
-  const roots = [];
-  for (const familyId of orderedRootIds) {
-    if (attachedFamilyIds.has(familyId)) continue;
-    const node = buildFamilyNode(familyId, new Set(), 0);
-    if (node) roots.push(node);
-  }
+  const roots = orderedRootIds
+    .map((familyId) => buildFamilyNode(familyId, new Set(), 0, null))
+    .filter(Boolean);
 
   if (!roots.length) {
     const people = Array.from(peopleById.values()).slice(0, 1).map((p) => buildLeafPerson(p.id));
@@ -395,7 +249,6 @@ function buildRenderForest(model) {
   return roots;
 }
 
-
 function makeLayoutMetrics() {
   const sizingCfg = TREE_CFG?.sizing || {};
   const layoutCfg = TREE_CFG?.layout || {};
@@ -403,7 +256,7 @@ function makeLayoutMetrics() {
 
 const vw = Math.max(320, window.innerWidth || 1280);
 const rawScale = vw / 1280;
-const scale = clamp(rawScale, 0.88, 1);
+const scale = clamp(rawScale, 0.90, 1);
 
 const scaleNum = (value, fallback, min = 1) =>
   Math.max(min, Math.round(cfgNum(value, fallback) * scale));
@@ -637,16 +490,18 @@ function layoutNode(node, left, top, metrics, segments, cards) {
 
   for (const union of node.unions) {
     const centers = union.parentIds.map((pid) => cardCenters.get(pid)).filter(Number.isFinite);
+    const unionY = top + CARD_H;
     if (centers.length >= 2) {
       segments.push({
         x1: centers[0],
-        y1: top + Math.round(CARD_H * 0.52),
+        y1: unionY,
         x2: centers[centers.length - 1],
-        y2: top + Math.round(CARD_H * 0.52),
+        y2: unionY,
         cls: "tree-link tree-link-parent",
       });
     }
     union.unionX = centers.length >= 2 ? (centers[0] + centers[centers.length - 1]) / 2 : (centers[0] ?? node.unionX);
+    union.unionY = unionY;
   }
 
   const activeUnions = node.unions.filter((union) => union.childNodes.length);
@@ -666,7 +521,7 @@ function layoutNode(node, left, top, metrics, segments, cards) {
       .map((child) => ({ child, attach: getNodeAttachSpec(child) }))
       .filter((pt) => Number.isFinite(pt.attach.joinX) && Number.isFinite(pt.attach.y));
     const childXs = childTargets.map((pt) => pt.attach.joinX);
-    const trunkTop = top + CARD_H;
+    const trunkTop = union.unionY ?? (top + CARD_H);
     const trunkBottom = trunkTop + trunkDrop;
 
     if (union.verticalChildren && childTargets.length > 1) {
@@ -738,8 +593,12 @@ function buildScene(treeJson, previewMode) {
   const { sidePad, topPad, bottomPad, clusterGap } = metrics.spacing;
 
   const totalWidth = roots.reduce((sum, root, idx) => sum + root.subtreeWidth + (idx > 0 ? clusterGap : 0), 0);
-  let cursorLeft = sidePad;
+  const extraLeadPad = Math.max(sidePad, 24);
+  const centeredLeadPad = Math.max(extraLeadPad, Math.round((totalWidth + (extraLeadPad * 2) > 0 ? 0 : 0)));
+  let cursorLeft = extraLeadPad;
   const top = topPad;
+  const estimatedWidth = Math.max((extraLeadPad * 2) + totalWidth, window.innerWidth ? Math.round(window.innerWidth * 0.84) : 0);
+  cursorLeft = Math.max(extraLeadPad, Math.round((estimatedWidth - totalWidth) / 2));
   for (const root of roots) {
     layoutNode(root, cursorLeft, top, metrics, segments, cards);
     cursorLeft += root.subtreeWidth + clusterGap;
@@ -750,7 +609,7 @@ function buildScene(treeJson, previewMode) {
   const viewBox = {
     x: 0,
     y: 0,
-    w: Math.max(sidePad * 2 + totalWidth, maxRight + sidePad),
+    w: Math.max(estimatedWidth, maxRight + extraLeadPad),
     h: Math.max(topPad + bottomPad + metrics.card.height, maxBottom + bottomPad),
   };
 

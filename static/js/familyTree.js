@@ -42,6 +42,7 @@ function wrapName(text, width) {
   const words = raw.split(/\s+/).filter(Boolean);
   if (!words.length) return [raw];
   const maxChars = width >= 160 ? 15 : 12;
+  const maxLines = 3;
   const lines = [];
   let current = "";
 
@@ -53,11 +54,11 @@ function wrapName(text, width) {
     }
     if (current) lines.push(current);
     current = word;
-    if (lines.length === 1) break;
+    if (lines.length === maxLines - 1) break;
   }
-  if (current && lines.length < 2) lines.push(current);
+  if (current && lines.length < maxLines) lines.push(current);
   if (!lines.length) lines.push(raw.slice(0, maxChars));
-  if (lines.length > 2) lines.length = 2;
+  if (lines.length > maxLines) lines.length = maxLines;
   if (words.join(" ").length > lines.join(" ").length) {
     const last = lines[lines.length - 1];
     lines[lines.length - 1] = `${last.slice(0, Math.max(0, last.length - 1)).trim()}…`;
@@ -66,73 +67,49 @@ function wrapName(text, width) {
 }
 
 function drawPersonCard(parent, person, x, y, metrics) {
-  const { width, height, radius, imageRatio, photoWidth, photoHeight, bottomPanelHeight } = metrics.card;
-  const imageW = Math.max(1, Math.min(width, Math.round(photoWidth || width)));
-  const imageH = Math.max(1, Math.min(height - 18, Math.round(photoHeight || (height * imageRatio))));
-  const textH = Math.max(30, Math.max(bottomPanelHeight || (height - imageH), height - imageH));
+  const { width, height, radius, photoWidth, photoHeight, bottomPanelHeight } = metrics.card;
+  const outerPadX = Math.max(6, Math.round(width * 0.05));
+  const outerPadTop = Math.max(6, Math.round(height * 0.038));
+  const plateHeight = Math.max(40, Math.round(bottomPanelHeight || 43));
+  const imageW = Math.max(1, Math.min(width - (outerPadX * 2), Math.round(photoWidth || (width - (outerPadX * 2)))));
+  const imageH = Math.max(1, Math.min(height - plateHeight - outerPadTop - 6, Math.round(photoHeight || (height - plateHeight - outerPadTop - 6))));
   const imageX = x + ((width - imageW) / 2);
-  const imageY = y;
-  const imageInnerH = imageH;
-  const textTop = y + imageH;
+  const imageY = y + outerPadTop;
+  const textTop = y + height - plateHeight;
   const textCenterX = x + (width / 2);
-  const nameLines = wrapName(person.name, width);
-
-
-  const metaFont = clamp(Math.round(width * 0.066), 9, 12);
-
-  function fitNameToSingleLine(name, cardWidth) {
-    const rawName = String(name || "").trim();
-
-    let fontSize = clamp(Math.round(cardWidth * 0.096), 10, 16);
-
-    const maxTextWidth = cardWidth - 16;
-
-    const estWidth = (text, size) => text.length * size * 0.54;
-
-    while (fontSize > 10 && estWidth(rawName, fontSize) > maxTextWidth) {
-      fontSize -= 1;
-    }
-
-    if (estWidth(rawName, fontSize) <= maxTextWidth) {
-      return { text: rawName, fontSize };
-    }
-
-    let trimmed = rawName;
-    while (trimmed.length > 3 && estWidth(`${trimmed}…`, fontSize) > maxTextWidth) {
-      trimmed = trimmed.slice(0, -1);
-    }
-
-    return {
-      text: `${trimmed}…`,
-      fontSize,
-    };
-  }
-
-  const fittedName = fitNameToSingleLine(person.name, width);
-  const nameFont = fittedName.fontSize;
-  const singleLineName = fittedName.text;
-  
-  const metaGap = Math.max(9, Math.round(metaFont * 1.2));
-
+  const nameLines = wrapName(person.name, width - 18);
+  const metaFont = clamp(Math.round(width * 0.075), 9, 11);
+  const nameFont = clamp(Math.round(width * 0.104), 12, 15);
+  const lineGap = Math.max(12, Math.round(nameFont * 1.02));
   const yearsText = person.yearsText || "";
   const hasYears = Boolean(yearsText);
+  const bottomPadding = Math.max(7, Math.round(plateHeight * 0.16));
+  const yearsY = y + height - bottomPadding;
+  const nameBlockHeight = nameLines.length * lineGap;
+  const nameStartY = textTop + Math.max(9, Math.round((plateHeight - nameBlockHeight - (hasYears ? metaFont + 6 : 0)) * 0.18));
 
-  const bottomPadding = Math.max(10, Math.round(textH * 0.16));
-  const reservedBottomH = hasYears ? (metaGap + bottomPadding) : bottomPadding;
+  const g = group(parent, "tree-card-wrap");
 
-  const nameStartY = textTop + Math.max(16, Math.round(textH * 0.34));
+  const card = svgEl("rect");
+  card.setAttribute("x", String(x));
+  card.setAttribute("y", String(y));
+  card.setAttribute("width", String(width));
+  card.setAttribute("height", String(height));
+  card.setAttribute("rx", String(radius));
+  card.setAttribute("ry", String(radius));
+  card.setAttribute("class", "tree-card");
+  g.appendChild(card);
 
-  const g = group(parent, "tree-card-shadow");
 
-  const rect = svgEl("rect");
-  rect.setAttribute("x", String(x));
-  rect.setAttribute("y", String(y));
-  rect.setAttribute("width", String(width));
-  rect.setAttribute("height", String(height));
-  rect.setAttribute("rx", String(radius));
-  rect.setAttribute("ry", String(radius));
-  rect.setAttribute("class", "tree-card");
-  g.appendChild(rect);
+  const plate = svgEl("rect");
+  plate.setAttribute("x", String(x));
+  plate.setAttribute("y", String(textTop));
+  plate.setAttribute("width", String(width));
+  plate.setAttribute("height", String(height - (textTop - y)));
+  plate.setAttribute("rx", String(radius));
+  plate.setAttribute("ry", String(radius));
+  plate.setAttribute("class", "tree-nameplate");
+  g.appendChild(plate);
 
   const clipId = `treePhotoClip-${STATE.uid += 1}`;
   const defs = svgEl("defs");
@@ -143,9 +120,9 @@ function drawPersonCard(parent, person, x, y, metrics) {
   clipRect.setAttribute("x", String(imageX));
   clipRect.setAttribute("y", String(imageY));
   clipRect.setAttribute("width", String(imageW));
-  clipRect.setAttribute("height", String(imageInnerH));
-  clipRect.setAttribute("rx", String(radius));
-  clipRect.setAttribute("ry", String(radius));
+  clipRect.setAttribute("height", String(imageH));
+  clipRect.setAttribute("rx", String(Math.max(10, radius - 1)));
+  clipRect.setAttribute("ry", String(Math.max(10, radius - 1)));
   clip.appendChild(clipRect);
   defs.appendChild(clip);
   g.appendChild(defs);
@@ -154,9 +131,9 @@ function drawPersonCard(parent, person, x, y, metrics) {
   photoFrame.setAttribute("x", String(imageX));
   photoFrame.setAttribute("y", String(imageY));
   photoFrame.setAttribute("width", String(imageW));
-  photoFrame.setAttribute("height", String(imageInnerH));
-  photoFrame.setAttribute("rx", String(radius));
-  photoFrame.setAttribute("ry", String(radius));
+  photoFrame.setAttribute("height", String(imageH));
+  photoFrame.setAttribute("rx", String(Math.max(10, radius - 1)));
+  photoFrame.setAttribute("ry", String(Math.max(10, radius - 1)));
   photoFrame.setAttribute("class", "tree-photo-frame");
   g.appendChild(photoFrame);
 
@@ -164,17 +141,18 @@ function drawPersonCard(parent, person, x, y, metrics) {
   img.setAttribute("x", String(imageX));
   img.setAttribute("y", String(imageY));
   img.setAttribute("width", String(imageW));
-  img.setAttribute("height", String(imageInnerH));
+  img.setAttribute("height", String(imageH));
   img.setAttribute("clip-path", `url(#${clipId})`);
   img.setAttribute("preserveAspectRatio", "xMidYMid slice");
   img.setAttributeNS(XLINK_NS, "href", cardImageHref(person));
   img.setAttribute("href", cardImageHref(person));
+  img.setAttribute("class", "tree-card-photo");
   g.appendChild(img);
 
   const divider = svgEl("line");
-  divider.setAttribute("x1", String(x + 10));
+  divider.setAttribute("x1", String(x + 8));
   divider.setAttribute("y1", String(textTop));
-  divider.setAttribute("x2", String(x + width - 10));
+  divider.setAttribute("x2", String(x + width - 8));
   divider.setAttribute("y2", String(textTop));
   divider.setAttribute("class", "tree-card-divider");
   g.appendChild(divider);
@@ -184,25 +162,39 @@ function drawPersonCard(parent, person, x, y, metrics) {
   nameText.setAttribute("y", String(nameStartY));
   nameText.setAttribute("class", "tree-name");
   nameText.setAttribute("style", `font-size:${nameFont}px`);
-  nameText.textContent = singleLineName;
+  nameLines.forEach((lineText, idx) => {
+    const tspan = svgEl("tspan");
+    tspan.setAttribute("x", String(textCenterX));
+    tspan.setAttribute("dy", idx === 0 ? "0" : String(lineGap));
+    tspan.textContent = lineText;
+    nameText.appendChild(tspan);
+  });
   g.appendChild(nameText);
 
   if (hasYears) {
     const yearsNode = svgEl("text");
     yearsNode.setAttribute("x", String(textCenterX));
-    yearsNode.setAttribute("y", String(y + height - bottomPadding));
-    yearsNode.setAttribute("class", "tree-card-meta");
+    yearsNode.setAttribute("y", String(yearsY));
+    yearsNode.setAttribute("class", "tree-card-meta tree-years");
     yearsNode.setAttribute("style", `font-size:${metaFont}px`);
-    yearsNode.textContent = yearsText;
+    yearsNode.textContent = yearsText.replace(/^\((.*)\)$/,'$1');
     g.appendChild(yearsNode);
   }
 }
+
 export function renderFamilyTree(svg, scene) {
   STATE.svg = svg;
   STATE.viewBox = scene.viewBox;
   clear(svg);
   svg.setAttribute("viewBox", `${scene.viewBox.x} ${scene.viewBox.y} ${scene.viewBox.w} ${scene.viewBox.h}`);
   svg.setAttribute("preserveAspectRatio", "xMidYMin meet");
+  svg.setAttribute("width", String(scene.viewBox.w));
+  svg.setAttribute("height", String(scene.viewBox.h));
+  svg.style.width = `${scene.viewBox.w}px`;
+  svg.style.height = `${scene.viewBox.h}px`;
+  svg.style.maxWidth = "none";
+  svg.style.minWidth = "0";
+  svg.style.flex = "none";
 
   const connectors = group(svg);
   const cards = group(svg);

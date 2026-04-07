@@ -88,16 +88,13 @@
   </article>
 
   <article class="tree-card raised-card parchment-card" id="tree">
-    <div class="tree-controls">
-      <div class="tree-speed-toggle" id="treeSpeedToggle" role="group" aria-label="Tree build speed">
-        <button class="tree-speed-btn" type="button" data-speed="slow">Slow</button>
-        <button class="tree-speed-btn is-active" type="button" data-speed="medium">Medium</button>
-        <button class="tree-speed-btn" type="button" data-speed="fast">Fast</button>
-      </div>
-          </div>
+    <div class="tree-controls tree-controls--landing">
+      <a class="btn-secondary tree-full-link" href="{{ url_for('tree') }}">View Full Tree</a>
+    </div>
     <div class="tree-frame landing-tree-frame">
-      {% set tree = data.tree %}
-      {% include '_tree_canvas.html' %}
+      <div id="treeCanvas" class="treeCanvas treeCanvas--landing" data-tree-api-url="{{ landing_tree_api_url }}">
+        <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
+      </div>
     </div>
   </article>
 </section>
@@ -146,6 +143,7 @@
 </script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="{{ url_for('static', filename='js/landing-tree.js') }}"></script>
+<script>window.TREE_API_URL = {{ landing_tree_api_url|tojson }};</script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
 <script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>
 {% endblock %}

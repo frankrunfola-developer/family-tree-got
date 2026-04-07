@@ -175,6 +175,129 @@ def _normalize_family_photo_paths(data: dict, family_id: str | None = None) -> d
     meta['profile_photo'] = _normalize_photo_path(meta.get('profile_photo'), family_id)
     return data
 
+def normalize_tree_payload(data: dict, family_id: str | None = None) -> dict:
+    data = _normalize_family_photo_paths(json.loads(json.dumps(data or {})), family_id)
+    people = []
+    for raw in data.get('people', []):
+        if not raw.get('id'):
+            continue
+        person = dict(raw)
+        person['id'] = str(person.get('id'))
+        person['photo'] = _normalize_photo_path(person.get('photo') or person.get('image'), family_id)
+        person['image'] = person['photo']
+        people.append(person)
+
+    relationships = []
+    for rel in data.get('relationships', []):
+        if not isinstance(rel, dict):
+            continue
+        if rel.get('type') == 'spouse':
+            a = rel.get('a') or rel.get('person1') or rel.get('source') or rel.get('sourceId')
+            b = rel.get('b') or rel.get('person2') or rel.get('target') or rel.get('targetId')
+            if a and b and str(a) != str(b):
+                relationships.append({'type': 'spouse', 'a': str(a), 'b': str(b)})
+            continue
+
+        parent = rel.get('parentId') or rel.get('parent') or rel.get('sourceId') or rel.get('source')
+        child = rel.get('childId') or rel.get('child') or rel.get('targetId') or rel.get('target')
+        other = rel.get('otherParentId') or rel.get('other_parent_id')
+        if parent and child and str(parent) != str(child):
+            nr = {'parentId': str(parent), 'childId': str(child), 'parent': str(parent), 'child': str(child)}
+            if other:
+                nr['otherParentId'] = str(other)
+            relationships.append(nr)
+
+    return {'meta': data.get('meta', {}), 'people': people, 'relationships': relationships, 'events': data.get('events', [])}
+
+
+def lineage_subset_to_root(data: dict, max_generations: int = 4) -> dict:
+    people = [dict(p) for p in data.get('people', []) if p.get('id')]
+    relationships = list(data.get('relationships', []))
+    people_by_id = {str(p['id']): p for p in people}
+    parent_map: dict[str, set[str]] = defaultdict(set)
+    child_map: dict[str, set[str]] = defaultdict(set)
+    spouse_map: dict[str, set[str]] = defaultdict(set)
+
+    for rel in relationships:
+        if not isinstance(rel, dict):
+            continue
+        if rel.get('type') == 'spouse':
+            a = rel.get('a')
+            b = rel.get('b')
+            if a in people_by_id and b in people_by_id and a != b:
+                spouse_map[str(a)].add(str(b))
+                spouse_map[str(b)].add(str(a))
+            continue
+        parent = rel.get('parentId') or rel.get('parent')
+        child = rel.get('childId') or rel.get('child')
+        if parent in people_by_id and child in people_by_id and parent != child:
+            parent_map[str(child)].add(str(parent))
+            child_map[str(parent)].add(str(child))
+
+    def born_key(pid: str):
+        raw = str(people_by_id.get(pid, {}).get('born') or people_by_id.get(pid, {}).get('birth') or '').strip()
+        try:
+            return int(raw)
+        except Exception:
+            return -999999
+
+    leaves = [pid for pid in people_by_id if not child_map.get(pid)]
+    if not leaves:
+        leaves = list(people_by_id.keys())
+    current = sorted(leaves, key=lambda pid: (born_key(pid), people_by_id[pid].get('name', '')))[-1]
+
+    included: list[str] = []
+    included_set: set[str] = set()
+
+    def include(pid: str | None):
+        if pid and pid in people_by_id and pid not in included_set:
+            included.append(pid)
+            included_set.add(pid)
+
+    def lineage_depth(pid: str, memo: dict[str, int]) -> int:
+        if pid in memo:
+            return memo[pid]
+        parents = list(parent_map.get(pid, []))
+        if not parents:
+            memo[pid] = 0
+            return 0
+        memo[pid] = 1 + max(lineage_depth(parent, memo) for parent in parents)
+        return memo[pid]
+
+    depth_memo: dict[str, int] = {}
+    generations_used = 0
+    while current and generations_used < max_generations:
+        include(current)
+        parents = sorted(parent_map.get(current, []), key=lambda pid: (born_key(pid), people_by_id[pid].get('name', '')))
+        for pid in parents:
+            include(pid)
+        generations_used += 1
+        if not parents:
+            break
+        ranked = sorted(parents, key=lambda pid: (lineage_depth(pid, depth_memo), -born_key(pid), people_by_id[pid].get('name', '')), reverse=True)
+        next_current = None
+        for pid in ranked:
+            if parent_map.get(pid):
+                next_current = pid
+                break
+        if not next_current:
+            break
+        current = next_current
+
+    filtered_relationships = []
+    for rel in relationships:
+        if rel.get('type') == 'spouse':
+            if rel.get('a') in included_set and rel.get('b') in included_set:
+                filtered_relationships.append(dict(rel))
+        else:
+            parent = rel.get('parentId') or rel.get('parent')
+            child = rel.get('childId') or rel.get('child')
+            if parent in included_set and child in included_set:
+                filtered_relationships.append(dict(rel))
+
+    return {**data, 'people': [people_by_id[pid] for pid in included if pid in people_by_id], 'relationships': filtered_relationships}
+
+
 
 def build_tree_layout(data: dict) -> dict:
     people = data.get('people', [])
@@ -604,25 +727,10 @@ def landing_summary_from_family(data: dict) -> dict:
     end_year = max((int(str(p.get('died') or p.get('born')).strip()) for p in people if str(p.get('died') or p.get('born') or '').strip().isdigit()), default='')
     years = f"{start_year}–{end_year}" if start_year and end_year else (str(start_year) if start_year else '')
 
-    landing_tree_source = landing_tree_family_subset(data, max_generations=4)
-    tree_layout = build_tree_layout(landing_tree_source)
+    landing_tree_source = lineage_subset_to_root(data, max_generations=4)
     landing_tree = {
-        'links': tree_layout.get('connectors', []),
-        'people': [],
+        'api_url': '/api/current-family/tree?scope=lineage&generations=4'
     }
-    for idx, person in enumerate(tree_layout.get('people', [])):
-        photo = _normalize_photo_path(person.get('photo'), data.get('meta', {}).get('family_id'))
-        landing_tree['people'].append({
-            'id': person.get('id', f'p{idx}'),
-            'name': person.get('name', 'Unknown'),
-            'years': person.get('years', ''),
-            'image': photo,
-            'photo': photo,
-            'x': f"{person.get('x', 0)}px",
-            'y': f"{person.get('y', 0)}px",
-            'w': '116px',
-            'featured': idx == 0,
-        })
 
     return {
         'brand': 'LineAgeMap',
@@ -684,6 +792,7 @@ def map_people_payload(data: dict) -> dict:
             'label': format_place(person.get('current_location') or person.get('location')),
             'placeLabels': [loc.get('label') or format_place(loc) for loc in migrations if (loc.get('label') or format_place(loc))],
             'path': coords_path,
+            'route': coords_path,
         })
     return {'people': people_payload, 'places': all_places}
 
@@ -703,7 +812,7 @@ def index():
     user = current_user()
     family = current_sample_family()
     data = landing_summary_from_family(family)
-    return render_template('index.html', data=data, landing_family=family, user=user, mapbox_public_token=MAPBOX_PUBLIC_TOKEN)
+    return render_template('index.html', data=data, landing_family=family, user=user, mapbox_public_token=MAPBOX_PUBLIC_TOKEN, landing_tree_api_url='/api/current-family/tree?scope=lineage&generations=4')
 
 
 @app.get('/select-family')
@@ -752,12 +861,26 @@ def tree():
     user = current_user()
     if owner:
         family = enrich_family_data(ensure_user_family(owner), owner)
+        family_id = owner
     elif user:
         family = enrich_family_data(ensure_user_family(user['username']), user['username'])
+        family_id = user['username']
     else:
-        family = current_sample_family()
-    tree_data = build_tree_layout(family)
-    return render_template('tree.html', tree_data=tree_data)
+        family_id = selected_family_id()
+        family = enrich_family_data(load_sample_family(family_id), family_id)
+    family_name = family.get('meta', {}).get('family_name', 'Family Tree')
+    return render_template('tree.html', family_name=family_name, tree_api_url='/api/current-family/tree')
+
+
+@app.get('/api/current-family/tree')
+def api_current_family_tree():
+    family = current_family_payload()
+    scope = (request.args.get('scope') or '').strip().lower()
+    generations = request.args.get('generations', type=int) or 4
+    if scope == 'lineage':
+        family = lineage_subset_to_root(family, max_generations=max(1, generations))
+    family_id = family.get('meta', {}).get('family_id')
+    return normalize_tree_payload(family, family_id)
 
 
 @app.route('/map')
@@ -769,6 +892,11 @@ def map_view():
 
 @app.get('/api/current-family/people')
 def api_current_family_people():
+    return map_people_payload(current_family_payload())
+
+
+@app.get('/api/family/current/people')
+def api_family_current_people_alias():
     return map_people_payload(current_family_payload())
 
 

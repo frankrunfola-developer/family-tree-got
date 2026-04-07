@@ -1,54 +1,25 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}Tree | LineAgeMap{% endblock %}
 {% block body_class %}landing-page tree-page{% endblock %}
 {% block content %}
 <section class="tree-page-card raised-card parchment-card">
-  <div class="section-head wide-gap tree-page-head">
+  <div class="section-head wide-gap tree-page-head" style="text-align:center; justify-content:center;">
     <div>
-      <h1>{{ tree_data.family_name }}</h1>
-      <p class="subtitle">A structured record of your family story, preserved and connected across generations.</p>
+      <h1>{{ family_name }}</h1>
     </div>
   </div>
 
-  <div class="tree-page-actions hero-auth-actions">
-    <a class="btn-primary" href="{{ url_for('tree') }}">Start Building Your Archive</a>
-    {% if logged_in_user %}
-    <a class="btn-secondary" href="{{ url_for('dashboard') }}">Login To Continue Building</a>
-    {% else %}
-    <a class="btn-secondary" href="{{ url_for('login') }}">Login To Continue Building</a>
-    {% endif %}
+  <div class="treeToolbar" role="group" aria-label="Tree controls">
+    <button id="treeDepthToggleBtn" class="treeToolbarBtn" type="button">See Full Tree</button>
   </div>
 
-  <div class="tree-frame full-frame">
-    {% set tree = tree_data %}
-    {% include '_tree_canvas.html' %}
+  <div id="treeCanvas" class="treeCanvas treeCanvas--page" data-tree-api-url="{{ tree_api_url }}">
+    <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
   </div>
 </section>
 {% endblock %}
 
 {% block scripts %}
-<script>
-(() => {
-  const frame = document.querySelector('.tree-frame.full-frame');
-  const stage = document.querySelector('.tree-scale-stage');
-  const canvas = document.querySelector('.tree-canvas');
-  if (!frame || !stage || !canvas) return;
-
-  const fitTree = () => {
-    const cw = Number(stage.dataset.canvasWidth || getComputedStyle(stage).getPropertyValue('--canvas-width') || 0) || canvas.offsetWidth || 1;
-    const ch = Number(stage.dataset.canvasHeight || getComputedStyle(stage).getPropertyValue('--canvas-height') || 0) || canvas.offsetHeight || 1;
-    const available = Math.max(280, frame.clientWidth - 8);
-    const scale = Math.min(1, available / cw);
-    stage.style.setProperty('--tree-scale', String(scale));
-    stage.style.height = `${Math.round(ch * scale)}px`;
-    frame.scrollLeft = 0;
-  };
-
-  window.addEventListener('resize', fitTree);
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(fitTree).catch(fitTree);
-  }
-  fitTree();
-})();
-</script>
+<script>window.TREE_API_URL = {{ tree_api_url|tojson }};</script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
 {% endblock %}

@@ -3055,3 +3055,851 @@ body.tree-page .tree-frame .person-card {
     margin-bottom: 0.3rem !important;
   }
 }
+
+
+/* tree engine integration */
+.treeToolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 14px;
+}
+
+.treeToolbarBtn {
+  appearance: none;
+  border: 1px solid rgba(92, 66, 42, 0.18);
+  background: #f4efe7;
+  color: #4d3928;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font: inherit;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(55, 35, 15, 0.10);
+  cursor: pointer;
+}
+
+.treeCanvas {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  border-radius: 22px;
+}
+
+.treeCanvas--page {
+  min-height: 560px;
+  background: rgba(255,255,255,0.38);
+  border: 1px solid rgba(174, 140, 98, 0.28);
+}
+
+.treeCanvas--landing {
+  min-height: 520px;
+}
+
+#treeSvg {
+  display: block;
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+}
+
+.tree-link {
+  stroke: #a66a35;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.tree-link-parent,
+.tree-link-child {
+  stroke: #a66a35;
+}
+
+@media (max-width: 700px) {
+  .treeCanvas--landing { min-height: 620px; }
+  #treeSvg { min-width: 520px; }
+}
+
+
+/* === tree SVG card styling restore === */
+#treeSvg {
+  overflow: visible;
+}
+
+.tree-card-shadow {
+  filter: drop-shadow(0 8px 16px rgba(79, 55, 35, 0.18));
+}
+
+.tree-card {
+  fill: #f3ede3;
+  stroke: rgba(187, 155, 116, 0.78);
+  stroke-width: 1.4;
+}
+
+.tree-nameplate {
+  fill: #f2ede5;
+  stroke: rgba(187, 155, 116, 0.82);
+  stroke-width: 1.15;
+}
+
+.tree-photo-frame {
+  fill: #f8f3e8;
+  stroke: rgba(198, 190, 176, 0.98);
+  stroke-width: 5.5;
+}
+
+.tree-card-photo {
+  filter: sepia(0.18) saturate(0.88) contrast(1.02);
+}
+
+.tree-card-divider {
+  stroke: rgba(214, 198, 172, 0.8);
+  stroke-width: 1.2;
+}
+
+.tree-name {
+  fill: #5b3823;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.tree-card-meta,
+.tree-years {
+  fill: #6f4a31;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif;
+  font-weight: 600;
+  text-anchor: middle;
+  letter-spacing: 0;
+}
+
+.tree-link,
+.tree-link-parent,
+.tree-link-child {
+  stroke: #9a6537 !important;
+  stroke-width: 3.2 !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.treeCanvas--landing {
+  min-height: 560px;
+}
+
+.treeCanvas--page {
+  min-height: 720px;
+}
+
+/* ==== v-final tree card size + styling cleanup ==== */
+body.tree-page .tree-page-card .tree-frame .person-card,
+body.tree-page .tree-page-card .tree-canvas .person-card {
+  width: 96px !important;
+}
+
+body.tree-page .tree-page-card .portrait-frame,
+body.tree-page .tree-page-card .portrait-frame.compact,
+.landing-page .tree-frame .portrait-frame,
+.landing-page .tree-frame .portrait-frame.compact,
+.landing-page .tree-canvas .portrait-frame,
+.landing-page .tree-canvas .portrait-frame.compact {
+  padding: 4px !important;
+  border-radius: 14px 14px 10px 10px !important;
+  background: linear-gradient(180deg, #f4efe7, #e9e0d3) !important;
+  border: 0 !important;
+  box-shadow: 0 5px 12px rgba(90, 58, 31, 0.12), inset 0 1px 0 rgba(255,255,255,0.72) !important;
+}
+
+body.tree-page .tree-page-card .portrait-frame img,
+body.tree-page .tree-page-card .portrait-frame.compact img,
+.landing-page .tree-frame .portrait-frame img,
+.landing-page .tree-frame .portrait-frame.compact img,
+.landing-page .tree-canvas .portrait-frame img,
+.landing-page .tree-canvas .portrait-frame.compact img {
+  height: 100px !important;
+  aspect-ratio: auto !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(164, 132, 98, 0.22) !important;
+  filter: sepia(0.46) contrast(1.01) saturate(0.82) !important;
+}
+
+body.tree-page .tree-page-card .nameplate,
+body.tree-page .tree-page-card .nameplate.compact,
+.landing-page .tree-frame .nameplate,
+.landing-page .tree-frame .nameplate.compact,
+.landing-page .tree-canvas .nameplate,
+.landing-page .tree-canvas .nameplate.compact {
+  min-height: 42px !important;
+  padding: 8px 8px 10px !important;
+  border-radius: 0 0 12px 12px !important;
+  background: linear-gradient(180deg, rgba(252,249,244,0.98), rgba(236,228,214,0.98)) !important;
+  border: 1px solid rgba(189, 159, 124, 0.62) !important;
+  border-top: 0 !important;
+  box-shadow: 0 4px 10px rgba(90, 58, 31, 0.08) !important;
+}
+
+body.tree-page .tree-page-card .person-name,
+.landing-page .tree-frame .person-name,
+.landing-page .tree-canvas .person-name {
+  display: block !important;
+  font-family: "Cormorant Garamond", serif !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  line-height: 0.98 !important;
+  letter-spacing: 0 !important;
+  color: #6a4529 !important;
+  text-align: center !important;
+}
+
+body.tree-page .tree-page-card .person-years,
+.landing-page .tree-frame .person-years,
+.landing-page .tree-canvas .person-years {
+  display: block !important;
+  margin-top: 4px !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-size: 0.55rem !important;
+  line-height: 1.1 !important;
+  color: rgba(106, 69, 41, 0.9) !important;
+  text-align: center !important;
+}
+
+
+/* ==== tree card + landing tree final alignment overrides ==== */
+.landing-page .hero-card h1 {
+  margin-bottom: 6px !important;
+}
+
+.landing-page .hero-copy .subtitle,
+.landing-page .hero-card .subtitle {
+  margin-top: 0 !important;
+}
+
+.landing-page .tree-card .tree-controls.tree-controls--landing {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-bottom: 12px !important;
+}
+
+.landing-page .tree-full-link {
+  min-width: 170px;
+  text-align: center;
+}
+
+.landing-page .tree-speed-toggle,
+.landing-page #treeSpeedToggle {
+  display: none !important;
+}
+
+svg .tree-card,
+#treeSvg .tree-card {
+  fill: #f1ece3 !important;
+  stroke: rgba(200, 173, 133, 0.9) !important;
+  stroke-width: 1.15 !important;
+}
+
+svg .tree-card-shadow,
+#treeSvg .tree-card-shadow {
+  filter: drop-shadow(0 6px 12px rgba(92, 63, 36, 0.14)) !important;
+}
+
+svg .tree-nameplate,
+#treeSvg .tree-nameplate {
+  fill: #f3eee5 !important;
+  stroke: rgba(203, 173, 132, 0.92) !important;
+  stroke-width: 1.1 !important;
+}
+
+svg .tree-photo-frame,
+#treeSvg .tree-photo-frame {
+  fill: #f7f2e8 !important;
+  stroke: rgba(212, 207, 198, 0.95) !important;
+  stroke-width: 4.2 !important;
+}
+
+svg .tree-card-photo,
+#treeSvg .tree-card-photo {
+  filter: sepia(0.16) saturate(0.84) contrast(1.01) !important;
+}
+
+svg .tree-card-divider,
+#treeSvg .tree-card-divider {
+  stroke: rgba(208, 184, 145, 0.82) !important;
+  stroke-width: 1.05 !important;
+}
+
+svg .tree-name,
+#treeSvg .tree-name {
+  fill: #6b452b !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 700 !important;
+  text-anchor: middle !important;
+}
+
+svg .tree-card-meta,
+svg .tree-years,
+#treeSvg .tree-card-meta,
+#treeSvg .tree-years {
+  fill: rgba(107, 69, 43, 0.95) !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-weight: 400 !important;
+  text-anchor: middle !important;
+}
+
+svg .tree-generation-row,
+svg .generation-row,
+svg .generation-band,
+svg .tree-row-box,
+svg .family-row,
+#treeSvg .tree-generation-row,
+#treeSvg .generation-row,
+#treeSvg .generation-band,
+#treeSvg .tree-row-box,
+#treeSvg .family-row {
+  display: none !important;
+  fill: none !important;
+  stroke: none !important;
+}
+
+.treeCanvas--landing {
+  min-height: 520px !important;
+}
+
+.treeCanvas--page {
+  min-height: 700px !important;
+}
+
+
+/* ==== v-next tree card normalization across landing + tree page ==== */
+.landing-page .treeCanvas--landing .person-card,
+.landing-page .tree-frame .person-card,
+.landing-page .tree-canvas .person-card,
+body.tree-page .treeCanvas--page .person-card,
+body.tree-page .tree-page-card .tree-canvas .person-card {
+  position: absolute !important;
+  width: 96px !important;
+  max-width: 96px !important;
+  min-width: 96px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.landing-page .treeCanvas--landing .portrait-frame,
+.landing-page .tree-frame .portrait-frame,
+.landing-page .tree-canvas .portrait-frame,
+body.tree-page .treeCanvas--page .portrait-frame,
+body.tree-page .tree-page-card .tree-canvas .portrait-frame {
+  display: block !important;
+  width: 96px !important;
+  padding: 5px !important;
+  background: linear-gradient(180deg, #ece5da 0%, #e2d8c9 100%) !important;
+  border: 1px solid rgba(186, 161, 125, 0.62) !important;
+  border-radius: 14px 14px 0 0 !important;
+  box-shadow: 0 4px 12px rgba(84, 58, 31, 0.10), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+  overflow: hidden !important;
+}
+
+.landing-page .treeCanvas--landing .portrait-frame img,
+.landing-page .tree-frame .portrait-frame img,
+.landing-page .tree-canvas .portrait-frame img,
+body.tree-page .treeCanvas--page .portrait-frame img,
+body.tree-page .tree-page-card .tree-canvas .portrait-frame img {
+  display: block !important;
+  width: 84px !important;
+  height: 84px !important;
+  max-width: 84px !important;
+  max-height: 84px !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(170, 142, 104, 0.22) !important;
+  filter: none !important;
+}
+
+.landing-page .treeCanvas--landing .nameplate,
+.landing-page .tree-frame .nameplate,
+.landing-page .tree-canvas .nameplate,
+body.tree-page .treeCanvas--page .nameplate,
+body.tree-page .tree-page-card .tree-canvas .nameplate {
+  display: block !important;
+  width: 96px !important;
+  min-height: 0 !important;
+  padding: 6px 6px 7px !important;
+  background: linear-gradient(180deg, #f4efe8 0%, #ece4d8 100%) !important;
+  border: 1px solid rgba(186, 161, 125, 0.64) !important;
+  border-top: 0 !important;
+  border-radius: 0 0 12px 12px !important;
+  box-shadow: 0 3px 8px rgba(84, 58, 31, 0.08) !important;
+}
+
+.landing-page .treeCanvas--landing .person-name,
+.landing-page .tree-frame .person-name,
+.landing-page .tree-canvas .person-name,
+body.tree-page .treeCanvas--page .person-name,
+body.tree-page .tree-page-card .tree-canvas .person-name {
+  display: block !important;
+  font-family: "Cormorant Garamond", serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  line-height: 0.95 !important;
+  letter-spacing: 0 !important;
+  color: #6a4529 !important;
+  text-align: center !important;
+  text-shadow: none !important;
+}
+
+.landing-page .treeCanvas--landing .person-years,
+.landing-page .tree-frame .person-years,
+.landing-page .tree-canvas .person-years,
+body.tree-page .treeCanvas--page .person-years,
+body.tree-page .tree-page-card .tree-canvas .person-years {
+  display: block !important;
+  margin-top: 2px !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-size: 0.52rem !important;
+  line-height: 1.05 !important;
+  color: rgba(106, 69, 41, 0.92) !important;
+  text-align: center !important;
+  text-shadow: none !important;
+}
+
+.landing-page .treeCanvas--landing .person-card::before,
+.landing-page .treeCanvas--landing .person-card::after,
+.landing-page .tree-frame .person-card::before,
+.landing-page .tree-frame .person-card::after,
+.landing-page .tree-canvas .person-card::before,
+.landing-page .tree-canvas .person-card::after,
+body.tree-page .treeCanvas--page .person-card::before,
+body.tree-page .treeCanvas--page .person-card::after,
+body.tree-page .tree-page-card .tree-canvas .person-card::before,
+body.tree-page .tree-page-card .tree-canvas .person-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+.landing-page .treeCanvas--landing,
+body.tree-page .treeCanvas--page {
+  overflow: auto !important;
+}
+
+
+/* ==== final svg tree card normalization ==== */
+#treeSvg,
+.treeCanvas svg {
+  overflow: visible;
+}
+
+#treeSvg .tree-card,
+.treeCanvas svg .tree-card {
+  fill: #f1ece3 !important;
+  stroke: rgba(198, 173, 132, 0.92) !important;
+  stroke-width: 1.05 !important;
+}
+
+#treeSvg .tree-nameplate,
+.treeCanvas svg .tree-nameplate {
+  fill: #f3eee6 !important;
+  stroke: rgba(198, 173, 132, 0.92) !important;
+  stroke-width: 1.0 !important;
+}
+
+#treeSvg .tree-photo-frame,
+.treeCanvas svg .tree-photo-frame {
+  fill: #f7f2e8 !important;
+  stroke: rgba(206, 199, 188, 0.9) !important;
+  stroke-width: 3.2 !important;
+}
+
+#treeSvg .tree-card-divider,
+.treeCanvas svg .tree-card-divider {
+  stroke: rgba(198, 173, 132, 0.75) !important;
+  stroke-width: 1 !important;
+}
+
+#treeSvg .tree-name,
+.treeCanvas svg .tree-name {
+  fill: #694329 !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 700 !important;
+}
+
+#treeSvg .tree-card-meta,
+#treeSvg .tree-years,
+.treeCanvas svg .tree-card-meta,
+.treeCanvas svg .tree-years {
+  fill: rgba(105, 67, 41, 0.95) !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-weight: 400 !important;
+}
+
+#treeSvg .tree-card-shadow,
+.treeCanvas svg .tree-card-shadow {
+  filter: drop-shadow(0 4px 8px rgba(92, 63, 36, 0.12)) !important;
+}
+
+#treeSvg .tree-generation-row,
+#treeSvg .generation-row,
+#treeSvg .generation-band,
+#treeSvg .tree-row-box,
+#treeSvg .family-row,
+.treeCanvas svg .tree-generation-row,
+.treeCanvas svg .generation-row,
+.treeCanvas svg .generation-band,
+.treeCanvas svg .tree-row-box,
+.treeCanvas svg .family-row {
+  display: none !important;
+  fill: transparent !important;
+  stroke: transparent !important;
+}
+
+.landing-page .tree-frame,
+.landing-page .landing-tree-frame,
+.tree-page .treeCanvas {
+  overflow: auto;
+}
+
+
+/* ==== hard override: actual active tree svg sizing + card skin ==== */
+#treeSvg,
+.treeCanvas > svg {
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: none !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+#treeSvg .tree-card,
+.treeCanvas > svg .tree-card {
+  fill: transparent !important;
+  stroke: transparent !important;
+  stroke-width: 0 !important;
+}
+
+#treeSvg .tree-card-shadow,
+.treeCanvas > svg .tree-card-shadow {
+  filter: drop-shadow(0 4px 8px rgba(92, 63, 36, 0.10)) !important;
+}
+
+#treeSvg .tree-photo-frame,
+.treeCanvas > svg .tree-photo-frame {
+  fill: #e9e4db !important;
+  stroke: #cfc8bc !important;
+  stroke-width: 5px !important;
+}
+
+#treeSvg .tree-nameplate,
+.treeCanvas > svg .tree-nameplate {
+  fill: #f3eee6 !important;
+  stroke: #d2b588 !important;
+  stroke-width: 1.2px !important;
+}
+
+#treeSvg .tree-card-divider,
+.treeCanvas > svg .tree-card-divider {
+  stroke: #cfae7c !important;
+  stroke-width: 1px !important;
+}
+
+#treeSvg .tree-name,
+.treeCanvas > svg .tree-name {
+  fill: #6a4329 !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 700 !important;
+}
+
+#treeSvg .tree-card-meta,
+#treeSvg .tree-years,
+.treeCanvas > svg .tree-card-meta,
+.treeCanvas > svg .tree-years {
+  fill: rgba(106, 67, 41, 0.95) !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-weight: 400 !important;
+}
+
+#treeSvg .tree-generation-row,
+#treeSvg .generation-row,
+#treeSvg .generation-band,
+#treeSvg .tree-row-box,
+#treeSvg .family-row,
+.treeCanvas > svg .tree-generation-row,
+.treeCanvas > svg .generation-row,
+.treeCanvas > svg .generation-band,
+.treeCanvas > svg .tree-row-box,
+.treeCanvas > svg .family-row {
+  display: none !important;
+  opacity: 0 !important;
+  fill: transparent !important;
+  stroke: transparent !important;
+}
+
+.landing-page .tree-frame,
+.tree-page .treeCanvas,
+.landing-page .treeCanvas--landing,
+body.tree-page .treeCanvas--page {
+  overflow: auto !important;
+}
+
+
+/* ==== v13 final tree card polish + centering ==== */
+#treeCanvas.treeCanvas {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  overflow: auto !important;
+}
+
+#treeSvg,
+.treeCanvas > svg {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#treeSvg .tree-card-shadow,
+.treeCanvas > svg .tree-card-shadow {
+  filter: none !important;
+}
+
+#treeSvg .tree-card,
+.treeCanvas > svg .tree-card {
+  fill: transparent !important;
+  stroke: transparent !important;
+}
+
+#treeSvg .tree-photo-frame,
+.treeCanvas > svg .tree-photo-frame {
+  fill: #e9e6df !important;
+  stroke: #d1cbc0 !important;
+  stroke-width: 4px !important;
+}
+
+#treeSvg .tree-nameplate,
+.treeCanvas > svg .tree-nameplate {
+  fill: #f6f1e8 !important;
+  stroke: #d7b67f !important;
+  stroke-width: 1.1px !important;
+}
+
+#treeSvg .tree-card-divider,
+.treeCanvas > svg .tree-card-divider {
+  stroke: #d8ba86 !important;
+  stroke-width: 0.95px !important;
+}
+
+#treeSvg .tree-name,
+.treeCanvas > svg .tree-name {
+  fill: #69442a !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+#treeSvg .tree-card-meta,
+#treeSvg .tree-years,
+.treeCanvas > svg .tree-card-meta,
+.treeCanvas > svg .tree-years {
+  fill: #6f4c31 !important;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-weight: 400 !important;
+}
+
+#treeSvg .tree-link,
+#treeSvg .tree-link-parent,
+#treeSvg .tree-link-child,
+.treeCanvas > svg .tree-link,
+.treeCanvas > svg .tree-link-parent,
+.treeCanvas > svg .tree-link-child {
+  stroke: #9a6738 !important;
+  stroke-width: 3px !important;
+  stroke-linecap: square !important;
+}
+
+
+/* ==== final tree card polish + header cleanup ==== */
+.tree-page .tree-page-head,
+.tree-page .section-head.tree-page-head {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.tree-page .tree-page-head > div {
+  width: 100%;
+}
+
+#treeCanvas.treeCanvas {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+#treeSvg,
+.treeCanvas > svg {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#treeSvg .tree-card-shadow,
+.treeCanvas > svg .tree-card-shadow {
+  filter: drop-shadow(0 10px 16px rgba(79, 55, 35, 0.16)) !important;
+}
+
+#treeSvg .tree-card,
+.treeCanvas > svg .tree-card {
+  fill: #f4efe7 !important;
+  stroke: #cdb28a !important;
+  stroke-width: 1.15px !important;
+}
+
+#treeSvg .tree-card-inset,
+.treeCanvas > svg .tree-card-inset {
+  fill: none !important;
+  stroke: rgba(255,255,255,0.52) !important;
+  stroke-width: 0.8px !important;
+}
+
+#treeSvg .tree-photo-frame,
+.treeCanvas > svg .tree-photo-frame {
+  fill: #ece7de !important;
+  stroke: #d2cbc0 !important;
+  stroke-width: 3.8px !important;
+}
+
+#treeSvg .tree-nameplate,
+.treeCanvas > svg .tree-nameplate {
+  fill: #f6f1e8 !important;
+  stroke: #d6b680 !important;
+  stroke-width: 1.05px !important;
+}
+
+#treeSvg .tree-card-divider,
+.treeCanvas > svg .tree-card-divider {
+  stroke: rgba(202, 171, 122, 0.92) !important;
+  stroke-width: 0.95px !important;
+}
+
+#treeSvg .tree-name,
+.treeCanvas > svg .tree-name {
+  fill: #6a452b !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+}
+
+#treeSvg .tree-years,
+#treeSvg .tree-card-meta,
+.treeCanvas > svg .tree-years,
+.treeCanvas > svg .tree-card-meta {
+  fill: #7a5637 !important;
+  font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+  font-weight: 600 !important;
+}
+
+#treeSvg .tree-link,
+#treeSvg .tree-link-parent,
+#treeSvg .tree-link-child,
+.treeCanvas > svg .tree-link,
+.treeCanvas > svg .tree-link-parent,
+.treeCanvas > svg .tree-link-child {
+  stroke: #9f6738 !important;
+  stroke-width: 3.2px !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+
+/* ==== FINAL TREE FIX CLEAN ==== */
+.treeCanvas {
+  overflow: auto;
+}
+
+.treeCanvas > svg,
+#treeSvg {
+  display: block;
+  margin-inline: auto;
+}
+
+#treeSvg .tree-card-shadow,
+.treeCanvas > svg .tree-card-shadow {
+  filter: drop-shadow(0 8px 16px rgba(92, 62, 35, 0.18));
+}
+
+#treeSvg .tree-card,
+.treeCanvas > svg .tree-card {
+  fill: #f6f0e7;
+  stroke: #d4b482;
+  stroke-width: 1.15;
+}
+
+#treeSvg .tree-nameplate,
+.treeCanvas > svg .tree-nameplate {
+  fill: #f6f0e7;
+  stroke: none;
+}
+
+#treeSvg .tree-photo-frame,
+.treeCanvas > svg .tree-photo-frame {
+  fill: #eee8df;
+  stroke: #d3cdc4;
+  stroke-width: 0.9;
+}
+
+#treeSvg .tree-card-divider,
+.treeCanvas > svg .tree-card-divider {
+  stroke: rgba(190, 154, 110, 0.58);
+  stroke-width: 1;
+}
+
+#treeSvg .tree-name,
+.treeCanvas > svg .tree-name {
+  fill: #6b4428;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+#treeSvg .tree-card-meta,
+#treeSvg .tree-years,
+.treeCanvas > svg .tree-card-meta,
+.treeCanvas > svg .tree-years {
+  fill: #8a6341;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-weight: 400;
+}
+
+#treeSvg .tree-link,
+#treeSvg .tree-link-parent,
+#treeSvg .tree-link-child,
+.treeCanvas > svg .tree-link,
+.treeCanvas > svg .tree-link-parent,
+.treeCanvas > svg .tree-link-child {
+  stroke: #a86f3c;
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.treeCanvas--landing #treeSvg,
+.treeCanvas--landing svg {
+  max-width: none !important;
+}
+
+.landing-page .tree-frame,
+.landing-page .treeCanvas,
+.tree-page .treeCanvas {
+  background: linear-gradient(180deg, rgba(255,252,247,0.92), rgba(246,239,227,0.94));
+  border: 1px solid rgba(205, 176, 132, 0.65);
+  border-radius: 22px;
+}

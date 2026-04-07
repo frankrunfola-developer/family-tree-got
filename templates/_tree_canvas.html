@@ -6,7 +6,7 @@
       {% endfor %}
     </svg>
     {% for person in tree.people %}
-    <figure class="person-card person-{{ person.id }}{% if person.featured %} featured{% endif %}" data-person-name="{{ person.name }}" style="left: {{ person.x }}px; top: {{ person.y }}px; width: 96px; position: absolute;">
+    <figure class="person-card person-{{ person.id }}{% if person.featured %} featured{% endif %}" data-person-name="{{ person.name }}" style="left: {{ person.x }}px; top: {{ person.y }}px; width: 84px; position: absolute;">
       <div class="portrait-frame">
         <img src="{{ person.photo }}" alt="{{ person.name }} portrait">
       </div>
