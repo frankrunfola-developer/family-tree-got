@@ -58,26 +58,20 @@
       {% set stats = data.family.stats if data.family and data.family.stats else [] %}
       {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
       {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
-      {% set stat3 = stats[2] if stats|length > 2 else {'value': '—', 'label': 'Branches'} %}
       <div class="capsule-overview-card">
-        <div class="capsule-overview-grid">
+        <div class="capsule-overview-grid capsule-overview-grid--three-up">
           <article class="capsule-metric-card metric-tree">
             <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
             <div class="capsule-metric-value">{{ stat1.value }}</div>
             <div class="capsule-metric-label">{{ stat1.label }}</div>
           </article>
-          <article class="capsule-metric-card metric-hourglass">
-            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
+          <article class="capsule-metric-card metric-scroll">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
             <div class="capsule-metric-value">{{ stat2.value }}</div>
             <div class="capsule-metric-label">{{ stat2.label }}</div>
           </article>
-          <article class="capsule-metric-card metric-globe">
-            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
-            <div class="capsule-metric-value">{{ stat3.value }}</div>
-            <div class="capsule-metric-label">Branches</div>
-          </article>
-          <article class="capsule-metric-card metric-scroll">
-            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
+          <article class="capsule-metric-card metric-hourglass">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
             <div class="capsule-metric-value">170+</div>
             <div class="capsule-metric-label">Years</div>
           </article>

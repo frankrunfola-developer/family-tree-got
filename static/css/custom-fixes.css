@@ -4754,3 +4754,398 @@ body.tree-page .treeCanvas--page #treeSvg {
     inset 0 0 0 4px rgba(108, 68, 36, 0.10),
     0 7px 16px rgba(67, 42, 20, 0.14) !important;
 }
+
+
+/* ===== Final refinements v21 ===== */
+
+/* Keep section headers clean and single-line without crowding */
+.landing-page .capsule-section-title,
+.landing-page .tree-section-title,
+.landing-page .map-title-centered {
+  font-size: clamp(1.72rem, 5.2vw, 2.55rem) !important;
+  line-height: 0.98 !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  word-break: keep-all !important;
+  letter-spacing: 0.01em !important;
+}
+
+.landing-page .tree-section-subtitle,
+.landing-page .capsule-family-name {
+  font-size: clamp(1rem, 3.15vw, 1.18rem) !important;
+  line-height: 1.08 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Summary portrait: thicker ornamental border with stronger engraved lift */
+.landing-page .capsule-portrait-shell,
+.landing-page .capsule-portrait-oval {
+  width: clamp(132px, 20vw, 168px) !important;
+  height: clamp(132px, 20vw, 168px) !important;
+}
+
+.landing-page .capsule-portrait-oval {
+  padding: 14px !important;
+  border: 2px solid rgba(108, 67, 34, 0.54) !important;
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255,251,244,0.96), rgba(255,251,244,0) 28%),
+    radial-gradient(circle at 78% 76%, rgba(122,76,40,0.22), rgba(122,76,40,0) 34%),
+    repeating-conic-gradient(from -3deg, rgba(246,228,198,0.26) 0deg 7deg, rgba(136,87,46,0.12) 7deg 14deg, rgba(248,235,214,0.08) 14deg 21deg),
+    linear-gradient(180deg, #dfb988 0%, #ca9865 15%, #9a683e 42%, #744628 63%, #b17d4d 84%, #ebc99a 100%) !important;
+  box-shadow:
+    0 20px 36px rgba(60, 36, 18, 0.24),
+    0 8px 16px rgba(60, 36, 18, 0.17),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 0 0 3px rgba(251,235,210,0.76),
+    inset 0 0 0 7px rgba(139, 89, 46, 0.2),
+    inset 0 0 0 11px rgba(246,224,190,0.42),
+    inset 0 0 0 14px rgba(116, 71, 37, 0.1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.landing-page .capsule-portrait-oval::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 6px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(251, 238, 216, 0.96) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 95, 53, 0.24),
+    inset 0 0 0 8px rgba(255,247,232,0.08),
+    0 0 12px rgba(112, 70, 36, 0.08) !important;
+  pointer-events: none !important;
+}
+
+.landing-page .capsule-portrait-oval::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 2px !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), rgba(255,255,255,0) 34%),
+    radial-gradient(circle at 70% 76%, rgba(94,55,28,0.16), rgba(94,55,28,0) 36%) !important;
+  pointer-events: none !important;
+}
+
+.landing-page .capsule-portrait-photo-wrap {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,251,244,0.68),
+    inset 0 0 0 4px rgba(109, 68, 35, 0.12),
+    0 10px 18px rgba(63, 38, 19, 0.16) !important;
+}
+
+/* Remove branches card and rebalance stats to three wider cards */
+.landing-page .capsule-overview-card {
+  width: calc(100% + 10px) !important;
+  margin-left: -5px !important;
+  margin-right: -5px !important;
+  padding: 12px 10px 14px !important;
+}
+
+.landing-page .capsule-overview-grid,
+.landing-page .capsule-overview-grid--three-up {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.landing-page .capsule-metric-card {
+  min-height: 120px !important;
+  padding: 12px 8px 13px !important;
+  border-radius: 16px !important;
+}
+
+.landing-page .capsule-metric-value {
+  font-size: clamp(1.9rem, 5vw, 2.3rem) !important;
+}
+
+.landing-page .capsule-metric-label {
+  font-size: clamp(0.9rem, 2.4vw, 1rem) !important;
+  white-space: nowrap !important;
+}
+
+/* Tree node cards: no line border, use raised shadow styling consistently */
+.landing-page .person-card,
+.landing-page .tree-person-card,
+.landing-page .tree-node-card,
+.landing-page .tree-canvas .person-card,
+.landing-page .treeCanvas--landing .person-card,
+.landing-page .tree-frame .person-card {
+  border: none !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 12px 18px rgba(78, 50, 27, 0.16)) drop-shadow(0 3px 8px rgba(78, 50, 27, 0.08)) !important;
+}
+
+.landing-page .person-card .portrait-frame,
+.landing-page .tree-canvas .person-card .portrait-frame,
+.landing-page .treeCanvas--landing .portrait-frame,
+.landing-page .tree-frame .portrait-frame {
+  border: none !important;
+  box-shadow:
+    0 10px 18px rgba(83, 56, 31, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.82),
+    inset 0 0 0 1px rgba(192,161,123,0.14) !important;
+}
+
+.landing-page .person-card .nameplate,
+.landing-page .tree-canvas .person-card .nameplate,
+.landing-page .treeCanvas--landing .nameplate,
+.landing-page .tree-frame .nameplate {
+  min-height: 68px !important;
+  padding: 11px 8px 16px !important;
+  border: none !important;
+  box-shadow:
+    0 8px 14px rgba(84,58,31,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.80),
+    inset 0 0 0 1px rgba(184,149,108,0.14) !important;
+}
+
+@media (max-width: 520px) {
+  .landing-page .capsule-overview-card {
+    width: calc(100% + 6px) !important;
+    margin-left: -3px !important;
+    margin-right: -3px !important;
+    padding: 10px 8px 12px !important;
+  }
+
+  .landing-page .capsule-overview-grid,
+  .landing-page .capsule-overview-grid--three-up {
+    gap: 8px !important;
+  }
+
+  .landing-page .capsule-metric-card {
+    min-height: 112px !important;
+    padding: 10px 6px 12px !important;
+  }
+
+  .landing-page .capsule-metric-label {
+    font-size: 0.88rem !important;
+  }
+
+  .landing-page .tree-section-subtitle,
+  .landing-page .capsule-family-name {
+    font-size: clamp(0.92rem, 3vw, 1.02rem) !important;
+  }
+}
+
+
+/* ===== Final summary portrait cleanup: remove the weird oval and use a clean circular ornamental frame ===== */
+.landing-page .capsule-family-card {
+  overflow: visible !important;
+}
+
+.landing-page .capsule-portrait-block {
+  margin-top: 2px !important;
+}
+
+.landing-page .capsule-family-name {
+  font-size: clamp(28px, 4.8vw, 38px) !important;
+  line-height: 0.92 !important;
+  margin-top: -6px !important;
+  margin-bottom: 8px !important;
+}
+
+.landing-page .capsule-portrait-shell {
+  position: relative !important;
+  width: clamp(138px, 22vw, 170px) !important;
+  height: clamp(138px, 22vw, 170px) !important;
+  display: grid !important;
+  place-items: center !important;
+  margin: 0 auto 10px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+.landing-page .capsule-portrait-shell::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -9px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25' r='75%25'%3E%3Cstop offset='0%25' stop-color='%23f8ebd4'/%3E%3Cstop offset='38%25' stop-color='%23ead2ac'/%3E%3Cstop offset='68%25' stop-color='%23caa16a'/%3E%3Cstop offset='100%25' stop-color='%2388582f'/%3E%3C/radialGradient%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='5' stdDeviation='4' flood-color='%23543518' flood-opacity='.28'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Ccircle cx='110' cy='110' r='92' fill='none' stroke='url(%23g)' stroke-width='10'/%3E%3Ccircle cx='110' cy='110' r='83' fill='none' stroke='%23f7eddc' stroke-width='2.5' opacity='.96'/%3E%3Ccircle cx='110' cy='110' r='78' fill='none' stroke='%23b7844c' stroke-width='2' opacity='.55'/%3E%3Cg fill='url(%23g)' stroke='%2388582f' stroke-width='1.5'%3E%3Cpath d='M110 8 120 24 138 24 126 37 130 55 110 45 90 55 94 37 82 24 100 24Z'/%3E%3Cpath d='M110 212 120 196 138 196 126 183 130 165 110 175 90 165 94 183 82 196 100 196Z'/%3E%3Cpath d='M8 110 24 100 24 82 37 94 55 90 45 110 55 130 37 126 24 138 24 120Z'/%3E%3Cpath d='M212 110 196 100 196 82 183 94 165 90 175 110 165 130 183 126 196 138 196 120Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23f9f0e2' stroke-width='1.5' opacity='.75'%3E%3Cpath d='M110 22c49 0 88 39 88 88'/%3E%3Cpath d='M22 110c0-49 39-88 88-88'/%3E%3C/g%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.landing-page .capsule-portrait-shell::after {
+  display: none !important;
+  content: none !important;
+}
+
+.landing-page .capsule-portrait-photo-wrap {
+  position: relative !important;
+  z-index: 1 !important;
+  width: calc(100% - 24px) !important;
+  height: calc(100% - 24px) !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: #efe4d0 !important;
+  border: 2px solid rgba(248, 237, 222, 0.95) !important;
+  box-shadow:
+    0 8px 18px rgba(74, 46, 23, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 0 0 1px rgba(170, 125, 73, 0.24) !important;
+}
+
+.landing-page .capsule-portrait-photo,
+.landing-page .capsule-portrait-photo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+  filter: sepia(0.16) contrast(1.02) saturate(0.92) !important;
+}
+
+
+
+/* ===== Final portrait correction =====
+   Smooth visible border, no ornaments, no invisible frame space.
+   Keep fix scoped to landing summary portrait only.
+*/
+.landing-page .capsule-portrait-shell {
+  position: relative !important;
+  width: 150px !important;
+  height: 150px !important;
+  margin: 4px auto 10px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 3px solid #c9a46b !important;
+  border-radius: 50% !important;
+  background: #f4ead7 !important;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.16),
+    inset 0 1px 2px rgba(255, 255, 255, 0.58) !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+}
+
+.landing-page .capsule-portrait-shell::before,
+.landing-page .capsule-portrait-shell::after,
+.landing-page .capsule-portrait-oval::before,
+.landing-page .capsule-portrait-oval::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.landing-page .capsule-portrait-oval {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.landing-page .capsule-portrait-photo-wrap {
+  position: static !important;
+  inset: auto !important;
+  width: calc(100% - 12px) !important;
+  height: calc(100% - 12px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.landing-page .capsule-portrait-photo,
+.landing-page .capsule-portrait-photo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  box-shadow: none !important;
+}
+
+.landing-page .capsule-portrait-block {
+  margin-top: 0 !important;
+}
+
+.landing-page .capsule-family-name {
+  line-height: 1.02 !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 10px !important;
+}
+
+
+
+/* ===== Border thickness + tighter inner gap ===== */
+.landing-page .capsule-portrait-shell{
+  border: 5px solid #c9a46b !important; /* thicker */
+}
+
+.landing-page .capsule-portrait-photo-wrap{
+  width: calc(100% - 8px) !important;  /* smaller gap (4px each side) */
+  height: calc(100% - 8px) !important;
+}
+
+
+/* ===== Final polish: thinner gap + thicker gradient border ===== */
+.landing-page .capsule-portrait-shell{
+  border: 6px solid transparent !important;
+  background: 
+    linear-gradient(#f4ead7, #f4ead7) padding-box,
+    linear-gradient(135deg, #e5c78f, #c9a46b, #8b6a3f) border-box !important;
+}
+
+/* reduce gap further */
+.landing-page .capsule-portrait-photo-wrap{
+  width: calc(100% - 6px) !important;  /* tighter gap */
+  height: calc(100% - 6px) !important;
+}
+
+
+/* ===== Ultra final: much thinner gap + thicker border ===== */
+.landing-page .capsule-portrait-shell{
+  border: 9px solid transparent !important; /* ~50% thicker */
+  background: 
+    linear-gradient(#f4ead7, #f4ead7) padding-box,
+    linear-gradient(135deg, #e5c78f, #c9a46b, #8b6a3f) border-box !important;
+}
+
+/* ~70% thinner gap */
+.landing-page .capsule-portrait-photo-wrap{
+  width: calc(100% - 2px) !important;
+  height: calc(100% - 2px) !important;
+}
+
+
+/* ===== Coin-edge inner highlight ===== */
+.landing-page .capsule-portrait-shell::after{
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.6),
+    inset 0 -1px 2px rgba(0,0,0,0.15);
+  pointer-events: none;
+}
+
+/* Slightly smaller family name */
+.landing-page .capsule-family-name{
+  font-size: 0.92em !important;
+}

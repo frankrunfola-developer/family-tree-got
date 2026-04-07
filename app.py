@@ -748,7 +748,6 @@ def landing_summary_from_family(data: dict) -> dict:
             'stats': [
                 {'value': stats['members'], 'label': 'Members'},
                 {'value': stats['generations'], 'label': 'Generations'},
-                {'value': max(1, stats['couples']), 'label': 'Branches'},
             ],
             'ancestor': ancestor,
         },
