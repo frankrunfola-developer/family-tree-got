@@ -38,6 +38,8 @@
         <h2 class="capsule-section-title">Summary</h2>
         <div class="capsule-family-name">{{ data.family.name }}</div>
 
+
+
         {% set ancestor = data.family.ancestor if data.family and data.family.ancestor else None %}
         {% if ancestor and ancestor.born %}
         {% set earliest_trace = ancestor.born %}
@@ -59,8 +61,22 @@
       {% set stats = data.family.stats if data.family and data.family.stats else [] %}
       {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
       {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
+      {% set stat3 = stats[2] if stats|length > 2 else {'value': '170+', 'label': 'Years'} %}
+      {% set ns = namespace(migration_count=0) %}
+      {% if data.map and data.map.people %}
+        {% for person in data.map.people %}
+          {% if person.route and person.route|length > 1 %}
+            {% set ns.migration_count = ns.migration_count + 1 %}
+          {% elif person.stops and person.stops|length > 1 %}
+            {% set ns.migration_count = ns.migration_count + 1 %}
+          {% elif person.migrations and person.migrations|length > 0 %}
+            {% set ns.migration_count = ns.migration_count + (person.migrations|length) %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% set stat4 = stats[3] if stats|length > 3 else {'value': ns.migration_count if ns.migration_count > 0 else '—', 'label': 'Migrations'} %}
       <div class="capsule-overview-card">
-        <div class="capsule-overview-grid capsule-overview-grid--three-up">
+        <div class="capsule-overview-grid capsule-overview-grid--four-up">
           <article class="capsule-metric-card metric-tree">
             <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
             <div class="capsule-metric-value">{{ stat1.value }}</div>
@@ -73,8 +89,13 @@
           </article>
           <article class="capsule-metric-card metric-hourglass">
             <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
-            <div class="capsule-metric-value">170+</div>
-            <div class="capsule-metric-label">Years</div>
+            <div class="capsule-metric-value">{{ stat3.value }}</div>
+            <div class="capsule-metric-label">{{ stat3.label }}</div>
+          </article>
+          <article class="capsule-metric-card metric-globe">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ stat4.value }}</div>
+            <div class="capsule-metric-label">{{ stat4.label }}</div>
           </article>
         </div>
       </div>
@@ -95,41 +116,50 @@
     </div>
     <a class="btn-primary wide tree-full-link tree-full-link-bottom" href="{{ url_for('tree') }}">View Full Tree</a>
   </article>
+
+  
+
 </section>
 
-<section class="map-card map-card-live raised-card parchment-card" id="journey">
-  <div class="map-header">
-    <div>
-      <h3 class="map-title-centered">Migration Map</h3>
-    </div>
-    <div class="map-controls">
-      <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
-        <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
-        <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
-        <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
+<div class="map-row">
+  <section class="map-card map-card-live raised-card parchment-card" id="journey">
+    <div class="map-header">
+      <div>
+        <h3 class="map-title-centered">Migration Map</h3>
+      </div>
+      <div class="map-controls">
+        <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
+          <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
+          <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
+          <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="map-selector-shell">
-    <details class="map-selector-details" id="mapSelectorDetails">
-      <summary class="map-selector-summary">Choose route <span class="map-selector-summary-icon" aria-hidden="true">▾</span></summary>
-      <div class="map-selector-body">
-        <button class="btn-secondary map-action-btn map-all-inline-btn" type="button" data-action="all">All</button>
-        <div class="person-chip-row" id="personChipRow"></div>
-      </div>
-    </details>
-  </div>
+    <div class="map-selector-shell">
+      <details class="map-selector-details" id="mapSelectorDetails">
+        <summary class="map-selector-summary">Choose route <span class="map-selector-summary-icon" aria-hidden="true">▾</span></summary>
+        <div class="map-selector-body">
+          <button class="btn-secondary map-action-btn map-all-inline-btn" type="button" data-action="all">All</button>
+          <div class="person-chip-row" id="personChipRow"></div>
+        </div>
+      </details>
+    </div>
 
-  <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
+    <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
 
-  {% if data.map.legend %}
-  <div class="map-legend map-legend-bottom">
-    {% for item in data.map.legend %}
-    <span class="legend-item legend-{{ item.kind|lower|replace(' ', '-') }}">{{ item.label }}</span>
-    {% endfor %}
-  </div>
-  {% endif %}
+    {% if data.map.legend %}
+    <div class="map-legend map-legend-bottom">
+      {% for item in data.map.legend %}
+      <span class="legend-item legend-{{ item.kind|lower|replace(' ', '-') }}">{{ item.label }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+</div>
+
 </section>
 {% endblock %}
 

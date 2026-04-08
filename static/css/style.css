@@ -2528,3 +2528,11 @@ padding: 5px !important;
 }
 
 }
+
+
+/* widen nodes slightly for better name fit */
+.landing-page,
+body.tree-page {
+  --tree-card-w: calc(var(--tree-card-w) + 22px);
+  --tree-featured-width: calc(var(--tree-featured-width) + 22px);
+}

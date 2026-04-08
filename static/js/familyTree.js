@@ -41,8 +41,21 @@ function wrapName(text, width) {
   const raw = String(text || "").trim() || "Unknown";
   const words = raw.split(/\s+/).filter(Boolean);
   if (!words.length) return [raw];
-  const maxChars = width >= 160 ? 15 : 12;
+
+  const maxChars = width >= 124 ? 20 : width >= 112 ? 18 : width >= 100 ? 16 : 14;
   const maxLines = 3;
+
+  if (raw.length <= maxChars) return [raw];
+  if (words.length === 2 && raw.length <= maxChars + 2) return [raw];
+
+  if (words.length >= 3) {
+    const firstTwo = `${words[0]} ${words[1]}`;
+    const remaining = words.slice(2).join(" ");
+    if (firstTwo.length <= maxChars + 2 && remaining.length <= maxChars) {
+      return [firstTwo, remaining];
+    }
+  }
+
   const lines = [];
   let current = "";
 
@@ -54,15 +67,20 @@ function wrapName(text, width) {
     }
     if (current) lines.push(current);
     current = word;
+
     if (lines.length === maxLines - 1) break;
   }
+
   if (current && lines.length < maxLines) lines.push(current);
   if (!lines.length) lines.push(raw.slice(0, maxChars));
+
   if (lines.length > maxLines) lines.length = maxLines;
+
   if (words.join(" ").length > lines.join(" ").length) {
     const last = lines[lines.length - 1];
     lines[lines.length - 1] = `${last.slice(0, Math.max(0, last.length - 1)).trim()}…`;
   }
+
   return lines;
 }
 
@@ -77,17 +95,22 @@ function drawPersonCard(parent, person, x, y, metrics) {
   const imageH = Math.max(1, Math.min(height - plateHeight - outerPadTop - 4, Math.round(photoHeight || (height - plateHeight - outerPadTop - 4))));
   const imageX = x + ((width - imageW) / 2);
   const imageY = y + outerPadTop;
-  const textTop = y + height - plateHeight;
+
+  const plateTop = imageY + imageH + 4;
+  const plateBottom = y + height - 8;
   const textCenterX = x + (width / 2);
-  const nameLines = wrapName(person.name, width - 18);
-  const metaFont = clamp(Math.round(width * 0.09), 9, 11);
-  const nameFont = clamp(Math.round(width * 0.112), 12, 16);
+  const nameLines = wrapName(person.name, width - 6);
+  const metaFont = clamp(Math.round(width * 0.085), 8, 10);
+  const nameFont = clamp(Math.round(width * 0.104), 11, 14);
   const lineGap = Math.max(12, Math.round(nameFont * 0.98));
   const yearsText = person.yearsText || "";
   const hasYears = Boolean(yearsText);
-  const yearsY = y + height - Math.max(8, Math.round(plateHeight * 0.14));
   const nameBlockHeight = nameLines.length * lineGap;
-  const nameStartY = textTop + Math.max(11, Math.round((plateHeight - nameBlockHeight - (hasYears ? metaFont + 4 : 0)) * 0.24));
+  const desiredNameStartY = plateTop + 13;
+  const desiredYearsY = desiredNameStartY + nameBlockHeight + (hasYears ? metaFont + 6 : 0);
+  const maxYearsY = plateBottom;
+  const yearsY = hasYears ? Math.min(maxYearsY, desiredYearsY) : plateBottom;
+  const nameStartY = desiredNameStartY;
 
   const g = group(parent, "tree-node-wrap");
 
@@ -142,9 +165,9 @@ function drawPersonCard(parent, person, x, y, metrics) {
 
   const divider = svgEl("line");
   divider.setAttribute("x1", String(x + 12));
-  divider.setAttribute("y1", String(textTop));
+  divider.setAttribute("y1", String(plateTop));
   divider.setAttribute("x2", String(x + width - 12));
-  divider.setAttribute("y2", String(textTop));
+  divider.setAttribute("y2", String(plateTop));
   divider.setAttribute("class", "tree-node-divider");
   g.appendChild(divider);
 
