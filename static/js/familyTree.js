@@ -92,11 +92,11 @@ function drawPersonCard(parent, person, x, y, metrics) {
   const outerPadTop = Math.max(7, Math.round(height * 0.04));
   const plateHeight = Math.max(32, Math.round(bottomPanelHeight || 34));
   const imageW = Math.max(1, Math.min(width - (outerPadX * 2), Math.round(photoWidth || (width - (outerPadX * 2)))));
-  const imageH = Math.max(1, Math.min(height - plateHeight - outerPadTop - 4, Math.round(photoHeight || (height - plateHeight - outerPadTop - 4))));
+  const imageH = Math.max(1, Math.min(height - plateHeight - outerPadTop - 4, Math.round((photoHeight || (height - plateHeight - outerPadTop - 4)) * 1.14)));
   const imageX = x + ((width - imageW) / 2);
   const imageY = y + outerPadTop;
 
-  const plateTop = imageY + imageH + 4;
+  const plateTop = imageY + imageH + 8;
   const plateBottom = y + height - 8;
   const textCenterX = x + (width / 2);
   const nameLines = wrapName(person.name, width - 6);
@@ -106,8 +106,8 @@ function drawPersonCard(parent, person, x, y, metrics) {
   const yearsText = person.yearsText || "";
   const hasYears = Boolean(yearsText);
   const nameBlockHeight = nameLines.length * lineGap;
-  const desiredNameStartY = plateTop + 13;
-  const desiredYearsY = desiredNameStartY + nameBlockHeight + (hasYears ? metaFont + 6 : 0);
+  const desiredNameStartY = plateTop + 17;
+  const desiredYearsY = desiredNameStartY + nameBlockHeight + (hasYears ? metaFont + 8 : 0);
   const maxYearsY = plateBottom;
   const yearsY = hasYears ? Math.min(maxYearsY, desiredYearsY) : plateBottom;
   const nameStartY = desiredNameStartY;

@@ -1,0 +1,78 @@
+
+/* === FINAL PATCH (FORCED + TARGETED) === */
+
+/* HERO TITLE */
+.hero-title, h1 {
+    font-size: clamp(1.7rem, 4vw, 2.2rem) !important;
+    line-height: 1.1 !important;
+    max-width: 75% !important;
+    margin: 0 auto 6px auto !important;
+    text-align: center !important;
+    white-space: normal !important;
+}
+
+/* NAV DROPDOWN */
+.mobile-menu,
+.nav-dropdown,
+.dropdown-menu {
+    background: #e6d6bd !important;
+    width: 125% !important;
+    left: -12.5% !important;
+    position: relative !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25) !important;
+}
+
+/* FAMILY NAME BOX (tighten height) */
+.family-name,
+.family-selector,
+.family-display {
+    padding: 4px 10px !important;
+    line-height: 1.2 !important;
+    font-size: 0.95rem !important;
+}
+
+/* SPEED BUTTONS */
+.speed-controls,
+.speed-row {
+    width: fit-content !important;
+    margin: 0 auto !important;
+    padding: 6px !important;
+    border-radius: 30px !important;
+    background: linear-gradient(145deg, #e6d6bd, #cbb08a) !important;
+    box-shadow:
+        inset 2px 2px 4px rgba(255,255,255,0.6),
+        inset -2px -2px 6px rgba(0,0,0,0.2),
+        0 4px 10px rgba(0,0,0,0.15) !important;
+}
+
+.speed-controls button,
+.speed-row button {
+    border-radius: 20px !important;
+    padding: 6px 14px !important;
+    background: linear-gradient(145deg, #f2e6d2, #c9b08c) !important;
+    box-shadow:
+        inset 1px 1px 2px rgba(255,255,255,0.7),
+        inset -2px -2px 4px rgba(0,0,0,0.25) !important;
+    border: none !important;
+}
+
+/* ACTIVE */
+.speed-controls button.active,
+.speed-row button.active {
+    background: linear-gradient(145deg, #a24e1f, #7a3714) !important;
+    color: #fff !important;
+}
+
+/* NAV BREAKPOINT */
+@media (max-width: 799px) {
+    .nav-links,
+    .family-selector {
+        display: none !important;
+    }
+
+    .hamburger,
+    .menu-toggle {
+        display: flex !important;
+    }
+}

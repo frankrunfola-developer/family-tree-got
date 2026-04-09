@@ -272,9 +272,9 @@ const scaleNum = (value, fallback, min = 1) =>
   const basePhotoH = cfgNum(sizingCfg.PHOTO_H, Math.max(1, baseCardH - baseBottomPanelH));
 
   const cardWidth = scaleNum(baseCardW, baseCardW, 72);
-  const cardHeight = Math.round(scaleNum(baseCardH, baseCardH, 104));
+  const cardHeight = Math.round(scaleNum(baseCardH * 1.15, baseCardH * 1.15, 120));
   const radius = scaleNum(baseRadius, baseRadius, 8);
-  const bottomPanelH = Math.round(scaleNum(baseBottomPanelH, baseBottomPanelH, 30) * 1.04);
+  const bottomPanelH = Math.round(scaleNum(baseBottomPanelH * 1.12, baseBottomPanelH * 1.12, 34) * 1.04);
   const photoW = Math.min(cardWidth, scaleNum(basePhotoW, basePhotoW, 62));
   const photoH = Math.min(cardHeight, scaleNum(basePhotoH, basePhotoH, 62));
   const imageRatio = Math.max(0.40, Math.min(0.82, photoH / cardHeight));

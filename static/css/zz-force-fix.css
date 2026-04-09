@@ -1,0 +1,32 @@
+
+/* === FORCE FIXES (REAL TARGETING) === */
+
+/* HERO TITLE (force all h1 inside hero containers) */
+h1 {
+    font-size: clamp(1.7rem, 4vw, 2.2rem) !important;
+    line-height: 1.1 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+/* tighten spacing */
+h1 + p {
+    margin-top: 6px !important;
+}
+
+/* DROPDOWN NAV FIX */
+.dropdown,
+.nav-dropdown,
+.menu-dropdown {
+    background: #e6d6bd !important;
+    width: 125% !important;
+    max-width: none !important;
+}
+
+/* ensure dropdown container expands */
+.dropdown-container,
+.nav-menu,
+.mobile-menu {
+    width: 125% !important;
+    background: #e6d6bd !important;
+}

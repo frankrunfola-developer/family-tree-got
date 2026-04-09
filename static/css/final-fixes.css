@@ -1,58 +1,624 @@
+/* ===== TARGETED FINAL FIXES ===== */
 
-/* ===== FINAL FIXES ===== */
-
-/* Pill fix */
-.landing-page .summary-card .capsule-earliest-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 18px;
-  min-width: max-content;
-  white-space: nowrap;
+/* Put back the shared parchment/light-brown surface on the navbar + 3 main sections */
+:root {
+  --lam-shared-surface-final: #e7d8b8;
+  --lam-shared-surface-mobile: #eadcc2;
+  --lam-shared-border-final: rgba(167, 129, 84, 0.34);
 }
 
-@media (max-width: 490px) {
-  .landing-page .summary-card .capsule-earliest-pill {
-    padding: 6px 20px;
+body.landing-page header.topbar.raised-card.parchment-card,
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card,
+body.landing-page .map-card.raised-card.parchment-card,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card {
+  background: var(--lam-shared-surface-final) !important;
+  background-image: none !important;
+  border-color: var(--lam-shared-border-final) !important;
+}
+
+body.landing-page header.topbar.raised-card.parchment-card::before,
+body.landing-page header.topbar.raised-card.parchment-card::after,
+body.landing-page .summary-card.raised-card.parchment-card::before,
+body.landing-page .summary-card.raised-card.parchment-card::after,
+body.landing-page .tree-card.raised-card.parchment-card::before,
+body.landing-page .tree-card.raised-card.parchment-card::after,
+body.landing-page .map-card.raised-card.parchment-card::before,
+body.landing-page .map-card.raised-card.parchment-card::after,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card::before,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Main heading: keep requested text, reduce font ~20%, and make it wrap into fewer lines */
+body.landing-page .hero-card h1,
+body.landing-page .hero-title-top {
+  display: block !important;
+  font-size: clamp(1.76rem, 4.15vw, 2.52rem) !important;
+  line-height: 0.90 !important;
+  letter-spacing: -0.02em !important;
+  white-space: normal !important;
+  text-wrap: balance !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  margin: 0 auto !important;
+  max-width: 17ch !important;
+  text-align: center !important;
+}
+
+body.landing-page .hero-copy .subtitle {
+  margin-top: 0.45rem !important;
+}
+
+/* Move summary portrait up a little and tighten the family-name stack */
+body.landing-page .summary-section-head {
+  margin-bottom: 0.3rem !important;
+  padding-bottom: 0.15rem !important;
+}
+
+body.landing-page .capsule-family-name {
+  font-size: clamp(1.62rem, 3.6vw, 2.08rem) !important;
+  line-height: 0.96 !important;
+  margin-top: 0.1rem !important;
+  margin-bottom: 0.18rem !important;
+}
+
+body.landing-page .capsule-portrait-shell {
+  margin: -6px auto 8px !important;
+  padding-top: 10px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Move the landing tree up a little */
+body.landing-page .tree-section-head {
+  margin-bottom: 0.25rem !important;
+  padding-bottom: 0.2rem !important;
+}
+
+body.landing-page .tree-frame,
+body.landing-page .landing-tree-frame,
+body.landing-page .treeCanvas--landing {
+  margin-top: -10px !important;
+}
+
+/* Keep the View Full Tree button in the premium style */
+body.landing-page .tree-full-link-bottom,
+body.landing-page a.tree-full-link.tree-full-link-bottom,
+body.landing-page .tree-card .tree-full-link-bottom {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 176px !important;
+  max-width: calc(100% - 24px) !important;
+  min-height: 50px !important;
+  padding: 0.9rem 1.5rem !important;
+  margin: 14px auto 0 !important;
+  border: 1px solid rgba(103, 46, 19, 0.92) !important;
+  border-radius: 14px !important;
+  color: #fff2df !important;
+  background: linear-gradient(180deg, var(--button-top), var(--button-bottom)) !important;
+  box-shadow:
+    0 3px 8px rgba(87, 44, 18, 0.28),
+    0 2px 0 rgba(255, 217, 172, 0.18) inset,
+    0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+}
+
+/* Keep speed controls engraved and not full width */
+body.landing-page .map-controls {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+body.landing-page .map-speed-control.map-speed-toggle,
+body.landing-page .map-card .map-speed-control {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 8px !important;
+  gap: 8px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #efe4cf, #dcc8a8) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.68),
+    inset 0 -3px 6px rgba(122, 79, 39, 0.14),
+    0 6px 16px rgba(73, 43, 22, 0.10) !important;
+}
+
+body.landing-page .map-speed-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  min-width: 86px !important;
+  padding: 0.85rem 1.1rem !important;
+  border: 1px solid rgba(166, 128, 86, 0.28) !important;
+  border-radius: 16px !important;
+  color: #8b6138 !important;
+  background: linear-gradient(180deg, #f7efdf, #eadac0) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 4px rgba(140, 102, 62, 0.10) !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+body.landing-page .map-speed-btn.is-active {
+  color: #fff4e3 !important;
+  border-color: rgba(103, 46, 19, 0.92) !important;
+  background: linear-gradient(180deg, var(--button-top), var(--button-bottom)) !important;
+  box-shadow:
+    0 3px 8px rgba(87, 44, 18, 0.22),
+    0 2px 0 rgba(255, 217, 172, 0.18) inset,
+    0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
+}
+
+/* Mobile navbar cleanup only at 799 and below */
+@media (max-width: 799px) {
+  body.landing-page header.topbar .topbar-center-nav,
+  body.landing-page header.topbar .topbar-right > .family-switcher {
+    display: none !important;
+  }
+
+  body.landing-page header.topbar .nav-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body.landing-page header.topbar .mobile-nav {
+    width: min(340px, calc(100vw - 28px)) !important;
+    max-width: calc(100vw - 28px) !important;
+    margin: 10px 0 0 auto !important;
+    padding: 10px 10px 8px !important;
+    background: var(--lam-shared-surface-mobile) !important;
+    border: 1px solid rgba(171, 131, 86, 0.24) !important;
+    border-radius: 18px !important;
+    box-shadow:
+      0 14px 30px rgba(61, 38, 18, 0.18),
+      inset 0 1px 0 rgba(255,255,255,0.58) !important;
+  }
+
+  body.landing-page header.topbar .mobile-nav-links {
+    background: transparent !important;
+  }
+
+  body.landing-page header.topbar .mobile-nav-links a {
+    background: rgba(248, 241, 226, 0.92) !important;
+    border: 1px solid rgba(171, 131, 86, 0.20) !important;
+    border-radius: 12px !important;
+    padding: 0.78rem 0.92rem !important;
+  }
+
+  body.landing-page header.topbar .family-switcher-mobile {
+    display: block !important;
+    margin-top: 8px !important;
+    padding-top: 10px !important;
+    background: transparent !important;
+  }
+
+  body.landing-page header.topbar .family-switcher-row {
+    display: grid !important;
+    grid-template-columns: max-content minmax(0, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  body.landing-page header.topbar .family-switcher-mobile .family-switcher-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    padding: 0.52rem 0.7rem !important;
+    border-radius: 12px !important;
+    background: rgba(245, 234, 214, 0.95) !important;
+    font-size: 0.94rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  body.landing-page header.topbar .family-switcher-mobile select {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 0.72rem 1.9rem 0.72rem 0.82rem !important;
+    border-radius: 14px !important;
+    background: #f6ecdb !important;
+    box-sizing: border-box !important;
+    font-size: 1rem !important;
+    line-height: 1.05 !important;
   }
 }
 
-/* Typography ratio */
-.landing-page .summary-card .capsule-ancestor-role {
-  font-size: 0.95rem;
-}
-.landing-page .summary-card .capsule-ancestor-name {
-  font-size: calc(0.95rem * 1.2);
+
+/* === REMOVE SECTION BACKGROUNDS === */
+body.landing-page header.topbar.raised-card.parchment-card,
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card,
+body.landing-page .map-card.raised-card.parchment-card {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
 }
 
-/* Tree */
-.landing-page .tree-card {
-  overflow-x: hidden;
-  display: flex;
-  justify-content: center;
+/* === HERO WIDTH + LESS WRAPPING === */
+body.landing-page .hero-card h1,
+body.landing-page .hero-title-top {
+    max-width: 26ch !important; /* wider so fewer lines */
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem) !important;
 }
 
-.landing-page .tree-card .tree-node {
-  transform: scaleY(1.2);
+
+/* === RESTORE RAISED / ENGRAVED SECTION TREATMENT WITHOUT FILLED BACKGROUNDS === */
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card,
+body.landing-page .map-card.raised-card.parchment-card,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card,
+body.landing-page header.topbar.raised-card.parchment-card {
+    background: transparent !important;
+    background-image: none !important;
+    border: 1px solid rgba(163, 124, 80, 0.34) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 248, 236, 0.55),
+        inset 0 -2px 8px rgba(126, 90, 54, 0.08),
+        0 10px 24px rgba(73, 47, 25, 0.12),
+        0 2px 0 rgba(255, 248, 236, 0.28) !important;
+    backdrop-filter: none !important;
 }
 
-@media (max-width: 620px) {
-  .landing-page .tree-card .tree-node {
-    transform: scale(0.9);
-  }
+body.landing-page .summary-card.raised-card.parchment-card::before,
+body.landing-page .tree-card.raised-card.parchment-card::before,
+body.landing-page .map-card.raised-card.parchment-card::before,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card::before,
+body.landing-page header.topbar.raised-card.parchment-card::before {
+    display: block !important;
+    content: "" !important;
+    position: absolute !important;
+    inset: 8px !important;
+    border-radius: inherit !important;
+    border: 1px solid rgba(255, 245, 225, 0.22) !important;
+    pointer-events: none !important;
 }
 
-@media (max-width: 500px) {
-  .landing-page .tree-card .tree-node {
-    transform: scale(0.8);
-  }
+body.landing-page .summary-card.raised-card.parchment-card::after,
+body.landing-page .tree-card.raised-card.parchment-card::after,
+body.landing-page .map-card.raised-card.parchment-card::after,
+body.landing-page .map-card.map-card-live.raised-card.parchment-card::after,
+body.landing-page header.topbar.raised-card.parchment-card::after {
+    display: none !important;
 }
 
-/* Background + nav */
-.landing-page .topbar {
-  background: linear-gradient(180deg, #c9a97a, #b89563);
+/* Make sure the Migration Map gets the exact same treatment */
+body.landing-page .map-card,
+body.landing-page .map-card.map-card-live {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 248, 236, 0.55),
+        inset 0 -2px 8px rgba(126, 90, 54, 0.08),
+        0 10px 24px rgba(73, 47, 25, 0.12),
+        0 2px 0 rgba(255, 248, 236, 0.28) !important;
 }
 
-.landing-page .parchment-card {
-  background: linear-gradient(180deg, #f4e6cf, #e7d3b0);
+
+/* === STRONGER ENGRAVED + ELEVATED EFFECT === */
+
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card,
+body.landing-page .map-card.raised-card.parchment-card,
+body.landing-page header.topbar.raised-card.parchment-card {
+    border: 1px solid rgba(120, 85, 45, 0.45) !important;
+
+    box-shadow:
+        /* outer elevation */
+        0 14px 32px rgba(60, 38, 18, 0.18),
+        0 3px 8px rgba(60, 38, 18, 0.12),
+
+        /* inner engraved edge */
+        inset 0 1px 0 rgba(255, 248, 236, 0.65),
+        inset 0 -3px 10px rgba(110, 75, 40, 0.15),
+
+        /* subtle edge contrast */
+        inset 0 0 0 1px rgba(255, 240, 210, 0.25) !important;
+}
+
+/* stronger inner highlight frame */
+body.landing-page .summary-card.raised-card.parchment-card::before,
+body.landing-page .tree-card.raised-card.parchment-card::before,
+body.landing-page .map-card.raised-card.parchment-card::before,
+body.landing-page header.topbar.raised-card.parchment-card::before {
+    inset: 6px !important;
+    border: 1px solid rgba(255, 245, 225, 0.35) !important;
+}
+
+/* slight bottom weight for realism */
+body.landing-page .summary-card,
+body.landing-page .tree-card,
+body.landing-page .map-card {
+    position: relative;
+}
+
+body.landing-page .summary-card::after,
+body.landing-page .tree-card::after,
+body.landing-page .map-card::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 10%;
+    width: 80%;
+    height: 12px;
+    background: radial-gradient(ellipse at center, rgba(60,38,18,0.25), transparent 70%);
+    filter: blur(6px);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+
+/* === HERO SUBTITLE SPACING BALANCE === */
+body.landing-page .hero-copy .subtitle {
+    margin-top: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
+}
+
+
+/* === HERO PILLS: BALANCE SPACING WITH SUBTITLE === */
+body.landing-page .hero-mini-icons {
+    margin-top: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
+}
+
+/* tighten any inherited giant side margins if present */
+body.landing-page .hero-copy .hero-mini-icons {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* === TREE CARDS: AGED LOWER PLAQUE / TEXT PANEL LOOK === */
+body.landing-page .tree-node-card,
+body.landing-page .tree-person-card,
+body.landing-page .tree-card-item,
+body.landing-page .tree-feature-card {
+    overflow: visible !important;
+}
+
+body.landing-page .tree-node-card .node-label,
+body.landing-page .tree-node-card .tree-node-meta,
+body.landing-page .tree-person-card .node-label,
+body.landing-page .tree-person-card .tree-node-meta,
+body.landing-page .tree-card-item .node-label,
+body.landing-page .tree-card-item .tree-node-meta,
+body.landing-page .tree-feature-card .node-label,
+body.landing-page .tree-feature-card .tree-node-meta,
+body.landing-page .tree-node-card .person-meta,
+body.landing-page .tree-person-card .person-meta,
+body.landing-page .tree-card-item .person-meta,
+body.landing-page .tree-feature-card .person-meta {
+    position: relative !important;
+    margin-top: 0.18rem !important;
+    padding: 0.42rem 0.42rem 0.5rem !important;
+    border-top: 1px solid rgba(173, 132, 83, 0.22) !important;
+    background:
+        linear-gradient(180deg, rgba(239, 227, 202, 0.96), rgba(223, 203, 169, 0.92)) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 246, 230, 0.75),
+        inset 0 -2px 5px rgba(125, 89, 53, 0.12),
+        0 3px 7px rgba(79, 52, 28, 0.10) !important;
+    border-radius: 0 0 12px 12px !important;
+    overflow: hidden !important;
+}
+
+body.landing-page .tree-node-card .node-label::before,
+body.landing-page .tree-node-card .tree-node-meta::before,
+body.landing-page .tree-person-card .node-label::before,
+body.landing-page .tree-person-card .tree-node-meta::before,
+body.landing-page .tree-card-item .node-label::before,
+body.landing-page .tree-card-item .tree-node-meta::before,
+body.landing-page .tree-feature-card .node-label::before,
+body.landing-page .tree-feature-card .tree-node-meta::before,
+body.landing-page .tree-node-card .person-meta::before,
+body.landing-page .tree-person-card .person-meta::before,
+body.landing-page .tree-card-item .person-meta::before,
+body.landing-page .tree-feature-card .person-meta::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    background:
+        radial-gradient(circle at 18% 24%, rgba(255,255,255,0.18), transparent 26%),
+        radial-gradient(circle at 78% 68%, rgba(147, 110, 70, 0.10), transparent 28%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(133, 101, 68, 0.025) 0,
+            rgba(133, 101, 68, 0.025) 2px,
+            transparent 2px,
+            transparent 6px
+        ) !important;
+    mix-blend-mode: multiply !important;
+    opacity: 0.55 !important;
+}
+
+body.landing-page .tree-node-card .node-label,
+body.landing-page .tree-node-card .tree-node-meta,
+body.landing-page .tree-person-card .node-label,
+body.landing-page .tree-person-card .tree-node-meta,
+body.landing-page .tree-card-item .node-label,
+body.landing-page .tree-card-item .tree-node-meta,
+body.landing-page .tree-feature-card .node-label,
+body.landing-page .tree-feature-card .tree-node-meta,
+body.landing-page .tree-node-card .person-meta,
+body.landing-page .tree-person-card .person-meta,
+body.landing-page .tree-card-item .person-meta,
+body.landing-page .tree-feature-card .person-meta {
+    z-index: 0 !important;
+}
+
+/* ensure text sits above texture */
+body.landing-page .tree-node-card .node-label > *,
+body.landing-page .tree-node-card .tree-node-meta > *,
+body.landing-page .tree-person-card .node-label > *,
+body.landing-page .tree-person-card .tree-node-meta > *,
+body.landing-page .tree-card-item .node-label > *,
+body.landing-page .tree-card-item .tree-node-meta > *,
+body.landing-page .tree-feature-card .node-label > *,
+body.landing-page .tree-feature-card .tree-node-meta > *,
+body.landing-page .tree-node-card .person-meta > *,
+body.landing-page .tree-person-card .person-meta > *,
+body.landing-page .tree-card-item .person-meta > *,
+body.landing-page .tree-feature-card .person-meta > * {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+
+/* === FORCE HERO PILLS POSITION (VISIBLE CHANGE) === */
+body.landing-page .hero-mini-icons {
+    margin-top: 0.4rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* === FORCE TREE CARD HEIGHT INCREASE === */
+body.landing-page .tree-node-card,
+body.landing-page .tree-person-card,
+body.landing-page .tree-card-item,
+body.landing-page .tree-feature-card {
+    min-height: 115% !important;
+}
+
+/* specifically increase inner content spacing so it visually grows */
+body.landing-page .tree-node-card,
+body.landing-page .tree-person-card {
+    padding-bottom: 14px !important;
+}
+
+/* === FORCE LOWER PLAQUE VISUAL (STRONGER) === */
+body.landing-page .tree-node-card .node-label,
+body.landing-page .tree-person-card .node-label,
+body.landing-page .tree-node-card .person-meta,
+body.landing-page .tree-person-card .person-meta {
+    background: linear-gradient(180deg, #f1e6d2, #dcc5a1) !important;
+    border-top: 1px solid rgba(120,85,45,0.35) !important;
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.8),
+        inset 0 -3px 6px rgba(120,85,45,0.2),
+        0 4px 10px rgba(60,40,20,0.15) !important;
+}
+
+/* === CONFLICT FIX: TREE SECTION SHAPE SHOULD MATCH OTHER SECTIONS === */
+body.landing-page .tree-card.raised-card.parchment-card {
+  border-radius: 28px !important;
+  overflow: hidden !important;
+}
+
+body.landing-page .tree-card.raised-card.parchment-card::before {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  inset: 8px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 245, 225, 0.28) !important;
+  pointer-events: none !important;
+}
+
+body.landing-page .tree-section-head,
+body.landing-page .tree-frame.landing-tree-frame,
+body.landing-page .treeCanvas--landing {
+  border-radius: 0 !important;
+}
+
+/* Keep the hero pills/subtitle spacing balanced, using the real selector stack */
+body.landing-page .hero-card .subtitle {
+  margin-bottom: 0.82rem !important;
+}
+
+body.landing-page .hero-mini-icons {
+  margin-top: 0.82rem !important;
+  margin-bottom: 0.82rem !important;
+}
+
+/* Stronger exact overrides for the SVG tree cards */
+body.landing-page #treeSvg .tree-node-card {
+  filter:
+    drop-shadow(0 12px 20px rgba(79, 51, 24, 0.18))
+    drop-shadow(0 4px 10px rgba(79, 51, 24, 0.10)) !important;
+}
+
+body.landing-page #treeSvg .tree-node-photo-frame {
+  filter:
+    drop-shadow(0 6px 10px rgba(79, 51, 24, 0.12)) !important;
+}
+
+body.landing-page #treeSvg .tree-node-divider {
+  opacity: 0.22 !important;
+}
+
+body.landing-page #treeSvg .tree-node-name {
+  font-size: 15px !important;
+}
+
+body.landing-page #treeSvg .tree-node-years {
+  font-size: 12px !important;
+}
+
+
+/* === RESTORE HERO SUBTITLE / PILLS SPACING TO PRIOR LOOK === */
+body.landing-page .hero-card .subtitle,
+body.landing-page .hero-copy .subtitle {
+  margin-top: 0.55rem !important;
+  margin-bottom: 0.55rem !important;
+  line-height: 1.22 !important;
+}
+
+body.landing-page .hero-mini-icons {
+  margin-top: 0.55rem !important;
+  margin-bottom: 0.55rem !important;
+}
+
+
+/* === HERO SECTION BACKGROUND MATCH SITE === */
+body.landing-page .hero-card.raised-card.parchment-card {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: inherit !important;
+}
+
+
+/* === HERO BORDER: MATCH OTHER SECTIONS EXACTLY === */
+body.landing-page .hero-card.raised-card.parchment-card {
+    background: transparent !important;
+    background-image: none !important;
+    border: 1px solid rgba(163, 124, 80, 0.34) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 248, 236, 0.55),
+        inset 0 -2px 8px rgba(126, 90, 54, 0.08),
+        0 10px 24px rgba(73, 47, 25, 0.12),
+        0 2px 0 rgba(255, 248, 236, 0.28) !important;
+    backdrop-filter: none !important;
+    border-radius: 28px !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+body.landing-page .hero-card.raised-card.parchment-card::before {
+    display: block !important;
+    content: "" !important;
+    position: absolute !important;
+    inset: 8px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 245, 225, 0.22) !important;
+    pointer-events: none !important;
+}
+
+body.landing-page .hero-card.raised-card.parchment-card::after {
+    display: none !important;
+    content: none !important;
 }
