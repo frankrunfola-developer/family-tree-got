@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-fixes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-fixes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-premium.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/container-map-surface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/zz-user-fixes.css') }}">
     {% block head_extras %}{% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
@@ -25,14 +28,26 @@
     </main>
     <script>
       (() => {
+        const topbar = document.querySelector('.topbar');
         const toggle = document.querySelector('.nav-toggle');
         const mobileNav = document.querySelector('.mobile-nav');
+
+        const syncTopbar = () => {
+          if (!topbar) return;
+          topbar.classList.toggle('is-scrolled', window.scrollY > 10);
+        };
+
+        syncTopbar();
+        window.addEventListener('scroll', syncTopbar, { passive: true });
+
         if (!toggle || !mobileNav) return;
+
         toggle.addEventListener('click', () => {
           const isOpen = mobileNav.classList.toggle('is-open');
           toggle.classList.toggle('is-open', isOpen);
           toggle.setAttribute('aria-expanded', String(isOpen));
         });
+
         mobileNav.querySelectorAll('a').forEach((link) => {
           link.addEventListener('click', () => {
             mobileNav.classList.remove('is-open');

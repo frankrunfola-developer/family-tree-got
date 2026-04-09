@@ -255,8 +255,11 @@ function makeLayoutMetrics() {
   const viewCfg = TREE_CFG?.view || {};
 
 const vw = Math.max(320, window.innerWidth || 1280);
-const rawScale = vw / 1280;
-const scale = vw <= 520 ? clamp(rawScale, 0.58, 1) : 1;
+const scaleStart = 550;
+const minScale = 0.62;
+const scale = vw >= scaleStart
+  ? 1
+  : clamp(minScale + (((vw - 320) / (scaleStart - 320)) * (1 - minScale)), minScale, 1);
 
 const scaleNum = (value, fallback, min = 1) =>
   Math.max(min, Math.round(cfgNum(value, fallback) * scale));
@@ -269,9 +272,9 @@ const scaleNum = (value, fallback, min = 1) =>
   const basePhotoH = cfgNum(sizingCfg.PHOTO_H, Math.max(1, baseCardH - baseBottomPanelH));
 
   const cardWidth = scaleNum(baseCardW, baseCardW, 72);
-  const cardHeight = Math.round(scaleNum(baseCardH, baseCardH, 92) * 1.02);
+  const cardHeight = Math.round(scaleNum(baseCardH, baseCardH, 104));
   const radius = scaleNum(baseRadius, baseRadius, 8);
-  const bottomPanelH = Math.round(scaleNum(baseBottomPanelH, baseBottomPanelH, 28) * 1.06);
+  const bottomPanelH = Math.round(scaleNum(baseBottomPanelH, baseBottomPanelH, 30) * 1.04);
   const photoW = Math.min(cardWidth, scaleNum(basePhotoW, basePhotoW, 62));
   const photoH = Math.min(cardHeight, scaleNum(basePhotoH, basePhotoH, 62));
   const imageRatio = Math.max(0.40, Math.min(0.82, photoH / cardHeight));

@@ -26,7 +26,7 @@ export const TREE_CFG = {
 
 sizing: {
   CARD_W: 104,
-  CARD_H: 132,
+  CARD_H: 158,
   CARD_R: 12,
   PHOTO_W: 92,
   PHOTO_H: 92,

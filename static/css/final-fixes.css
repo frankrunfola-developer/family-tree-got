@@ -1,0 +1,58 @@
+
+/* ===== FINAL FIXES ===== */
+
+/* Pill fix */
+.landing-page .summary-card .capsule-earliest-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  min-width: max-content;
+  white-space: nowrap;
+}
+
+@media (max-width: 490px) {
+  .landing-page .summary-card .capsule-earliest-pill {
+    padding: 6px 20px;
+  }
+}
+
+/* Typography ratio */
+.landing-page .summary-card .capsule-ancestor-role {
+  font-size: 0.95rem;
+}
+.landing-page .summary-card .capsule-ancestor-name {
+  font-size: calc(0.95rem * 1.2);
+}
+
+/* Tree */
+.landing-page .tree-card {
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.landing-page .tree-card .tree-node {
+  transform: scaleY(1.2);
+}
+
+@media (max-width: 620px) {
+  .landing-page .tree-card .tree-node {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 500px) {
+  .landing-page .tree-card .tree-node {
+    transform: scale(0.8);
+  }
+}
+
+/* Background + nav */
+.landing-page .topbar {
+  background: linear-gradient(180deg, #c9a97a, #b89563);
+}
+
+.landing-page .parchment-card {
+  background: linear-gradient(180deg, #f4e6cf, #e7d3b0);
+}

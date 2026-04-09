@@ -1,0 +1,20 @@
+
+:root {
+  --font-base: 16px;
+  --scale-ratio: 1.2;
+}
+
+body {
+  font-size: var(--font-base);
+}
+
+h1 { font-size: calc(var(--font-base) * 2); }
+h2 { font-size: calc(var(--font-base) * 1.6); }
+
+.landing-page .topbar {
+  background: linear-gradient(180deg, #c9a97a, #b89563);
+}
+
+.landing-page .parchment-card {
+  background: linear-gradient(180deg, #f4e6cf, #e7d3b0);
+}

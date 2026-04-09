@@ -6447,3 +6447,1589 @@ body.tree-page #treeSvg .tree-node-divider {
     box-sizing: border-box !important;
   }
 }
+
+
+
+/* ===== FINAL summary portrait/pill/name hierarchy conflict override ===== */
+@media (max-width: 700px) {
+  .landing-page .summary-card .capsule-portrait-shell,
+  .landing-page .capsule-summary-card .capsule-portrait-shell {
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-oval,
+  .landing-page .capsule-summary-card .capsule-portrait-oval {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    inset: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    padding: 3px !important;
+    box-sizing: border-box !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo-wrap,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    inset: auto !important;
+    width: calc(100% - 6px) !important;
+    height: calc(100% - 6px) !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo,
+  .landing-page .summary-card .capsule-portrait-photo-wrap img,
+  .landing-page .summary-card .capsule-portrait-oval img,
+  .landing-page .capsule-summary-card .capsule-portrait-photo,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap img,
+  .landing-page .capsule-summary-card .capsule-portrait-oval img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    margin: 0 !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    padding: 8px 14px !important;
+    gap: 6px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before {
+    flex: 0 0 auto !important;
+    line-height: 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    font-size: 0.84rem !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-role,
+  .landing-page .capsule-summary-card .capsule-ancestor-role {
+    font-size: 0.70rem !important;
+    line-height: 1.02 !important;
+    text-align: center !important;
+  }
+}
+
+
+/* ===== targeted fix ===== */
+@media (max-width: 700px) {
+  .landing-page .summary-card .capsule-portrait-oval {
+    padding: 1.2px !important; /* tighter sliver */
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-name {
+    font-size: 1.2em !important;
+  }
+}
+
+
+/* ===== Final landing mobile spacing/button consistency overrides ===== */
+@media (max-width: 700px) {
+  .landing-page .page-shell {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-shell,
+  .landing-page .capsule-summary-card .capsule-portrait-shell {
+    padding: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-oval,
+  .landing-page .capsule-summary-card .capsule-portrait-oval {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo-wrap,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap {
+    width: calc(100% - 2px) !important;
+    height: calc(100% - 2px) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo,
+  .landing-page .summary-card .capsule-portrait-photo-wrap img,
+  .landing-page .summary-card .capsule-portrait-oval img,
+  .landing-page .capsule-summary-card .capsule-portrait-photo,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap img,
+  .landing-page .capsule-summary-card .capsule-portrait-oval img {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    min-width: 0 !important;
+    max-width: calc(100% - 12px) !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    box-sizing: border-box !important;
+    gap: 6px !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+  }
+}
+
+.landing-page .btn-primary,
+.landing-page .btn-secondary,
+.landing-page .tree-link-btn,
+.landing-page .tree-full-link-bottom,
+.landing-page .capsule-summary-card .tree-link-btn,
+.landing-page .map-speed-btn,
+.landing-page .map-action-btn {
+  font-size: 0.94rem !important;
+  line-height: 1.1 !important;
+  padding: 0.78rem 1.18rem !important;
+  min-height: 46px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 560px) {
+  .landing-page .btn-primary,
+  .landing-page .btn-secondary,
+  .landing-page .tree-link-btn,
+  .landing-page .tree-full-link-bottom,
+  .landing-page .capsule-summary-card .tree-link-btn,
+  .landing-page .map-speed-btn,
+  .landing-page .map-action-btn {
+    font-size: 0.94rem !important;
+    line-height: 1.1 !important;
+    padding: 0.72rem 1.02rem !important;
+    min-height: 44px !important;
+  }
+}
+
+/* ===== Final micro-mobile summary refinements ===== */
+@media (max-width: 520px) {
+  .landing-page .summary-card .capsule-portrait-shell,
+  .landing-page .capsule-summary-card .capsule-portrait-shell {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    margin: 0 auto 8px !important;
+    padding: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-oval,
+  .landing-page .summary-card .capsule-portrait-photo-wrap,
+  .landing-page .capsule-summary-card .capsule-portrait-oval,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap {
+    width: 120px !important;
+    height: 120px !important;
+    padding: 4px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo-wrap,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap {
+    width: calc(100% - 8px) !important;
+    height: calc(100% - 8px) !important;
+    padding: 0 !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    max-width: calc(100% - 6px) !important;
+    padding: 7px 18px !important;
+    gap: 5px !important;
+    font-size: clamp(0.70rem, 0.56rem + 0.55vw, 0.76rem) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    box-sizing: border-box !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before {
+    font-size: 0.90em !important;
+    flex: 0 0 auto !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(0.96rem, 0.70rem + 1.1vw, 1.08rem) !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.01em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.72rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    font-size: clamp(0.84rem, 0.62rem + 1.3vw, 0.94rem) !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-role,
+  .landing-page .capsule-summary-card .capsule-ancestor-role {
+    font-size: 0.66rem !important;
+  }
+}
+
+/* ===== Frank final summary mobile correction pass ===== */
+@media (max-width: 520px) {
+  .landing-page .summary-card,
+  .landing-page .capsule-summary-card {
+    overflow: hidden !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-shell,
+  .landing-page .capsule-summary-card .capsule-portrait-shell {
+    width: 120px !important;
+    height: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    margin: 4px auto 10px !important;
+    padding: 0 !important;
+    border: 9px solid transparent !important;
+    border-radius: 50% !important;
+    background:
+      linear-gradient(#f4ead7, #f4ead7) padding-box,
+      linear-gradient(135deg, #f0d9a4 0%, #d4af72 34%, #ae8350 66%, #7f5a30 100%) border-box !important;
+    box-shadow:
+      0 5px 14px rgba(73, 49, 24, 0.18),
+      inset 0 1px 2px rgba(255,255,255,0.55) !important;
+    overflow: hidden !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-shell::before,
+  .landing-page .summary-card .capsule-portrait-shell::after,
+  .landing-page .capsule-summary-card .capsule-portrait-shell::before,
+  .landing-page .capsule-summary-card .capsule-portrait-shell::after,
+  .landing-page .summary-card .capsule-portrait-oval,
+  .landing-page .capsule-summary-card .capsule-portrait-oval {
+    display: none !important;
+    content: none !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo-wrap,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-photo,
+  .landing-page .summary-card .capsule-portrait-photo-wrap img,
+  .landing-page .capsule-summary-card .capsule-portrait-photo,
+  .landing-page .capsule-summary-card .capsule-portrait-photo-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    max-width: calc(100% - 10px) !important;
+    padding: 7px 18px !important;
+    gap: 6px !important;
+    font-size: 0.76rem !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.98rem !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.01em !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.72rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    font-size: 0.90rem !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.68rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .landing-page .summary-card .capsule-ancestor-name,
+  .landing-page .capsule-summary-card .capsule-ancestor-name {
+    font-size: 0.84rem !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.64rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+/* ===== FINAL v4 summary hierarchy / pill / CTA consistency fix ===== */
+.landing-page .summary-card,
+.landing-page .capsule-summary-card {
+  --summary-role-size: 0.95rem;
+  --summary-name-size: calc(var(--summary-role-size) * 1.2);
+  --summary-pill-pad-x: 18px;
+  --summary-pill-gap: 8px;
+}
+
+.landing-page .summary-card .capsule-ancestor-role,
+.landing-page .capsule-summary-card .capsule-ancestor-role {
+  font-size: var(--summary-role-size) !important;
+  line-height: 1.12 !important;
+}
+
+.landing-page .summary-card .capsule-ancestor-name,
+.landing-page .capsule-summary-card .capsule-ancestor-name {
+  font-size: var(--summary-name-size) !important;
+  line-height: 1.12 !important;
+}
+
+.landing-page .summary-card .capsule-earliest-pill,
+.landing-page .capsule-summary-card .capsule-earliest-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 8px) !important;
+  padding-left: var(--summary-pill-pad-x) !important;
+  padding-right: var(--summary-pill-pad-x) !important;
+  gap: var(--summary-pill-gap) !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+}
+
+.landing-page .summary-card .capsule-earliest-pill::before,
+.landing-page .capsule-summary-card .capsule-earliest-pill::before {
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+}
+
+.landing-page .summary-card > .btn-primary.wide.tree-link-btn,
+.landing-page .capsule-summary-card > .btn-primary.wide.tree-link-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  max-width: calc(100% - 12px) !important;
+  margin: 10px auto 0 !important;
+  padding: 0.72rem 1.02rem !important;
+  font-size: 0.94rem !important;
+  line-height: 1.1 !important;
+  min-height: 44px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 520px) {
+  .landing-page .summary-card,
+  .landing-page .capsule-summary-card {
+    --summary-role-size: 0.80rem;
+    --summary-name-size: 0.96rem;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.72rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    gap: 7px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .landing-page .summary-card,
+  .landing-page .capsule-summary-card {
+    --summary-role-size: 0.75rem;
+    --summary-name-size: 0.90rem;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.68rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .landing-page .summary-card,
+  .landing-page .capsule-summary-card {
+    --summary-role-size: 0.70rem;
+    --summary-name-size: 0.84rem;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    font-size: 0.64rem !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+/* ===== FINAL v5 conflict-resolution overrides ===== */
+/* Conflicts found: multiple repeated mobile blocks were overriding name/role sizing,
+   pill padding, and summary CTA sizing with equal/near-equal specificity. These are
+   the last rules in the file and intentionally target the exact summary markup. */
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-role,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-role {
+  --summary-role-size-final: 0.84rem;
+  font-size: var(--summary-role-size-final) !important;
+  line-height: 1.08 !important;
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-name,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-name {
+  font-size: calc(var(--summary-role-size-final) * 1.2) !important;
+  line-height: 1.08 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  max-width: calc(100% - 8px) !important;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill::before {
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+}
+
+.landing-page .summary-card > a.btn-primary.wide.tree-link-btn,
+.landing-page .capsule-summary-card > a.btn-primary.wide.tree-link-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  max-width: calc(100% - 12px) !important;
+  margin: 10px auto 0 !important;
+  padding: 0.72rem 1.02rem !important;
+  font-size: 0.94rem !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 520px) {
+  .landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-role,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-role {
+    --summary-role-size-final: 0.80rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    font-size: 0.72rem !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-role,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-role {
+    --summary-role-size-final: 0.74rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    font-size: 0.66rem !important;
+    gap: 7px !important;
+  }
+
+  .landing-page .summary-card > a.btn-primary.wide.tree-link-btn,
+  .landing-page .capsule-summary-card > a.btn-primary.wide.tree-link-btn {
+    font-size: 0.90rem !important;
+    padding: 0.68rem 0.96rem !important;
+  }
+}
+
+/* ===== FINAL v6 summary mobile conflict fix ===== */
+/* The summary card had multiple overlapping mobile rules at 570/520/500 and below.
+   These final selectors target only the exact summary markup and re-establish a
+   hard 1.2 name-to-role ratio plus earlier pill scaling breakpoints. */
+
+.landing-page .summary-card .capsule-portrait-block,
+.landing-page .capsule-summary-card .capsule-portrait-block {
+  --summary-role-size-locked: 0.95rem;
+  --summary-name-size-locked: calc(var(--summary-role-size-locked) * 1.2);
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-role,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-role {
+  font-size: var(--summary-role-size-locked) !important;
+  line-height: 1.12 !important;
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-ancestor-name,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-ancestor-name {
+  font-size: var(--summary-name-size-locked) !important;
+  line-height: 1.12 !important;
+}
+
+.landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+.landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  gap: 8px !important;
+  font-size: 0.84rem !important;
+}
+
+@media (max-width: 570px) {
+  .landing-page .summary-card .capsule-portrait-block,
+  .landing-page .capsule-summary-card .capsule-portrait-block {
+    --summary-role-size-locked: 0.90rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    font-size: 0.78rem !important;
+    gap: 7px !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .landing-page .summary-card .capsule-portrait-block,
+  .landing-page .capsule-summary-card .capsule-portrait-block {
+    --summary-role-size-locked: 0.84rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    font-size: 0.72rem !important;
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-page .summary-card .capsule-portrait-block,
+  .landing-page .capsule-summary-card .capsule-portrait-block {
+    --summary-role-size-locked: 0.78rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    font-size: 0.68rem !important;
+  }
+}
+
+
+/* ===== FINAL v7 summary/mobile conflict fix ===== */
+/* The story grid was being forced to 2 columns at widths where the summary pill
+   no longer had enough room, which made the pill look clipped even when the pill
+   itself was resized. Collapse the landing cards earlier and tighten the pill at
+   the exact breakpoint the user called out. */
+@media (max-width: 490px) {
+  .landing-page .story-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .landing-page .summary-card,
+  .landing-page .tree-card,
+  .landing-page .capsule-summary-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block,
+  .landing-page .capsule-summary-card .capsule-portrait-block {
+    --summary-role-size-locked: 0.82rem;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    max-width: 100% !important;
+    font-size: 0.70rem !important;
+    line-height: 1 !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    gap: 5px !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill i,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill i,
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill svg,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill svg {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    font-size: 0.68rem !important;
+  }
+}
+
+
+/* ===== FINAL v8 keep Summary + Tree on one line AND preserve pill fit ===== */
+/* Do not collapse the story grid on small mobile. Keep two cards side-by-side,
+   but explicitly tighten the summary pill so it still fits inside the narrower card. */
+@media (max-width: 490px) {
+  .landing-page .story-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+
+  .landing-page .summary-card,
+  .landing-page .tree-card,
+  .landing-page .capsule-summary-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: fit-content !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 6px) !important;
+    padding: 5px 9px !important;
+    gap: 4px !important;
+    font-size: 0.62rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    box-sizing: border-box !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill i,
+  .landing-page .capsule-summary-card .capsule-earliest-pill i,
+  .landing-page .summary-card .capsule-earliest-pill svg,
+  .landing-page .capsule-summary-card .capsule-earliest-pill svg {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    font-size: 0.62rem !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .landing-page .story-grid {
+    gap: 10px !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill {
+    max-width: calc(100% - 4px) !important;
+    padding: 5px 8px !important;
+    gap: 4px !important;
+    font-size: 0.58rem !important;
+  }
+
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill i,
+  .landing-page .capsule-summary-card .capsule-earliest-pill i,
+  .landing-page .summary-card .capsule-earliest-pill svg,
+  .landing-page .capsule-summary-card .capsule-earliest-pill svg {
+    font-size: 0.58rem !important;
+  }
+}
+
+
+
+/* ===== FINAL v9 summary + tree mobile fit overrides ===== */
+/* Keep Summary + Tree on one row, add one more pill tighten step at 429px,
+   and neutralize late mobile conflicts without touching img assets. */
+@media (max-width: 490px) {
+  .landing-page .story-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+
+  .landing-page .summary-card,
+  .landing-page .tree-card,
+  .landing-page .capsule-summary-card {
+    min-width: 0 !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill,
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    max-width: calc(100% - 4px) !important;
+    padding: 5px 8px !important;
+    gap: 4px !important;
+    font-size: 0.58rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill i,
+  .landing-page .capsule-summary-card .capsule-earliest-pill i,
+  .landing-page .summary-card .capsule-earliest-pill svg,
+  .landing-page .capsule-summary-card .capsule-earliest-pill svg {
+    font-size: 0.58rem !important;
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 429px) {
+  .landing-page .story-grid {
+    gap: 10px !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-earliest-pill,
+  .landing-page .summary-card .capsule-portrait-block > .capsule-earliest-pill,
+  .landing-page .capsule-summary-card .capsule-portrait-block > .capsule-earliest-pill {
+    max-width: calc(100% - 2px) !important;
+    padding: 4px 7px !important;
+    gap: 3px !important;
+    font-size: 0.54rem !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .landing-page .summary-card .capsule-earliest-pill::before,
+  .landing-page .capsule-summary-card .capsule-earliest-pill::before,
+  .landing-page .summary-card .capsule-earliest-pill i,
+  .landing-page .capsule-summary-card .capsule-earliest-pill i,
+  .landing-page .summary-card .capsule-earliest-pill svg,
+  .landing-page .capsule-summary-card .capsule-earliest-pill svg {
+    font-size: 0.54rem !important;
+  }
+}
+
+/* ===== Tree container darker background ===== */
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing{
+  background: linear-gradient(180deg, rgba(236,220,190,0.96), rgba(214,190,150,0.96)) !important;
+  border-color: rgba(170,140,95,0.75) !important;
+}
+
+/* ===== GLOBAL DARKER THEME ===== */
+.topbar,
+.hero-card.parchment-card,
+.summary-card.parchment-card,
+.tree-card.parchment-card,
+.map-card.parchment-card,
+.tree-page-card.parchment-card,
+.workspace-main.parchment-card,
+.form-card.parchment-card{
+  background: linear-gradient(180deg, rgba(226,204,168,0.98), rgba(198,168,120,0.98)) !important;
+  border-color: rgba(150,120,80,0.8) !important;
+}
+
+/* ===== TREE FULL CONTAINER (REMOVE INNER LOOK) ===== */
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing{
+  background: linear-gradient(180deg, rgba(226,204,168,0.98), rgba(198,168,120,0.98)) !important;
+  border: 1px solid rgba(150,120,80,0.8) !important;
+}
+
+/* remove inner layered effect */
+.landing-page .treeCanvas--landing,
+.landing-page .tree-frame *{
+  background-image: none !important;
+}
+
+/* ===== UNIFY NAV + CARDS + TREE COLOR ===== */
+:root{
+  --unified-parchment: linear-gradient(180deg, rgba(226,204,168,0.98), rgba(198,168,120,0.98));
+  --unified-border: rgba(150,120,80,0.8);
+}
+
+/* apply same background everywhere */
+.topbar,
+.hero-card.parchment-card,
+.summary-card.parchment-card,
+.tree-card.parchment-card,
+.map-card.parchment-card,
+.tree-page-card.parchment-card,
+.workspace-main.parchment-card,
+.form-card.parchment-card,
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing{
+  background: var(--unified-parchment) !important;
+  border-color: var(--unified-border) !important;
+}
+
+/* ===== TREE CLEAN SINGLE SURFACE ===== */
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing{
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* remove any inner panel look completely */
+.landing-page .treeCanvas--landing *,
+.landing-page .tree-frame *{
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* keep node cards intact */
+#treeSvg .tree-node-card,
+#treeSvg .tree-node-photo-frame{
+  background: unset !important;
+}
+
+/* ===== SINGLE UNIFIED SURFACE COLOR ===== */
+:root{
+  --surface-main: linear-gradient(180deg, #e4cfa8, #cfae78);
+}
+
+/* NAV */
+.topbar{
+  background: var(--surface-main) !important;
+}
+
+/* HERO + SUMMARY MAIN */
+.hero-card.parchment-card,
+.summary-card.parchment-card{
+  background: var(--surface-main) !important;
+}
+
+/* SUMMARY INNER ELEMENTS MATCH MAIN */
+.summary-card .parchment-card,
+.summary-card .capsule-summary-card,
+.summary-card .summary-inner,
+.summary-card .capsule-portrait-block{
+  background: transparent !important;
+}
+
+/* TREE: remove inner container look completely */
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing{
+  background: var(--surface-main) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* kill inner tree backgrounds */
+.landing-page .treeCanvas--landing *,
+.landing-page .tree-frame *{
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* ensure tree nodes still render correctly */
+#treeSvg .tree-node-card,
+#treeSvg .tree-node-photo-frame{
+  fill: #f5efe3 !important;
+}
+
+/* ===== FINAL OVERRIDE (HIGHEST PRIORITY FIX) ===== */
+
+/* Force unified surface color */
+.topbar.parchment-card,
+.topbar,
+.landing-page .tree-card.parchment-card,
+.landing-page .tree-frame,
+.landing-page .treeCanvas--landing,
+.landing-page .summary-card.parchment-card {
+  background: linear-gradient(180deg, #e4cfa8, #cfae78) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Kill ALL tree inner layers (strong override) */
+.landing-page .tree-frame *,
+.landing-page .treeCanvas--landing *,
+.landing-page .tree-card * {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Re-apply node visuals AFTER wipe */
+#treeSvg .tree-node-card {
+  fill: #f5efe3 !important;
+  stroke: #c7ab82 !important;
+}
+
+#treeSvg .tree-node-photo-frame {
+  fill: #f6f2ea !important;
+  stroke: #d6cec0 !important;
+}
+
+/* ===== MICRO CONTRAST (premium depth) ===== */
+
+/* cards slightly lighter than surface */
+.summary-card .capsule-portrait-block,
+.summary-card .capsule-summary-card,
+.tree-card .tree-frame,
+.map-card.parchment-card {
+  background: linear-gradient(180deg, #ead7b4, #d8bb8a) !important;
+  box-shadow:
+    0 6px 14px rgba(90,60,30,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.55) !important;
+}
+
+/* navbar slight lift */
+.topbar {
+  box-shadow:
+    0 8px 18px rgba(80,50,20,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.65) !important;
+}
+
+
+/* ===== FINAL v10 unified summary/nav/tree surface ===== */
+/* Competing logic existed from:
+   - .landing-page .parchment-card
+   - .landing-page .capsule-summary-card, .landing-page .tree-card.parchment-card
+   - .treeCanvas--landing, .landing-page .tree-frame
+   - topbar card + pseudo decorations
+   These selectors intentionally target the exact live elements with higher specificity
+   and also clear decorative overlays that were preserving the old lighter look. */
+
+:root{
+  --surface-unified-solid: #e2cc9f;
+  --surface-unified-grad: linear-gradient(180deg, #e6d2a8 0%, #d8bc8b 100%);
+  --surface-card-lift: linear-gradient(180deg, rgba(242,230,204,0.72) 0%, rgba(232,214,180,0.72) 100%);
+}
+
+/* one shared base surface for navbar + summary + tree outer card */
+body.landing-page header.topbar.raised-card.parchment-card,
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card {
+  background: var(--surface-unified-grad) !important;
+  background-color: var(--surface-unified-solid) !important;
+  border-color: rgba(156, 124, 82, 0.42) !important;
+}
+
+/* remove old decorative overlays that keep lighter color visible */
+body.landing-page header.topbar.raised-card.parchment-card::before,
+body.landing-page header.topbar.raised-card.parchment-card::after,
+body.landing-page .summary-card.raised-card.parchment-card::before,
+body.landing-page .summary-card.raised-card.parchment-card::after,
+body.landing-page .tree-card.raised-card.parchment-card::before,
+body.landing-page .tree-card.raised-card.parchment-card::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+}
+
+/* topbar inner structure was keeping older visual treatment alive */
+body.landing-page header.topbar .topbar-inner,
+body.landing-page header.topbar .topbar-left,
+body.landing-page header.topbar .topbar-right,
+body.landing-page header.topbar .brand-mark,
+body.landing-page header.topbar .brand-mark-title,
+body.landing-page header.topbar .desktop-nav {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* tree must visually be one surface with no inset panel */
+body.landing-page .tree-card.raised-card.parchment-card .tree-frame,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas--landing,
+body.landing-page .tree-card.raised-card.parchment-card #treeCanvas {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* remove lingering tree inset pseudo elements */
+body.landing-page .tree-card.raised-card.parchment-card .tree-frame::before,
+body.landing-page .tree-card.raised-card.parchment-card .tree-frame::after,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas::before,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas::after,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas--landing::before,
+body.landing-page .tree-card.raised-card.parchment-card .treeCanvas--landing::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* leave SVG/node visuals alone while making the container itself unified */
+body.landing-page .tree-card.raised-card.parchment-card svg,
+body.landing-page .tree-card.raised-card.parchment-card g,
+body.landing-page .tree-card.raised-card.parchment-card line,
+body.landing-page .tree-card.raised-card.parchment-card image,
+body.landing-page .tree-card.raised-card.parchment-card text,
+body.landing-page .tree-card.raised-card.parchment-card tspan {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* subtle premium depth: inner content surfaces are only slightly lifted */
+body.landing-page .summary-card .capsule-family-card,
+body.landing-page .summary-card .capsule-overview-card {
+  background: var(--surface-card-lift) !important;
+}
+
+body.landing-page .summary-card .capsule-family-card,
+body.landing-page .summary-card .capsule-overview-card,
+body.landing-page .tree-card .tree-frame {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    0 4px 10px rgba(89, 61, 28, 0.06) !important;
+}
+
+/* but the tree should not read as a separate lighter panel */
+body.landing-page .tree-card .tree-frame {
+  box-shadow: none !important;
+}
+
+/* keep nav depth subtle without changing button styling */
+body.landing-page header.topbar.raised-card.parchment-card {
+  box-shadow:
+    0 10px 22px rgba(78, 52, 24, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.42) !important;
+}
+
+/* ===== v11 soften global surface ===== */
+:root{
+  --surface-unified-grad: linear-gradient(180deg, #efe0bf 0%, #e3cfa3 100%) !important;
+  --surface-unified-solid: #e9d8b2 !important;
+}
+
+body.landing-page header.topbar.raised-card.parchment-card,
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card{
+  background: var(--surface-unified-grad) !important;
+  background-color: var(--surface-unified-solid) !important;
+}
+
+/* soften shadows */
+body.landing-page header.topbar.raised-card.parchment-card{
+  box-shadow:
+    0 6px 14px rgba(80,50,20,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.55) !important;
+}
+
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card{
+  box-shadow:
+    0 8px 18px rgba(80,50,20,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.45) !important;
+}
+
+
+/* ===== v12 summary single-surface cleanup + micro separators ===== */
+/* Remove the two inner summary containers so the whole summary reads as one surface. */
+body.landing-page .summary-card .capsule-summary-card,
+body.landing-page .summary-card .capsule-family-card,
+body.landing-page .summary-card .capsule-overview-card,
+body.landing-page .summary-card .capsule-portrait-block {
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.landing-page .summary-card .capsule-summary-card::before,
+body.landing-page .summary-card .capsule-summary-card::after,
+body.landing-page .summary-card .capsule-family-card::before,
+body.landing-page .summary-card .capsule-family-card::after,
+body.landing-page .summary-card .capsule-overview-card::before,
+body.landing-page .summary-card .capsule-overview-card::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep spacing intact after removing inner containers. */
+body.landing-page .summary-card .capsule-summary-shell {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* Micro separators instead of inner panels. */
+body.landing-page .summary-card .capsule-family-card {
+  position: relative !important;
+  padding-bottom: 14px !important;
+  margin-bottom: 2px !important;
+}
+
+body.landing-page .summary-card .capsule-family-card::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 0 !important;
+  height: 1px !important;
+  border: 0 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(161, 125, 82, 0) 0%,
+    rgba(161, 125, 82, 0.22) 18%,
+    rgba(161, 125, 82, 0.32) 50%,
+    rgba(161, 125, 82, 0.22) 82%,
+    rgba(161, 125, 82, 0) 100%
+  ) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.18) !important;
+  pointer-events: none !important;
+}
+
+body.landing-page .summary-card .capsule-overview-card {
+  position: relative !important;
+  padding-top: 2px !important;
+}
+
+/* Optional subtle separator above the metrics area for clearer structure. */
+body.landing-page .summary-card .capsule-overview-card::before {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  left: 10px !important;
+  right: 10px !important;
+  top: -2px !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(161, 125, 82, 0) 0%,
+    rgba(161, 125, 82, 0.12) 20%,
+    rgba(161, 125, 82, 0.20) 50%,
+    rgba(161, 125, 82, 0.12) 80%,
+    rgba(161, 125, 82, 0) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+
+
+/* ===== FINAL CLEAN HEADING SYSTEM v20 ===== */
+/* One source of truth for Summary / Tree / Map heading parity:
+   same top rhythm, separator, title sizing, ornament distance, and tone. */
+
+:root{
+  --lam-heading-color: #7a5533;
+  --lam-heading-subtitle: #9a744c;
+  --lam-heading-ornament: rgba(190,160,120,0.9);
+  --lam-heading-separator: rgba(191,165,124,0.36);
+  --lam-heading-size: 40px;
+  --lam-heading-line-gap: 12px;
+  --lam-heading-subtitle-gap-top: 4px;
+  --lam-heading-subtitle-gap-bottom: 14px;
+  --lam-heading-inline-pad: 1.28rem;
+  --lam-heading-top-pad: 12px;
+  --lam-heading-block-gap: 18px;
+  --lam-card-top-space: 18px;
+}
+
+body.landing-page .summary-card.raised-card.parchment-card,
+body.landing-page .tree-card.raised-card.parchment-card,
+body.landing-page .map-card.raised-card.parchment-card,
+body.landing-page .map-card-live.raised-card.parchment-card {
+  padding-top: var(--lam-card-top-space) !important;
+}
+
+body.landing-page .summary-card .capsule-summary-shell {
+  padding-top: 0 !important;
+}
+
+/* Keep the summary content wrapper simple; the header gets its own shared block now. */
+body.landing-page .summary-card .capsule-family-card {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 0 14px !important;
+  background: transparent !important;
+  text-align: center !important;
+}
+
+/* Shared heading block used by Summary / Tree / Map title areas only. */
+body.landing-page .summary-section-head,
+body.landing-page .tree-section-head,
+body.landing-page .map-header > div:first-child {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: var(--lam-heading-top-pad) 0 0 !important;
+  margin: 0 0 var(--lam-heading-block-gap) 0 !important;
+  background: transparent !important;
+  text-align: center !important;
+}
+
+body.landing-page .map-header {
+  margin: 0 0 var(--lam-heading-block-gap) 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+/* Neutralize legacy summary/tree/map heading wrappers that were owning spacing differently. */
+body.landing-page .capsule-family-card::before,
+body.landing-page .tree-section-head::before,
+body.landing-page .map-header::before,
+body.landing-page .map-header > div:first-child::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Long upper separator with the same offset for all 3 headings. */
+body.landing-page .summary-section-head::before,
+body.landing-page .tree-section-head::before,
+body.landing-page .map-header > div:first-child::before {
+  content: "" !important;
+  display: block !important;
+  width: calc(100% - 56px) !important;
+  height: 1px !important;
+  margin: 0 auto var(--lam-heading-line-gap) auto !important;
+  background: linear-gradient(
+    90deg,
+    rgba(191,165,124,0) 0%,
+    rgba(191,165,124,0.32) 14%,
+    var(--lam-heading-separator) 50%,
+    rgba(191,165,124,0.32) 86%,
+    rgba(191,165,124,0) 100%
+  ) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.14) !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
+
+body.landing-page .capsule-section-title,
+body.landing-page .tree-section-title,
+body.landing-page .map-title-centered,
+body.landing-page .map-header h3,
+body.landing-page .map-card .map-title {
+  position: relative !important;
+  display: inline-block !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 var(--lam-heading-inline-pad) !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-weight: 700 !important;
+  font-size: var(--lam-heading-size) !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  color: var(--lam-heading-color) !important;
+  text-align: center !important;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.6),
+    0 2px 8px rgba(110,76,40,0.10) !important;
+}
+
+body.landing-page .capsule-family-name,
+body.landing-page .tree-section-subtitle,
+body.landing-page .map-subtitle,
+body.landing-page .map-card .subtitle {
+  display: block !important;
+  width: 100% !important;
+  margin-top: var(--lam-heading-subtitle-gap-top) !important;
+  margin-bottom: var(--lam-heading-subtitle-gap-bottom) !important;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-size: 1.18rem !important;
+  font-weight: 500 !important;
+  line-height: 1.04 !important;
+  color: var(--lam-heading-subtitle) !important;
+  text-align: center !important;
+}
+
+body.landing-page .capsule-section-title::before,
+body.landing-page .capsule-section-title::after,
+body.landing-page .tree-section-title::before,
+body.landing-page .tree-section-title::after,
+body.landing-page .map-title-centered::before,
+body.landing-page .map-title-centered::after,
+body.landing-page .map-header h3::before,
+body.landing-page .map-header h3::after,
+body.landing-page .map-card .map-title::before,
+body.landing-page .map-card .map-title::after {
+  content: "✦" !important;
+  position: absolute !important;
+  top: 50% !important;
+  font-size: 0.7rem !important;
+  line-height: 1 !important;
+  color: var(--lam-heading-ornament) !important;
+  text-shadow: none !important;
+}
+
+body.landing-page .capsule-section-title::before,
+body.landing-page .tree-section-title::before,
+body.landing-page .map-title-centered::before,
+body.landing-page .map-header h3::before,
+body.landing-page .map-card .map-title::before {
+  left: 0 !important;
+  transform: translate(-82%, -50%) !important;
+}
+
+body.landing-page .capsule-section-title::after,
+body.landing-page .tree-section-title::after,
+body.landing-page .map-title-centered::after,
+body.landing-page .map-header h3::after,
+body.landing-page .map-card .map-title::after {
+  right: 0 !important;
+  transform: translate(82%, -50%) !important;
+}
+
+/* map controls are not part of the heading height */
+body.landing-page .map-header .map-controls {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 520px) {
+  :root{
+    --lam-heading-size: 40px;
+    --lam-heading-line-gap: 10px;
+    --lam-heading-subtitle-gap-bottom: 12px;
+    --lam-heading-inline-pad: 1.08rem;
+    --lam-heading-top-pad: 10px;
+    --lam-heading-block-gap: 16px;
+  }
+
+  body.landing-page .summary-section-head::before,
+  body.landing-page .tree-section-head::before,
+  body.landing-page .map-header > div:first-child::before {
+    width: calc(100% - 36px) !important;
+  }
+
+  body.landing-page .capsule-family-name,
+  body.landing-page .tree-section-subtitle,
+  body.landing-page .map-subtitle,
+  body.landing-page .map-card .subtitle {
+    font-size: 0.94rem !important;
+  }
+}
+
+
+/* ===== Final landing overrides v19 ===== */
+/* Previous tweaks were being overridden later in this file. These rules are intentionally last. */
+
+:root {
+  --lam-heading-size: 46px;
+}
+
+body.landing-page .capsule-section-title,
+body.landing-page .tree-section-title,
+body.landing-page .map-title-centered,
+body.landing-page .map-header h3,
+body.landing-page .map-card .map-title {
+  font-size: clamp(2rem, 4.3vw, 2.875rem) !important;
+}
+
+body.landing-page .capsule-family-name {
+  font-size: clamp(1.22rem, 2vw, 1.42rem) !important;
+  margin-top: 0.18rem !important;
+  margin-bottom: 0.55rem !important;
+}
+
+body.landing-page .capsule-portrait-block,
+body.landing-page .summary-portrait-block,
+body.landing-page .capsule-portrait-wrap {
+  margin-top: -2px !important;
+}
+
+body.landing-page .capsule-portrait-shell,
+body.landing-page .capsule-portrait-oval {
+  width: clamp(128px, 18vw, 158px) !important;
+  height: clamp(128px, 18vw, 158px) !important;
+}
+
+body.landing-page .map-sequence-kicker {
+  font-size: 0.88rem !important;
+  letter-spacing: 0.16em !important;
+  margin-bottom: 12px !important;
+}
+
+body.landing-page .map-sequence-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  margin: 0 auto 8px !important;
+  box-shadow:
+    0 10px 22px rgba(72, 47, 23, 0.16),
+    inset 0 0 0 3px rgba(255,248,236,0.82) !important;
+}
+
+body.landing-page .map-sequence-name {
+  font-size: 1.26rem !important;
+  line-height: 1.08 !important;
+  margin: 0 0 12px !important;
+}
+
+body.landing-page .map-sequence-copy {
+  padding-bottom: 6px !important;
+}
+
+body.landing-page .tree-full-link-bottom,
+body.landing-page a.tree-full-link.tree-full-link-bottom,
+body.landing-page .tree-card .tree-full-link-bottom {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  width: auto !important;
+  min-width: 152px !important;
+  max-width: calc(100% - 24px) !important;
+  min-height: 46px !important;
+  padding: 0.78rem 1.3rem !important;
+  margin: 12px auto 0 !important;
+  border-radius: 14px !important;
+  font-size: 1rem !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 640px) {
+  body.landing-page .map-sequence-avatar {
+    width: 82px !important;
+    height: 82px !important;
+  }
+
+  body.landing-page .map-sequence-name {
+    font-size: 1.18rem !important;
+    margin-bottom: 10px !important;
+  }
+}
