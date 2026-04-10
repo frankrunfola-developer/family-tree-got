@@ -2,6 +2,142 @@
 {% block title %}Tree | LineAgeMap
 {% endblock %}
 {% block body_class %}landing-page tree-page{% endblock %}
+{% block head_extras %}
+<style>
+  /* Tree page parity override: loaded after the shared CSS stack so it wins. */
+  body.tree-page {
+    --tree-page-surface-top: #efe0bf;
+    --tree-page-surface-bottom: #e3cfa3;
+    --tree-page-border: rgba(156, 124, 82, 0.42);
+  }
+
+  body.tree-page .tree-page-card.raised-card.parchment-card {
+    background: transparent !important;
+    background-image: none !important;
+    border: 1px solid var(--tree-page-border) !important;
+    box-shadow:
+      0 10px 24px rgba(82, 57, 28, 0.10),
+      0 1px 0 rgba(255,255,255,0.58) inset !important;
+  }
+
+  body.tree-page .tree-page-card.raised-card.parchment-card::before,
+  body.tree-page .tree-page-card.raised-card.parchment-card::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
+  body.tree-page .tree-frame--page {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  body.tree-page .treeCanvas--page,
+  body.tree-page .treeCanvas--page > svg {
+    background: transparent !important;
+    background-image: none !important;
+  }
+
+  body.tree-page .treeCanvas--page {
+    border: 0 !important;
+    border-radius: 0 !important;
+    min-height: 560px !important;
+    box-shadow: none !important;
+  }
+
+  body.tree-page #treeDepthToggleBtn,
+  body.tree-page button#treeDepthToggleBtn,
+  body.tree-page .treeToolbar .treeToolbarBtn,
+  body.tree-page .treeToolbar .treeToolbarBtn.btn-primary,
+  body.tree-page .treeToolbar .tree-full-link-bottom {
+    appearance: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    padding: 0.72rem 0.92rem !important;
+    margin: 0 auto !important;
+    border: 1px solid rgba(103, 46, 19, 0.92) !important;
+    border-radius: 14px !important;
+    color: #fff2df !important;
+    background: linear-gradient(180deg, var(--button-top), var(--button-bottom)) !important;
+    box-shadow:
+      0 3px 8px rgba(87, 44, 18, 0.28),
+      0 2px 0 rgba(255, 217, 172, 0.18) inset,
+      0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      filter 0.18s ease !important;
+  }
+
+  body.tree-page #treeDepthToggleBtn:hover,
+  body.tree-page button#treeDepthToggleBtn:hover,
+  body.tree-page .treeToolbar .treeToolbarBtn:hover,
+  body.tree-page .treeToolbar .tree-full-link-bottom:hover {
+    transform: translateY(-1px) !important;
+    box-shadow:
+      0 6px 14px rgba(87, 44, 18, 0.22),
+      0 2px 0 rgba(255, 217, 172, 0.18) inset,
+      0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
+    filter: saturate(1.03) brightness(1.01) !important;
+  }
+
+  body.tree-page #treeDepthToggleBtn:focus-visible,
+  body.tree-page button#treeDepthToggleBtn:focus-visible,
+  body.tree-page .treeToolbar .treeToolbarBtn:focus-visible,
+  body.tree-page .treeToolbar .tree-full-link-bottom:focus-visible {
+    outline: none !important;
+    box-shadow:
+      0 0 0 3px rgba(255, 230, 192, 0.58),
+      0 0 0 5px rgba(118, 69, 30, 0.22),
+      0 6px 14px rgba(87, 44, 18, 0.22),
+      0 2px 0 rgba(255, 217, 172, 0.18) inset,
+      0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
+  }
+
+  body.tree-page .treeToolbar {
+    justify-content: center !important;
+    margin: 0 0 14px !important;
+  }
+
+  body.tree-page #treeSvg .tree-node-card,
+  body.tree-page #treeSvg .tree-node-photo-frame,
+  body.tree-page #treeSvg .tree-node-photo {
+    transition:
+      filter 0.2s ease,
+      opacity 0.2s ease !important;
+  }
+
+  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-card,
+  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-photo-frame {
+    filter: drop-shadow(0 10px 16px rgba(84, 55, 26, 0.16));
+  }
+
+  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-photo {
+    filter: saturate(1.03) contrast(1.02);
+  }
+
+  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-name,
+  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-years {
+    opacity: 0.98;
+  }
+</style>
+{% endblock %}
 {% block content %}
 <section class="tree-page-card raised-card parchment-card">
   <div class="section-head wide-gap tree-page-head" style="text-align:center; justify-content:center;">
@@ -11,7 +147,7 @@
   </div>
 
   <div class="treeToolbar" role="group" aria-label="Tree controls">
-    <button id="treeDepthToggleBtn" class="treeToolbarBtn" type="button">See Full Tree</button>
+    <button id="treeDepthToggleBtn" class="btn-primary wide tree-full-link tree-full-link-bottom treeToolbarBtn" type="button">See Full Tree</button>
   </div>
 
   <div class="tree-frame landing-tree-frame tree-frame--page">

@@ -2,7 +2,7 @@
   "people": [
     {
       "id": "paresh",
-      "name": "Paresh Gupta",
+      "name": "Paresh C. Gupta",
       "born": "1888",
       "died": "1970",
       "photo": "/static/uploads/gupta/paresh.png",
@@ -1240,7 +1240,7 @@
         "lng": 77.5946,
         "label": "Bengaluru, Karnataka, India"
       },
-      "description": "Paresh Chandra Gupta moved from Kolkata, West Bengal, India to Bengaluru, Karnataka, India."
+      "description": "Paresh C. Gupta moved from Kolkata, West Bengal, India to Bengaluru, Karnataka, India."
     },
     {
       "id": "evt_paresh_migration_2",
@@ -1273,7 +1273,7 @@
         "lng": -0.1276,
         "label": "London, England, UK"
       },
-      "description": "Paresh Chandra Gupta moved from Bengaluru, Karnataka, India to London, England, UK."
+      "description": "Paresh C. Gupta moved from Bengaluru, Karnataka, India to London, England, UK."
     },
     {
       "id": "evt_1919_paresh_nilima_marriage",
