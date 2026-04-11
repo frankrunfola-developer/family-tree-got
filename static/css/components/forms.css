@@ -1,0 +1,84 @@
+form label,
+.auth-form label,
+.stack-form label,
+.tree-builder-form label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+form label > span,
+.auth-form label > span,
+.stack-form label > span,
+.tree-builder-form label > span {
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.8rem 0.92rem;
+  border-radius: 16px;
+  border: 1px solid rgba(156, 118, 79, 0.28);
+  color: var(--ink);
+  background: rgba(255, 252, 247, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid rgba(169, 90, 36, 0.16);
+  outline-offset: 2px;
+  border-color: rgba(145, 97, 53, 0.44);
+}
+
+.auth-form,
+.stack-form,
+.tree-builder-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.dashboard-form-head {
+  margin-bottom: 1rem;
+}
+
+.dashboard-mini-title {
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+}
+
+.form-card {
+  display: grid;
+  align-content: start;
+}
+
+.login-pill-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.login-pill-row::-webkit-scrollbar {
+  display: none;
+}
+
+.login-pill-row span {
+  flex: 0 0 auto;
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  background: rgba(255, 249, 240, 0.62);
+  border: 1px solid rgba(160, 122, 84, 0.18);
+}

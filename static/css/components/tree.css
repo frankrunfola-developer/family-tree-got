@@ -1,0 +1,183 @@
+
+.tree-frame {
+  padding: 0.45rem;
+  overflow: hidden;
+}
+#treeSvg circle{display:none;}
+
+.landing-tree-frame {
+  min-height: 420px;
+}
+#treeSvg circle{display:none;}
+
+.dashboard-preview-frame {
+  min-height: 500px;
+}
+#treeSvg circle{display:none;}
+
+.treeCanvas {
+  width: 100%;
+  min-height: 100%;
+}
+#treeSvg circle{display:none;}
+
+.treeCanvas > svg {
+  width: 100%;
+  height: auto;
+}
+#treeSvg circle{display:none;}
+
+.treeToolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+#treeSvg circle{display:none;}
+
+body.tree-page .tree-frame--page {
+  overflow: auto;
+}
+#treeSvg circle{display:none;}
+
+body.tree-page .treeCanvas--page {
+  min-height: 620px;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-connector,
+#treeSvg .tree-connector-parent,
+#treeSvg .tree-connector-child {
+  fill: none;
+  stroke: rgba(166, 109, 57, 0.94);
+  stroke-width: 2.15px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 0 rgba(255, 244, 230, 0.35));
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-card {
+  fill: rgba(254, 248, 237, 0.90);
+  stroke: rgba(154, 116, 74, 0.32);
+  stroke-width: 1.15;
+  filter: drop-shadow(0 8px 16px rgba(77, 45, 18, 0.12));
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-photo-frame {
+  fill: rgba(232, 214, 188, 0.72);
+  stroke: rgba(166, 128, 86, 0.30);
+  stroke-width: 1;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-divider {
+  stroke: rgba(169, 125, 84, 0.24);
+  stroke-width: 1;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-name {
+  fill: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-anchor: middle;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-meta {
+  fill: var(--ink-soft);
+  text-anchor: middle;
+  font-family: var(--font-body);
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-wrap:hover .tree-node-card,
+#treeSvg .tree-node-wrap:hover .tree-node-photo-frame {
+  filter: drop-shadow(0 12px 22px rgba(84, 50, 20, 0.16));
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-photo {
+  transition: filter 160ms ease;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-wrap:hover .tree-node-photo {
+  filter: saturate(1.04) contrast(1.02);
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-edit-btn {
+  cursor: pointer;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-edit-shadow {
+  fill: rgba(81, 50, 24, 0.18);
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-edit-disc {
+  fill: url(#treeNodeAddGradient);
+  stroke: rgba(103, 46, 19, 0.92);
+  stroke-width: 1.4;
+  filter: drop-shadow(0 8px 12px rgba(80, 45, 18, 0.16));
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-edit-ring {
+  fill: none;
+  stroke: rgba(255, 232, 196, 0.48);
+  stroke-width: 1.1;
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-node-edit-glyph,
+#treeSvg .tree-node-edit-nib,
+#treeSvg .tree-node-edit-spark {
+  stroke: #fff2df;
+  stroke-linecap: round;
+  stroke-width: 2;
+  fill: none;
+}
+#treeSvg circle{display:none;}
+
+.person-card {
+  transition: transform 160ms ease, filter 160ms ease;
+}
+#treeSvg circle{display:none;}
+
+.person-card.is-active-map {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 14px 22px rgba(83, 50, 23, 0.12));
+}
+#treeSvg circle{display:none;}
+
+#treeSvg .tree-junction-dot,
+#treeSvg .tree-connector-dot,
+#treeSvg .tree-endpoint-dot,
+#treeSvg [class*="junction-dot"],
+#treeSvg [class*="connector-dot"],
+#treeSvg g[class*="connector"] circle,
+#treeSvg g[class*="family"] circle {
+  display: none !important;
+}
+
+
+.landing-tree-frame {
+  padding-inline: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .landing-tree-frame {
+    padding: 0.45rem 0.28rem 0.55rem;
+  }
+
+  .landing-tree-frame .treeCanvas > svg {
+    width: calc(100% + 0.8rem);
+    max-width: none;
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+  }
+}

@@ -161,12 +161,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!person) return 'Choose a route to begin';
     const label = pairLabel(person);
     const parts = String(label || '').split('→').map((part) => part.trim()).filter(Boolean);
-    if (parts.length < 2) return `<span class="map-route-pill">${escapeHtml(label || '')}</span>`;
+    if (parts.length < 2) {
+      return `
+        <div class="map-route-prefix">Route</div>
+        <div class="map-route-line map-route-line--single">
+          <span class="map-route-pill">${escapeHtml(label || '')}</span>
+        </div>
+      `;
+    }
     return `
-      <span class="map-route-prefix">Route</span>
-      <span class="map-route-pill">${escapeHtml(parts[0])}</span>
-      <span class="map-route-arrow" aria-hidden="true">→</span>
-      <span class="map-route-pill">${escapeHtml(parts[1])}</span>
+      <div class="map-route-prefix">Route</div>
+      <div class="map-route-line">
+        <span class="map-route-pill">${escapeHtml(parts[0])}</span>
+        <span class="map-route-arrow" aria-hidden="true">→</span>
+        <span class="map-route-pill">${escapeHtml(parts[1])}</span>
+      </div>
     `;
   }
 

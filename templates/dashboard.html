@@ -4,13 +4,14 @@
 {% block content %}
 <section class="dashboard-shell">
   <article class="summary-card raised-card parchment-card dashboard-hero-card">
+    <div class="summary-section-head landing-section-header dashboard-summary-head">
+      <p class="eyebrow">Your archive workspace</p>
+      <h1 class="capsule-section-title dashboard-section-title">Summary</h1>
+      <div class="capsule-family-name">{{ tree.family_name.replace(' Family', ' Legacy') }}</div>
+    </div>
+
     <div class="capsule-summary-shell dashboard-summary-shell">
-      <div class="capsule-family-card dashboard-family-card">
-        <div class="summary-section-head landing-section-header">
-          <p class="eyebrow">Your archive workspace</p>
-          <h1 class="capsule-section-title dashboard-section-title">Summary</h1>
-          <div class="capsule-family-name">{{ tree.family_name.replace(' Family', ' Legacy') }}</div>
-        </div>
+      <div class="dashboard-family-card summary-portrait-wrap">
         <div class="capsule-portrait-block">
           <div class="capsule-portrait-shell" aria-hidden="true">
             <div class="capsule-portrait-photo-wrap">

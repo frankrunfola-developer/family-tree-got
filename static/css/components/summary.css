@@ -1,0 +1,452 @@
+.capsule-summary-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.capsule-family-card,
+.capsule-overview-card {
+  padding: 1.15rem;
+}
+
+.landing-section-header {
+  gap: 0.4rem;
+  margin-bottom: 0.95rem;
+}
+
+.capsule-section-title::before,
+.capsule-section-title::after,
+.tree-section-title::before,
+.tree-section-title::after,
+.map-title-centered::before,
+.map-title-centered::after {
+  content: "✦";
+  display: inline-block;
+  margin: 0 0.6rem;
+  color: rgba(185, 147, 94, 0.82);
+  font-size: 0.42em;
+  transform: translateY(-0.18em);
+}
+
+.capsule-family-name,
+.tree-section-subtitle {
+  font-size: 0.96rem;
+}
+
+.capsule-portrait-block {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.6rem;
+}
+
+.capsule-portrait-shell {
+  width: 144px;
+  height: 144px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  padding: 8px;
+  background: linear-gradient(180deg, rgba(216, 187, 135, 0.85), rgba(150, 108, 63, 0.65));
+  box-shadow:
+    0 10px 22px rgba(84, 51, 22, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.capsule-portrait-photo-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 5px solid rgba(255, 247, 234, 0.65);
+  background: rgba(92, 62, 35, 0.18);
+}
+
+.capsule-portrait-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.capsule-ancestor-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.08rem, 2.2vw, 1.34rem);
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.capsule-ancestor-role {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.capsule-earliest-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.36rem 0.76rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--ink);
+  background: rgba(255, 247, 235, 0.62);
+  border: 1px solid rgba(159, 122, 83, 0.18);
+}
+
+.capsule-overview-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.capsule-overview-grid--four-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.capsule-metric-card {
+  --metric-pad-x: clamp(0.38rem, 1.35vw, 0.58rem);
+  --metric-pad-y: clamp(0.5rem, 1.6vw, 0.78rem);
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  justify-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(0.22rem, 0.7vw, 0.5rem);
+  width: 100%;
+  min-width: 0;
+  min-height: 112px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--metric-pad-y) var(--metric-pad-x);
+  border-radius: 20px;
+  background: rgba(255, 251, 246, 0.72);
+  border: 1px solid rgba(159, 122, 83, 0.18);
+  box-shadow:
+    0 10px 18px rgba(91, 56, 30, 0.05),
+    inset 0 1px 0 rgba(255,255,255,0.50);
+}
+
+.capsule-metric-art {
+  width: clamp(24px, 5vw, 36px);
+  height: clamp(24px, 5vw, 36px);
+  opacity: 0.95;
+}
+
+.capsule-metric-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.capsule-metric-value {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 2.1rem);
+  font-weight: 700;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.capsule-metric-label {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(0.62rem, 1.35vw, 0.76rem);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 520px) {
+  .capsule-overview-grid--four-up {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .capsule-family-card,
+  .capsule-overview-card {
+    padding: 0.95rem;
+  }
+
+  .capsule-metric-card {
+    --metric-pad-x: 0.46rem;
+    --metric-pad-y: 0.62rem;
+    min-height: 104px;
+  }
+
+  .capsule-portrait-shell {
+    width: 132px;
+    height: 132px;
+  }
+}
+
+@media (max-width: 680px) {
+  .capsule-family-card,
+  .capsule-overview-card {
+    padding: 0.75rem;
+  }
+
+  .capsule-section-title::before,
+  .capsule-section-title::after,
+  .tree-section-title::before,
+  .tree-section-title::after {
+    margin: 0 0.28rem;
+  }
+
+  .capsule-family-name,
+  .tree-section-subtitle {
+    font-size: 0.92rem;
+  }
+}
+
+
+.capsule-ancestor-name {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+  .capsule-family-card,
+  .capsule-overview-card {
+    padding: 0.62rem;
+  }
+
+  .capsule-section-title {
+    font-size: clamp(1.5rem, 6.2vw, 1.9rem);
+    line-height: 0.92;
+  }
+
+  .capsule-family-name {
+    font-size: 0.82rem;
+  }
+
+  .capsule-portrait-block {
+    gap: 0.45rem;
+  }
+
+  .capsule-portrait-shell {
+    width: 98px;
+    height: 98px;
+    padding: 6px;
+  }
+
+  .capsule-ancestor-name {
+    font-size: 1.06rem;
+    line-height: 1.05;
+    text-align: center;
+  }
+
+  .capsule-ancestor-role {
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+  .capsule-earliest-pill {
+    min-height: 1.8rem;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.68rem;
+    text-align: center;
+  }
+
+  .capsule-overview-grid {
+    gap: 0.65rem;
+  }
+
+  .capsule-metric-card {
+    --metric-pad-x: 0.4rem;
+    --metric-pad-y: 0.56rem;
+    min-height: 96px;
+    gap: 0.28rem;
+    border-radius: 16px;
+  }
+
+  .capsule-metric-art {
+    width: 26px;
+    height: 26px;
+  }
+
+  .capsule-metric-value {
+    font-size: clamp(1.16rem, 6.2vw, 1.72rem);
+  }
+
+  .capsule-metric-label {
+    font-size: 0.64rem;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 460px) {
+  .capsule-family-card,
+  .capsule-overview-card {
+    padding: 0.55rem;
+  }
+
+  .capsule-section-title {
+    font-size: clamp(1.38rem, 6vw, 1.7rem);
+  }
+
+  .capsule-portrait-shell {
+    width: 92px;
+    height: 92px;
+  }
+
+  .capsule-ancestor-name {
+    font-size: 0.98rem;
+  }
+
+  .capsule-earliest-pill {
+    font-size: 0.64rem;
+    padding: 0.24rem 0.48rem;
+  }
+
+  .capsule-metric-card {
+    --metric-pad-x: 0.34rem;
+    --metric-pad-y: 0.5rem;
+    min-height: 90px;
+  }
+
+  .capsule-metric-art {
+    width: 22px;
+    height: 22px;
+  }
+
+  .capsule-metric-value {
+    font-size: clamp(1.06rem, 5.6vw, 1.48rem);
+  }
+
+  .capsule-metric-label {
+    font-size: 0.58rem;
+  }
+}
+
+
+/* Keep summary stat cards even and single-line across sizes */
+.capsule-overview-grid--four-up > .capsule-metric-card {
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 560px) {
+  .capsule-overview-grid--four-up {
+    gap: 0.58rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .capsule-overview-grid--four-up {
+    gap: 0.5rem;
+  }
+
+  .capsule-metric-card {
+    border-radius: 14px;
+  }
+}
+
+
+/* hard override: summary portrait size */
+.capsule-portrait-shell {
+  width: 144px !important;
+  height: 144px !important;
+}
+
+@media (max-width: 900px) {
+  .capsule-portrait-shell {
+    width: 132px !important;
+    height: 132px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .capsule-portrait-shell {
+    width: 98px !important;
+    height: 98px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .capsule-portrait-shell {
+    width: 92px !important;
+    height: 92px !important;
+  }
+}
+
+/* Summary portrait wrapper is intentionally free-floating inside the main card */
+.summary-portrait-wrap {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+
+/* Home summary should match Tree structure: header outside, content frame below */
+.summary-card-head {
+  margin-bottom: 0.95rem;
+  text-align: center;
+}
+
+.summary-family-frame {
+  padding-top: 1rem;
+}
+
+.summary-card .capsule-summary-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.summary-card .capsule-family-name {
+  text-align: center;
+}
+
+
+/* Summary heading should match Tree heading exactly */
+.summary-card-head {
+  text-align: center;
+  margin-bottom: 0.95rem;
+}
+
+.summary-card-head.tree-section-head {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.summary-card-head .tree-section-title,
+.summary-card-head .capsule-section-title {
+  font: inherit;
+  line-height: 0.92;
+}
+
+.summary-family-frame > .capsule-family-name {
+  text-align: center;
+  margin-bottom: 0.7rem;
+  font-size: 0.96rem;
+}
+
+
+/* Summary typography polish */
+.summary-card .capsule-ancestor-name {
+  font-size: clamp(1.18rem, 2.4vw, 1.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2px;
+  /* subtle texture via layered shadows */
+  text-shadow:
+    0 0.5px 0 rgba(255,255,255,0.35),
+    0 1px 1px rgba(92, 62, 35, 0.18);
+}
+
+.summary-card .capsule-ancestor-role {
+  font-size: 0.82rem !important;
+  opacity: 0.85;
+}
+
+/* Ensure inner family name (above portrait) looks like a soft label */
+.summary-card .summary-family-frame > .capsule-family-name {
+  font-size: 0.98rem;
+  opacity: 0.9;
+}

@@ -954,25 +954,13 @@ def dashboard():
     user = current_user()
     if not user:
         return redirect(url_for('login'))
-    family = enrich_family_data(ensure_user_family(user['username']), user['username'])
-    summary = landing_summary_from_family(family)
-    tree_payload = normalize_tree_payload(family, user['username'])
-    family_name = family.get('meta', {}).get('family_name', 'Family Tree')
+    family = ensure_family_loaded()
+    summary = build_landing_payload(user)
     return render_template(
-        'dashboard.html',
-        family=family,
-        tree={
-            'stats': family_stats(family),
-            'family_name': family_name,
-        },
+        'index.html',
         user=user,
         data=summary,
-        family_name=family_name,
-        tree_api_url='/api/current-family/tree',
-        tree_editor_enabled=True,
-        tree_branch_api_url=url_for('api_tree_add_branch'),
-        tree_update_api_url=url_for('api_tree_update_node'),
-        tree_delete_api_url=url_for('api_tree_delete_node'),
+        landing_tree_api_url='/api/current-family/tree',
         mapbox_public_token=MAPBOX_PUBLIC_TOKEN,
     )
 

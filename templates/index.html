@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block content %}
-{% if not user %}
+{% if not user or request.endpoint == 'dashboard' %}
 <section class="hero-card raised-card parchment-card">
   <div class="hero-inner">
     <div class="hero-copy">
-      <h1><span class="hero-title-top">Preserve Your Family's Story Through Space and Time</span></h1>
+      <h1><span class="hero-title-top">Preserve Your Family's Story Across Space and Time</span></h1>
       <p class="subtitle">Map your family&#39;s stories, movements, and generations</p>
       <div class="hero-mini-icons" aria-hidden="true">
         <span>Summary</span>
@@ -34,16 +34,15 @@
 {% endif %}
 
 <section class="story-grid" id="story">
+  {% if not user %}
   <article class="summary-card raised-card parchment-card capsule-summary-card">
+    <div class="tree-section-head">
+      <h2 class="tree-section-title">Summary</h2>
+    </div>
+
     <div class="capsule-summary-shell">
-      <div class="capsule-family-card">
-        <div class="summary-section-head landing-section-header">
-          <h2 class="capsule-section-title">Summary</h2>
-          <div class="capsule-family-name">{{ data.family.name }}</div>
-        </div>
-
-
-
+      <div class="capsule-family-card summary-family-frame">
+        <div class="capsule-family-name">{{ data.family.name }}</div>
         {% set ancestor = data.family.ancestor if data.family and data.family.ancestor else None %}
         {% if ancestor and ancestor.born %}
         {% set earliest_trace = ancestor.born %}
@@ -108,6 +107,7 @@
 
     <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ 'Open Your Tree' if user else data.family.tree_cta }}</a>
   </article>
+  {% endif %}
 
   <article class="tree-card raised-card parchment-card" id="tree">
     <div class="tree-section-head">
@@ -164,7 +164,6 @@
   </section>
 </div>
 
-</div>
 
 {% if user %}
 <div class="tree-builder-modal" id="treeBuilderModal" hidden>
@@ -214,7 +213,6 @@
 </div>
 {% endif %}
 
-</section>
 {% endblock %}
 
 {% block scripts %}
@@ -235,5 +233,5 @@
 </script>
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
 
-<script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>
+<script src="{{ url_for('static', filename='js/landing-mapbox.js') }}?v=20260411-routefix3"></script>
 {% endblock %}

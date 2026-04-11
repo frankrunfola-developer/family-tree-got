@@ -3,8 +3,8 @@ export const TREE_CFG = {
     rankdir: "TB",
     nodesep: 20,
     ranksep: 36,
-    marginx: 6,
-    marginy: 6,
+    marginx: 0,
+    marginy: 0,
   },
 
   layout: {
@@ -25,12 +25,12 @@ export const TREE_CFG = {
   },
 
 sizing: {
-  CARD_W: 104,
-  CARD_H: 158,
+  CARD_W: 116,
+  CARD_H: 176,
   CARD_R: 12,
-  PHOTO_W: 92,
-  PHOTO_H: 92,
-  BOTTOM_PANEL_H: 34,
+  PHOTO_W: 104,
+  PHOTO_H: 104,
+  BOTTOM_PANEL_H: 38,
 },
   view: {
     stackLastGeneration: true,

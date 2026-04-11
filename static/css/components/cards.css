@@ -1,0 +1,128 @@
+.raised-card {
+  box-shadow: var(--surface-shadow-md), 0 0 0 1px rgba(168, 130, 87, 0.18);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.raised-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--surface-shadow-lg), 0 0 0 1px rgba(168, 130, 87, 0.22);
+}
+
+.parchment-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(157, 121, 82, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)),
+    radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 46%),
+    rgba(244, 230, 206, 0.10);
+  backdrop-filter: blur(2px);
+}
+
+.parchment-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,0.05), transparent 18%),
+    radial-gradient(circle at 82% 14%, rgba(169, 114, 56, 0.03), transparent 20%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  opacity: 0.9;
+}
+
+.parchment-card::after {
+  display: none;
+}
+
+.hero-card,
+.summary-card,
+.tree-card,
+.map-card,
+.form-card,
+.login-card,
+.tree-page-card,
+.tree-builder-sheet {
+  padding: clamp(0.9rem, 1.6vw, 1.2rem);
+}
+
+.parchment-inset,
+.capsule-family-card,
+.capsule-overview-card,
+.map-selector-shell,
+.map-sequence-banner,
+.login-demo-card,
+.tree-frame,
+.tree-builder-sheet {
+  position: relative;
+  border-radius: var(--radius-md);
+  border: 0;
+  background: rgba(255, 249, 241, 0.08);
+  box-shadow: 0 8px 20px rgba(85, 52, 25, 0.08);
+}
+
+.dashboard-hero-card {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.dashboard-cta-row,
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.story-grid > .summary-card,
+.story-grid > .tree-card {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .hero-card,
+  .summary-card,
+  .tree-card,
+  .map-card,
+  .form-card,
+  .login-card,
+  .tree-page-card,
+  .tree-builder-sheet {
+    padding: 0.8rem;
+  }
+}
+
+
+.story-grid .btn-primary.wide,
+.story-grid .btn-secondary.wide,
+.story-grid .tree-full-link,
+.story-grid .tree-full-link-bottom {
+  min-height: 2.5rem;
+  padding: 0.56rem 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.05;
+}
+
+.story-grid .btn-primary,
+.story-grid .btn-secondary {
+  max-width: 100%;
+}
+
+/* Summary card: keep the outer premium card, but do not frame the portrait block again */
+.summary-card {
+  box-shadow: var(--surface-shadow-md), 0 0 0 1px rgba(168, 130, 87, 0.18) !important;
+}
+
+.summary-card .summary-portrait-wrap {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+/* Keep Summary as a premium outer card. Only the inner portrait frame is simplified. */
+.summary-card {
+  box-shadow: var(--surface-shadow-md), 0 0 0 1px rgba(168, 130, 87, 0.18) !important;
+}

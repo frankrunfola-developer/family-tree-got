@@ -1,0 +1,82 @@
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  overflow-x: hidden;
+  background: url("../img/parchment-bg.jpg") center top / cover fixed no-repeat;
+  background-color: #ead5b6;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(255, 248, 235, 0.08);
+  opacity: 1;
+}
+
+main, section, article, header, nav {
+  position: relative;
+}
+
+.page-shell,
+.page-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-shell {
+  width: min(100%, var(--page-max-width));
+  margin: 0 auto;
+  padding: 0.3rem 1rem 2rem;
+}
+
+body.authenticated-user .page-shell {
+  padding-bottom: 2.4rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  max-width: 46rem;
+}
+
+.two-up {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.wide {
+  width: 100%;
+}
+
+.flash-stack {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.flash-card {
+  padding: 1rem 1.1rem;
+  font-size: 0.94rem;
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    padding-inline: 0.8rem;
+    padding-top: 0.2rem;
+  }
+
+  .two-up {
+    grid-template-columns: 1fr;
+  }
+}

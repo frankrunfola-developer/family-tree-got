@@ -1,0 +1,123 @@
+.story-grid,
+.dashboard-shell,
+.dashboard-form-grid {
+  display: grid;
+  gap: var(--section-gap);
+}
+
+.story-grid,
+.dashboard-shell {
+  margin-top: var(--section-gap);
+}
+
+.story-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.story-grid > .summary-card,
+.story-grid > .tree-card {
+  min-width: 0;
+  height: 100%;
+}
+
+.map-row {
+  margin-top: var(--section-gap);
+}
+
+.dashboard-shell {
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+}
+
+.dashboard-form-grid {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.section-head,
+.tree-section-head,
+.summary-section-head,
+.map-header {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.section-head.wide-gap {
+  gap: 0.75rem;
+}
+
+.tree-section-head,
+.summary-section-head,
+.map-header {
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.tree-section-title,
+.capsule-section-title,
+.map-title-centered,
+.login-hero-copy h1,
+.hero-title-top,
+.tree-page-head h1 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.96;
+}
+
+.tree-section-title,
+.capsule-section-title,
+.map-title-centered {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+}
+
+.tree-section-subtitle,
+.capsule-family-name {
+  color: var(--ink-soft);
+}
+
+.tree-page-head {
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tree-page-head h1 {
+  font-size: clamp(2.2rem, 4.6vw, 4rem);
+}
+
+@media (max-width: 680px) {
+  .dashboard-shell,
+  .dashboard-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .tree-section-title,
+  .capsule-section-title,
+  .map-title-centered {
+    font-size: clamp(1.7rem, 8vw, 2.35rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .story-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+}
+
+
+@media (max-width: 560px) {
+  .story-grid {
+    gap: 0.4rem;
+  }
+}

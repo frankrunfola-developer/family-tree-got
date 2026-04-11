@@ -1,0 +1,50 @@
+.dashboard-summary-shell {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.dashboard-family-card {
+  min-height: 100%;
+}
+
+.dashboard-cta-row {
+  justify-content: center;
+}
+
+.dashboard-tree-card {
+  display: grid;
+  align-content: start;
+}
+
+.dashboard-tree-card .tree-full-link-bottom {
+  margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-summary-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Summary header sits outside the inner summary shell */
+.dashboard-summary-head {
+  margin-bottom: 0.7rem !important;
+}
+
+.dashboard-summary-shell {
+  margin-top: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem !important;
+  align-items: start !important;
+}
+
+.dashboard-summary-shell > .summary-portrait-wrap {
+  align-self: start;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-summary-shell {
+    grid-template-columns: 1fr !important;
+  }
+}

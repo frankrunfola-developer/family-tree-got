@@ -8,12 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-fixes.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom-fixes.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-premium.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/container-map-surface.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/final-fixes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}?v=20260411-dashboardlanding11">
     {% block head_extras %}{% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}{% if logged_in_user %} authenticated-user{% endif %}">
@@ -27,7 +22,7 @@
       {% block content %}{% endblock %}
     </main>
     <script>
-      (() => {
+      document.addEventListener('DOMContentLoaded', () => {
         const topbar = document.querySelector('.topbar');
         const toggle = document.querySelector('.nav-toggle');
         const mobileNav = document.querySelector('.mobile-nav');
@@ -40,22 +35,56 @@
         syncTopbar();
         window.addEventListener('scroll', syncTopbar, { passive: true });
 
-        if (!toggle || !mobileNav) return;
+        if (!topbar || !toggle || !mobileNav) return;
 
-        toggle.addEventListener('click', () => {
-          const isOpen = mobileNav.classList.toggle('is-open');
-          toggle.classList.toggle('is-open', isOpen);
-          toggle.setAttribute('aria-expanded', String(isOpen));
+        const closeMobileNav = () => {
+          topbar.classList.remove('menu-open');
+          mobileNav.classList.remove('is-open');
+          toggle.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        };
+
+        const openMobileNav = () => {
+          topbar.classList.add('menu-open');
+          mobileNav.classList.add('is-open');
+          toggle.classList.add('is-open');
+          toggle.setAttribute('aria-expanded', 'true');
+        };
+
+        const toggleMobileNav = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const isOpen = topbar.classList.contains('menu-open');
+          if (isOpen) {
+            closeMobileNav();
+          } else {
+            openMobileNav();
+          }
+        };
+
+        toggle.addEventListener('click', toggleMobileNav);
+        toggle.addEventListener('pointerdown', (event) => event.stopPropagation());
+
+        document.addEventListener('click', (event) => {
+          if (!topbar.classList.contains('menu-open')) return;
+          if (mobileNav.contains(event.target) || toggle.contains(event.target)) return;
+          closeMobileNav();
         });
 
-        mobileNav.querySelectorAll('a').forEach((link) => {
-          link.addEventListener('click', () => {
-            mobileNav.classList.remove('is-open');
-            toggle.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
-          });
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 900) closeMobileNav();
         });
-      })();
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') closeMobileNav();
+        });
+
+        mobileNav.querySelectorAll('a, button').forEach((el) => {
+          el.addEventListener('click', () => closeMobileNav());
+        });
+
+        closeMobileNav();
+      });
     </script>
     {% block scripts %}{% endblock %}
   </body>

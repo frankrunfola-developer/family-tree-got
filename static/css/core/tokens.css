@@ -1,0 +1,41 @@
+:root {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Libre Baskerville", Georgia, serif;
+
+  --page-max-width: 1360px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 30px;
+
+  --paper: #f0dfc7;
+  --paper-soft: rgba(246, 235, 218, 0.86);
+  --paper-deep: rgba(237, 221, 196, 0.94);
+  --paper-border: rgba(157, 121, 82, 0.34);
+  --paper-border-strong: rgba(134, 96, 57, 0.48);
+  --paper-highlight: rgba(255, 247, 232, 0.64);
+
+  --ink: #6e4a33;
+  --ink-soft: #8d6a4c;
+  --ink-faint: #ab8866;
+
+  --accent: #a95a24;
+  --accent-dark: #7f3715;
+  --accent-deep: #65260d;
+  --accent-soft: #d8b58e;
+  --gold: #cfab66;
+  --gold-soft: #efdcb3;
+
+  --surface-shadow-sm: 0 4px 12px rgba(73, 44, 18, 0.10);
+  --surface-shadow-md: 0 12px 28px rgba(73, 44, 18, 0.12);
+  --surface-shadow-lg: 0 20px 42px rgba(73, 44, 18, 0.14);
+
+  --button-top: #c56d33;
+  --button-bottom: #9e4d20;
+  --button-border: rgba(106, 47, 18, 0.92);
+
+  --section-gap: clamp(1.25rem, 2vw, 1.9rem);
+  --content-pad: clamp(1rem, 2vw, 1.6rem);
+
+  --map-ocean: #9ec1c6;
+}
