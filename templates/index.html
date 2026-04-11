@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ data.brand }}
 {% endblock %}
-{% block body_class %}landing-page{% endblock %}
+{% block body_class %}landing-page{% if user %} authenticated-home{% endif %}{% endblock %}
 
 {% block head_extras %}
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css">
@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+{% if not user %}
 <section class="hero-card raised-card parchment-card">
   <div class="hero-inner">
     <div class="hero-copy">
@@ -30,6 +31,7 @@
     </div>
   </div>
 </section>
+{% endif %}
 
 <section class="story-grid" id="story">
   <article class="summary-card raised-card parchment-card capsule-summary-card">
@@ -63,7 +65,8 @@
       {% set stats = data.family.stats if data.family and data.family.stats else [] %}
       {% set stat1 = stats[0] if stats|length > 0 else {'value': '—', 'label': 'Members'} %}
       {% set stat2 = stats[1] if stats|length > 1 else {'value': '—', 'label': 'Generations'} %}
-      {% set stat3 = stats[2] if stats|length > 2 else {'value': '170+', 'label': 'Years'} %}
+      {% set stat3_value = data.family.years if data.family and data.family.years else (stats[2].value if stats|length > 2 else '170+') %}
+      {% set stat3 = {'value': stat3_value, 'label': 'Years'} %}
       {% set ns = namespace(migration_count=0) %}
       {% if data.map and data.map.people %}
         {% for person in data.map.people %}
@@ -103,7 +106,7 @@
       </div>
     </div>
 
-    <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ data.family.tree_cta }}</a>
+    <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ 'Open Your Tree' if user else data.family.tree_cta }}</a>
   </article>
 
   <article class="tree-card raised-card parchment-card" id="tree">
@@ -116,7 +119,7 @@
         <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
       </div>
     </div>
-    <a class="btn-primary wide tree-full-link tree-full-link-bottom" href="{{ url_for('tree') }}">View Full Tree</a>
+    <a class="btn-primary wide tree-full-link tree-full-link-bottom" href="{{ url_for('tree') }}">{{ 'Open Your Tree' if user else 'View Full Tree' }}</a>
   </article>
 
   
@@ -128,13 +131,6 @@
     <div class="map-header">
       <div>
         <h3 class="map-title-centered">Migration Map</h3>
-      </div>
-      <div class="map-controls">
-        <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
-          <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
-          <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
-          <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
-        </div>
       </div>
     </div>
 
@@ -150,6 +146,14 @@
 
     <div class="map-frame live-map-frame"><div id="lmMap" class="lm-map"></div></div>
 
+    <div class="map-controls map-controls--below">
+      <div class="map-speed-control map-speed-toggle" id="mapSpeedToggle" role="group" aria-label="Route playback speed">
+        <button class="map-speed-btn is-active" type="button" data-speed="slow">Slow</button>
+        <button class="map-speed-btn" type="button" data-speed="medium">Medium</button>
+        <button class="map-speed-btn" type="button" data-speed="fast">Fast</button>
+      </div>
+    </div>
+
     {% if data.map.legend %}
     <div class="map-legend map-legend-bottom">
       {% for item in data.map.legend %}
@@ -162,6 +166,54 @@
 
 </div>
 
+{% if user %}
+<div class="tree-builder-modal" id="treeBuilderModal" hidden>
+  <article class="tree-builder-sheet raised-card parchment-card">
+    <button class="tree-builder-close" type="button" id="treeBuilderClose" aria-label="Close">✕</button>
+    <div class="tree-builder-head">
+      <p class="eyebrow">Modify the archive</p>
+      <h3>Edit this branch</h3>
+      <p class="subtitle">Update this person, add a photo, grow new children, or remove this branch and all descendants.</p>
+    </div>
+    <form id="treeBuilderForm" class="tree-builder-form">
+      <input type="hidden" name="person_id" id="treeBuilderPersonId">
+      <label>
+        <span>Name</span>
+        <input name="name" id="treeBuilderName" required>
+      </label>
+      <div class="two-up">
+        <label>
+          <span>Birth year</span>
+          <input name="born" id="treeBuilderBorn" inputmode="numeric">
+        </label>
+        <label>
+          <span>Death year</span>
+          <input name="died" id="treeBuilderDied" inputmode="numeric">
+        </label>
+      </div>
+      <label>
+        <span>Photo path</span>
+        <input name="photo" id="treeBuilderPhoto" placeholder="/static/uploads/... or /static/img/...">
+      </label>
+      <label>
+        <span>Number of new children</span>
+        <select name="child_count" id="treeBuilderChildCount">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+      <div class="tree-builder-actions">
+        <button class="btn-primary wide" type="submit">Save Changes</button>
+        <button class="btn-secondary wide" type="button" id="treeBuilderDeleteBtn">Delete Branch</button>
+      </div>
+    </form>
+  </article>
+</div>
+{% endif %}
+
 </section>
 {% endblock %}
 
@@ -172,7 +224,15 @@
 </script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script>window.TREE_API_URL = {{ landing_tree_api_url|tojson }};</script>
+<script>
+  window.TREE_API_URL = {{ landing_tree_api_url|tojson }};
+  window.TREE_EDITOR_ENABLED = {{ (user is not none)|tojson }};
+  {% if user %}
+  window.TREE_BRANCH_API_URL = {{ url_for('api_tree_add_branch')|tojson }};
+  window.TREE_UPDATE_API_URL = {{ url_for('api_tree_update_node')|tojson }};
+  window.TREE_DELETE_API_URL = {{ url_for('api_tree_delete_node')|tojson }};
+  {% endif %}
+</script>
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
 
 <script src="{{ url_for('static', filename='js/landing-mapbox.js') }}"></script>

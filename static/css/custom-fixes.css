@@ -8033,3 +8033,109 @@ body.landing-page .tree-card .tree-full-link-bottom {
     margin-bottom: 10px !important;
   }
 }
+
+
+/* ===== Frank landing fix pack ===== */
+body.landing-page .capsule-overview-card {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+body.landing-page .capsule-overview-grid.capsule-overview-grid--four-up {
+  width: min(100%, 272px) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  justify-items: center !important;
+  justify-content: center !important;
+  column-gap: 12px !important;
+  row-gap: 12px !important;
+}
+
+body.landing-page .capsule-overview-grid.capsule-overview-grid--four-up > .capsule-metric-card {
+  width: 100% !important;
+  max-width: 112px !important;
+  margin: 0 !important;
+  justify-self: center !important;
+}
+
+body.landing-page .summary-card .tree-link-btn,
+body.landing-page .summary-card .tree-full-link-bottom {
+  align-self: center !important;
+}
+
+body.landing-page .tree-frame.landing-tree-frame,
+body.landing-page .treeCanvas--landing,
+body.landing-page #treeCanvas {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+body.landing-page #treeSvg {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body.landing-page .tree-node-edit-btn {
+  cursor: pointer;
+  transform-origin: center;
+  animation: treeEditHeartbeat 1.55s ease-in-out infinite;
+}
+
+body.landing-page .tree-node-edit-shadow,
+body.tree-page .tree-node-edit-shadow {
+  fill: rgba(73, 40, 17, 0.22);
+}
+
+body.landing-page .tree-node-edit-disc,
+body.tree-page .tree-node-edit-disc {
+  fill: url(#treeNodeAddGradient);
+  stroke: rgba(113, 53, 23, 0.72);
+  stroke-width: 1.4;
+}
+
+body.landing-page .tree-node-edit-ring,
+body.tree-page .tree-node-edit-ring {
+  fill: none;
+  stroke: rgba(255, 239, 212, 0.82);
+  stroke-width: 1.2;
+}
+
+body.landing-page .tree-node-edit-glyph,
+body.tree-page .tree-node-edit-glyph {
+  stroke: #fff6eb;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+}
+
+body.landing-page .tree-node-edit-nib,
+body.tree-page .tree-node-edit-nib {
+  fill: #fff2df;
+}
+
+body.landing-page .tree-node-edit-spark,
+body.tree-page .tree-node-edit-spark {
+  fill: rgba(255, 244, 222, 0.92);
+}
+
+@keyframes treeEditHeartbeat {
+  0%, 28%, 100% { transform: scale(1); }
+  12% { transform: scale(1.12); }
+  20% { transform: scale(0.97); }
+  38% { transform: scale(1.08); }
+}
+
+@media (max-width: 560px) {
+  body.landing-page .capsule-overview-grid.capsule-overview-grid--four-up {
+    width: min(100%, 252px) !important;
+  }
+
+  body.landing-page .capsule-overview-grid.capsule-overview-grid--four-up > .capsule-metric-card {
+    max-width: 108px !important;
+  }
+}

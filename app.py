@@ -5,6 +5,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+from datetime import datetime
 from uuid import uuid4
 
 try:
@@ -20,6 +21,12 @@ USERS_PATH = DATA_DIR / 'users.json'
 SAMPLES_DIR = DATA_DIR / 'samples'
 DEMO_FAMILY_PATH = SAMPLES_DIR / 'johnson.json'
 USER_FAMILIES_DIR = BASE_DIR / 'instance' / 'user_families'
+LEGACY_USER_FAMILIES_DIR = DATA_DIR / 'user_families'
+DEFAULT_DEMO_USERS = {
+    'users': [
+        {'username': 'frank', 'password': 'lineagemap', 'name': 'Frank Runfola'}
+    ]
+}
 USER_FAMILIES_DIR.mkdir(parents=True, exist_ok=True)
 
 app = Flask(__name__)
@@ -45,7 +52,10 @@ def slugify(value: str) -> str:
 
 
 def get_users() -> dict:
-    return load_json(USERS_PATH, default={'users': []})
+    users = load_json(USERS_PATH, default=DEFAULT_DEMO_USERS)
+    if not users.get('users'):
+        users = DEFAULT_DEMO_USERS
+    return users
 
 
 def get_user(username: str) -> dict | None:
@@ -66,21 +76,102 @@ def user_family_path(username: str) -> Path:
     return USER_FAMILIES_DIR / f'{username}.json'
 
 
+
+
+def locked_root_person_ids(data: dict) -> list[str]:
+    people = [dict(p) for p in data.get('people', []) if p.get('id')]
+    relationships = list(data.get('relationships', []))
+    if not people:
+        return []
+
+    people_by_id = {str(p['id']): p for p in people}
+    parent_map: dict[str, set[str]] = defaultdict(set)
+    spouse_map: dict[str, set[str]] = defaultdict(set)
+
+    for rel in relationships:
+        if not isinstance(rel, dict):
+            continue
+        if rel.get('type') == 'spouse':
+            a = str(rel.get('a') or '')
+            b = str(rel.get('b') or '')
+            if a in people_by_id and b in people_by_id and a != b:
+                spouse_map[a].add(b)
+                spouse_map[b].add(a)
+            continue
+        parent = str(rel.get('parentId') or rel.get('parent') or '')
+        child = str(rel.get('childId') or rel.get('child') or '')
+        if parent in people_by_id and child in people_by_id and parent != child:
+            parent_map[child].add(parent)
+
+    def sort_key(pid: str):
+        person = people_by_id.get(pid, {})
+        raw = str(person.get('born') or person.get('birth') or '').strip()
+        try:
+            born = int(raw)
+        except Exception:
+            born = 999999
+        return (born, str(person.get('name', '')), pid)
+
+    roots = sorted([pid for pid in people_by_id if not parent_map.get(pid)], key=sort_key)
+    if not roots:
+        roots = sorted(people_by_id.keys(), key=sort_key)
+
+    locked: list[str] = []
+    primary = roots[0]
+    locked.append(primary)
+    spouse_candidates = sorted([pid for pid in spouse_map.get(primary, set()) if pid in roots], key=sort_key)
+    if spouse_candidates:
+        locked.append(spouse_candidates[0])
+    elif len(roots) > 1:
+        locked.append(roots[1])
+    return locked[:2]
+
 def ensure_user_family(username: str) -> dict:
     path = user_family_path(username)
     if not path.exists():
-        demo = load_json(DEMO_FAMILY_PATH, default={})
+        display_name = get_user(username).get('name') if get_user(username) else username.title()
         seeded = {
             'meta': {
-                'family_name': f"{username.title()} Family",
+                'family_name': 'Runfola Family' if username == 'frank' else f"{display_name} Family",
                 'owner_username': username,
-                'profile_name': username.title(),
+                'profile_name': display_name,
                 'profile_photo': '/static/img/placeholder-avatar.png',
-                'description': 'Start with the sample tree, then add your own relatives.'
+                'description': 'A starter family archive with two parents and a few simple migrations to help you test the experience.',
+                'family_id': username,
             },
-            'people': demo.get('people', []),
-            'relationships': demo.get('relationships', []),
-            'events': demo.get('events', []),
+            'people': [
+                {
+                    'id': 'frank_root' if username == 'frank' else slugify(f"{username}_root"),
+                    'name': display_name,
+                    'born': '1985',
+                    'died': '',
+                    'photo': '/static/img/placeholder-avatar.png',
+                    'current_location': {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784},
+                    'migrations': [
+                        {'label': 'Brooklyn, New York, USA', 'lat': 40.6782, 'lng': -73.9442},
+                        {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784},
+                    ],
+                },
+                {
+                    'id': 'frank_partner' if username == 'frank' else slugify(f"{username}_partner"),
+                    'name': 'Partner',
+                    'born': '1987',
+                    'died': '',
+                    'photo': '/static/img/placeholder-avatar.png',
+                    'current_location': {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784},
+                    'migrations': [
+                        {'label': 'Rochester, New York, USA', 'lat': 43.1566, 'lng': -77.6088},
+                        {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784},
+                    ],
+                },
+            ],
+            'relationships': [
+                {'type': 'spouse', 'a': 'frank_root' if username == 'frank' else slugify(f"{username}_root"), 'b': 'frank_partner' if username == 'frank' else slugify(f"{username}_partner")},
+            ],
+            'events': [
+                {'person_id': 'frank_root' if username == 'frank' else slugify(f"{username}_root"), 'label': 'Moved to Buffalo', 'year': '2010', 'location': {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784}},
+                {'person_id': 'frank_partner' if username == 'frank' else slugify(f"{username}_partner"), 'label': 'Moved to Buffalo', 'year': '2011', 'location': {'label': 'Buffalo, New York, USA', 'lat': 42.8864, 'lng': -78.8784}},
+            ],
         }
         save_json(path, seeded)
     return load_json(path, default={})
@@ -187,6 +278,11 @@ def normalize_tree_payload(data: dict, family_id: str | None = None) -> dict:
         person['image'] = person['photo']
         people.append(person)
 
+    locked_ids = set(locked_root_person_ids(data))
+    for person in people:
+        person['locked'] = str(person.get('id')) in locked_ids
+        person['editable'] = not person['locked']
+
     relationships = []
     for rel in data.get('relationships', []):
         if not isinstance(rel, dict):
@@ -207,7 +303,7 @@ def normalize_tree_payload(data: dict, family_id: str | None = None) -> dict:
                 nr['otherParentId'] = str(other)
             relationships.append(nr)
 
-    return {'meta': data.get('meta', {}), 'people': people, 'relationships': relationships, 'events': data.get('events', [])}
+    return {'meta': data.get('meta', {}), 'people': people, 'relationships': relationships, 'events': data.get('events', []), 'locked_ids': list(locked_ids)}
 
 
 def lineage_subset_to_root(data: dict, max_generations: int = 4) -> dict:
@@ -479,6 +575,7 @@ def build_tree_layout(data: dict) -> dict:
         'canvas_height': int(max(280, _num(canvas_height, 420))),
         'people': sorted(safe_people, key=lambda p: (p['y'], p['x'], p['name'])),
         'connectors': safe_connectors,
+        'links': safe_connectors,
         'stats': family_stats(data),
     }
 
@@ -724,13 +821,15 @@ def landing_summary_from_family(data: dict) -> dict:
                 seen_places.add(label)
                 migration_places.append(label)
     start_year = min((int(str(p.get('born')).strip()) for p in people if str(p.get('born', '')).strip().isdigit()), default='')
-    end_year = max((int(str(p.get('died') or p.get('born')).strip()) for p in people if str(p.get('died') or p.get('born') or '').strip().isdigit()), default='')
-    years = f"{start_year}–{end_year}" if start_year and end_year else (str(start_year) if start_year else '')
+    current_year = datetime.now().year
+    years = str(max(0, current_year - start_year)) if start_year else ''
+    migration_count = sum(max(0, len(person.get('migrations', [])) - 1) for person in people)
 
     landing_tree_source = lineage_subset_to_root(data, max_generations=4)
     landing_tree = {
-        'api_url': '/api/current-family/tree?scope=lineage&generations=4'
+        'api_url': '/api/current-family/tree'
     }
+    map_payload = map_people_payload(data)
 
     return {
         'brand': 'LineAgeMap',
@@ -748,6 +847,8 @@ def landing_summary_from_family(data: dict) -> dict:
             'stats': [
                 {'value': stats['members'], 'label': 'Members'},
                 {'value': stats['generations'], 'label': 'Generations'},
+                {'value': years or '—', 'label': 'Years'},
+                {'value': migration_count if migration_count > 0 else '—', 'label': 'Migrations'},
             ],
             'ancestor': ancestor,
         },
@@ -760,6 +861,8 @@ def landing_summary_from_family(data: dict) -> dict:
                 {'kind': 'migration', 'label': 'Migration'},
                 {'kind': 'settlement', 'label': 'Current / Latest'},
             ],
+            'people': map_payload['people'],
+            'places': map_payload['places'],
         },
     }
 
@@ -798,18 +901,20 @@ def map_people_payload(data: dict) -> dict:
 
 @app.context_processor
 def inject_helpers():
-    family_options = [{'id': sid, 'label': sample_family_label(sid)} for sid in sample_family_ids()]
+    logged_in = current_user()
+    family_options = [{'id': sid, 'label': sample_family_label(sid)} for sid in sample_family_ids()] if not logged_in else []
     return {
-        'logged_in_user': current_user(),
+        'logged_in_user': logged_in,
         'family_options': family_options,
-        'current_family_id': selected_family_id(),
+        'current_family_id': selected_family_id() if not logged_in else '',
+        'show_family_switcher': not bool(logged_in),
     }
 
 
 @app.route('/')
 def index():
     user = current_user()
-    family = current_sample_family()
+    family = current_family_payload() if user else current_sample_family()
     data = landing_summary_from_family(family)
     return render_template('index.html', data=data, landing_family=family, user=user, mapbox_public_token=MAPBOX_PUBLIC_TOKEN, landing_tree_api_url='/api/current-family/tree?scope=lineage&generations=4')
 
@@ -835,7 +940,7 @@ def login():
         session['username'] = username
         ensure_user_family(username)
         return redirect(url_for('dashboard'))
-    return render_template('login.html')
+    return render_template('login.html', demo_username='frank', demo_password='lineagemap')
 
 
 @app.route('/logout')
@@ -849,9 +954,27 @@ def dashboard():
     user = current_user()
     if not user:
         return redirect(url_for('login'))
-    family = ensure_user_family(user['username'])
-    tree = build_tree_layout(family)
-    return render_template('dashboard.html', user=user, family=family, tree=tree)
+    family = enrich_family_data(ensure_user_family(user['username']), user['username'])
+    summary = landing_summary_from_family(family)
+    tree_payload = normalize_tree_payload(family, user['username'])
+    family_name = family.get('meta', {}).get('family_name', 'Family Tree')
+    return render_template(
+        'dashboard.html',
+        family=family,
+        tree={
+            'stats': family_stats(family),
+            'family_name': family_name,
+        },
+        user=user,
+        data=summary,
+        family_name=family_name,
+        tree_api_url='/api/current-family/tree',
+        tree_editor_enabled=True,
+        tree_branch_api_url=url_for('api_tree_add_branch'),
+        tree_update_api_url=url_for('api_tree_update_node'),
+        tree_delete_api_url=url_for('api_tree_delete_node'),
+        mapbox_public_token=MAPBOX_PUBLIC_TOKEN,
+    )
 
 
 @app.route('/tree')
@@ -868,7 +991,7 @@ def tree():
         family_id = selected_family_id()
         family = enrich_family_data(load_sample_family(family_id), family_id)
     family_name = family.get('meta', {}).get('family_name', 'Family Tree')
-    return render_template('tree.html', family_name=family_name, tree_api_url='/api/current-family/tree')
+    return render_template('tree.html', family_name=family_name, tree_api_url='/api/current-family/tree', tree_editor_enabled=bool(user), tree_branch_api_url=url_for('api_tree_add_branch'), tree_update_api_url=url_for('api_tree_update_node'), tree_delete_api_url=url_for('api_tree_delete_node'))
 
 
 @app.get('/api/current-family/tree')
@@ -974,6 +1097,182 @@ def add_relationship():
 
     save_user_family(user['username'], family)
     return redirect(url_for('dashboard'))
+
+
+@app.post('/api/tree/add-branch')
+def api_tree_add_branch():
+    user = current_user()
+    if not user:
+        return {'ok': False, 'error': 'login_required'}, 401
+
+    payload = request.get_json(silent=True) or {}
+    parent_id = str(payload.get('parent_id') or '').strip()
+    name = str(payload.get('name') or '').strip()
+    born = str(payload.get('born') or '').strip()
+    died = str(payload.get('died') or '').strip()
+    try:
+        child_count = max(0, min(int(payload.get('child_count') or 0), 8))
+    except Exception:
+        child_count = 0
+
+    if not parent_id or not name:
+        return {'ok': False, 'error': 'missing_required_fields'}, 400
+
+    family = ensure_user_family(user['username'])
+    people = family.setdefault('people', [])
+    relationships = family.setdefault('relationships', [])
+    people_by_id = {str(person.get('id')): person for person in people if person.get('id')}
+    if parent_id not in people_by_id:
+        return {'ok': False, 'error': 'parent_not_found'}, 404
+
+    existing_ids = set(people_by_id.keys())
+
+    def unique_person_id(base_text: str) -> str:
+        person_id = slugify(base_text)
+        base_id = person_id
+        counter = 2
+        while person_id in existing_ids:
+            person_id = f'{base_id}_{counter}'
+            counter += 1
+        existing_ids.add(person_id)
+        return person_id
+
+    def append_person(person_name: str, birth_year: str = '', death_year: str = '') -> str:
+        person_id = unique_person_id(person_name)
+        people.append({
+            'id': person_id,
+            'name': person_name,
+            'born': birth_year,
+            'died': death_year,
+            'photo': '/static/img/placeholder-avatar.png',
+        })
+        return person_id
+
+    new_person_id = append_person(name, born, died)
+    relationships.append({'parent': parent_id, 'child': new_person_id})
+
+    for idx in range(child_count):
+        placeholder_name = f'{name} Child {idx + 1}'
+        placeholder_id = append_person(placeholder_name, '', '')
+        relationships.append({'parent': new_person_id, 'child': placeholder_id})
+
+    save_user_family(user['username'], family)
+    return {'ok': True, 'added_person_id': new_person_id}
+
+
+@app.post('/api/tree/update-node')
+def api_tree_update_node():
+    user = current_user()
+    if not user:
+        return {'ok': False, 'error': 'login_required'}, 401
+
+    payload = request.get_json(silent=True) or {}
+    person_id = str(payload.get('person_id') or '').strip()
+    if not person_id:
+        return {'ok': False, 'error': 'person_required'}, 400
+
+    family = ensure_user_family(user['username'])
+    locked_ids = set(locked_root_person_ids(family))
+    if person_id in locked_ids:
+        return {'ok': False, 'error': 'root_locked'}, 403
+
+    people = family.setdefault('people', [])
+    relationships = family.setdefault('relationships', [])
+    person = next((p for p in people if str(p.get('id')) == person_id), None)
+    if not person:
+        return {'ok': False, 'error': 'person_not_found'}, 404
+
+    name = str(payload.get('name') or '').strip()
+    if name:
+        person['name'] = name
+    person['born'] = str(payload.get('born') or '').strip()
+    person['died'] = str(payload.get('died') or '').strip()
+    person['photo'] = _normalize_photo_path(str(payload.get('photo') or '').strip(), family.get('meta', {}).get('family_id'))
+
+    try:
+        child_count = max(0, min(int(payload.get('child_count') or 0), 8))
+    except Exception:
+        child_count = 0
+
+    existing_ids = {str(p.get('id')) for p in people if p.get('id')}
+
+    def unique_person_id(base_text: str) -> str:
+        person_id_local = slugify(base_text)
+        base_id = person_id_local
+        counter = 2
+        while person_id_local in existing_ids:
+            person_id_local = f'{base_id}_{counter}'
+            counter += 1
+        existing_ids.add(person_id_local)
+        return person_id_local
+
+    for idx in range(child_count):
+        child_name = f"{person.get('name', 'Child')} Child {idx + 1}"
+        child_id = unique_person_id(child_name)
+        people.append({
+            'id': child_id,
+            'name': child_name,
+            'born': '',
+            'died': '',
+            'photo': '/static/img/placeholder-avatar.png',
+        })
+        relationships.append({'parent': person_id, 'child': child_id})
+
+    save_user_family(user['username'], family)
+    return {'ok': True}
+
+
+@app.post('/api/tree/delete-node')
+def api_tree_delete_node():
+    user = current_user()
+    if not user:
+        return {'ok': False, 'error': 'login_required'}, 401
+
+    payload = request.get_json(silent=True) or {}
+    person_id = str(payload.get('person_id') or '').strip()
+    if not person_id:
+        return {'ok': False, 'error': 'person_required'}, 400
+
+    family = ensure_user_family(user['username'])
+    locked_ids = set(locked_root_person_ids(family))
+    if person_id in locked_ids:
+        return {'ok': False, 'error': 'root_locked'}, 403
+
+    people = family.setdefault('people', [])
+    relationships = family.setdefault('relationships', [])
+    people_by_id = {str(p.get('id')): p for p in people if p.get('id')}
+    if person_id not in people_by_id:
+        return {'ok': False, 'error': 'person_not_found'}, 404
+
+    child_map: dict[str, set[str]] = defaultdict(set)
+    for rel in relationships:
+        parent = str(rel.get('parentId') or rel.get('parent') or '')
+        child = str(rel.get('childId') or rel.get('child') or '')
+        if parent and child:
+            child_map[parent].add(child)
+
+    to_remove = set()
+    stack = [person_id]
+    while stack:
+        current = stack.pop()
+        if current in to_remove:
+            continue
+        to_remove.add(current)
+        stack.extend(child_map.get(current, set()))
+
+    people[:] = [p for p in people if str(p.get('id')) not in to_remove]
+    relationships[:] = [
+        rel for rel in relationships
+        if str(rel.get('a') or '') not in to_remove
+        and str(rel.get('b') or '') not in to_remove
+        and str(rel.get('parentId') or rel.get('parent') or '') not in to_remove
+        and str(rel.get('childId') or rel.get('child') or '') not in to_remove
+        and str(rel.get('otherParentId') or '') not in to_remove
+    ]
+    family['events'] = [event for event in family.get('events', []) if str(event.get('person_id') or '') not in to_remove and not set(map(str, event.get('people', []))) & to_remove]
+
+    save_user_family(user['username'], family)
+    return {'ok': True, 'removed_ids': sorted(to_remove)}
 
 
 if __name__ == '__main__':

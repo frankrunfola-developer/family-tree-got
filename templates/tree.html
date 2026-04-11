@@ -4,10 +4,7 @@
 {% block body_class %}landing-page tree-page{% endblock %}
 {% block head_extras %}
 <style>
-  /* Tree page parity override: loaded after the shared CSS stack so it wins. */
   body.tree-page {
-    --tree-page-surface-top: #efe0bf;
-    --tree-page-surface-bottom: #e3cfa3;
     --tree-page-border: rgba(156, 124, 82, 0.42);
   }
 
@@ -27,26 +24,22 @@
     background: none !important;
   }
 
-  body.tree-page .tree-frame--page {
-    background: transparent !important;
-    background-image: none !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    overflow: visible !important;
-    box-shadow: none !important;
-  }
-
+  body.tree-page .tree-frame--page,
   body.tree-page .treeCanvas--page,
   body.tree-page .treeCanvas--page > svg {
     background: transparent !important;
     background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.tree-page .tree-frame--page {
+    overflow: visible !important;
   }
 
   body.tree-page .treeCanvas--page {
-    border: 0 !important;
-    border-radius: 0 !important;
     min-height: 560px !important;
-    box-shadow: none !important;
   }
 
   body.tree-page #treeDepthToggleBtn,
@@ -79,10 +72,7 @@
     text-decoration: none !important;
     white-space: nowrap !important;
     cursor: pointer !important;
-    transition:
-      transform 0.18s ease,
-      box-shadow 0.18s ease,
-      filter 0.18s ease !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
   }
 
   body.tree-page #treeDepthToggleBtn:hover,
@@ -97,19 +87,6 @@
     filter: saturate(1.03) brightness(1.01) !important;
   }
 
-  body.tree-page #treeDepthToggleBtn:focus-visible,
-  body.tree-page button#treeDepthToggleBtn:focus-visible,
-  body.tree-page .treeToolbar .treeToolbarBtn:focus-visible,
-  body.tree-page .treeToolbar .tree-full-link-bottom:focus-visible {
-    outline: none !important;
-    box-shadow:
-      0 0 0 3px rgba(255, 230, 192, 0.58),
-      0 0 0 5px rgba(118, 69, 30, 0.22),
-      0 6px 14px rgba(87, 44, 18, 0.22),
-      0 2px 0 rgba(255, 217, 172, 0.18) inset,
-      0 -3px 0 rgba(71, 25, 10, 0.18) inset !important;
-  }
-
   body.tree-page .treeToolbar {
     justify-content: center !important;
     margin: 0 0 14px !important;
@@ -118,9 +95,7 @@
   body.tree-page #treeSvg .tree-node-card,
   body.tree-page #treeSvg .tree-node-photo-frame,
   body.tree-page #treeSvg .tree-node-photo {
-    transition:
-      filter 0.2s ease,
-      opacity 0.2s ease !important;
+    transition: filter 0.2s ease, opacity 0.2s ease !important;
   }
 
   body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-card,
@@ -132,10 +107,80 @@
     filter: saturate(1.03) contrast(1.02);
   }
 
-  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-name,
-  body.tree-page #treeSvg .tree-node-wrap:hover .tree-node-years {
-    opacity: 0.98;
+  body.tree-page #treeSvg .tree-node-edit-btn {
+    cursor: pointer;
   }
+
+  body.tree-page #treeSvg .tree-node-edit-shadow {
+    fill: rgba(81, 50, 24, 0.22);
+  }
+
+  body.tree-page #treeSvg .tree-node-edit-disc {
+    fill: url(#treeNodeAddGradient);
+    stroke: rgba(103, 46, 19, 0.92);
+    stroke-width: 1.4;
+    filter: drop-shadow(0 8px 12px rgba(80, 45, 18, 0.20));
+    animation: treeNodePulse 2.8s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  body.tree-page #treeSvg .tree-node-edit-glyph {
+    stroke: #fff2df;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  @keyframes treeNodePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .tree-builder-modal[hidden] { display: none !important; }
+  .tree-builder-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(52, 31, 13, 0.28);
+    backdrop-filter: blur(2px);
+  }
+
+  .tree-builder-sheet {
+    width: min(100%, 360px);
+    padding: 18px;
+  }
+
+  .tree-builder-head {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .tree-builder-head h3 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 4px;
+  }
+
+  .tree-builder-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid rgba(103, 46, 19, 0.75);
+    background: linear-gradient(180deg, rgba(255,255,255,0.74), rgba(235,217,189,0.86));
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .tree-builder-form { display: grid; gap: 12px; }
+  .tree-builder-form .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tree-builder-actions { display: flex; justify-content: center; margin-top: 6px; }
 </style>
 {% endblock %}
 {% block content %}
@@ -156,10 +201,63 @@
     </div>
   </div>
 </section>
+
+{% if tree_editor_enabled %}
+<div class="tree-builder-modal" id="treeBuilderModal" hidden>
+  <article class="tree-builder-sheet raised-card parchment-card">
+    <button class="tree-builder-close" type="button" id="treeBuilderClose" aria-label="Close">✕</button>
+    <div class="tree-builder-head">
+      <p class="eyebrow">Modify the archive</p>
+      <h3>Edit this branch</h3>
+      <p class="subtitle">Update this person, add a photo, grow new children, or remove this branch and all descendants.</p>
+    </div>
+    <form id="treeBuilderForm" class="tree-builder-form">
+      <input type="hidden" name="person_id" id="treeBuilderPersonId">
+      <label>
+        <span>Name</span>
+        <input name="name" id="treeBuilderName" required>
+      </label>
+      <div class="two-up">
+        <label>
+          <span>Birth year</span>
+          <input name="born" id="treeBuilderBorn" inputmode="numeric">
+        </label>
+        <label>
+          <span>Death year</span>
+          <input name="died" id="treeBuilderDied" inputmode="numeric">
+        </label>
+      </div>
+      <label>
+        <span>Photo path</span>
+        <input name="photo" id="treeBuilderPhoto" placeholder="/static/uploads/... or /static/img/...">
+      </label>
+      <label>
+        <span>Number of new children</span>
+        <select name="child_count" id="treeBuilderChildCount">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+      <div class="tree-builder-actions">
+        <button class="btn-primary wide" type="submit">Save Changes</button>
+        <button class="btn-secondary wide" type="button" id="treeBuilderDeleteBtn">Delete Branch</button>
+      </div>
+    </form>
+  </article>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script>window.TREE_API_URL = {{ tree_api_url|tojson }};</script>
+<script>
+  window.TREE_API_URL = {{ tree_api_url|tojson }};
+  window.TREE_EDITOR_ENABLED = {{ tree_editor_enabled|tojson }};
+  window.TREE_BRANCH_API_URL = {{ tree_branch_api_url|tojson }};
+  window.TREE_UPDATE_API_URL = {{ tree_update_api_url|tojson }};
+  window.TREE_DELETE_API_URL = {{ tree_delete_api_url|tojson }};
+</script>
 <script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
-
 {% endblock %}

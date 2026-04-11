@@ -1,22 +1,26 @@
 <header class="topbar raised-card parchment-card">
   <div class="topbar-inner">
-    <div class="topbar-left">
-      <a href="{{ url_for('index') }}" class="brand-mark" aria-label="LineAgeMap home">
-        <img src="{{ url_for('static', filename='img/logo-nav.png') }}" alt="LineAgeMap logo" class="nav-logo">
-      </a>
-    </div>
+    <a href="{{ url_for('index') }}" class="brand-mark" aria-label="LineAgeMap home">
+      <img class="nav-logo" src="{{ url_for('static', filename='img/logo-nav.png') }}" alt="LineAgeMap">
+    </a>
 
-    <nav class="desktop-nav topbar-center-nav" aria-label="Primary navigation">
-      <a href="{{ url_for('tree') }}">Tree</a>
+    <div class="topbar-right{% if logged_in_user %} topbar-right-auth{% endif %}">
       {% if logged_in_user %}
-      <a href="{{ url_for('dashboard') }}">Workspace</a>
-      <a href="{{ url_for('logout') }}">Logout</a>
+      <div class="nav-app-links" aria-label="Account links">
+        {% if request.endpoint != 'dashboard' %}<a class="nav-app-link" href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
+        {% if request.endpoint != 'tree' %}<a class="nav-app-link" href="{{ url_for('tree') }}">Tree</a>{% endif %}
+        <a class="nav-app-link nav-app-link-logout" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+      <div class="nav-user-chip" aria-label="Logged in user">
+        <span class="nav-user-icon" aria-hidden="true">👤</span>
+        <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
+      </div>
       {% else %}
-      <a href="{{ url_for('login') }}">Login</a>
-      {% endif %}
-    </nav>
-
-    <div class="topbar-right">
+      <div class="nav-app-links nav-public-links" aria-label="Primary navigation">
+        <a class="nav-app-link" href="{{ url_for('tree') }}">Tree</a>
+        <a class="nav-app-link" href="{{ url_for('login') }}">Login</a>
+      </div>
+      {% if show_family_switcher %}
       <form class="family-switcher" action="{{ url_for('select_family') }}" method="get">
         <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
         <label class="family-switcher-label" for="desktopFamilySelect">Family Demo</label>
@@ -26,6 +30,8 @@
           {% endfor %}
         </select>
       </form>
+      {% endif %}
+      {% endif %}
 
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span>
@@ -36,16 +42,25 @@
   </div>
 
   <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
+    {% if logged_in_user %}
+    <div class="mobile-user-chip">
+      <span class="nav-user-icon" aria-hidden="true">👤</span>
+      <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
+    </div>
+    {% endif %}
+
     <div class="mobile-nav-links">
-      <a href="{{ url_for('tree') }}">🌿 Tree</a>
       {% if logged_in_user %}
-      <a href="{{ url_for('dashboard') }}">👤 Workspace</a>
-      <a href="{{ url_for('logout') }}">↩ Logout</a>
+      {% if request.endpoint != 'dashboard' %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
+      {% if request.endpoint != 'tree' %}<a href="{{ url_for('tree') }}">Tree</a>{% endif %}
+      <a href="{{ url_for('logout') }}">Logout</a>
       {% else %}
-      <a href="{{ url_for('login') }}">🔐 Login</a>
+      <a href="{{ url_for('tree') }}">Tree</a>
+      <a href="{{ url_for('login') }}">Login</a>
       {% endif %}
     </div>
 
+    {% if show_family_switcher %}
     <form class="family-switcher family-switcher-mobile" action="{{ url_for('select_family') }}" method="get">
       <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
       <div class="family-switcher-row">
@@ -57,5 +72,6 @@
         </select>
       </div>
     </form>
+    {% endif %}
   </nav>
 </header>

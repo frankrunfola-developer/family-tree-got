@@ -1,37 +1,79 @@
 {% extends 'base.html' %}
 {% block title %}Workspace | LineAgeMap{% endblock %}
+{% block body_class %}dashboard-mode landing-page{% endblock %}
 {% block content %}
-<section class="workspace-grid">
-  <article class="workspace-main raised-card parchment-card">
-    <div class="section-head workspace-head">
-      <div>
-        <p class="eyebrow">Your archive workspace</p>
-        <h1>{{ tree.family_name }}</h1>
-        <p class="subtitle tight">Manage your people, relationships, and the living archive your family will pass forward.</p>
+<section class="dashboard-shell">
+  <article class="summary-card raised-card parchment-card dashboard-hero-card">
+    <div class="capsule-summary-shell dashboard-summary-shell">
+      <div class="capsule-family-card dashboard-family-card">
+        <div class="summary-section-head landing-section-header">
+          <p class="eyebrow">Your archive workspace</p>
+          <h1 class="capsule-section-title dashboard-section-title">Summary</h1>
+          <div class="capsule-family-name">{{ tree.family_name.replace(' Family', ' Legacy') }}</div>
+        </div>
+        <div class="capsule-portrait-block">
+          <div class="capsule-portrait-shell" aria-hidden="true">
+            <div class="capsule-portrait-photo-wrap">
+              <img class="capsule-portrait-photo" src="{{ family.meta.profile_photo or url_for('static', filename='img/placeholder-avatar.png') }}" alt="">
+            </div>
+          </div>
+          <div class="capsule-ancestor-name">{{ family.meta.profile_name or user.name }}</div>
+          <div class="capsule-ancestor-role">Archive steward</div>
+          <div class="capsule-earliest-pill">Family file: instance/user_families/{{ user.username }}.json</div>
+        </div>
       </div>
-      <a class="btn-secondary small-inline" href="{{ url_for('tree') }}">Open full archive</a>
+
+      <div class="capsule-overview-card">
+        <div class="capsule-overview-grid capsule-overview-grid--four-up">
+          <article class="capsule-metric-card metric-tree">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/tree-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ tree.stats.members }}</div>
+            <div class="capsule-metric-label">Members</div>
+          </article>
+          <article class="capsule-metric-card metric-scroll">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/scroll-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ tree.stats.generations }}</div>
+            <div class="capsule-metric-label">Generations</div>
+          </article>
+          <article class="capsule-metric-card metric-hourglass">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/hourglass-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ tree.stats.couples }}</div>
+            <div class="capsule-metric-label">Couples</div>
+          </article>
+          <article class="capsule-metric-card metric-globe">
+            <div class="capsule-metric-art" aria-hidden="true"><img src="{{ url_for('static', filename='img/ui/globe-custom.png') }}" alt=""></div>
+            <div class="capsule-metric-value">{{ tree.stats.relationships }}</div>
+            <div class="capsule-metric-label">Parent Links</div>
+          </article>
+        </div>
+      </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-chip"><strong>{{ tree.stats.members }}</strong><span>Members</span></div>
-      <div class="stat-chip"><strong>{{ tree.stats.generations }}</strong><span>Generations</span></div>
-      <div class="stat-chip"><strong>{{ tree.stats.couples }}</strong><span>Couples</span></div>
-      <div class="stat-chip"><strong>{{ tree.stats.relationships }}</strong><span>Parent Links</span></div>
-    </div>
-
-    <div class="workspace-preview parchment-inset">
-      <div class="section-head">
-        <h3>Live archive preview</h3>
-      </div>
-      <div class="tree-frame preview-frame">
-        {% include '_tree_canvas.html' %}
-      </div>
+    <div class="dashboard-cta-row">
+      <a class="btn-primary" href="{{ url_for('tree') }}">Open your tree</a>
+      <a class="btn-secondary hero-cta-secondary" href="{{ url_for('index') }}#journey">Open migration map</a>
     </div>
   </article>
 
-  <aside class="workspace-side">
+  <article class="tree-card raised-card parchment-card dashboard-tree-card">
+    <div class="tree-section-head">
+      <h2 class="tree-section-title">Tree</h2>
+      <p class="tree-section-subtitle">Live archive preview</p>
+    </div>
+    <div class="tree-frame landing-tree-frame dashboard-preview-frame">
+      <div id="treeCanvas" class="treeCanvas treeCanvas--landing" data-tree-api-url="{{ tree_api_url }}">
+        <svg id="treeSvg" role="img" aria-label="Family tree diagram"></svg>
+      </div>
+    </div>
+    <a class="btn-primary wide tree-full-link tree-full-link-bottom" href="{{ url_for('tree') }}">View full tree</a>
+  </article>
+
+  <section class="dashboard-form-grid">
     <section class="form-card raised-card parchment-card">
-      <h3>Update profile</h3>
+      <div class="tree-section-head dashboard-form-head">
+        <h3 class="tree-section-title dashboard-mini-title">Update profile</h3>
+        <p class="tree-section-subtitle">Keep your archive identity current.</p>
+      </div>
       <form method="post" action="{{ url_for('update_profile') }}" class="stack-form">
         <label><span>Display name</span><input name="profile_name" value="{{ family.meta.profile_name }}"></label>
         <label><span>Family name</span><input name="family_name" value="{{ family.meta.family_name }}"></label>
@@ -41,7 +83,10 @@
     </section>
 
     <section class="form-card raised-card parchment-card">
-      <h3>Add person</h3>
+      <div class="tree-section-head dashboard-form-head">
+        <h3 class="tree-section-title dashboard-mini-title">Add person</h3>
+        <p class="tree-section-subtitle">Create a new person in the archive.</p>
+      </div>
       <form method="post" action="{{ url_for('add_person') }}" class="stack-form">
         <label><span>Name</span><input name="name" required></label>
         <label><span>Custom ID</span><input name="person_id" placeholder="optional"></label>
@@ -49,13 +94,16 @@
           <label><span>Born</span><input name="born"></label>
           <label><span>Died</span><input name="died"></label>
         </div>
-        <label><span>Photo path</span><input name="photo" placeholder="/static/uploads/... or /static/img/..." ></label>
+        <label><span>Photo path</span><input name="photo" placeholder="/static/uploads/... or /static/img/..."></label>
         <button class="btn-primary wide" type="submit">Add person</button>
       </form>
     </section>
 
     <section class="form-card raised-card parchment-card">
-      <h3>Add relationship</h3>
+      <div class="tree-section-head dashboard-form-head">
+        <h3 class="tree-section-title dashboard-mini-title">Add relationship</h3>
+        <p class="tree-section-subtitle">Connect people without leaving the workspace.</p>
+      </div>
       <form method="post" action="{{ url_for('add_relationship') }}" class="stack-form">
         <label>
           <span>Relationship type</span>
@@ -79,11 +127,53 @@
         <button class="btn-primary wide" type="submit">Add relationship</button>
       </form>
     </section>
-
-    <section class="form-card raised-card parchment-card">
-      <h3>Archive file</h3>
-      <p class="subtitle tight">Your archive saves to <code>data/user_families/{{ user.username }}.json</code>.</p>
-    </section>
-  </aside>
+  </section>
 </section>
+
+{% if tree_editor_enabled %}
+<div class="tree-builder-modal" id="treeBuilderModal" hidden>
+  <article class="tree-builder-sheet raised-card parchment-card">
+    <button class="tree-builder-close" type="button" id="treeBuilderClose" aria-label="Close">✕</button>
+    <div class="tree-builder-head">
+      <p class="eyebrow">Modify the archive</p>
+      <h3>Edit this branch</h3>
+      <p class="subtitle">Update this person, add a photo, grow new children, or remove this branch and all descendants.</p>
+    </div>
+    <form id="treeBuilderForm" class="tree-builder-form">
+      <input type="hidden" name="person_id" id="treeBuilderPersonId">
+      <label><span>Name</span><input name="name" id="treeBuilderName" required></label>
+      <div class="two-up">
+        <label><span>Birth year</span><input name="born" id="treeBuilderBorn" inputmode="numeric"></label>
+        <label><span>Death year</span><input name="died" id="treeBuilderDied" inputmode="numeric"></label>
+      </div>
+      <label><span>Photo path</span><input name="photo" id="treeBuilderPhoto" placeholder="/static/uploads/... or /static/img/..."></label>
+      <label>
+        <span>Number of new children</span>
+        <select name="child_count" id="treeBuilderChildCount">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+      <div class="tree-builder-actions">
+        <button class="btn-primary wide" type="submit">Save Changes</button>
+        <button class="btn-secondary wide" type="button" id="treeBuilderDeleteBtn">Delete Branch</button>
+      </div>
+    </form>
+  </article>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.TREE_API_URL = {{ tree_api_url|tojson }};
+  window.TREE_EDITOR_ENABLED = {{ tree_editor_enabled|tojson }};
+  window.TREE_BRANCH_API_URL = {{ tree_branch_api_url|tojson }};
+  window.TREE_UPDATE_API_URL = {{ tree_update_api_url|tojson }};
+  window.TREE_DELETE_API_URL = {{ tree_delete_api_url|tojson }};
+</script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
 {% endblock %}

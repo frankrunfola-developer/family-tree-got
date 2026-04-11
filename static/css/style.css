@@ -1187,20 +1187,74 @@ margin: 10px 0 0 18px; padding: 0;
 margin-top: 8px;
 }
 .login-shell {
-display: grid; place-items: center; min-height: calc(100vh - 170px);
+display: grid; place-items: center; min-height: calc(100vh - 150px);
 }
 .login-card {
 width: min(540px, 100%);
+padding: 24px 18px;
 }
-.login-copy {
-text-align: center; margin-bottom: 18px;
+.login-hero-copy {
+text-align: center;
+margin-bottom: 14px;
 }
-.login-demo {
-margin-top: 16px; text-align: center;
+.login-hero-copy h1 {
+font-size: clamp(2.35rem, 8vw, 3.25rem);
+line-height: 0.95;
+margin-bottom: 10px;
+}
+.login-pill-row {
+display: flex;
+justify-content: center;
+gap: 8px;
+flex-wrap: wrap;
+margin: 6px 0 16px;
+}
+.login-pill-row span {
+padding: 0.45rem 0.9rem;
+border-radius: 999px;
+border: 1px solid rgba(181, 146, 103, 0.35);
+background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(226,205,174,0.18));
+font-family: var(--font-display);
+font-size: 1rem;
+}
+.login-demo-card {
+margin-top: 16px;
+}
+.login-demo-meta {
+display: grid;
+grid-template-columns: 1fr;
+gap: 8px;
+margin: 10px 0 0;
+}
+.login-demo-meta div {
+display: flex;
+justify-content: space-between;
+gap: 12px;
+}
+.login-demo-meta dt {
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(--ink-soft);
+}
+.login-demo-meta dd {
+margin: 0;
+font-weight: 700;
 }
 .auth-form, .stack-form {
 display: grid;
   gap: 12px;
+}
+.auth-form--hero {
+margin-top: 6px;
+}
+.auth-submit {
+margin-top: 4px;
+}
+.map-controls--below {
+display: flex;
+justify-content: center;
+margin: 14px 0 6px;
 }
 label span {
 display: block;

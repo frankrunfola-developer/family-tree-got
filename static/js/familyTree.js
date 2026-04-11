@@ -85,6 +85,54 @@ function wrapName(text, width) {
 }
 
 
+function drawEditNodeButton(parent, person, x, y, metrics) {
+  const btn = group(parent, 'tree-node-edit-btn');
+  btn.setAttribute('data-person-id', String(person?.id || ''));
+
+  const cardWidth = Number(metrics?.card?.width || 116);
+  const anchorX = x + cardWidth - 10;
+  const anchorY = y - 8;
+
+  const shadow = svgEl('circle');
+  shadow.setAttribute('cx', String(anchorX + 3));
+  shadow.setAttribute('cy', String(anchorY + 3));
+  shadow.setAttribute('r', '15');
+  shadow.setAttribute('class', 'tree-node-edit-shadow');
+  btn.appendChild(shadow);
+
+  const disc = svgEl('circle');
+  disc.setAttribute('cx', String(anchorX));
+  disc.setAttribute('cy', String(anchorY));
+  disc.setAttribute('r', '15');
+  disc.setAttribute('class', 'tree-node-edit-disc');
+  btn.appendChild(disc);
+
+  const ring = svgEl('circle');
+  ring.setAttribute('cx', String(anchorX));
+  ring.setAttribute('cy', String(anchorY));
+  ring.setAttribute('r', '12.5');
+  ring.setAttribute('class', 'tree-node-edit-ring');
+  btn.appendChild(ring);
+
+  const body = svgEl('line');
+  body.setAttribute('x1', String(anchorX - 4.5));
+  body.setAttribute('y1', String(anchorY + 4.5));
+  body.setAttribute('x2', String(anchorX + 4.5));
+  body.setAttribute('y2', String(anchorY - 4.5));
+  body.setAttribute('class', 'tree-node-edit-glyph');
+  btn.appendChild(body);
+
+  const nib = svgEl('polygon');
+  nib.setAttribute('points', `${anchorX + 5.1},${anchorY - 5.1} ${anchorX + 8.3},${anchorY - 8.2} ${anchorX + 10.1},${anchorY - 6.4} ${anchorX + 6.8},${anchorY - 3.2}`);
+  nib.setAttribute('class', 'tree-node-edit-nib');
+  btn.appendChild(nib);
+
+  const spark = svgEl('path');
+  spark.setAttribute('d', `M ${anchorX - 7} ${anchorY - 9} l 2.4 0 l 0.8 -2.4 l 0.8 2.4 l 2.4 0 l -1.9 1.4 l 0.8 2.4 l -2.1 -1.5 l -2.1 1.5 l 0.8 -2.4 z`);
+  spark.setAttribute('class', 'tree-node-edit-spark');
+  btn.appendChild(spark);
+}
+
 function drawPersonCard(parent, person, x, y, metrics) {
   const { width, height, radius, photoWidth, photoHeight, bottomPanelHeight } = metrics.card;
   const shellInset = Math.max(3, Math.round(width * 0.028));
@@ -204,11 +252,30 @@ export function renderFamilyTree(svg, scene) {
   svg.setAttribute("preserveAspectRatio", "xMidYMin meet");
   svg.setAttribute("width", String(scene.viewBox.w));
   svg.setAttribute("height", String(scene.viewBox.h));
-  svg.style.width = `${scene.viewBox.w}px`;
-  svg.style.height = `${scene.viewBox.h}px`;
-  svg.style.maxWidth = "none";
+  const isLanding = document.body.classList.contains('landing-page');
+  svg.style.width = isLanding ? '100%' : `${scene.viewBox.w}px`;
+  svg.style.height = isLanding ? 'auto' : `${scene.viewBox.h}px`;
+  svg.style.maxWidth = isLanding ? '100%' : 'none';
   svg.style.minWidth = "0";
   svg.style.flex = "none";
+
+  const defs = svgEl('defs');
+  const grad = svgEl('linearGradient');
+  grad.setAttribute('id', 'treeNodeAddGradient');
+  grad.setAttribute('x1', '0');
+  grad.setAttribute('y1', '0');
+  grad.setAttribute('x2', '0');
+  grad.setAttribute('y2', '1');
+  const stop1 = svgEl('stop');
+  stop1.setAttribute('offset', '0%');
+  stop1.setAttribute('stop-color', '#c97335');
+  const stop2 = svgEl('stop');
+  stop2.setAttribute('offset', '100%');
+  stop2.setAttribute('stop-color', '#9b451e');
+  grad.appendChild(stop1);
+  grad.appendChild(stop2);
+  defs.appendChild(grad);
+  svg.appendChild(defs);
 
   const connectors = group(svg);
   const cards = group(svg);
@@ -216,10 +283,13 @@ export function renderFamilyTree(svg, scene) {
   for (const seg of scene.segments) {
     line(connectors, seg.x1, seg.y1, seg.x2, seg.y2, seg.cls);
   }
+  const canEdit = Boolean(window.TREE_EDITOR_ENABLED) && (document.body.classList.contains('tree-page') || document.body.classList.contains('dashboard-mode') || document.body.classList.contains('landing-page'));
   for (const card of scene.cards) {
     drawPersonCard(cards, card.person, card.x, card.y, scene.metrics);
+    if (canEdit && !card.person?.raw?.locked) drawEditNodeButton(cards, card.person, card.x, card.y, scene.metrics);
   }
 }
+
 
 export function fitTreeToScreen() {
   if (!STATE.svg || !STATE.viewBox) return;

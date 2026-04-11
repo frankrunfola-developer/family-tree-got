@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/final-fixes.css') }}">
     {% block head_extras %}{% endblock %}
   </head>
-  <body class="{% block body_class %}{% endblock %}">
+  <body class="{% block body_class %}{% endblock %}{% if logged_in_user %} authenticated-user{% endif %}">
     <main class="page-shell">
       {% include '_topbar.html' %}
       {% with messages = get_flashed_messages() %}

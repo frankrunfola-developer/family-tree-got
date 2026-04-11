@@ -119,6 +119,15 @@ function normalizeTree(treeJson) {
     if (!fam.childIds.includes(childId)) fam.childIds.push(childId);
   }
 
+  // Ensure spouse-only root pairs still render as a visible family in preview/full-tree.
+  for (const rel of relationships) {
+    if (!rel || rel.type !== 'spouse') continue;
+    const a = ensurePerson(rel.a);
+    const b = ensurePerson(rel.b);
+    if (!a || !b) continue;
+    ensureFamily([a, b]);
+  }
+
   const childToParentFamilyIds = new Map();
   const familyIdsByParent = new Map();
   for (const fam of familiesById.values()) {
@@ -242,7 +251,7 @@ function buildRenderForest(model) {
     .filter(Boolean);
 
   if (!roots.length) {
-    const people = Array.from(peopleById.values()).slice(0, 1).map((p) => buildLeafPerson(p.id));
+    const people = Array.from(peopleById.values()).map((p) => buildLeafPerson(p.id));
     return people;
   }
 
@@ -657,7 +666,10 @@ function buildScene(treeJson, previewMode, renderMode = "tree") {
 
   const partialChildrenVisible = Math.max(1, metrics.view.partialChildrenVisible ?? 3);
   if (renderMode === "landing") {
-    roots = buildLineageSlice(roots);
+    const peopleCount = Array.isArray(treeJson?.people) ? treeJson.people.length : 0;
+    if (peopleCount > 2) {
+      roots = buildLineageSlice(roots);
+    }
   } else if (previewMode) {
     roots = buildPartialSlice(roots, partialChildrenVisible);
   }
@@ -740,15 +752,112 @@ async function boot() {
     : "tree";
   const state = { preview: renderMode === "landing" ? true : (metrics.view.defaultPartial !== false), treeJson };
 
+  const treeBuilderModal = document.querySelector('#treeBuilderModal');
+  const treeBuilderForm = document.querySelector('#treeBuilderForm');
+  const treeBuilderPersonId = document.querySelector('#treeBuilderPersonId');
+  const treeBuilderName = document.querySelector('#treeBuilderName');
+  const treeBuilderClose = document.querySelector('#treeBuilderClose');
+
+  const treeBuilderDeleteBtn = document.querySelector('#treeBuilderDeleteBtn');
+  const treePeopleById = () => new Map((state.treeJson?.people || []).map((person) => [String(person.id), person]));
+
+  const closeBuilder = () => {
+    if (!treeBuilderModal) return;
+    treeBuilderModal.hidden = true;
+    treeBuilderForm?.reset();
+    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = true;
+  };
+
+  const openBuilder = (personId) => {
+    if (!treeBuilderModal || !treeBuilderPersonId) return;
+    const person = treePeopleById().get(String(personId));
+    if (!person || person.locked) return;
+    treeBuilderPersonId.value = String(personId);
+    if (treeBuilderForm) {
+      treeBuilderForm.name.value = person.name || '';
+      treeBuilderForm.born.value = person.born || person.birth || '';
+      treeBuilderForm.died.value = person.died || person.death || '';
+      if (treeBuilderForm.photo) treeBuilderForm.photo.value = person.photo || person.image || '';
+      treeBuilderForm.child_count.value = '0';
+    }
+    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = false;
+    treeBuilderModal.hidden = false;
+    window.setTimeout(() => treeBuilderName?.focus(), 30);
+  };
+
+  const wireEditButtons = () => {
+    if (!window.TREE_EDITOR_ENABLED) return;
+    document.querySelectorAll('.tree-node-edit-btn').forEach((btn) => {
+      if (btn.dataset.bound === 'true') return;
+      btn.dataset.bound = 'true';
+      btn.addEventListener('click', () => openBuilder(btn.getAttribute('data-person-id') || ''));
+    });
+  };
+
   const render = () => {
     try {
       const scene = buildScene(state.treeJson, state.preview, renderMode);
       renderFamilyTree(svg, scene);
       fitTreeToScreen();
+      wireEditButtons();
     } catch (err) {
       console.error("[LineAgeMap] tree render failed", err);
     }
   };
+
+  if (treeBuilderClose) treeBuilderClose.addEventListener('click', closeBuilder);
+  if (treeBuilderModal) {
+    treeBuilderModal.addEventListener('click', (event) => {
+      if (event.target === treeBuilderModal) closeBuilder();
+    });
+  }
+  if (treeBuilderDeleteBtn) {
+    treeBuilderDeleteBtn.addEventListener('click', async () => {
+      const personId = treeBuilderPersonId?.value || '';
+      if (!personId) return;
+      if (!window.confirm('Delete this person and all descendants?')) return;
+      try {
+        const res = await fetch(window.TREE_DELETE_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({ person_id: personId }),
+        });
+        if (!res.ok) throw new Error(`Delete node failed: ${res.status}`);
+        state.treeJson = await fetchTreeJson();
+        closeBuilder();
+        render();
+      } catch (err) {
+        console.error('[LineAgeMap] delete node failed', err);
+      }
+    });
+  }
+  if (treeBuilderForm) {
+    treeBuilderForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const payload = {
+        person_id: treeBuilderPersonId?.value || '',
+        name: treeBuilderForm.name?.value?.trim?.() || '',
+        born: treeBuilderForm.born?.value?.trim?.() || '',
+        died: treeBuilderForm.died?.value?.trim?.() || '',
+        photo: treeBuilderForm.photo?.value?.trim?.() || '',
+        child_count: treeBuilderForm.child_count?.value || '0',
+      };
+      if (!payload.person_id || !payload.name) return;
+      try {
+        const res = await fetch(window.TREE_UPDATE_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`Update node failed: ${res.status}`);
+        state.treeJson = await fetchTreeJson();
+        closeBuilder();
+        render();
+      } catch (err) {
+        console.error('[LineAgeMap] update node failed', err);
+      }
+    });
+  }
 
   wireToolbar(state, render);
   const toggleBtn = $("#treeDepthToggleBtn") || $("#treeMoreBtn") || $("#btnFull");

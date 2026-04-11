@@ -1,5 +1,5 @@
 <div class="tree-scale-stage" data-canvas-width="{{ tree.canvas_width }}" data-canvas-height="{{ tree.canvas_height }}" style="--canvas-width: {{ tree.canvas_width }}; --canvas-height: {{ tree.canvas_height }};">
-  <div class="tree-canvas" data-tree-links='{{ tree.links|tojson }}' style="position: relative; width: {{ tree.canvas_width }}px; height: {{ tree.canvas_height }}px;">
+  <div class="tree-canvas" data-tree-links='{{ tree.links|default([])|tojson }}' style="position: relative; width: {{ tree.canvas_width }}px; height: {{ tree.canvas_height }}px;">
     <svg class="tree-svg" viewBox="0 0 {{ tree.canvas_width }} {{ tree.canvas_height }}" aria-hidden="true">
       {% for link in tree.connectors %}
       <line class="tree-connector" x1="{{ link.x1 }}" y1="{{ link.y1 }}" x2="{{ link.x2 }}" y2="{{ link.y2 }}"></line>
