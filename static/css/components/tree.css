@@ -181,3 +181,205 @@ body.tree-page .treeCanvas--page {
     margin-right: -0.4rem;
   }
 }
+
+
+/* Animated node edit/add pencil */
+#treeSvg .tree-node-edit-btn {
+  cursor: pointer;
+  transform-origin: center;
+}
+
+#treeSvg .tree-node-edit-shadow {
+  fill: rgba(81, 50, 24, 0.22);
+  filter: blur(1px);
+}
+
+#treeSvg .tree-node-edit-disc {
+  filter:
+    drop-shadow(0 0 10px rgba(201, 115, 53, 0.28))
+    drop-shadow(0 10px 16px rgba(80, 45, 18, 0.18));
+  animation: treePencilPulse 1.8s ease-in-out infinite;
+}
+
+#treeSvg .tree-node-edit-ring {
+  stroke: rgba(255, 236, 208, 0.64);
+}
+
+#treeSvg .tree-node-edit-btn:hover .tree-node-edit-disc {
+  animation-duration: 1.2s;
+}
+
+@keyframes treePencilPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.11);
+  }
+}
+
+
+/* make node edit buttons unmistakably visible on landing/dashboard tree cards */
+.tree-frame,
+.landing-tree-frame,
+.treeCanvas,
+.treeCanvas > svg {
+  overflow: visible !important;
+}
+
+#treeSvg .tree-node-edit-btn {
+  pointer-events: auto;
+}
+
+#treeSvg .tree-node-edit-disc,
+#treeSvg .tree-node-edit-ring,
+#treeSvg .tree-node-edit-glyph,
+#treeSvg .tree-node-edit-nib,
+#treeSvg .tree-node-edit-spark {
+  vector-effect: non-scaling-stroke;
+}
+
+
+#treeSvg .tree-node-edit-btn {
+  cursor: pointer;
+}
+
+#treeSvg .tree-node-edit-disc {
+  fill: rgba(244, 234, 216, 0.96);
+  stroke: rgba(138, 93, 52, 0.42);
+  stroke-width: 1;
+  filter:
+    drop-shadow(0 0 10px rgba(95, 174, 255, 0.18))
+    drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
+  animation: treePencilPulse 1.7s ease-in-out infinite;
+}
+
+#treeSvg .tree-node-edit-ring {
+  fill: none;
+  stroke: rgba(255,255,255,0.66);
+  stroke-width: 1;
+}
+
+#treeSvg .tree-node-edit-icon {
+  opacity: 0.96;
+}
+
+#treeSvg .tree-node-edit-btn:hover .tree-node-edit-disc {
+  filter:
+    drop-shadow(0 0 14px rgba(95, 174, 255, 0.24))
+    drop-shadow(0 12px 16px rgba(80, 45, 18, 0.18));
+}
+
+.family-switcher-mobile-bottom {
+  margin-top: 0.25rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid rgba(162, 124, 85, 0.12);
+}
+
+
+/* slower, visible in-and-out pulse for node edit button */
+#treeSvg .tree-node-edit-btn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: treePencilPulseSlow 2.6s ease-in-out infinite;
+}
+
+#treeSvg .tree-node-edit-disc {
+  fill: rgba(244, 234, 216, 0.96);
+  stroke: rgba(138, 93, 52, 0.42);
+  stroke-width: 1;
+  filter:
+    drop-shadow(0 0 12px rgba(115, 214, 70, 0.20))
+    drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
+}
+
+#treeSvg .tree-node-edit-ring {
+  fill: none;
+  stroke: rgba(255,255,255,0.66);
+  stroke-width: 1;
+}
+
+#treeSvg .tree-node-edit-icon {
+  opacity: 0.98;
+}
+
+#treeSvg .tree-node-edit-btn:hover {
+  animation-duration: 1.8s;
+}
+
+@keyframes treePencilPulseSlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+}
+
+
+/* force the node edit icon pieces to stay visible */
+#treeSvg .tree-node-edit-btn circle,
+#treeSvg .tree-node-edit-btn image {
+  display: inline !important;
+}
+
+/* stronger visible pulse on the whole icon */
+#treeSvg .tree-node-edit-btn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: treePencilPulseSlow 2.8s ease-in-out infinite !important;
+}
+
+#treeSvg .tree-node-edit-shadow,
+#treeSvg .tree-node-edit-disc,
+#treeSvg .tree-node-edit-ring {
+  display: inline !important;
+}
+
+#treeSvg .tree-node-edit-disc {
+  fill: rgba(244, 234, 216, 0.98) !important;
+  stroke: rgba(138, 93, 52, 0.42) !important;
+  stroke-width: 1 !important;
+  filter:
+    drop-shadow(0 0 14px rgba(115, 214, 70, 0.24))
+    drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16)) !important;
+}
+
+#treeSvg .tree-node-edit-icon {
+  display: inline !important;
+  opacity: 1 !important;
+}
+
+@keyframes treePencilPulseSlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.16); }
+}
+
+
+/* centered heartbeat pulse for edit icon */
+#treeSvg .tree-node-edit-btn {
+  transform-origin: center center !important;
+  transform-box: fill-box !important;
+  animation: treePencilPulseHeart 2.4s ease-in-out infinite !important;
+}
+
+#treeSvg .tree-node-edit-disc {
+  animation: treePencilGlowHeart 2.4s ease-in-out infinite !important;
+}
+
+@keyframes treePencilPulseHeart {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.08); }
+  50%  { transform: scale(1.14); }
+  75%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes treePencilGlowHeart {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 10px rgba(115, 214, 70, 0.18))
+      drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 18px rgba(115, 214, 70, 0.30))
+      drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
+  }
+}

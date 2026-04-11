@@ -90,47 +90,41 @@ function drawEditNodeButton(parent, person, x, y, metrics) {
   btn.setAttribute('data-person-id', String(person?.id || ''));
 
   const cardWidth = Number(metrics?.card?.width || 116);
-  const anchorX = x + cardWidth - 10;
-  const anchorY = y - 8;
+  const anchorX = x + cardWidth - 9;
+  const anchorY = y + 8;
+  const iconSize = 15.5;
 
   const shadow = svgEl('circle');
-  shadow.setAttribute('cx', String(anchorX + 3));
-  shadow.setAttribute('cy', String(anchorY + 3));
-  shadow.setAttribute('r', '15');
+  shadow.setAttribute('cx', String(anchorX + 1.4));
+  shadow.setAttribute('cy', String(anchorY + 1.7));
+  shadow.setAttribute('r', '11');
   shadow.setAttribute('class', 'tree-node-edit-shadow');
   btn.appendChild(shadow);
 
   const disc = svgEl('circle');
   disc.setAttribute('cx', String(anchorX));
   disc.setAttribute('cy', String(anchorY));
-  disc.setAttribute('r', '15');
+  disc.setAttribute('r', '10.7');
   disc.setAttribute('class', 'tree-node-edit-disc');
   btn.appendChild(disc);
 
   const ring = svgEl('circle');
   ring.setAttribute('cx', String(anchorX));
   ring.setAttribute('cy', String(anchorY));
-  ring.setAttribute('r', '12.5');
+  ring.setAttribute('r', '9.1');
   ring.setAttribute('class', 'tree-node-edit-ring');
   btn.appendChild(ring);
 
-  const body = svgEl('line');
-  body.setAttribute('x1', String(anchorX - 4.5));
-  body.setAttribute('y1', String(anchorY + 4.5));
-  body.setAttribute('x2', String(anchorX + 4.5));
-  body.setAttribute('y2', String(anchorY - 4.5));
-  body.setAttribute('class', 'tree-node-edit-glyph');
-  btn.appendChild(body);
-
-  const nib = svgEl('polygon');
-  nib.setAttribute('points', `${anchorX + 5.1},${anchorY - 5.1} ${anchorX + 8.3},${anchorY - 8.2} ${anchorX + 10.1},${anchorY - 6.4} ${anchorX + 6.8},${anchorY - 3.2}`);
-  nib.setAttribute('class', 'tree-node-edit-nib');
-  btn.appendChild(nib);
-
-  const spark = svgEl('path');
-  spark.setAttribute('d', `M ${anchorX - 7} ${anchorY - 9} l 2.4 0 l 0.8 -2.4 l 0.8 2.4 l 2.4 0 l -1.9 1.4 l 0.8 2.4 l -2.1 -1.5 l -2.1 1.5 l 0.8 -2.4 z`);
-  spark.setAttribute('class', 'tree-node-edit-spark');
-  btn.appendChild(spark);
+  const icon = svgEl('image');
+  icon.setAttribute('x', String(anchorX - (iconSize / 2)));
+  icon.setAttribute('y', String(anchorY - (iconSize / 2)));
+  icon.setAttribute('width', String(iconSize));
+  icon.setAttribute('height', String(iconSize));
+  icon.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  icon.setAttributeNS(XLINK_NS, 'href', '/static/img/ui/edit-node-icon.png');
+  icon.setAttribute('href', '/static/img/ui/edit-node-icon.png');
+  icon.setAttribute('class', 'tree-node-edit-icon');
+  btn.appendChild(icon);
 }
 
 function drawPersonCard(parent, person, x, y, metrics) {
@@ -286,7 +280,7 @@ export function renderFamilyTree(svg, scene) {
   const canEdit = Boolean(window.TREE_EDITOR_ENABLED) && (document.body.classList.contains('tree-page') || document.body.classList.contains('dashboard-mode') || document.body.classList.contains('landing-page'));
   for (const card of scene.cards) {
     drawPersonCard(cards, card.person, card.x, card.y, scene.metrics);
-    if (canEdit && !card.person?.raw?.locked) drawEditNodeButton(cards, card.person, card.x, card.y, scene.metrics);
+    if (canEdit) drawEditNodeButton(cards, card.person, card.x, card.y, scene.metrics);
   }
 }
 

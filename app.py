@@ -14,6 +14,7 @@ except Exception:
     MAPBOX_PUBLIC_TOKEN = ''
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
+from werkzeug.utils import secure_filename
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
@@ -116,15 +117,8 @@ def locked_root_person_ids(data: dict) -> list[str]:
     if not roots:
         roots = sorted(people_by_id.keys(), key=sort_key)
 
-    locked: list[str] = []
     primary = roots[0]
-    locked.append(primary)
-    spouse_candidates = sorted([pid for pid in spouse_map.get(primary, set()) if pid in roots], key=sort_key)
-    if spouse_candidates:
-        locked.append(spouse_candidates[0])
-    elif len(roots) > 1:
-        locked.append(roots[1])
-    return locked[:2]
+    return [primary]
 
 def ensure_user_family(username: str) -> dict:
     path = user_family_path(username)
@@ -902,12 +896,12 @@ def map_people_payload(data: dict) -> dict:
 @app.context_processor
 def inject_helpers():
     logged_in = current_user()
-    family_options = [{'id': sid, 'label': sample_family_label(sid)} for sid in sample_family_ids()] if not logged_in else []
+    family_options = [{'id': sid, 'label': sample_family_label(sid)} for sid in sample_family_ids()]
     return {
         'logged_in_user': logged_in,
         'family_options': family_options,
-        'current_family_id': selected_family_id() if not logged_in else '',
-        'show_family_switcher': not bool(logged_in),
+        'current_family_id': selected_family_id(),
+        'show_family_switcher': bool(family_options),
     }
 
 
@@ -954,8 +948,8 @@ def dashboard():
     user = current_user()
     if not user:
         return redirect(url_for('login'))
-    family = ensure_family_loaded()
-    summary = build_landing_payload(user)
+    family = enrich_family_data(ensure_user_family(user['username']), user['username'])
+    summary = landing_summary_from_family(family)
     return render_template(
         'index.html',
         user=user,
@@ -1087,6 +1081,35 @@ def add_relationship():
     return redirect(url_for('dashboard'))
 
 
+
+@app.post('/api/tree/upload-photo')
+def api_tree_upload_photo():
+    user = current_user()
+    if not user:
+        return {'ok': False, 'error': 'login_required'}, 401
+
+    upload = request.files.get('photo')
+    if not upload or not upload.filename:
+        return {'ok': False, 'error': 'photo_required'}, 400
+
+    family = ensure_user_family(user['username'])
+    family_id = str(family.get('meta', {}).get('family_id') or user['username']).strip() or user['username']
+    ext = Path(upload.filename).suffix.lower()
+    if ext not in {'.jpg', '.jpeg', '.png', '.webp', '.gif'}:
+        return {'ok': False, 'error': 'invalid_file_type'}, 400
+
+    upload_dir = BASE_DIR / 'static' / 'uploads' / family_id
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    safe_name = secure_filename(Path(upload.filename).stem) or 'portrait'
+    filename = f"{safe_name}_{uuid4().hex[:8]}{ext}"
+    file_path = upload_dir / filename
+    upload.save(file_path)
+
+    return {'ok': True, 'photo': f'/static/uploads/{family_id}/{filename}'}
+
+
+
 @app.post('/api/tree/add-branch')
 def api_tree_add_branch():
     user = current_user()
@@ -1095,13 +1118,14 @@ def api_tree_add_branch():
 
     payload = request.get_json(silent=True) or {}
     parent_id = str(payload.get('parent_id') or '').strip()
+    relationship = str(payload.get('relationship') or 'child').strip().lower()
     name = str(payload.get('name') or '').strip()
     born = str(payload.get('born') or '').strip()
     died = str(payload.get('died') or '').strip()
-    try:
-        child_count = max(0, min(int(payload.get('child_count') or 0), 8))
-    except Exception:
-        child_count = 0
+    photo = _normalize_photo_path(str(payload.get('photo') or '').strip(), user.get('username'))
+
+    if relationship not in {'child', 'spouse', 'parent'}:
+        relationship = 'child'
 
     if not parent_id or not name:
         return {'ok': False, 'error': 'missing_required_fields'}, 400
@@ -1111,9 +1135,10 @@ def api_tree_add_branch():
     relationships = family.setdefault('relationships', [])
     people_by_id = {str(person.get('id')): person for person in people if person.get('id')}
     if parent_id not in people_by_id:
-        return {'ok': False, 'error': 'parent_not_found'}, 404
+        return {'ok': False, 'error': 'anchor_not_found'}, 404
 
     existing_ids = set(people_by_id.keys())
+    family_id = family.get('meta', {}).get('family_id')
 
     def unique_person_id(base_text: str) -> str:
         person_id = slugify(base_text)
@@ -1125,24 +1150,21 @@ def api_tree_add_branch():
         existing_ids.add(person_id)
         return person_id
 
-    def append_person(person_name: str, birth_year: str = '', death_year: str = '') -> str:
-        person_id = unique_person_id(person_name)
-        people.append({
-            'id': person_id,
-            'name': person_name,
-            'born': birth_year,
-            'died': death_year,
-            'photo': '/static/img/placeholder-avatar.png',
-        })
-        return person_id
+    new_person_id = unique_person_id(name)
+    people.append({
+        'id': new_person_id,
+        'name': name,
+        'born': born,
+        'died': died,
+        'photo': _normalize_photo_path(photo, family_id),
+    })
 
-    new_person_id = append_person(name, born, died)
-    relationships.append({'parent': parent_id, 'child': new_person_id})
-
-    for idx in range(child_count):
-        placeholder_name = f'{name} Child {idx + 1}'
-        placeholder_id = append_person(placeholder_name, '', '')
-        relationships.append({'parent': new_person_id, 'child': placeholder_id})
+    if relationship == 'spouse':
+        relationships.append({'type': 'spouse', 'a': parent_id, 'b': new_person_id})
+    elif relationship == 'parent':
+        relationships.append({'parent': new_person_id, 'child': parent_id})
+    else:
+        relationships.append({'parent': parent_id, 'child': new_person_id})
 
     save_user_family(user['username'], family)
     return {'ok': True, 'added_person_id': new_person_id}

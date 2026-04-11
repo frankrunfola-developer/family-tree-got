@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-{% if not user or request.endpoint == 'dashboard' %}
+{% if not user %}
 <section class="hero-card raised-card parchment-card">
   <div class="hero-inner">
     <div class="hero-copy">
@@ -34,8 +34,7 @@
 {% endif %}
 
 <section class="story-grid" id="story">
-  {% if not user %}
-  <article class="summary-card raised-card parchment-card capsule-summary-card">
+    <article class="summary-card raised-card parchment-card capsule-summary-card">
     <div class="tree-section-head">
       <h2 class="tree-section-title">Summary</h2>
     </div>
@@ -107,7 +106,7 @@
 
     <a class="btn-primary wide tree-link-btn" href="{{ url_for('tree') }}">{{ 'Open Your Tree' if user else data.family.tree_cta }}</a>
   </article>
-  {% endif %}
+
 
   <article class="tree-card raised-card parchment-card" id="tree">
     <div class="tree-section-head">
@@ -166,51 +165,67 @@
 
 
 {% if user %}
+
 <div class="tree-builder-modal" id="treeBuilderModal" hidden>
   <article class="tree-builder-sheet raised-card parchment-card">
     <button class="tree-builder-close" type="button" id="treeBuilderClose" aria-label="Close">✕</button>
     <div class="tree-builder-head">
-      <p class="eyebrow">Modify the archive</p>
-      <h3>Edit this branch</h3>
-      <p class="subtitle">Update this person, add a photo, grow new children, or remove this branch and all descendants.</p>
+      <p class="eyebrow">Grow the archive</p>
+      <h3>Add a new person</h3>
+      <p class="subtitle">Expand this branch from <strong id="treeBuilderAnchorName">this person</strong>.</p>
     </div>
     <form id="treeBuilderForm" class="tree-builder-form">
       <input type="hidden" name="person_id" id="treeBuilderPersonId">
+
       <label>
         <span>Name</span>
         <input name="name" id="treeBuilderName" required>
       </label>
+
+      <label>
+        <span>Relationship</span>
+        <select name="relationship" id="treeBuilderRelationship">
+          <option value="child">Child</option>
+          <option value="spouse">Spouse</option>
+          <option value="parent">Parent</option>
+        </select>
+      </label>
+
       <div class="two-up">
         <label>
-          <span>Birth year</span>
+          <span>Born</span>
           <input name="born" id="treeBuilderBorn" inputmode="numeric">
         </label>
         <label>
-          <span>Death year</span>
+          <span>Died</span>
           <input name="died" id="treeBuilderDied" inputmode="numeric">
         </label>
       </div>
+
       <label>
-        <span>Photo path</span>
+        <span>Picture upload</span>
+        <input type="file" name="photo_file" id="treeBuilderPhotoFile" accept="image/*">
+      </label>
+
+      <label>
+        <span>Or picture path</span>
         <input name="photo" id="treeBuilderPhoto" placeholder="/static/uploads/... or /static/img/...">
       </label>
-      <label>
-        <span>Number of new children</span>
-        <select name="child_count" id="treeBuilderChildCount">
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-      </label>
+
       <div class="tree-builder-actions">
-        <button class="btn-primary wide" type="submit">Save Changes</button>
-        <button class="btn-secondary wide" type="button" id="treeBuilderDeleteBtn">Delete Branch</button>
+        <button class="btn-primary wide" type="submit">Add Person</button>
+      </div>
+
+      <div class="tree-builder-danger-row">
+        <button class="tree-builder-delete-icon" type="button" id="treeBuilderDeleteBtn" aria-label="Delete this person">
+          <span aria-hidden="true">🗑</span>
+          <span>Delete node</span>
+        </button>
       </div>
     </form>
   </article>
 </div>
+
 {% endif %}
 
 {% endblock %}
@@ -229,9 +244,10 @@
   window.TREE_BRANCH_API_URL = {{ url_for('api_tree_add_branch')|tojson }};
   window.TREE_UPDATE_API_URL = {{ url_for('api_tree_update_node')|tojson }};
   window.TREE_DELETE_API_URL = {{ url_for('api_tree_delete_node')|tojson }};
+  window.TREE_UPLOAD_PHOTO_API_URL = {{ url_for('api_tree_upload_photo')|tojson }};
   {% endif %}
 </script>
-<script type="module" src="{{ url_for('static', filename='js/tree.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v=20260411-nodeeditor17"></script>
 
 <script src="{{ url_for('static', filename='js/landing-mapbox.js') }}?v=20260411-routefix3"></script>
 {% endblock %}

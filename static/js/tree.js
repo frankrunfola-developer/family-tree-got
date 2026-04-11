@@ -752,13 +752,20 @@ async function boot() {
     : "tree";
   const state = { preview: renderMode === "landing" ? true : (metrics.view.defaultPartial !== false), treeJson };
 
+
   const treeBuilderModal = document.querySelector('#treeBuilderModal');
   const treeBuilderForm = document.querySelector('#treeBuilderForm');
   const treeBuilderPersonId = document.querySelector('#treeBuilderPersonId');
   const treeBuilderName = document.querySelector('#treeBuilderName');
+  const treeBuilderBorn = document.querySelector('#treeBuilderBorn');
+  const treeBuilderDied = document.querySelector('#treeBuilderDied');
+  const treeBuilderPhoto = document.querySelector('#treeBuilderPhoto');
+  const treeBuilderPhotoFile = document.querySelector('#treeBuilderPhotoFile');
+  const treeBuilderRelationship = document.querySelector('#treeBuilderRelationship');
+  const treeBuilderAnchorName = document.querySelector('#treeBuilderAnchorName');
   const treeBuilderClose = document.querySelector('#treeBuilderClose');
-
   const treeBuilderDeleteBtn = document.querySelector('#treeBuilderDeleteBtn');
+
   const treePeopleById = () => new Map((state.treeJson?.people || []).map((person) => [String(person.id), person]));
 
   const closeBuilder = () => {
@@ -771,18 +778,31 @@ async function boot() {
   const openBuilder = (personId) => {
     if (!treeBuilderModal || !treeBuilderPersonId) return;
     const person = treePeopleById().get(String(personId));
-    if (!person || person.locked) return;
+    if (!person) return;
     treeBuilderPersonId.value = String(personId);
+    if (treeBuilderAnchorName) treeBuilderAnchorName.textContent = person.name || 'this person';
     if (treeBuilderForm) {
-      treeBuilderForm.name.value = person.name || '';
-      treeBuilderForm.born.value = person.born || person.birth || '';
-      treeBuilderForm.died.value = person.died || person.death || '';
-      if (treeBuilderForm.photo) treeBuilderForm.photo.value = person.photo || person.image || '';
-      treeBuilderForm.child_count.value = '0';
+      treeBuilderForm.reset();
+      treeBuilderRelationship.value = 'child';
+      treeBuilderPhoto.value = '';
     }
-    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = false;
+    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = Boolean(person.locked);
     treeBuilderModal.hidden = false;
     window.setTimeout(() => treeBuilderName?.focus(), 30);
+  };
+
+  const uploadSelectedPhoto = async () => {
+    if (!treeBuilderPhotoFile?.files?.length) return '';
+    const formData = new FormData();
+    formData.append('photo', treeBuilderPhotoFile.files[0]);
+    const res = await fetch(window.TREE_UPLOAD_PHOTO_API_URL, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Photo upload failed: ${res.status}`);
+    const payload = await res.json();
+    if (!payload?.ok || !payload?.photo) throw new Error('Photo upload failed');
+    return payload.photo;
   };
 
   const wireEditButtons = () => {
@@ -790,7 +810,11 @@ async function boot() {
     document.querySelectorAll('.tree-node-edit-btn').forEach((btn) => {
       if (btn.dataset.bound === 'true') return;
       btn.dataset.bound = 'true';
-      btn.addEventListener('click', () => openBuilder(btn.getAttribute('data-person-id') || ''));
+      btn.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openBuilder(btn.getAttribute('data-person-id') || '');
+      });
     });
   };
 
@@ -805,12 +829,22 @@ async function boot() {
     }
   };
 
-  if (treeBuilderClose) treeBuilderClose.addEventListener('click', closeBuilder);
+  if (treeBuilderClose) {
+    treeBuilderClose.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeBuilder();
+    });
+  }
   if (treeBuilderModal) {
     treeBuilderModal.addEventListener('click', (event) => {
       if (event.target === treeBuilderModal) closeBuilder();
     });
   }
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && treeBuilderModal && !treeBuilderModal.hidden) closeBuilder();
+  });
+
   if (treeBuilderDeleteBtn) {
     treeBuilderDeleteBtn.addEventListener('click', async () => {
       const personId = treeBuilderPersonId?.value || '';
@@ -831,35 +865,46 @@ async function boot() {
       }
     });
   }
+
   if (treeBuilderForm) {
     treeBuilderForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const payload = {
-        person_id: treeBuilderPersonId?.value || '',
-        name: treeBuilderForm.name?.value?.trim?.() || '',
-        born: treeBuilderForm.born?.value?.trim?.() || '',
-        died: treeBuilderForm.died?.value?.trim?.() || '',
-        photo: treeBuilderForm.photo?.value?.trim?.() || '',
-        child_count: treeBuilderForm.child_count?.value || '0',
-      };
-      if (!payload.person_id || !payload.name) return;
+      const anchorId = treeBuilderPersonId?.value || '';
+      const name = treeBuilderName?.value?.trim?.() || '';
+      if (!anchorId || !name) return;
+
       try {
-        const res = await fetch(window.TREE_UPDATE_API_URL, {
+        let photoPath = treeBuilderPhoto?.value?.trim?.() || '';
+        if (!photoPath && treeBuilderPhotoFile?.files?.length) {
+          photoPath = await uploadSelectedPhoto();
+        }
+
+        const payload = {
+          parent_id: anchorId,
+          relationship: treeBuilderRelationship?.value || 'child',
+          name,
+          born: treeBuilderBorn?.value?.trim?.() || '',
+          died: treeBuilderDied?.value?.trim?.() || '',
+          photo: photoPath,
+        };
+
+        const res = await fetch(window.TREE_BRANCH_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', accept: 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error(`Update node failed: ${res.status}`);
+        if (!res.ok) throw new Error(`Add person failed: ${res.status}`);
         state.treeJson = await fetchTreeJson();
         closeBuilder();
         render();
       } catch (err) {
-        console.error('[LineAgeMap] update node failed', err);
+        console.error('[LineAgeMap] add person failed', err);
       }
     });
   }
 
   wireToolbar(state, render);
+
   const toggleBtn = $("#treeDepthToggleBtn") || $("#treeMoreBtn") || $("#btnFull");
   if (renderMode === "landing" && toggleBtn) {
     toggleBtn.textContent = "View Full Tree";
