@@ -923,12 +923,16 @@ async function boot() {
           headers: { 'Content-Type': 'application/json', accept: 'application/json' },
           body: JSON.stringify({ person_id: personId }),
         });
-        if (!res.ok) throw new Error(`Delete node failed: ${res.status}`);
+        const payload = await res.json().catch(() => null);
+        if (!res.ok || payload?.ok === false) {
+          throw new Error(payload?.error || `Delete node failed: ${res.status}`);
+        }
         state.treeJson = await fetchTreeJson();
         closeBuilder();
         render();
       } catch (err) {
         console.error('[LineAgeMap] delete node failed', err);
+        window.alert(err?.message || 'Delete failed.');
       }
     });
   }
@@ -971,7 +975,10 @@ async function boot() {
           headers: { 'Content-Type': 'application/json', accept: 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error(`${isEdit ? 'Save' : 'Add'} person failed: ${res.status}`);
+        const responsePayload = await res.json().catch(() => null);
+        if (!res.ok || responsePayload?.ok === false) {
+          throw new Error(responsePayload?.error || `${isEdit ? 'Save' : 'Add'} person failed: ${res.status}`);
+        }
 
         closeBuilder();
         try {
@@ -982,6 +989,7 @@ async function boot() {
         }
       } catch (err) {
         console.error(`[LineAgeMap] ${mode} person failed`, err);
+        window.alert(err?.message || `${mode === 'edit' ? 'Save' : 'Add'} failed.`);
       }
     });
   }

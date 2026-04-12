@@ -1,40 +1,81 @@
-# LineAgeMap demo refresh
+# LineAgeMap
 
-This package includes:
+This version moves authenticated user data off JSON files and onto SQLAlchemy models backed by PostgreSQL.
 
-- a dynamic family tree page generated from JSON people + relationships
-- raised parchment-style connectors
-- shorter person cards with tighter portrait framing
-- a login screen
-- a logged-in workspace for adding people and relationships
-- JSON persistence for user tree data in `data/user_families/<username>.json`
+## Stack
 
-## Demo login
+- Flask
+- Render Web Service
+- Render Postgres
+- SQLAlchemy
+- Flask-Migrate
 
-- username: `frank`
-- password: `demo123`
+## Registration flow
 
-## Run
+- No baked-in starter user
+- `/register` creates the account
+- `User name` becomes the profile name
+- The same `User name` is seeded as the first root node in the tree
+- The root node also gets one default map location so it renders immediately
+
+## Local setup
 
 ```bash
 pip install -r requirements.txt
+cp .env.example .env
+```
+
+## Run locally
+
+```bash
 python app.py
 ```
 
-## Key files
+## Database migrations
 
-- `app.py` - routes, JSON persistence, tree layout builder
-- `templates/login.html` - login screen
-- `templates/dashboard.html` - user workspace for adding nodes/relationships
-- `templates/tree.html` - full dynamic tree page
-- `templates/_tree_canvas.html` - reusable tree renderer
-- `data/kennedy.json` - sample tree data
-- `data/users.json` - demo login account
-- `data/user_families/frank.json` - created on first login
+```bash
+export FLASK_APP=app.py
+flask db init
+flask db migrate -m "initial schema"
+flask db upgrade
+```
 
-## Notes
+On Windows PowerShell:
 
-- Tree placement is generated from parent/child and spouse relationships in JSON.
-- New people and new relationships added in the workspace are written back to JSON.
-- Portraits use `object-fit: cover` so images sit cleanly in the card frame.
-- Connector styling is purely CSS and uses the parchment texture already included in the project.
+```powershell
+$env:FLASK_APP = "app.py"
+flask db init
+flask db migrate -m "initial schema"
+flask db upgrade
+```
+
+## Render setup
+
+Create these on Render:
+
+- Web Service for the Flask app
+- Postgres database
+
+Set environment variables on the web service:
+
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `MAPBOX_TOKEN` if you use it
+
+Start command:
+
+```bash
+gunicorn app:app
+```
+
+Build command:
+
+```bash
+pip install -r requirements.txt
+```
+
+After the database is attached, run migrations during deploy or from a Render shell:
+
+```bash
+flask db upgrade
+```

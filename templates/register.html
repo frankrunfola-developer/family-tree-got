@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Register | LineAgeMap{% endblock %}
+{% block body_class %}landing-page auth-page{% endblock %}
+{% block content %}
+<section class="login-shell">
+  <article class="login-card raised-card parchment-card">
+    <div class="login-hero-copy">
+      <p class="eyebrow">Create your archive</p>
+      <h1>Open your family capsule</h1>
+      <p class="subtitle">Create your account, choose the User name shown on your profile, and LineAgeMap will seed your first node automatically.</p>
+    </div>
+
+    <div class="login-pill-row" aria-hidden="true">
+      <span>Account</span>
+      <span>Seeded Root</span>
+      <span>Ready to Build</span>
+    </div>
+
+    <form method="post" class="auth-form auth-form--hero">
+      <label>
+        <span>Username</span>
+        <input name="username" autocomplete="username" required>
+      </label>
+      <label>
+        <span>User name</span>
+        <input name="profile_name" autocomplete="name" required>
+      </label>
+      <label>
+        <span>Password</span>
+        <input name="password" type="password" autocomplete="new-password" required>
+      </label>
+      <button class="btn-primary wide auth-submit" type="submit">Create account</button>
+    </form>
+
+    <div class="login-demo-card parchment-inset">
+      <div>
+        <strong>What gets created</strong>
+        <p>Your account, your family profile, and one starter node using your User name so the tree and map have a real root immediately.</p>
+      </div>
+      <a class="btn-secondary" href="{{ url_for('login') }}">Already have an account?</a>
+    </div>
+  </article>
+</section>
+{% endblock %}

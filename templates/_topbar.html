@@ -14,7 +14,7 @@
       <details class="nav-user-menu">
         <summary class="nav-user-chip nav-user-chip--menu" aria-label="Logged in user menu">
           <span class="nav-user-icon" aria-hidden="true">👤</span>
-          <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
+          <span class="nav-user-text">{{ logged_in_user.display_name or logged_in_user.username }}</span>
           <span class="nav-user-caret" aria-hidden="true">▾</span>
         </summary>
         <div class="nav-user-dropdown">
@@ -25,6 +25,7 @@
       <div class="nav-app-links nav-public-links" aria-label="Primary navigation">
         <a class="nav-app-link" href="{{ url_for('tree') }}">Tree</a>
         <a class="nav-app-link" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-app-link" href="{{ url_for('register') }}">Register</a>
       </div>
       {% if show_family_switcher %}
       <form class="family-switcher" action="{{ url_for('select_family') }}" method="get">
@@ -52,9 +53,11 @@
       {% if logged_in_user %}
       {% if request.endpoint != 'dashboard' %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
       {% if request.endpoint != 'tree' %}<a href="{{ url_for('tree') }}">Tree</a>{% endif %}
+      <a href="{{ url_for('logout') }}">Logout</a>
       {% else %}
       <a href="{{ url_for('tree') }}">Tree</a>
       <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('register') }}">Register</a>
       {% endif %}
     </div>
     {% if show_family_switcher and not logged_in_user %}

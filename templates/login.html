@@ -7,7 +7,7 @@
     <div class="login-hero-copy">
       <p class="eyebrow">Your archive starts here</p>
       <h1>Step back into your family story</h1>
-      <p class="subtitle">Same parchment look. Same warm brass buttons. A cleaner sign-in that feels like the rest of the product instead of a bolt-on page.</p>
+      <p class="subtitle">Sign in to your archive, keep building your tree, and continue mapping your family journey.</p>
     </div>
 
     <div class="login-pill-row" aria-hidden="true">
@@ -19,25 +19,21 @@
     <form method="post" class="auth-form auth-form--hero">
       <label>
         <span>Username</span>
-        <input name="username" value="{{ demo_username }}" autocomplete="username" required>
+        <input name="username" autocomplete="username" required>
       </label>
       <label>
         <span>Password</span>
-        <input name="password" type="password" value="{{ demo_password }}" autocomplete="current-password" required>
+        <input name="password" type="password" autocomplete="current-password" required>
       </label>
       <button class="btn-primary wide auth-submit" type="submit">Enter the Archive</button>
     </form>
 
     <div class="login-demo-card parchment-inset">
       <div>
-        <strong>Demo login</strong>
-        <p>Use this starter account to test the new flow and build from a tiny seeded family.</p>
+        <strong>New here?</strong>
+        <p>Create an account and LineAgeMap will seed your profile with a single root person using your chosen User name.</p>
       </div>
-      <dl class="login-demo-meta">
-        <div><dt>Username</dt><dd>{{ demo_username }}</dd></div>
-        <div><dt>Password</dt><dd>{{ demo_password }}</dd></div>
-        <div><dt>Starter tree</dt><dd>2 descendants included</dd></div>
-      </dl>
+      <a class="btn-secondary" href="{{ url_for('register') }}">Create account</a>
     </div>
   </article>
 </section>
