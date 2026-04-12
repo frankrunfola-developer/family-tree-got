@@ -48,3 +48,6 @@ dist/
 # If you want to ALSO ignore the preloaded lannister avatars, uncomment:
 # static/uploads/lannister/*
 # !static/uploads/lannister/.gitkeep
+
+migrations/
+instance/
