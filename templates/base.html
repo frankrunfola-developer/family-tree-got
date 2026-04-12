@@ -27,6 +27,9 @@
         const toggle = document.querySelector('.nav-toggle');
         const mobileNav = document.querySelector('.mobile-nav');
 
+        const userMenus = Array.from(document.querySelectorAll('.nav-user-menu'));
+        const closeUserMenus = () => userMenus.forEach((menu) => { menu.open = false; });
+
         const syncTopbar = () => {
           if (!topbar) return;
           topbar.classList.toggle('is-scrolled', window.scrollY > 10);
@@ -39,6 +42,7 @@
 
         const closeMobileNav = () => {
           topbar.classList.remove('menu-open');
+          closeUserMenus();
           mobileNav.classList.remove('is-open');
           toggle.classList.remove('is-open');
           toggle.setAttribute('aria-expanded', 'false');
@@ -66,6 +70,7 @@
         toggle.addEventListener('pointerdown', (event) => event.stopPropagation());
 
         document.addEventListener('click', (event) => {
+          if (!userMenus.some((menu) => menu.contains(event.target))) closeUserMenus();
           if (!topbar.classList.contains('menu-open')) return;
           if (mobileNav.contains(event.target) || toggle.contains(event.target)) return;
           closeMobileNav();

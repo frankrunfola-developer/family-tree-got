@@ -246,7 +246,7 @@ export function renderFamilyTree(svg, scene) {
   svg.setAttribute("preserveAspectRatio", "xMidYMin meet");
   svg.setAttribute("width", String(scene.viewBox.w));
   svg.setAttribute("height", String(scene.viewBox.h));
-  const isLanding = document.body.classList.contains('landing-page');
+  const isLanding = document.body.classList.contains('landing-page') && !document.body.classList.contains('tree-page');
   svg.style.width = isLanding ? '100%' : `${scene.viewBox.w}px`;
   svg.style.height = isLanding ? 'auto' : `${scene.viewBox.h}px`;
   svg.style.maxWidth = isLanding ? '100%' : 'none';

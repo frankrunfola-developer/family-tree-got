@@ -24,23 +24,39 @@
 
 {% if tree_editor_enabled %}
 
+<div class="tree-builder-modal" id="treeBuilderChoiceModal" hidden>
+  <article class="tree-builder-sheet tree-builder-sheet--chooser raised-card parchment-card">
+    <button class="tree-builder-close" type="button" id="treeBuilderChoiceClose" aria-label="Close">✕</button>
+    <div class="tree-builder-head">
+      <p class="eyebrow">Grow the archive</p>
+      <h3>Choose an action</h3>
+      <p class="subtitle">What do you want to do with <strong id="treeBuilderChoiceAnchorName">this person</strong>?</p>
+    </div>
+    <div class="tree-builder-actions tree-builder-actions--stacked">
+      <button class="btn-primary wide" type="button" id="treeBuilderOpenEditBtn">Edit Person</button>
+      <button class="btn-secondary wide" type="button" id="treeBuilderOpenAddBtn">Add Person</button>
+    </div>
+  </article>
+</div>
+
 <div class="tree-builder-modal" id="treeBuilderModal" hidden>
   <article class="tree-builder-sheet raised-card parchment-card">
     <button class="tree-builder-close" type="button" id="treeBuilderClose" aria-label="Close">✕</button>
     <div class="tree-builder-head">
-      <p class="eyebrow">Grow the archive</p>
-      <h3>Add a new person</h3>
-      <p class="subtitle">Expand this branch from <strong id="treeBuilderAnchorName">this person</strong>.</p>
+      <p class="eyebrow" id="treeBuilderEyebrow">Grow the archive</p>
+      <h3 id="treeBuilderTitle">Add a new person</h3>
+      <p class="subtitle" id="treeBuilderSubtitle">Expand this branch from <strong id="treeBuilderAnchorName">this person</strong>.</p>
     </div>
     <form id="treeBuilderForm" class="tree-builder-form">
       <input type="hidden" name="person_id" id="treeBuilderPersonId">
+      <input type="hidden" name="mode" id="treeBuilderMode" value="add">
 
       <label>
         <span>Name</span>
         <input name="name" id="treeBuilderName" required>
       </label>
 
-      <label>
+      <label id="treeBuilderRelationshipField">
         <span>Relationship</span>
         <select name="relationship" id="treeBuilderRelationship">
           <option value="child">Child</option>
@@ -71,7 +87,7 @@
       </label>
 
       <div class="tree-builder-actions">
-        <button class="btn-primary wide" type="submit">Add Person</button>
+        <button class="btn-primary wide" type="submit" id="treeBuilderSubmitBtn">Add Person</button>
       </div>
 
       <div class="tree-builder-danger-row">
@@ -96,5 +112,5 @@
   window.TREE_DELETE_API_URL = {{ tree_delete_api_url|tojson }};
   window.TREE_UPLOAD_PHOTO_API_URL = {{ url_for('api_tree_upload_photo')|tojson }};
 </script>
-<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v=20260411-nodeeditor17"></script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v=20260412-nodeeditor24"></script>
 {% endblock %}

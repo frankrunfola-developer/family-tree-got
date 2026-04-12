@@ -137,3 +137,16 @@
   position: relative;
   z-index: 1;
 }
+
+.tree-builder-sheet--chooser {
+  width: min(100%, 360px);
+}
+
+.tree-builder-actions--stacked {
+  grid-template-columns: 1fr;
+}
+
+#treeBuilderRelationshipField[hidden],
+.tree-builder-danger-row[hidden] {
+  display: none !important;
+}

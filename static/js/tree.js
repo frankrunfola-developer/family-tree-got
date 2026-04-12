@@ -753,9 +753,20 @@ async function boot() {
   const state = { preview: renderMode === "landing" ? true : (metrics.view.defaultPartial !== false), treeJson };
 
 
+  const treeBuilderChoiceModal = document.querySelector('#treeBuilderChoiceModal');
+  const treeBuilderChoiceAnchorName = document.querySelector('#treeBuilderChoiceAnchorName');
+  const treeBuilderChoiceClose = document.querySelector('#treeBuilderChoiceClose');
+  const treeBuilderOpenEditBtn = document.querySelector('#treeBuilderOpenEditBtn');
+  const treeBuilderOpenAddBtn = document.querySelector('#treeBuilderOpenAddBtn');
+
   const treeBuilderModal = document.querySelector('#treeBuilderModal');
   const treeBuilderForm = document.querySelector('#treeBuilderForm');
   const treeBuilderPersonId = document.querySelector('#treeBuilderPersonId');
+  const treeBuilderMode = document.querySelector('#treeBuilderMode');
+  const treeBuilderTitle = document.querySelector('#treeBuilderTitle');
+  const treeBuilderSubtitle = document.querySelector('#treeBuilderSubtitle');
+  const treeBuilderSubmitBtn = document.querySelector('#treeBuilderSubmitBtn');
+  const treeBuilderRelationshipField = document.querySelector('#treeBuilderRelationshipField');
   const treeBuilderName = document.querySelector('#treeBuilderName');
   const treeBuilderBorn = document.querySelector('#treeBuilderBorn');
   const treeBuilderDied = document.querySelector('#treeBuilderDied');
@@ -768,25 +779,61 @@ async function boot() {
 
   const treePeopleById = () => new Map((state.treeJson?.people || []).map((person) => [String(person.id), person]));
 
-  const closeBuilder = () => {
-    if (!treeBuilderModal) return;
-    treeBuilderModal.hidden = true;
-    treeBuilderForm?.reset();
-    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = true;
+  const closeChoiceModal = () => {
+    if (!treeBuilderChoiceModal) return;
+    treeBuilderChoiceModal.hidden = true;
   };
 
-  const openBuilder = (personId) => {
-    if (!treeBuilderModal || !treeBuilderPersonId) return;
+  const closeBuilder = () => {
+    if (treeBuilderModal) treeBuilderModal.hidden = true;
+    if (treeBuilderChoiceModal) treeBuilderChoiceModal.hidden = true;
+    treeBuilderForm?.reset();
+    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = true;
+    if (treeBuilderRelationshipField) treeBuilderRelationshipField.hidden = false;
+    if (treeBuilderMode) treeBuilderMode.value = 'add';
+  };
+
+  const openActionChooser = (personId) => {
+    if (!treeBuilderChoiceModal || !treeBuilderPersonId) return;
     const person = treePeopleById().get(String(personId));
     if (!person) return;
     treeBuilderPersonId.value = String(personId);
+    if (treeBuilderChoiceAnchorName) treeBuilderChoiceAnchorName.textContent = person.name || 'this person';
+    treeBuilderChoiceModal.hidden = false;
+  };
+
+  const openBuilder = (mode, personId) => {
+    if (!treeBuilderModal || !treeBuilderPersonId) return;
+    const person = treePeopleById().get(String(personId));
+    if (!person) return;
+
+    closeChoiceModal();
+    treeBuilderPersonId.value = String(personId);
+    if (treeBuilderMode) treeBuilderMode.value = mode;
     if (treeBuilderAnchorName) treeBuilderAnchorName.textContent = person.name || 'this person';
-    if (treeBuilderForm) {
-      treeBuilderForm.reset();
-      treeBuilderRelationship.value = 'child';
-      treeBuilderPhoto.value = '';
+
+    treeBuilderForm?.reset();
+    if (treeBuilderRelationship) treeBuilderRelationship.value = 'child';
+    if (treeBuilderPhoto) treeBuilderPhoto.value = '';
+
+    const isEdit = mode === 'edit';
+    if (treeBuilderTitle) treeBuilderTitle.textContent = isEdit ? 'Edit Person' : 'Add a new person';
+    if (treeBuilderSubtitle) {
+      treeBuilderSubtitle.innerHTML = isEdit
+        ? `Update details for <strong>${person.name || 'this person'}</strong>.`
+        : `Expand this branch from <strong>${person.name || 'this person'}</strong>.`;
     }
-    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = Boolean(person.locked);
+    if (treeBuilderSubmitBtn) treeBuilderSubmitBtn.textContent = isEdit ? 'Save Changes' : 'Add Person';
+    if (treeBuilderRelationshipField) treeBuilderRelationshipField.hidden = isEdit;
+    if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = !isEdit || Boolean(person.locked);
+
+    if (isEdit) {
+      treeBuilderName.value = person.name || '';
+      treeBuilderBorn.value = person.birthDate ?? person.birth_date ?? person.birthYear ?? person.birth_year ?? person.birth ?? person.born ?? '';
+      treeBuilderDied.value = person.deathDate ?? person.death_date ?? person.deathYear ?? person.death_year ?? person.death ?? person.died ?? '';
+      treeBuilderPhoto.value = person.photo || person.image || '';
+    }
+
     treeBuilderModal.hidden = false;
     window.setTimeout(() => treeBuilderName?.focus(), 30);
   };
@@ -813,7 +860,7 @@ async function boot() {
       btn.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
-        openBuilder(btn.getAttribute('data-person-id') || '');
+        openActionChooser(btn.getAttribute('data-person-id') || '');
       });
     });
   };
@@ -836,13 +883,33 @@ async function boot() {
       closeBuilder();
     });
   }
+  if (treeBuilderChoiceClose) {
+    treeBuilderChoiceClose.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeChoiceModal();
+    });
+  }
+  if (treeBuilderChoiceModal) {
+    treeBuilderChoiceModal.addEventListener('click', (event) => {
+      if (event.target === treeBuilderChoiceModal) closeChoiceModal();
+    });
+  }
+  if (treeBuilderOpenEditBtn) {
+    treeBuilderOpenEditBtn.addEventListener('click', () => openBuilder('edit', treeBuilderPersonId?.value || ''));
+  }
+  if (treeBuilderOpenAddBtn) {
+    treeBuilderOpenAddBtn.addEventListener('click', () => openBuilder('add', treeBuilderPersonId?.value || ''));
+  }
   if (treeBuilderModal) {
     treeBuilderModal.addEventListener('click', (event) => {
       if (event.target === treeBuilderModal) closeBuilder();
     });
   }
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && treeBuilderModal && !treeBuilderModal.hidden) closeBuilder();
+    if (event.key !== 'Escape') return;
+    if (treeBuilderModal && !treeBuilderModal.hidden) closeBuilder();
+    if (treeBuilderChoiceModal && !treeBuilderChoiceModal.hidden) closeChoiceModal();
   });
 
   if (treeBuilderDeleteBtn) {
@@ -869,36 +936,52 @@ async function boot() {
   if (treeBuilderForm) {
     treeBuilderForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const anchorId = treeBuilderPersonId?.value || '';
+      const personId = treeBuilderPersonId?.value || '';
+      const mode = treeBuilderMode?.value || 'add';
       const name = treeBuilderName?.value?.trim?.() || '';
-      if (!anchorId || !name) return;
+      if (!personId || !name) return;
 
       try {
         let photoPath = treeBuilderPhoto?.value?.trim?.() || '';
-        if (!photoPath && treeBuilderPhotoFile?.files?.length) {
+        if (treeBuilderPhotoFile?.files?.length) {
           photoPath = await uploadSelectedPhoto();
         }
 
-        const payload = {
-          parent_id: anchorId,
-          relationship: treeBuilderRelationship?.value || 'child',
-          name,
-          born: treeBuilderBorn?.value?.trim?.() || '',
-          died: treeBuilderDied?.value?.trim?.() || '',
-          photo: photoPath,
-        };
+        const isEdit = mode === 'edit';
+        const payload = isEdit
+          ? {
+              person_id: personId,
+              name,
+              born: treeBuilderBorn?.value?.trim?.() || '',
+              died: treeBuilderDied?.value?.trim?.() || '',
+              photo: photoPath,
+            }
+          : {
+              parent_id: personId,
+              relationship: treeBuilderRelationship?.value || 'child',
+              name,
+              born: treeBuilderBorn?.value?.trim?.() || '',
+              died: treeBuilderDied?.value?.trim?.() || '',
+              photo: photoPath,
+            };
 
-        const res = await fetch(window.TREE_BRANCH_API_URL, {
+        const targetUrl = isEdit ? window.TREE_UPDATE_API_URL : window.TREE_BRANCH_API_URL;
+        const res = await fetch(targetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', accept: 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error(`Add person failed: ${res.status}`);
-        state.treeJson = await fetchTreeJson();
+        if (!res.ok) throw new Error(`${isEdit ? 'Save' : 'Add'} person failed: ${res.status}`);
+
         closeBuilder();
-        render();
+        try {
+          state.treeJson = await fetchTreeJson();
+          render();
+        } catch (refreshErr) {
+          console.error('[LineAgeMap] tree refresh failed after save', refreshErr);
+        }
       } catch (err) {
-        console.error('[LineAgeMap] add person failed', err);
+        console.error(`[LineAgeMap] ${mode} person failed`, err);
       }
     });
   }

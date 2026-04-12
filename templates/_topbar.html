@@ -9,23 +9,18 @@
       <div class="nav-app-links" aria-label="Account links">
         {% if request.endpoint != 'dashboard' %}<a class="nav-app-link" href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
         {% if request.endpoint != 'tree' %}<a class="nav-app-link" href="{{ url_for('tree') }}">Tree</a>{% endif %}
-        <a class="nav-app-link nav-app-link-logout" href="{{ url_for('logout') }}">Logout</a>
       </div>
-      {% if show_family_switcher %}
-      <form class="family-switcher" action="{{ url_for('select_family') }}" method="get">
-        <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
-        <label class="family-switcher-label" for="desktopFamilySelect">Family Demo</label>
-        <select id="desktopFamilySelect" name="family" onchange="this.form.submit()">
-          {% for family in family_options %}
-          <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
-          {% endfor %}
-        </select>
-      </form>
-      {% endif %}
-      <div class="nav-user-chip" aria-label="Logged in user">
-        <span class="nav-user-icon" aria-hidden="true">👤</span>
-        <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
-      </div>
+
+      <details class="nav-user-menu">
+        <summary class="nav-user-chip nav-user-chip--menu" aria-label="Logged in user menu">
+          <span class="nav-user-icon" aria-hidden="true">👤</span>
+          <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
+          <span class="nav-user-caret" aria-hidden="true">▾</span>
+        </summary>
+        <div class="nav-user-dropdown">
+          <a class="nav-user-dropdown-link" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </details>
       {% else %}
       <div class="nav-app-links nav-public-links" aria-label="Primary navigation">
         <a class="nav-app-link" href="{{ url_for('tree') }}">Tree</a>
@@ -53,35 +48,27 @@
   </div>
 
   <nav class="mobile-nav" id="mobileMenu" aria-label="Mobile navigation">
-    {% if logged_in_user %}
-    <div class="mobile-user-chip">
-      <span class="nav-user-icon" aria-hidden="true">👤</span>
-      <span class="nav-user-text">{{ logged_in_user.name or logged_in_user.username }}</span>
-    </div>
-    {% endif %}
-
     <div class="mobile-nav-links">
       {% if logged_in_user %}
       {% if request.endpoint != 'dashboard' %}<a href="{{ url_for('dashboard') }}">Dashboard</a>{% endif %}
       {% if request.endpoint != 'tree' %}<a href="{{ url_for('tree') }}">Tree</a>{% endif %}
-      <a href="{{ url_for('logout') }}">Logout</a>
       {% else %}
       <a href="{{ url_for('tree') }}">Tree</a>
       <a href="{{ url_for('login') }}">Login</a>
       {% endif %}
     </div>
-  {% if show_family_switcher %}
-  <form class="family-switcher family-switcher-mobile family-switcher-mobile-bottom" action="{{ url_for('select_family') }}" method="get">
-    <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
-    <div class="family-switcher-row">
-      <label class="family-switcher-label" for="mobileFamilySelectBottom">Family Demo</label>
-      <select id="mobileFamilySelectBottom" name="family" onchange="this.form.submit()">
-        {% for family in family_options %}
-        <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </form>
-  {% endif %}
-</nav>
+    {% if show_family_switcher and not logged_in_user %}
+    <form class="family-switcher family-switcher-mobile family-switcher-mobile-bottom" action="{{ url_for('select_family') }}" method="get">
+      <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
+      <div class="family-switcher-row">
+        <label class="family-switcher-label" for="mobileFamilySelectBottom">Family Demo</label>
+        <select id="mobileFamilySelectBottom" name="family" onchange="this.form.submit()">
+          {% for family in family_options %}
+          <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </form>
+    {% endif %}
+  </nav>
 </header>
