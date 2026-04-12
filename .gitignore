@@ -49,5 +49,4 @@ dist/
 # static/uploads/lannister/*
 # !static/uploads/lannister/.gitkeep
 
-migrations/
 instance/
