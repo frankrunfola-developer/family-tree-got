@@ -340,6 +340,17 @@ def ensure_user_family(username: str) -> dict:
     return family_to_payload(family)
 
 
+
+def unique_person_public_id(base_text: str) -> str:
+    base_id = slugify(base_text) or 'person'
+    person_id = base_id
+    counter = 2
+    while db.session.query(Person.id).filter_by(public_id=person_id).first() is not None:
+        person_id = f'{base_id}_{counter}'
+        counter += 1
+    return person_id
+
+
 def family_profile_for_user(username: str) -> FamilyProfile | None:
     user = get_user(username)
     if not user:
@@ -353,13 +364,72 @@ def family_profile_for_user(username: str) -> FamilyProfile | None:
 
 def person_location_payload(person: Person) -> dict:
     label = str(person.current_location_label or '').strip()
-    if not label or person.current_location_lat is None or person.current_location_lng is None:
+    if not label:
         return {}
-    return {
-        'label': label,
-        'lat': person.current_location_lat,
-        'lng': person.current_location_lng,
-    }
+    payload = {'label': label}
+    if person.current_location_lat is not None:
+        payload['lat'] = person.current_location_lat
+    if person.current_location_lng is not None:
+        payload['lng'] = person.current_location_lng
+    return payload
+
+
+def parse_migration_entries(raw_value) -> list[dict]:
+    if isinstance(raw_value, list):
+        lines = raw_value
+    else:
+        lines = str(raw_value or '').splitlines()
+
+    entries: list[dict] = []
+    for raw_line in lines:
+        line = str(raw_line or '').strip()
+        if not line:
+            continue
+        label_part, sep, coords_part = line.partition('|')
+        label = label_part.strip() or line
+        lat = None
+        lng = None
+        if sep and coords_part.strip():
+            coords_text = coords_part.strip().replace(';', ',')
+            if ',' in coords_text:
+                maybe_lat, maybe_lng = [part.strip() for part in coords_text.split(',', 1)]
+                try:
+                    lat = float(maybe_lat)
+                    lng = float(maybe_lng)
+                except Exception:
+                    lat = None
+                    lng = None
+        entry = {'label': label}
+        if lat is not None:
+            entry['lat'] = lat
+        if lng is not None:
+            entry['lng'] = lng
+        entries.append(entry)
+    return entries
+
+
+def apply_person_migrations(person: Person, raw_value) -> None:
+    entries = parse_migration_entries(raw_value)
+    person.migrations.clear()
+    for idx, entry in enumerate(entries):
+        person.migrations.append(
+            PersonMigration(
+                position=idx,
+                label=entry['label'],
+                lat=entry.get('lat'),
+                lng=entry.get('lng'),
+            )
+        )
+
+    if entries:
+        last_entry = entries[-1]
+        person.current_location_label = last_entry.get('label', '')
+        person.current_location_lat = last_entry.get('lat')
+        person.current_location_lng = last_entry.get('lng')
+    elif not str(person.current_location_label or '').strip():
+        person.current_location_label = ''
+        person.current_location_lat = None
+        person.current_location_lng = None
 
 
 def family_to_payload(family: FamilyProfile | None) -> dict:
@@ -370,13 +440,12 @@ def family_to_payload(family: FamilyProfile | None) -> dict:
     for person in family.people:
         migrations = []
         for migration in person.migrations:
-            if migration.lat is None or migration.lng is None:
-                continue
-            migrations.append({
-                'label': migration.label,
-                'lat': migration.lat,
-                'lng': migration.lng,
-            })
+            entry = {'label': migration.label}
+            if migration.lat is not None:
+                entry['lat'] = migration.lat
+            if migration.lng is not None:
+                entry['lng'] = migration.lng
+            migrations.append(entry)
         current_location = person_location_payload(person)
         if current_location and not migrations:
             migrations.append(dict(current_location))
@@ -1150,13 +1219,7 @@ def add_person():
         flash('Name is required.')
         return redirect(url_for('dashboard'))
 
-    existing_ids = {person.public_id for person in family.people}
-    person_id = slugify(request.form.get('person_id', '') or name)
-    base_id = person_id
-    counter = 2
-    while person_id in existing_ids:
-        person_id = f'{base_id}_{counter}'
-        counter += 1
+    person_id = unique_person_public_id(request.form.get('person_id', '') or name)
 
     person = Person(
         family=family,
@@ -1267,28 +1330,18 @@ def api_tree_add_branch():
     if not anchor:
         return {'ok': False, 'error': 'anchor_not_found'}, 404
 
-    existing_ids = {person.public_id for person in family.people}
-
-    def unique_person_id(base_text: str) -> str:
-        person_id = slugify(base_text)
-        base_id = person_id
-        counter = 2
-        while person_id in existing_ids:
-            person_id = f'{base_id}_{counter}'
-            counter += 1
-        existing_ids.add(person_id)
-        return person_id
-
+    photo_value = _normalize_photo_path(str(payload.get('photo') or '').strip(), family.family_slug)
     new_person = Person(
         family=family,
-        public_id=unique_person_id(name),
+        public_id=unique_person_public_id(name),
         name=name,
         born=born,
         died=died,
-        photo=_normalize_photo_path(str(payload.get('photo') or '').strip(), family.family_slug),
+        photo=photo_value,
     )
     db.session.add(new_person)
     db.session.flush()
+    apply_person_migrations(new_person, payload.get('migrations'))
 
     if relationship == 'spouse':
         db.session.add(FamilyRelationship(family=family, relationship_type='spouse', person_a=anchor, person_b=new_person))
@@ -1316,7 +1369,12 @@ def api_tree_add_branch():
         if len(unique_spouses) == 1:
             db.session.add(FamilyRelationship(family=family, relationship_type='parent', person_a=unique_spouses[0], person_b=new_person))
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as exc:
+        db.session.rollback()
+        app.logger.exception('Tree add branch failed')
+        return {'ok': False, 'error': str(exc)}, 500
     return {'ok': True, 'added_person_id': new_person.public_id}
 
 
@@ -1347,37 +1405,7 @@ def api_tree_update_node():
 
     photo_value = str(payload.get('photo') or '').strip()
     person.photo = _normalize_photo_path(photo_value, family.family_slug) if photo_value else person.photo
-
-    try:
-        child_count = max(0, min(int(payload.get('child_count') or 0), 8))
-    except Exception:
-        child_count = 0
-
-    existing_ids = {item.public_id for item in family.people}
-
-    def unique_person_id(base_text: str) -> str:
-        person_id_local = slugify(base_text)
-        base_id = person_id_local
-        counter = 2
-        while person_id_local in existing_ids:
-            person_id_local = f'{base_id}_{counter}'
-            counter += 1
-        existing_ids.add(person_id_local)
-        return person_id_local
-
-    for idx in range(child_count):
-        child_name = f"{person.name or 'Child'} Child {idx + 1}"
-        child = Person(
-            family=family,
-            public_id=unique_person_id(child_name),
-            name=child_name,
-            born='',
-            died='',
-            photo=DEFAULT_PROFILE_PHOTO,
-        )
-        db.session.add(child)
-        db.session.flush()
-        db.session.add(FamilyRelationship(family=family, relationship_type='parent', person_a=person, person_b=child))
+    apply_person_migrations(person, payload.get('migrations'))
 
     db.session.commit()
     return {'ok': True}

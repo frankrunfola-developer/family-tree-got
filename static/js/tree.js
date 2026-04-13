@@ -791,14 +791,19 @@ async function boot() {
     if (treeBuilderDeleteBtn) treeBuilderDeleteBtn.hidden = true;
     if (treeBuilderRelationshipField) treeBuilderRelationshipField.hidden = false;
     if (treeBuilderMode) treeBuilderMode.value = 'add';
+    if (treeBuilderMigrations) treeBuilderMigrations.value = '';
   };
 
   const openActionChooser = (personId) => {
-    if (!treeBuilderChoiceModal || !treeBuilderPersonId) return;
+    if (!treeBuilderPersonId) return;
     const person = treePeopleById().get(String(personId));
     if (!person) return;
     treeBuilderPersonId.value = String(personId);
     if (treeBuilderChoiceAnchorName) treeBuilderChoiceAnchorName.textContent = person.name || 'this person';
+    if (!treeBuilderChoiceModal) {
+      openBuilder('edit', personId);
+      return;
+    }
     treeBuilderChoiceModal.hidden = false;
   };
 
@@ -815,6 +820,7 @@ async function boot() {
     treeBuilderForm?.reset();
     if (treeBuilderRelationship) treeBuilderRelationship.value = 'child';
     if (treeBuilderPhoto) treeBuilderPhoto.value = '';
+    if (treeBuilderMigrations) treeBuilderMigrations.value = '';
 
     const isEdit = mode === 'edit';
     if (treeBuilderTitle) treeBuilderTitle.textContent = isEdit ? 'Edit Person' : 'Add a new person';
@@ -832,6 +838,19 @@ async function boot() {
       treeBuilderBorn.value = person.birthDate ?? person.birth_date ?? person.birthYear ?? person.birth_year ?? person.birth ?? person.born ?? '';
       treeBuilderDied.value = person.deathDate ?? person.death_date ?? person.deathYear ?? person.death_year ?? person.death ?? person.died ?? '';
       treeBuilderPhoto.value = person.photo || person.image || '';
+      if (treeBuilderMigrations) {
+        const lines = Array.isArray(person.migrations)
+          ? person.migrations.map((entry) => {
+              if (!entry) return '';
+              const label = entry.label || '';
+              if (entry.lat !== undefined && entry.lng !== undefined && entry.lat !== null && entry.lng !== null && `${entry.lat}` !== '' && `${entry.lng}` !== '') {
+                return `${label} | ${entry.lat},${entry.lng}`;
+              }
+              return label;
+            }).filter(Boolean)
+          : [];
+        treeBuilderMigrations.value = lines.join('\n');
+      }
     }
 
     treeBuilderModal.hidden = false;
@@ -883,6 +902,20 @@ async function boot() {
       closeBuilder();
     });
   }
+  document.querySelectorAll('.tree-builder-close').forEach((btn) => {
+    if (btn.dataset.boundClose === 'true') return;
+    btn.dataset.boundClose = 'true';
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (btn.id === 'treeBuilderChoiceClose') {
+        closeChoiceModal();
+      } else {
+        closeBuilder();
+      }
+    });
+  });
+
   if (treeBuilderChoiceClose) {
     treeBuilderChoiceClose.addEventListener('click', (event) => {
       event.preventDefault();
@@ -959,6 +992,7 @@ async function boot() {
               born: treeBuilderBorn?.value?.trim?.() || '',
               died: treeBuilderDied?.value?.trim?.() || '',
               photo: photoPath,
+              migrations: treeBuilderMigrations?.value || '',
             }
           : {
               parent_id: personId,
@@ -967,6 +1001,7 @@ async function boot() {
               born: treeBuilderBorn?.value?.trim?.() || '',
               died: treeBuilderDied?.value?.trim?.() || '',
               photo: photoPath,
+              migrations: treeBuilderMigrations?.value || '',
             };
 
         const targetUrl = isEdit ? window.TREE_UPDATE_API_URL : window.TREE_BRANCH_API_URL;

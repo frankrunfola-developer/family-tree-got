@@ -383,3 +383,34 @@ body.tree-page .treeCanvas--page {
       drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
   }
 }
+
+
+#treeSvg .tree-node-edit-btn {
+  transform-origin: center center !important;
+  transform-box: fill-box !important;
+  animation: treePencilPulseFinal 1.95s ease-in-out infinite !important;
+}
+
+#treeSvg .tree-node-edit-disc {
+  animation: treePencilGlowFinal 1.95s ease-in-out infinite !important;
+}
+
+@keyframes treePencilPulseFinal {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.12); }
+  55% { transform: scale(1.22); }
+  75% { transform: scale(1.12); }
+}
+
+@keyframes treePencilGlowFinal {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 12px rgba(115, 214, 70, 0.22))
+      drop-shadow(0 10px 14px rgba(80, 45, 18, 0.16));
+  }
+  55% {
+    filter:
+      drop-shadow(0 0 24px rgba(115, 214, 70, 0.42))
+      drop-shadow(0 10px 14px rgba(80, 45, 18, 0.18));
+  }
+}

@@ -61,17 +61,19 @@
       {% endif %}
     </div>
     {% if show_family_switcher and not logged_in_user %}
-    <form class="family-switcher family-switcher-mobile family-switcher-mobile-bottom" action="{{ url_for('select_family') }}" method="get">
-      <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
-      <div class="family-switcher-row">
-        <label class="family-switcher-label" for="mobileFamilySelectBottom">Family Demo</label>
-        <select id="mobileFamilySelectBottom" name="family" onchange="this.form.submit()">
-          {% for family in family_options %}
-          <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </form>
+    <div class="mobile-nav-family-shell">
+      <form class="family-switcher family-switcher-mobile family-switcher-mobile-bottom" action="{{ url_for('select_family') }}" method="get">
+        <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
+        <div class="family-switcher-row">
+          <label class="family-switcher-label" for="mobileFamilySelectBottom">Family Demo</label>
+          <select id="mobileFamilySelectBottom" name="family" onchange="this.form.submit()">
+            {% for family in family_options %}
+            <option value="{{ family.id }}" {% if family.id == current_family_id %}selected{% endif %}>{{ family.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+    </div>
     {% endif %}
   </nav>
 </header>

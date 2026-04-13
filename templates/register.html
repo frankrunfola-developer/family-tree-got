@@ -7,7 +7,7 @@
     <div class="login-hero-copy">
       <p class="eyebrow">Create your archive</p>
       <h1>Open your family capsule</h1>
-      <p class="subtitle">Create your account, choose the User name shown on your profile, and LineAgeMap will seed your first node automatically.</p>
+      <p class="subtitle">Create your account, choose the Family Name shown on your profile, and LineAgeMap will seed your first node automatically.</p>
     </div>
 
     <div class="login-pill-row" aria-hidden="true">
@@ -18,12 +18,12 @@
 
     <form method="post" class="auth-form auth-form--hero">
       <label>
-        <span>Username</span>
-        <input name="username" autocomplete="username" required>
+        <span>Family Name</span>
+        <input name="profile_name" autocomplete="name" required>
       </label>
       <label>
-        <span>User name</span>
-        <input name="profile_name" autocomplete="name" required>
+        <span>Username</span>
+        <input name="username" autocomplete="username" required>
       </label>
       <label>
         <span>Password</span>
@@ -35,7 +35,7 @@
     <div class="login-demo-card parchment-inset">
       <div>
         <strong>What gets created</strong>
-        <p>Your account, your family profile, and one starter node using your User name so the tree and map have a real root immediately.</p>
+        <p>Your account, your family profile, and one starter node using your Family Name so the tree and map have a real root immediately.</p>
       </div>
       <a class="btn-secondary" href="{{ url_for('login') }}">Already have an account?</a>
     </div>

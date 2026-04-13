@@ -22,3 +22,43 @@ body.tree-page .treeToolbar .treeToolbarBtn {
   width: auto;
   min-width: 0;
 }
+
+
+body.tree-page .treeToolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+body.tree-page .treeToolbar .treeToolbarBtn {
+  width: auto;
+  min-width: 0;
+}
+
+body.tree-page .treeToolbarBtn--dashboard {
+  color: var(--accent-dark);
+  background: rgba(255, 249, 240, 0.88);
+  border: 1px solid rgba(160, 122, 84, 0.22);
+  box-shadow:
+    0 10px 18px rgba(91, 56, 30, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.56);
+}
+
+body.tree-page .treeToolbarBtn--dashboard:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.02);
+}
+
+@media (max-width: 640px) {
+  body.tree-page .treeToolbar {
+    gap: 0.6rem;
+  }
+
+  body.tree-page .treeToolbarBtn--dashboard,
+  body.tree-page .treeToolbar .treeToolbarBtn {
+    min-width: 9.5rem;
+    justify-content: center;
+  }
+}

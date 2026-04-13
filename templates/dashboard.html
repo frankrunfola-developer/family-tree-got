@@ -195,6 +195,11 @@
         <input name="photo" id="treeBuilderPhoto" placeholder="/static/uploads/... or /static/img/...">
       </label>
 
+      <label>
+        <span>Migrations</span>
+        <textarea name="migrations" id="treeBuilderMigrations" rows="4" placeholder="One stop per line. Optional coords: City, Country | 40.7128,-74.0060"></textarea>
+      </label>
+
       <div class="tree-builder-actions">
         <button class="btn-primary wide" type="submit" id="treeBuilderSubmitBtn">Add Person</button>
       </div>
@@ -221,5 +226,5 @@
   window.TREE_DELETE_API_URL = {{ tree_delete_api_url|tojson }};
   window.TREE_UPLOAD_PHOTO_API_URL = {{ url_for('api_tree_upload_photo')|tojson }};
 </script>
-<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v=20260412-nodeeditor26"></script>
+<script type="module" src="{{ url_for('static', filename='js/tree.js') }}?v=20260412-final1"></script>
 {% endblock %}
